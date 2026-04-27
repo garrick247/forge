@@ -6,6 +6,28 @@
 
 ---
 
+## What is this?
+
+Forge is a programming language for writing systems and GPU code where **every safety property is proven, not tested**. You write `requires` and `ensures` annotations alongside ordinary code; the compiler generates proof obligations and discharges them with Z3 before emitting C99, CUDA C, or PTX. If any obligation fails, compilation stops.
+
+The output is **plain, portable code** with zero runtime bounds checks — because the bounds were proven safe at compile time. SASS-level parity with hand-written CUDA on five reference kernels (see [FB-0](#fb-0-verified-parity-baseline) below).
+
+Forge is the front of a fully open-source GPU toolchain:
+
+```
+Forge (.fg)  ──►  CUDA C / PTX  ──►  [OpenCUDA]  ──►  [OpenPTXas]  ──►  cubin  ──►  GPU
+   ↑ this repo                       CUDA C → PTX     PTX → SASS → ELF
+```
+
+- **Forge** (this repo) — language + Z3 proof discharge + codegen
+- **[OpenCUDA](https://github.com/garrick99/opencuda)** — pure-Python CUDA C → PTX compiler
+- **[OpenPTXas](https://github.com/garrick99/openptxas)** — pure-Python PTX → SM_120 cubin assembler
+- **[VortexSTARK](https://github.com/garrick99/VortexSTARK)** — production user: GPU-native Circle STARK prover, 9 forge-emitted kernels default-on
+
+No NVIDIA compiler is invoked at any stage of the toolchain.
+
+---
+
 ```forge
 #[kernel]
 fn reduce_sum(data: span<u64>, output: span<u64>, n: u64)
@@ -155,7 +177,7 @@ use std::raw;           // Raw pointers, volatile I/O
 
 ## Demo Corpus
 
-**1062 verified demos** covering:
+**1114 verified demos** covering:
 
 **GPU Kernels (ML/HPC):**
 - `1046` Warp-level reduction (3 proofs)
@@ -216,12 +238,16 @@ benchmarks/
 ## Validation Results
 
 ```
-Proof verification:   1062 / 1062 pass
+Proof verification:   1114 / 1114 pass
 GCC compilation:      1021 / 1021 pass   (-Wall -Wextra -Werror)
 Runtime execution:     879 /  879 pass
 Error cases:            20 /   20 pass
+GPU demos (subset):    103 / 103 ptxas-clean   (83 ptxas-validated)
+Pipeline integration:   21 /  21 pass   (Forge → OpenCUDA → OpenPTXas)
 ForgeBench FB-0:       5/5 kernels, SASS parity with nvcc
 ```
+
+Run the full suite with `bash test/run_all.sh`. Cross-toolchain integration tests in `test/test_pipeline.py`.
 
 ---
 
