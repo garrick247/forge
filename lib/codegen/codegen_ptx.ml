@@ -87,6 +87,13 @@ type emit_state = {
   fn_name : string;
   (* Variable → register name mapping *)
   mutable reg_env  : (string * string) list;
+  (* Synthetic tuple-name → component-register list mapping.
+     ETuple lowering returns a synthetic name like `__tuple_<n>` and
+     pushes its component registers here.  EField_n looks up the
+     synthetic name and returns the i-th register.  SLet for a
+     tuple-typed RHS propagates the entry under the new var name
+     when an EVar lookup returns a synthetic tuple name. *)
+  mutable tuple_env: (string * string list) list;
   (* FG-2.6: user-defined non-kernel functions available for inlining
      at a call site.  Keyed by function name; value is the full AST
      definition.  The generic ECall branch consults this table to
@@ -1226,6 +1233,37 @@ let rec lower_expr st e : string =
       emit st (Printf.sprintf "mov.u32 %s, 0;" r);
       r
 
+  (* Tuple construction: lower each component, return a synthetic
+     handle that EField_n / SLet can resolve via tuple_env to the
+     real component registers.  Without this, tuple expressions
+     fell through to the catch-all and returned a u64 placeholder
+     register, causing downstream type-mismatch errors when the
+     u64 placeholder got XORed against u32 components. *)
+  | ETuple es ->
+      let regs = List.map (lower_expr st) es in
+      let n = st.counter in
+      st.counter <- n + 1;
+      let synth = Printf.sprintf "__tuple_%d" n in
+      st.tuple_env <- (synth, regs) :: st.tuple_env;
+      synth
+
+  (* Tuple field projection: lower the inner expression to its
+     synthetic handle, look up the component-register list, return
+     the i-th register.  If the inner doesn't resolve to a tuple
+     handle (which would be a bug elsewhere), fall through to the
+     catch-all u64 placeholder so callers see the failure mode
+     rather than silently mis-typing. *)
+  | EField_n (inner, idx) ->
+      let r = lower_expr st inner in
+      (match List.assoc_opt r st.tuple_env with
+       | Some regs when idx < List.length regs -> List.nth regs idx
+       | _ ->
+           let p = fresh_reg st U64 in
+           emit st (Printf.sprintf
+             "mov.u64 %s, 0; // unhandled EField_n: tuple env miss for %s.%d"
+             p r idx);
+           p)
+
   | _ ->
       let r = fresh_reg st U64 in
       emit st (Printf.sprintf "mov.u64 %s, 0; // unhandled expr" r);
@@ -1487,6 +1525,7 @@ let emit_kernel ?(fn_defs = Hashtbl.create 0)
     reg_decls     = [];
     fn_name       = fn.fn_name.name;
     reg_env       = [];
+    tuple_env     = [];
     fn_defs;
     consts;
     shared_decls  = [];
