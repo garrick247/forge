@@ -478,13 +478,25 @@ let rec lower_expr st e : string =
       in
       let writeback name new_reg orig_reg =
         if new_reg <> orig_reg then begin
-          let rty = reg_rty st new_reg in
-          let pfx = match rty with
-            | Pred -> "pred"
-            | _ -> arith_pfx rty
-          in
-          emit st (Printf.sprintf "mov.%s %s, %s; // if wb: %s"
-                     pfx orig_reg new_reg name)
+          let new_rty = reg_rty st new_reg in
+          let orig_rty = reg_rty st orig_reg in
+          if new_rty <> orig_rty then
+            (* Type mismatch: the name was REBOUND to a different-typed
+               value inside the branch (typical for kernel-arg span
+               struct fields like `c0` which is u64 but gets locally
+               aliased to a u32 element). Writing a u32 source into a
+               u64-typed pre-if register produces invalid PTX
+               (`mov.u32 %rd0, %r107`). Such rebinds are not real
+               mutations of the pre-if value — emit no writeback. *)
+            ()
+          else begin
+            let pfx = match new_rty with
+              | Pred -> "pred"
+              | _ -> arith_pfx new_rty
+            in
+            emit st (Printf.sprintf "mov.%s %s, %s; // if wb: %s"
+                       pfx orig_reg new_reg name)
+          end
         end
       in
       let restore_env () =

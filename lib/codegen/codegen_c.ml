@@ -2301,9 +2301,22 @@ let emit_item item =
                Printf.sprintf "%s %s" (emit_ty ty) id.name
              ) fty.params)
            in
-           (* In CUDA mode, extern functions called from kernels need __device__ *)
-           let qual = if List.mem ex.ex_name.name !device_fn_names
-                      then "__device__ " else "" in
+           (* In CUDA mode, extern functions called from kernels need __device__.
+              Additionally: extern declarations linked to "forge_gpu" name GPU-only
+              intrinsics (atom_*, shfl_*, ballot_sync, lane_id, warp_id, ...). All
+              their call-sites are rewritten by emit_expr to CUDA built-ins, so the
+              decls themselves are technically dead — BUT they must still be emitted
+              consistently across every TU, because NVCC's whole-program device link
+              treats `__device__` as part of the function signature. If TU A declares
+              `uint64_t atom_min(...)` (no qualifier → host default) and TU B declares
+              `__device__ uint64_t atom_min(...)`, linking them together miscompiles
+              kernels in either TU. Force `__device__` whenever ex_link = "forge_gpu"
+              so every .cu emits identical declarations regardless of which kernels
+              happen to use which intrinsic. *)
+           let qual =
+             if ex.ex_link = "forge_gpu"
+                || List.mem ex.ex_name.name !device_fn_names
+             then "__device__ " else "" in
            Printf.sprintf "%s%s %s(%s);  /* extern: %s */\n"
              qual (emit_ty fty.ret) ex.ex_name.name params_str ex.ex_link
        | ty ->

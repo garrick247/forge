@@ -52,9 +52,17 @@ def forge_cuda(fg_src: str) -> str:
 
 def opencuda_to_ptx(cu_src: str) -> dict[str, str]:
     """Compile CUDA C to PTX via OpenCUDA. Returns {name: ptx}."""
+    from opencuda.frontend.preprocess import preprocess
     from opencuda.frontend.parser import parse
     from opencuda.ir.optimize import optimize
     from opencuda.codegen.emit import ir_to_ptx
+    # OpenCUDA's parse() does NOT run the preprocessor — caller must do it
+    # explicitly (see opencuda/tests/test_compiler.py for the canonical
+    # ordering). Without this, FORGE-emitted .cu files (which use
+    # `#define blockIdx_x ((uint32_t)(blockIdx.x))` etc.) fail with
+    # `undefined variable 'blockIdx_x'` because the parser sees the
+    # un-substituted macro name.
+    cu_src = preprocess(cu_src)
     mod = parse(cu_src)
     optimize(mod)
     return ir_to_ptx(mod)

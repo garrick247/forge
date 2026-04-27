@@ -6,14 +6,15 @@
 // over a 16-word message (leaf value in m[0], m[1..15] = 0), and writes
 // the 8-word digest to `hashes[leaf*8 .. leaf*8 + 8]`.
 //
-// Output words are M31-reduced, matching the shinobi-hash build's
-// `STORE_HASH8` semantics. For the default (non-shinobi-hash) build,
-// M31-reduction is a no-op on already-canonical M31 leaves (0 ≤ leaf < P).
+// Output words are raw 32-bit Blake2s digests, matching the hand-
+// written `cuda_merkle_hash_leaves` (which only post-reduces to M31
+// when the `shinobi-hash` cargo feature defines SHINOBI_HASH_REDUCE).
+// Reducing here unconditionally would diverge from prove_lean's
+// commit_root_only path and from the CPU mirror — that was Bug 2.
 //
 // Proof obligations Z3 discharges:
 //   - Per-thread bounds on `column[leaf]` read (`leaf < n_leaves <= column.len`)
 //   - Per-thread bounds on `hashes[leaf*8 + k]` writes for k in 0..7
-//   - Output invariant: each hash word < M31_P (from `reduce_word`)
 
 use std::gpu;
 use std::m31;
@@ -285,21 +286,26 @@ fn merkle_hash_leaves_single(column: span<u32>, hashes: span<u32>, n_leaves: u64
         let out6: u32 = h6 ^ f6 ^ f14;
         let out7: u32 = h7 ^ f7 ^ f15;
 
-        // ── Write with M31 reduction (matches STORE_HASH8) ──────────────
+        // ── Write raw Blake2s output ─────────────────────────────────────
+        // Blake2s output words are 32-bit; M31 reduction here would NOT match
+        // the hand-written `cuda_merkle_hash_leaves` (which reduces only
+        // under SHINOBI_HASH_REDUCE) nor the CPU mirror (which never
+        // reduces). Storing raw `out*` keeps prove() (FORGE) and
+        // prove_lean() (hand-written) in lock-step — fix for Bug 2.
         // Guard re-establishes (base + 7 < hashes.len). The kernel-level
         // precondition `n_leaves * 8 <= hashes.len` combined with
         // `leaf < n_leaves` implies it, but the bounds prover doesn't
         // reason through the non-linear `*` so we restate it explicitly.
         let base: u64 = leaf * 8u64;
         if base + 7u64 < hashes.len {
-            hashes[base]        = reduce_word(out0);
-            hashes[base + 1u64] = reduce_word(out1);
-            hashes[base + 2u64] = reduce_word(out2);
-            hashes[base + 3u64] = reduce_word(out3);
-            hashes[base + 4u64] = reduce_word(out4);
-            hashes[base + 5u64] = reduce_word(out5);
-            hashes[base + 6u64] = reduce_word(out6);
-            hashes[base + 7u64] = reduce_word(out7);
+            hashes[base]        = out0;
+            hashes[base + 1u64] = out1;
+            hashes[base + 2u64] = out2;
+            hashes[base + 3u64] = out3;
+            hashes[base + 4u64] = out4;
+            hashes[base + 5u64] = out5;
+            hashes[base + 6u64] = out6;
+            hashes[base + 7u64] = out7;
         };
     };
 }
@@ -501,21 +507,18 @@ fn merkle_hash_leaves_quad(c0: span<u32>, c1: span<u32>, c2: span<u32>, c3: span
         let out6: u32 = h6 ^ f6 ^ f14;
         let out7: u32 = h7 ^ f7 ^ f15;
 
-        // ── Write with M31 reduction (matches STORE_HASH8) ──────────────
-        // Guard re-establishes (base + 7 < hashes.len). The kernel-level
-        // precondition `n_leaves * 8 <= hashes.len` combined with
-        // `leaf < n_leaves` implies it, but the bounds prover doesn't
-        // reason through the non-linear `*` so we restate it explicitly.
+        // ── Write raw Blake2s output ─────────────────────────────────────
+        // See single-column variant — same rationale (Bug 2 fix).
         let base: u64 = leaf * 8u64;
         if base + 7u64 < hashes.len {
-            hashes[base]        = reduce_word(out0);
-            hashes[base + 1u64] = reduce_word(out1);
-            hashes[base + 2u64] = reduce_word(out2);
-            hashes[base + 3u64] = reduce_word(out3);
-            hashes[base + 4u64] = reduce_word(out4);
-            hashes[base + 5u64] = reduce_word(out5);
-            hashes[base + 6u64] = reduce_word(out6);
-            hashes[base + 7u64] = reduce_word(out7);
+            hashes[base]        = out0;
+            hashes[base + 1u64] = out1;
+            hashes[base + 2u64] = out2;
+            hashes[base + 3u64] = out3;
+            hashes[base + 4u64] = out4;
+            hashes[base + 5u64] = out5;
+            hashes[base + 6u64] = out6;
+            hashes[base + 7u64] = out7;
         };
     };
 }
