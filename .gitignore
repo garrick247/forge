@@ -52,3 +52,10 @@ test/programs/*.cu
 # Build symlinks / stdlib copies
 analysis/vortex_ntt/std
 apps/gpu_bench/std
+
+# Local scratch (diagnostic / probe kernels — not part of the demo set)
+demos/_tmp_*
+test/__pycache__/
+
+# pq_kyber stdlib copy/symlink (mirrors analysis/vortex_ntt/std)
+analysis/pq_kyber/std
