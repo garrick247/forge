@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Forward declarations */
 uint32_t pack_u32(uint32_t hi __attribute__((unused)), uint32_t lo __attribute__((unused)));

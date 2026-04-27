@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Monomorphized generic types */
 typedef enum {
@@ -135,14 +140,12 @@ void unwrap_or(Option_T opt __attribute__((unused)), void forge_default __attrib
 Option_U map(Option_T opt __attribute__((unused)), forge_fn_T_ret_U_t f __attribute__((unused)));
 Option_U and_then(Option_T opt __attribute__((unused)), forge_fn_T_ret_Option_U_t f __attribute__((unused)));
 Option_T or_else(Option_T opt __attribute__((unused)), Option_T forge_default __attribute__((unused)));
-int main();
 _Bool is_ok(Result_T_E r __attribute__((unused)));
 _Bool is_err(Result_T_E r __attribute__((unused)));
 void unwrap_or(Result_T_E r __attribute__((unused)), void forge_default __attribute__((unused)));
 Result_U_E map(Result_T_E r __attribute__((unused)), forge_fn_T_ret_U_t f __attribute__((unused)));
 Result_T_F map_err(Result_T_E r __attribute__((unused)), forge_fn_E_ret_F_t f __attribute__((unused)));
 Result_U_E and_then(Result_T_E r __attribute__((unused)), forge_fn_T_ret_Result_U_E_t f __attribute__((unused)));
-int main();
 uint64_t option_unwrap_or(Option_u64 opt __attribute__((unused)), uint64_t forge_default __attribute__((unused)));
 Option_u64 safe_sqrt(uint64_t n __attribute__((unused)));
 Result_u64_u64 safe_div(uint64_t a __attribute__((unused)), uint64_t b __attribute__((unused)));
@@ -225,11 +228,6 @@ Option_T or_else(Option_T opt __attribute__((unused)), Option_T forge_default __
   }
 }
 
-int main() {
-  return (int)(0ULL);
-
-}
-
 _Bool is_ok(Result_T_E r __attribute__((unused))) {
   switch (r.tag) {
     case Result_T_E_tag_Ok: {
@@ -307,11 +305,6 @@ Result_U_E and_then(Result_T_E r __attribute__((unused)), forge_fn_T_ret_Result_
     }
     default: __builtin_unreachable();
   }
-}
-
-int main() {
-  return (int)(0ULL);
-
 }
 
 uint64_t option_unwrap_or(Option_u64 opt __attribute__((unused)), uint64_t forge_default __attribute__((unused))) {

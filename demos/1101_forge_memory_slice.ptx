@@ -1,45 +1,78 @@
-.version 9.0
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
 .target sm_120
 .address_size 64
 
 .visible .entry vec_memory_mix3(
-    .param .u64 a, .param .u64 a_len, .param .u64 b, .param .u64 b_len, .param .u64 c, .param .u64 c_len, .param .u32 n)
+    .param .u64 vec_memory_mix3_param_a_data,
+    .param .u64 vec_memory_mix3_param_a_len,
+    .param .u64 vec_memory_mix3_param_b_data,
+    .param .u64 vec_memory_mix3_param_b_len,
+    .param .u64 vec_memory_mix3_param_c_data,
+    .param .u64 vec_memory_mix3_param_c_len,
+    .param .u32 vec_memory_mix3_param_n
+)
 {
-    .reg .b32 %r<4>;
-    .reg .b64 %rd<6>;
-    .reg .pred %p<1>;
+    .reg .pred %p16;
+    .reg .u32 %r10, %r11, %r12, %r13, %r14, %r15, %r18, %r19, %r24, %r29, %r34, %r35, %r36, %r37, %r38, %r43, %r44, %r45, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd2, %rd20, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd31, %rd32, %rd33, %rd39, %rd4, %rd40, %rd41, %rd42, %rd5;
 
-    ld.param.u64 %rd0, [a];
-    ld.param.u64 %rd1, [a_len];
-    ld.param.u64 %rd1, [b];
-    ld.param.u64 %rd2, [b_len];
-    ld.param.u64 %rd2, [c];
-    ld.param.u64 %rd3, [c_len];
-    ld.param.u32 %r0, [n];
-    mov.u32 %r1, %ctaid.x;
-    mov.u32 %r2, %ntid.x;
-    mul.lo.u32 %r3, %r1, %r2;
-    mov.u32 %r1, %tid.x;
-    add.u32 %r2, %r3, %r1;
-    add.u32 %r3, %r2, 5;
-    add.u32 %r1, %r0, 5;
-    setp.lt.u32 %p0, %r3, %r1;
-    @!%p0 ret;
-    shl.b32 %r0, %r2, 2;
-    cvt.u64.u32 %rd4, %r0;
-    add.u64 %rd3, %rd0, %rd4;
-    ld.global.u32 %r1, [%rd3];
-    shl.b32 %r2, %r3, 2;
-    cvt.u64.u32 %rd5, %r2;
-    add.u64 %rd0, %rd1, %rd5;
-    ld.global.u32 %r3, [%rd0];
-    add.u64 %rd1, %rd2, %rd4;
-    ld.global.u32 %r2, [%rd1];
-    shl.b32 %r0, %r1, 1;
-    add.u32 %r1, %r0, %r3;
-    xor.b32 %r3, %r1, %r2;
-    st.global.u32 [%rd3], %r3;
-    bra if_merge_4;
-if_merge_4:
-    ret;
+  ld.param.u64 %rd0, [vec_memory_mix3_param_a_data];
+  ld.param.u64 %rd1, [vec_memory_mix3_param_a_len];
+  ld.param.u64 %rd2, [vec_memory_mix3_param_b_data];
+  ld.param.u64 %rd3, [vec_memory_mix3_param_b_len];
+  ld.param.u64 %rd4, [vec_memory_mix3_param_c_data];
+  ld.param.u64 %rd5, [vec_memory_mix3_param_c_len];
+  ld.param.u32 %r6, [vec_memory_mix3_param_n];
+
+  mov.u32 %r7, %ctaid.x;
+  mov.u32 %r8, %ntid.x;
+  mul.lo.u32 %r9, %r7, %r8;
+  mov.u32 %r10, %tid.x;
+  add.u32 %r11, %r9, %r10;
+  mov.u32 %r12, 5;
+  add.u32 %r13, %r11, %r12;
+  mov.u32 %r14, 5;
+  add.u32 %r15, %r6, %r14;
+  setp.lt.u32 %p16, %r13, %r15;
+  @%p16 bra vec_memory_mix3_then_17;
+  bra vec_memory_mix3_else_17;
+  vec_memory_mix3_then_17:
+  mov.u32 %r18, 5;
+  add.u32 %r19, %r11, %r18;
+  cvt.u64.u32 %rd20, %r11;
+  mov.u64 %rd21, 4;
+  mul.lo.u64 %rd22, %rd20, %rd21;
+  add.u64 %rd23, %rd0, %rd22;
+  ld.global.u32 %r24, [%rd23];
+  cvt.u64.u32 %rd25, %r19;
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd25, %rd26;
+  add.u64 %rd28, %rd2, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  cvt.u64.u32 %rd30, %r11;
+  mov.u64 %rd31, 4;
+  mul.lo.u64 %rd32, %rd30, %rd31;
+  add.u64 %rd33, %rd4, %rd32;
+  ld.global.u32 %r34, [%rd33];
+  mov.u32 %r35, 2;
+  mul.lo.u32 %r36, %r24, %r35;
+  add.u32 %r37, %r36, %r29;
+  xor.b32 %r38, %r37, %r34;
+  cvt.u64.u32 %rd39, %r11;
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd39, %rd40;
+  add.u64 %rd42, %rd0, %rd41;
+  st.global.u32 [%rd42], %r38;
+  mov.u32 %r43, 0; // unit
+  mov.u32 %r44, %r43;
+  bra vec_memory_mix3_end_17;
+  vec_memory_mix3_else_17:
+  mov.u32 %r44, 0; // no else branch
+  vec_memory_mix3_end_17:
+  mov.u32 %r45, 0; // unit
+  ret;
 }
+

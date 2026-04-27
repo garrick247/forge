@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Tuple typedefs */
 typedef struct { uint64_t _0; uint64_t _1; } __forge_tuple_u64_u64_t;
@@ -18,9 +23,9 @@ int main();
 
 __forge_tuple_u64_u64_t minmax(uint64_t a __attribute__((unused)), uint64_t b __attribute__((unused))) {
   if ((a <= b)) {
-    return (__forge_tuple_u64_u64_t){ ._0 = a, ._1 = b };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, a, b);
   } else {
-    return (__forge_tuple_u64_u64_t){ ._0 = b, ._1 = a };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, b, a);
   }
 }
 

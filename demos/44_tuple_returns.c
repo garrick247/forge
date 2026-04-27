@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Tuple typedefs */
 typedef struct { uint64_t _0; uint64_t _1; } __forge_tuple_u64_u64_t;
@@ -19,23 +24,23 @@ __forge_tuple_u64_u64_t split_at(uint64_t total __attribute__((unused)), uint64_
 uint64_t run();
 
 __forge_tuple_u64_u64_t divmod(uint64_t a __attribute__((unused)), uint64_t b __attribute__((unused))) {
-  return (__forge_tuple_u64_u64_t){ ._0 = (a / b), ._1 = (a % b) };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, (a / b), (a % b));
 }
 
 __forge_tuple_u64_u64_t minmax(uint64_t x __attribute__((unused)), uint64_t y __attribute__((unused))) {
   if ((x <= y)) {
-    return (__forge_tuple_u64_u64_t){ ._0 = x, ._1 = y };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, x, y);
   } else {
-    return (__forge_tuple_u64_u64_t){ ._0 = y, ._1 = x };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, y, x);
   }
 }
 
 __forge_tuple_u64_u64_t swap(uint64_t x __attribute__((unused)), uint64_t y __attribute__((unused))) {
-  return (__forge_tuple_u64_u64_t){ ._0 = y, ._1 = x };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, y, x);
 }
 
 __forge_tuple_u64_u64_t split_at(uint64_t total __attribute__((unused)), uint64_t at __attribute__((unused))) {
-  return (__forge_tuple_u64_u64_t){ ._0 = at, ._1 = (total - at) };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, at, (total - at));
 }
 
 uint64_t run() {

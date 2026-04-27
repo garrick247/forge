@@ -29,9 +29,9 @@
     .param .u64 qm31_accumulate_kernel_param_n
 )
 {
-    .reg .pred %p114, %p137, %p146, %p154, %p165, %p186, %p206, %p229, %p238, %p247, %p256, %p26, %p276, %p298, %p309, %p330, %p351, %p360, %p369, %p382, %p395, %p408, %p92;
-    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd102, %rd103, %rd105, %rd106, %rd107, %rd108, %rd109, %rd11, %rd111, %rd112, %rd113, %rd116, %rd117, %rd118, %rd119, %rd12, %rd121, %rd122, %rd123, %rd124, %rd125, %rd127, %rd128, %rd129, %rd13, %rd130, %rd131, %rd133, %rd134, %rd135, %rd136, %rd139, %rd14, %rd140, %rd142, %rd143, %rd144, %rd145, %rd148, %rd149, %rd15, %rd151, %rd152, %rd153, %rd156, %rd157, %rd158, %rd159, %rd161, %rd162, %rd163, %rd164, %rd167, %rd168, %rd170, %rd171, %rd172, %rd173, %rd174, %rd176, %rd177, %rd178, %rd179, %rd180, %rd182, %rd183, %rd184, %rd185, %rd188, %rd189, %rd191, %rd192, %rd193, %rd194, %rd195, %rd197, %rd198, %rd199, %rd2, %rd20, %rd200, %rd201, %rd203, %rd204, %rd205, %rd208, %rd209, %rd210, %rd211, %rd213, %rd214, %rd215, %rd216, %rd217, %rd219, %rd220, %rd221, %rd222, %rd223, %rd225, %rd226, %rd227, %rd228, %rd231, %rd232, %rd234, %rd235, %rd236, %rd237, %rd240, %rd241, %rd243, %rd244, %rd245, %rd246, %rd249, %rd250, %rd252, %rd253, %rd254, %rd255, %rd258, %rd259, %rd261, %rd262, %rd263, %rd264, %rd265, %rd267, %rd268, %rd269, %rd27, %rd270, %rd271, %rd273, %rd274, %rd275, %rd278, %rd279, %rd280, %rd281, %rd283, %rd284, %rd285, %rd286, %rd287, %rd289, %rd29, %rd290, %rd291, %rd292, %rd293, %rd295, %rd296, %rd297, %rd3, %rd30, %rd300, %rd301, %rd302, %rd303, %rd305, %rd306, %rd307, %rd308, %rd31, %rd311, %rd312, %rd314, %rd315, %rd316, %rd317, %rd318, %rd32, %rd320, %rd321, %rd322, %rd323, %rd324, %rd326, %rd327, %rd328, %rd329, %rd33, %rd332, %rd333, %rd335, %rd336, %rd337, %rd338, %rd339, %rd341, %rd342, %rd343, %rd344, %rd345, %rd347, %rd348, %rd349, %rd35, %rd350, %rd353, %rd354, %rd356, %rd357, %rd358, %rd359, %rd36, %rd362, %rd363, %rd365, %rd366, %rd367, %rd368, %rd37, %rd371, %rd372, %rd374, %rd375, %rd376, %rd377, %rd378, %rd379, %rd38, %rd380, %rd381, %rd384, %rd385, %rd387, %rd388, %rd389, %rd39, %rd390, %rd391, %rd392, %rd393, %rd394, %rd397, %rd398, %rd4, %rd400, %rd401, %rd402, %rd403, %rd404, %rd405, %rd406, %rd407, %rd41, %rd410, %rd411, %rd413, %rd414, %rd415, %rd416, %rd42, %rd43, %rd44, %rd45, %rd47, %rd48, %rd49, %rd5, %rd50, %rd51, %rd53, %rd54, %rd55, %rd56, %rd57, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd65, %rd66, %rd67, %rd68, %rd69, %rd7, %rd71, %rd72, %rd73, %rd74, %rd75, %rd77, %rd78, %rd79, %rd8, %rd80, %rd81, %rd83, %rd84, %rd85, %rd86, %rd87, %rd89, %rd9, %rd90, %rd91, %rd94, %rd95, %rd96, %rd97, %rd99;
-    .reg .u32 %r104, %r110, %r120, %r126, %r132, %r141, %r150, %r16, %r160, %r169, %r17, %r175, %r18, %r181, %r19, %r190, %r196, %r202, %r21, %r212, %r218, %r22, %r224, %r23, %r233, %r24, %r242, %r25, %r251, %r260, %r266, %r272, %r282, %r288, %r294, %r304, %r313, %r319, %r325, %r334, %r34, %r340, %r346, %r355, %r364, %r373, %r386, %r399, %r40, %r412, %r417, %r418, %r419, %r46, %r52, %r58, %r64, %r70, %r76, %r82, %r88, %r98;
+    .reg .pred %p121, %p156, %p192, %p205, %p216, %p230, %p27, %p272, %p305, %p341, %p354, %p366, %p378, %p419, %p454, %p468, %p510, %p544, %p556, %p570, %p587, %p604, %p621;
+    .reg .u32 %r102, %r105, %r106, %r107, %r111, %r114, %r115, %r116, %r119, %r127, %r128, %r129, %r130, %r131, %r132, %r133, %r137, %r140, %r141, %r142, %r146, %r149, %r150, %r151, %r154, %r16, %r162, %r163, %r164, %r165, %r166, %r167, %r168, %r17, %r172, %r175, %r176, %r177, %r18, %r181, %r184, %r185, %r186, %r19, %r190, %r196, %r197, %r198, %r199, %r203, %r209, %r21, %r210, %r211, %r214, %r22, %r222, %r223, %r224, %r228, %r23, %r234, %r235, %r236, %r237, %r238, %r239, %r24, %r240, %r241, %r242, %r243, %r244, %r245, %r246, %r247, %r248, %r25, %r252, %r255, %r256, %r257, %r261, %r264, %r265, %r266, %r270, %r276, %r277, %r278, %r279, %r280, %r281, %r282, %r286, %r289, %r290, %r291, %r295, %r298, %r299, %r300, %r303, %r311, %r312, %r313, %r314, %r315, %r316, %r317, %r321, %r324, %r325, %r326, %r330, %r333, %r334, %r335, %r339, %r345, %r346, %r347, %r348, %r35, %r352, %r358, %r359, %r360, %r364, %r370, %r371, %r372, %r376, %r382, %r383, %r384, %r385, %r386, %r387, %r388, %r389, %r390, %r391, %r392, %r393, %r394, %r395, %r396, %r400, %r403, %r404, %r405, %r409, %r412, %r413, %r414, %r417, %r42, %r425, %r426, %r427, %r428, %r429, %r430, %r431, %r435, %r438, %r439, %r440, %r444, %r447, %r448, %r449, %r452, %r460, %r461, %r462, %r466, %r472, %r473, %r474, %r475, %r476, %r477, %r478, %r479, %r480, %r481, %r482, %r483, %r484, %r485, %r486, %r49, %r490, %r493, %r494, %r495, %r499, %r502, %r503, %r504, %r508, %r514, %r515, %r516, %r517, %r518, %r519, %r520, %r524, %r527, %r528, %r529, %r533, %r536, %r537, %r538, %r542, %r548, %r549, %r550, %r554, %r56, %r560, %r561, %r562, %r563, %r564, %r568, %r574, %r578, %r579, %r580, %r581, %r585, %r591, %r595, %r596, %r597, %r598, %r602, %r608, %r612, %r613, %r614, %r615, %r619, %r625, %r629, %r63, %r630, %r631, %r70, %r77, %r84, %r85, %r86, %r87, %r88, %r89, %r90, %r91, %r92, %r93, %r94, %r95, %r96, %r97, %r98;
+    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd103, %rd104, %rd108, %rd109, %rd11, %rd110, %rd112, %rd113, %rd117, %rd118, %rd12, %rd120, %rd123, %rd124, %rd125, %rd126, %rd13, %rd134, %rd135, %rd136, %rd138, %rd139, %rd14, %rd143, %rd144, %rd145, %rd147, %rd148, %rd15, %rd152, %rd153, %rd155, %rd158, %rd159, %rd160, %rd161, %rd169, %rd170, %rd171, %rd173, %rd174, %rd178, %rd179, %rd180, %rd182, %rd183, %rd187, %rd188, %rd189, %rd191, %rd194, %rd195, %rd2, %rd20, %rd200, %rd201, %rd202, %rd204, %rd207, %rd208, %rd212, %rd213, %rd215, %rd218, %rd219, %rd220, %rd221, %rd225, %rd226, %rd227, %rd229, %rd232, %rd233, %rd249, %rd250, %rd251, %rd253, %rd254, %rd258, %rd259, %rd26, %rd260, %rd262, %rd263, %rd267, %rd268, %rd269, %rd271, %rd274, %rd275, %rd283, %rd284, %rd285, %rd287, %rd288, %rd29, %rd292, %rd293, %rd294, %rd296, %rd297, %rd3, %rd30, %rd301, %rd302, %rd304, %rd307, %rd308, %rd309, %rd31, %rd310, %rd318, %rd319, %rd32, %rd320, %rd322, %rd323, %rd327, %rd328, %rd329, %rd33, %rd331, %rd332, %rd336, %rd337, %rd338, %rd34, %rd340, %rd343, %rd344, %rd349, %rd350, %rd351, %rd353, %rd356, %rd357, %rd36, %rd361, %rd362, %rd363, %rd365, %rd368, %rd369, %rd37, %rd373, %rd374, %rd375, %rd377, %rd38, %rd380, %rd381, %rd39, %rd397, %rd398, %rd399, %rd4, %rd40, %rd401, %rd402, %rd406, %rd407, %rd408, %rd41, %rd410, %rd411, %rd415, %rd416, %rd418, %rd421, %rd422, %rd423, %rd424, %rd43, %rd432, %rd433, %rd434, %rd436, %rd437, %rd44, %rd441, %rd442, %rd443, %rd445, %rd446, %rd45, %rd450, %rd451, %rd453, %rd456, %rd457, %rd458, %rd459, %rd46, %rd463, %rd464, %rd465, %rd467, %rd47, %rd470, %rd471, %rd48, %rd487, %rd488, %rd489, %rd491, %rd492, %rd496, %rd497, %rd498, %rd5, %rd50, %rd500, %rd501, %rd505, %rd506, %rd507, %rd509, %rd51, %rd512, %rd513, %rd52, %rd521, %rd522, %rd523, %rd525, %rd526, %rd53, %rd530, %rd531, %rd532, %rd534, %rd535, %rd539, %rd54, %rd540, %rd541, %rd543, %rd546, %rd547, %rd55, %rd551, %rd552, %rd553, %rd555, %rd558, %rd559, %rd565, %rd566, %rd567, %rd569, %rd57, %rd572, %rd573, %rd575, %rd576, %rd577, %rd58, %rd582, %rd583, %rd584, %rd586, %rd589, %rd59, %rd590, %rd592, %rd593, %rd594, %rd599, %rd6, %rd60, %rd600, %rd601, %rd603, %rd606, %rd607, %rd609, %rd61, %rd610, %rd611, %rd616, %rd617, %rd618, %rd62, %rd620, %rd623, %rd624, %rd626, %rd627, %rd628, %rd64, %rd65, %rd66, %rd67, %rd68, %rd69, %rd7, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd78, %rd79, %rd8, %rd80, %rd81, %rd82, %rd83, %rd9, %rd99;
 
   ld.param.u64 %rd0, [qm31_accumulate_kernel_param_out_are_data];
   ld.param.u64 %rd1, [qm31_accumulate_kernel_param_out_are_len];
@@ -60,542 +60,754 @@
   mul.lo.u32 %r23, %r21, %r22;
   mov.u32 %r24, %tid.x;
   add.u32 %r25, %r23, %r24;
-  cvt.u64.u32 %rd27, %r25;
-  setp.lt.u64 %p26, %rd27, %rd20;
-  @%p26 bra qm31_accumulate_kernel_then_28;
+  cvt.u64.u32 %rd26, %r25;
+  setp.lt.u64 %p27, %rd26, %rd20;
+  @%p27 bra qm31_accumulate_kernel_then_28;
   bra qm31_accumulate_kernel_else_28;
   qm31_accumulate_kernel_then_28:
-  cvt.u64.u32 %rd29, %r25;
-  mov.u64 %rd30, 0; // unhandled expr
-  mov.u64 %rd31, 4;
-  mul.lo.u64 %rd32, %rd29, %rd31;
-  add.u64 %rd33, %rd0, %rd32;
-  ld.global.u32 %r34, [%rd33];
-  cvt.u64.u32 %rd35, %r25;
-  mov.u64 %rd36, 0; // unhandled expr
-  mov.u64 %rd37, 4;
-  mul.lo.u64 %rd38, %rd35, %rd37;
-  add.u64 %rd39, %rd2, %rd38;
-  ld.global.u32 %r40, [%rd39];
-  cvt.u64.u32 %rd41, %r25;
-  mov.u64 %rd42, 0; // unhandled expr
-  mov.u64 %rd43, 4;
-  mul.lo.u64 %rd44, %rd41, %rd43;
-  add.u64 %rd45, %rd4, %rd44;
-  ld.global.u32 %r46, [%rd45];
-  cvt.u64.u32 %rd47, %r25;
-  mov.u64 %rd48, 0; // unhandled expr
-  mov.u64 %rd49, 4;
-  mul.lo.u64 %rd50, %rd47, %rd49;
-  add.u64 %rd51, %rd6, %rd50;
-  ld.global.u32 %r52, [%rd51];
-  cvt.u64.u32 %rd53, %r25;
-  mov.u64 %rd54, 0; // unhandled expr
-  mov.u64 %rd55, 4;
-  mul.lo.u64 %rd56, %rd53, %rd55;
-  add.u64 %rd57, %rd8, %rd56;
-  ld.global.u32 %r58, [%rd57];
-  cvt.u64.u32 %rd59, %r25;
-  mov.u64 %rd60, 0; // unhandled expr
-  mov.u64 %rd61, 4;
-  mul.lo.u64 %rd62, %rd59, %rd61;
-  add.u64 %rd63, %rd10, %rd62;
-  ld.global.u32 %r64, [%rd63];
-  cvt.u64.u32 %rd65, %r25;
+  mov.b64 %rd29, %rd0; // param: arr
+  mov.b64 %rd30, %rd26; // param: idx
+  mov.u64 %rd31, 0; // unhandled expr
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd30, %rd32;
+  add.u64 %rd34, %rd29, %rd33;
+  ld.global.u32 %r35, [%rd34];
+  mov.b64 %rd36, %rd2; // param: arr
+  mov.b64 %rd37, %rd26; // param: idx
+  mov.u64 %rd38, 0; // unhandled expr
+  mov.u64 %rd39, 4;
+  mul.lo.u64 %rd40, %rd37, %rd39;
+  add.u64 %rd41, %rd36, %rd40;
+  ld.global.u32 %r42, [%rd41];
+  mov.b64 %rd43, %rd4; // param: arr
+  mov.b64 %rd44, %rd26; // param: idx
+  mov.u64 %rd45, 0; // unhandled expr
+  mov.u64 %rd46, 4;
+  mul.lo.u64 %rd47, %rd44, %rd46;
+  add.u64 %rd48, %rd43, %rd47;
+  ld.global.u32 %r49, [%rd48];
+  mov.b64 %rd50, %rd6; // param: arr
+  mov.b64 %rd51, %rd26; // param: idx
+  mov.u64 %rd52, 0; // unhandled expr
+  mov.u64 %rd53, 4;
+  mul.lo.u64 %rd54, %rd51, %rd53;
+  add.u64 %rd55, %rd50, %rd54;
+  ld.global.u32 %r56, [%rd55];
+  mov.b64 %rd57, %rd8; // param: arr
+  mov.b64 %rd58, %rd26; // param: idx
+  mov.u64 %rd59, 0; // unhandled expr
+  mov.u64 %rd60, 4;
+  mul.lo.u64 %rd61, %rd58, %rd60;
+  add.u64 %rd62, %rd57, %rd61;
+  ld.global.u32 %r63, [%rd62];
+  mov.b64 %rd64, %rd10; // param: arr
+  mov.b64 %rd65, %rd26; // param: idx
   mov.u64 %rd66, 0; // unhandled expr
   mov.u64 %rd67, 4;
   mul.lo.u64 %rd68, %rd65, %rd67;
-  add.u64 %rd69, %rd12, %rd68;
+  add.u64 %rd69, %rd64, %rd68;
   ld.global.u32 %r70, [%rd69];
-  cvt.u64.u32 %rd71, %r25;
-  mov.u64 %rd72, 0; // unhandled expr
-  mov.u64 %rd73, 4;
-  mul.lo.u64 %rd74, %rd71, %rd73;
-  add.u64 %rd75, %rd14, %rd74;
-  ld.global.u32 %r76, [%rd75];
-  cvt.u64.u32 %rd77, %r16;
-  cvt.u64.u32 %rd78, %r58;
-  mul.lo.u64 %rd79, %rd77, %rd78;
-  cvt.u64.u32 %rd80, %rd_unknown_M31_P;
-  rem.u64 %rd81, %rd79, %rd80;
-  cvt.u32.u64 %r82, %rd81;
-  cvt.u64.u32 %rd83, %r17;
-  cvt.u64.u32 %rd84, %r64;
-  mul.lo.u64 %rd85, %rd83, %rd84;
-  cvt.u64.u32 %rd86, %rd_unknown_M31_P;
-  rem.u64 %rd87, %rd85, %rd86;
-  cvt.u32.u64 %r88, %rd87;
-  cvt.u64.u32 %rd89, %r82;
-  cvt.u64.u32 %rd90, %r88;
-  cvt.u64.u32 %rd91, %rd_unknown_M31_P;
-  setp.ge.u64 %p92, %rd89, %rd90;
-  @%p92 bra qm31_accumulate_kernel_then_93;
-  bra qm31_accumulate_kernel_else_93;
-  qm31_accumulate_kernel_then_93:
-  sub.u64 %rd94, %rd89, %rd90;
-  mov.u64 %rd95, %rd94;
-  bra qm31_accumulate_kernel_end_93;
-  qm31_accumulate_kernel_else_93:
-  add.u64 %rd96, %rd89, %rd91;
-  sub.u64 %rd97, %rd96, %rd90;
-  mov.u64 %rd95, %rd97;
-  qm31_accumulate_kernel_end_93:
-  cvt.u32.u64 %r98, %rd95;
-  cvt.u64.u32 %rd99, %r18;
-  cvt.u64.u32 %rd100, %r70;
+  mov.b64 %rd71, %rd12; // param: arr
+  mov.b64 %rd72, %rd26; // param: idx
+  mov.u64 %rd73, 0; // unhandled expr
+  mov.u64 %rd74, 4;
+  mul.lo.u64 %rd75, %rd72, %rd74;
+  add.u64 %rd76, %rd71, %rd75;
+  ld.global.u32 %r77, [%rd76];
+  mov.b64 %rd78, %rd14; // param: arr
+  mov.b64 %rd79, %rd26; // param: idx
+  mov.u64 %rd80, 0; // unhandled expr
+  mov.u64 %rd81, 4;
+  mul.lo.u64 %rd82, %rd79, %rd81;
+  add.u64 %rd83, %rd78, %rd82;
+  ld.global.u32 %r84, [%rd83];
+  mov.b32 %r85, %r16; // param: a_re
+  mov.b32 %r86, %r17; // param: a_im
+  mov.b32 %r87, %r18; // param: b_re
+  mov.b32 %r88, %r19; // param: b_im
+  mov.b32 %r89, %r63; // param: c_re
+  mov.b32 %r90, %r70; // param: c_im
+  mov.b32 %r91, %r77; // param: d_re
+  mov.b32 %r92, %r84; // param: d_im
+  mov.b32 %r93, %r85; // param: a_re
+  mov.b32 %r94, %r86; // param: a_im
+  mov.b32 %r95, %r89; // param: b_re
+  mov.b32 %r96, %r90; // param: b_im
+  mov.b32 %r97, %r93; // param: a
+  mov.b32 %r98, %r95; // param: b
+  cvt.u64.u32 %rd99, %r97;
+  cvt.u64.u32 %rd100, %r98;
   mul.lo.u64 %rd101, %rd99, %rd100;
-  cvt.u64.u32 %rd102, %rd_unknown_M31_P;
-  rem.u64 %rd103, %rd101, %rd102;
-  cvt.u32.u64 %r104, %rd103;
-  cvt.u64.u32 %rd105, %r19;
-  cvt.u64.u32 %rd106, %r76;
-  mul.lo.u64 %rd107, %rd105, %rd106;
-  cvt.u64.u32 %rd108, %rd_unknown_M31_P;
-  rem.u64 %rd109, %rd107, %rd108;
-  cvt.u32.u64 %r110, %rd109;
-  cvt.u64.u32 %rd111, %r104;
-  cvt.u64.u32 %rd112, %r110;
-  cvt.u64.u32 %rd113, %rd_unknown_M31_P;
-  setp.ge.u64 %p114, %rd111, %rd112;
-  @%p114 bra qm31_accumulate_kernel_then_115;
-  bra qm31_accumulate_kernel_else_115;
-  qm31_accumulate_kernel_then_115:
-  sub.u64 %rd116, %rd111, %rd112;
-  mov.u64 %rd117, %rd116;
-  bra qm31_accumulate_kernel_end_115;
-  qm31_accumulate_kernel_else_115:
-  add.u64 %rd118, %rd111, %rd113;
-  sub.u64 %rd119, %rd118, %rd112;
-  mov.u64 %rd117, %rd119;
-  qm31_accumulate_kernel_end_115:
-  cvt.u32.u64 %r120, %rd117;
-  cvt.u64.u32 %rd121, %r18;
-  cvt.u64.u32 %rd122, %r76;
-  mul.lo.u64 %rd123, %rd121, %rd122;
-  cvt.u64.u32 %rd124, %rd_unknown_M31_P;
-  rem.u64 %rd125, %rd123, %rd124;
-  cvt.u32.u64 %r126, %rd125;
-  cvt.u64.u32 %rd127, %r19;
-  cvt.u64.u32 %rd128, %r70;
-  mul.lo.u64 %rd129, %rd127, %rd128;
-  cvt.u64.u32 %rd130, %rd_unknown_M31_P;
-  rem.u64 %rd131, %rd129, %rd130;
-  cvt.u32.u64 %r132, %rd131;
-  cvt.u64.u32 %rd133, %r126;
+  mov.u32 %r102, 2147483647;
+  cvt.u64.u32 %rd103, %r102;
+  rem.u64 %rd104, %rd101, %rd103;
+  cvt.u32.u64 %r105, %rd104;
+  mov.b32 %r106, %r94; // param: a
+  mov.b32 %r107, %r96; // param: b
+  cvt.u64.u32 %rd108, %r106;
+  cvt.u64.u32 %rd109, %r107;
+  mul.lo.u64 %rd110, %rd108, %rd109;
+  mov.u32 %r111, 2147483647;
+  cvt.u64.u32 %rd112, %r111;
+  rem.u64 %rd113, %rd110, %rd112;
+  cvt.u32.u64 %r114, %rd113;
+  mov.b32 %r115, %r105; // param: a
+  mov.b32 %r116, %r114; // param: b
+  cvt.u64.u32 %rd117, %r115;
+  cvt.u64.u32 %rd118, %r116;
+  mov.u32 %r119, 2147483647;
+  cvt.u64.u32 %rd120, %r119;
+  setp.ge.u64 %p121, %rd117, %rd118;
+  @%p121 bra qm31_accumulate_kernel_then_122;
+  bra qm31_accumulate_kernel_else_122;
+  qm31_accumulate_kernel_then_122:
+  sub.u64 %rd123, %rd117, %rd118;
+  mov.u64 %rd124, %rd123;
+  bra qm31_accumulate_kernel_end_122;
+  qm31_accumulate_kernel_else_122:
+  add.u64 %rd125, %rd117, %rd120;
+  sub.u64 %rd126, %rd125, %rd118;
+  mov.u64 %rd124, %rd126;
+  qm31_accumulate_kernel_end_122:
+  cvt.u32.u64 %r127, %rd124;
+  mov.b32 %r128, %r87; // param: a_re
+  mov.b32 %r129, %r88; // param: a_im
+  mov.b32 %r130, %r91; // param: b_re
+  mov.b32 %r131, %r92; // param: b_im
+  mov.b32 %r132, %r128; // param: a
+  mov.b32 %r133, %r130; // param: b
   cvt.u64.u32 %rd134, %r132;
-  add.u64 %rd135, %rd133, %rd134;
-  cvt.u64.u32 %rd136, %rd_unknown_M31_P;
-  setp.ge.u64 %p137, %rd135, %rd136;
-  @%p137 bra qm31_accumulate_kernel_then_138;
-  bra qm31_accumulate_kernel_else_138;
-  qm31_accumulate_kernel_then_138:
-  sub.u64 %rd139, %rd135, %rd136;
-  mov.u64 %rd140, %rd139;
-  bra qm31_accumulate_kernel_end_138;
-  qm31_accumulate_kernel_else_138:
-  mov.u64 %rd140, %rd135;
-  qm31_accumulate_kernel_end_138:
-  cvt.u32.u64 %r141, %rd140;
-  cvt.u64.u32 %rd142, %r120;
-  cvt.u64.u32 %rd143, %r120;
-  add.u64 %rd144, %rd142, %rd143;
-  cvt.u64.u32 %rd145, %rd_unknown_M31_P;
-  setp.ge.u64 %p146, %rd144, %rd145;
-  @%p146 bra qm31_accumulate_kernel_then_147;
-  bra qm31_accumulate_kernel_else_147;
-  qm31_accumulate_kernel_then_147:
-  sub.u64 %rd148, %rd144, %rd145;
-  mov.u64 %rd149, %rd148;
-  bra qm31_accumulate_kernel_end_147;
-  qm31_accumulate_kernel_else_147:
-  mov.u64 %rd149, %rd144;
-  qm31_accumulate_kernel_end_147:
-  cvt.u32.u64 %r150, %rd149;
-  cvt.u64.u32 %rd151, %r150;
-  cvt.u64.u32 %rd152, %r141;
-  cvt.u64.u32 %rd153, %rd_unknown_M31_P;
-  setp.ge.u64 %p154, %rd151, %rd152;
-  @%p154 bra qm31_accumulate_kernel_then_155;
-  bra qm31_accumulate_kernel_else_155;
-  qm31_accumulate_kernel_then_155:
-  sub.u64 %rd156, %rd151, %rd152;
-  mov.u64 %rd157, %rd156;
-  bra qm31_accumulate_kernel_end_155;
-  qm31_accumulate_kernel_else_155:
-  add.u64 %rd158, %rd151, %rd153;
-  sub.u64 %rd159, %rd158, %rd152;
-  mov.u64 %rd157, %rd159;
-  qm31_accumulate_kernel_end_155:
-  cvt.u32.u64 %r160, %rd157;
-  cvt.u64.u32 %rd161, %r98;
-  cvt.u64.u32 %rd162, %r160;
-  add.u64 %rd163, %rd161, %rd162;
-  cvt.u64.u32 %rd164, %rd_unknown_M31_P;
-  setp.ge.u64 %p165, %rd163, %rd164;
-  @%p165 bra qm31_accumulate_kernel_then_166;
-  bra qm31_accumulate_kernel_else_166;
-  qm31_accumulate_kernel_then_166:
-  sub.u64 %rd167, %rd163, %rd164;
-  mov.u64 %rd168, %rd167;
-  bra qm31_accumulate_kernel_end_166;
-  qm31_accumulate_kernel_else_166:
-  mov.u64 %rd168, %rd163;
-  qm31_accumulate_kernel_end_166:
-  cvt.u32.u64 %r169, %rd168;
-  cvt.u64.u32 %rd170, %r16;
-  cvt.u64.u32 %rd171, %r64;
-  mul.lo.u64 %rd172, %rd170, %rd171;
-  cvt.u64.u32 %rd173, %rd_unknown_M31_P;
-  rem.u64 %rd174, %rd172, %rd173;
+  cvt.u64.u32 %rd135, %r133;
+  mul.lo.u64 %rd136, %rd134, %rd135;
+  mov.u32 %r137, 2147483647;
+  cvt.u64.u32 %rd138, %r137;
+  rem.u64 %rd139, %rd136, %rd138;
+  cvt.u32.u64 %r140, %rd139;
+  mov.b32 %r141, %r129; // param: a
+  mov.b32 %r142, %r131; // param: b
+  cvt.u64.u32 %rd143, %r141;
+  cvt.u64.u32 %rd144, %r142;
+  mul.lo.u64 %rd145, %rd143, %rd144;
+  mov.u32 %r146, 2147483647;
+  cvt.u64.u32 %rd147, %r146;
+  rem.u64 %rd148, %rd145, %rd147;
+  cvt.u32.u64 %r149, %rd148;
+  mov.b32 %r150, %r140; // param: a
+  mov.b32 %r151, %r149; // param: b
+  cvt.u64.u32 %rd152, %r150;
+  cvt.u64.u32 %rd153, %r151;
+  mov.u32 %r154, 2147483647;
+  cvt.u64.u32 %rd155, %r154;
+  setp.ge.u64 %p156, %rd152, %rd153;
+  @%p156 bra qm31_accumulate_kernel_then_157;
+  bra qm31_accumulate_kernel_else_157;
+  qm31_accumulate_kernel_then_157:
+  sub.u64 %rd158, %rd152, %rd153;
+  mov.u64 %rd159, %rd158;
+  bra qm31_accumulate_kernel_end_157;
+  qm31_accumulate_kernel_else_157:
+  add.u64 %rd160, %rd152, %rd155;
+  sub.u64 %rd161, %rd160, %rd153;
+  mov.u64 %rd159, %rd161;
+  qm31_accumulate_kernel_end_157:
+  cvt.u32.u64 %r162, %rd159;
+  mov.b32 %r163, %r87; // param: a_re
+  mov.b32 %r164, %r88; // param: a_im
+  mov.b32 %r165, %r91; // param: b_re
+  mov.b32 %r166, %r92; // param: b_im
+  mov.b32 %r167, %r163; // param: a
+  mov.b32 %r168, %r166; // param: b
+  cvt.u64.u32 %rd169, %r167;
+  cvt.u64.u32 %rd170, %r168;
+  mul.lo.u64 %rd171, %rd169, %rd170;
+  mov.u32 %r172, 2147483647;
+  cvt.u64.u32 %rd173, %r172;
+  rem.u64 %rd174, %rd171, %rd173;
   cvt.u32.u64 %r175, %rd174;
-  cvt.u64.u32 %rd176, %r17;
-  cvt.u64.u32 %rd177, %r58;
-  mul.lo.u64 %rd178, %rd176, %rd177;
-  cvt.u64.u32 %rd179, %rd_unknown_M31_P;
-  rem.u64 %rd180, %rd178, %rd179;
-  cvt.u32.u64 %r181, %rd180;
-  cvt.u64.u32 %rd182, %r175;
-  cvt.u64.u32 %rd183, %r181;
-  add.u64 %rd184, %rd182, %rd183;
-  cvt.u64.u32 %rd185, %rd_unknown_M31_P;
-  setp.ge.u64 %p186, %rd184, %rd185;
-  @%p186 bra qm31_accumulate_kernel_then_187;
-  bra qm31_accumulate_kernel_else_187;
-  qm31_accumulate_kernel_then_187:
-  sub.u64 %rd188, %rd184, %rd185;
-  mov.u64 %rd189, %rd188;
-  bra qm31_accumulate_kernel_end_187;
-  qm31_accumulate_kernel_else_187:
-  mov.u64 %rd189, %rd184;
-  qm31_accumulate_kernel_end_187:
-  cvt.u32.u64 %r190, %rd189;
-  cvt.u64.u32 %rd191, %r18;
-  cvt.u64.u32 %rd192, %r70;
-  mul.lo.u64 %rd193, %rd191, %rd192;
-  cvt.u64.u32 %rd194, %rd_unknown_M31_P;
-  rem.u64 %rd195, %rd193, %rd194;
+  mov.b32 %r176, %r164; // param: a
+  mov.b32 %r177, %r165; // param: b
+  cvt.u64.u32 %rd178, %r176;
+  cvt.u64.u32 %rd179, %r177;
+  mul.lo.u64 %rd180, %rd178, %rd179;
+  mov.u32 %r181, 2147483647;
+  cvt.u64.u32 %rd182, %r181;
+  rem.u64 %rd183, %rd180, %rd182;
+  cvt.u32.u64 %r184, %rd183;
+  mov.b32 %r185, %r175; // param: a
+  mov.b32 %r186, %r184; // param: b
+  cvt.u64.u32 %rd187, %r185;
+  cvt.u64.u32 %rd188, %r186;
+  add.u64 %rd189, %rd187, %rd188;
+  mov.u32 %r190, 2147483647;
+  cvt.u64.u32 %rd191, %r190;
+  setp.ge.u64 %p192, %rd189, %rd191;
+  @%p192 bra qm31_accumulate_kernel_then_193;
+  bra qm31_accumulate_kernel_else_193;
+  qm31_accumulate_kernel_then_193:
+  sub.u64 %rd194, %rd189, %rd191;
+  mov.u64 %rd195, %rd194;
+  bra qm31_accumulate_kernel_end_193;
+  qm31_accumulate_kernel_else_193:
+  mov.u64 %rd195, %rd189;
+  qm31_accumulate_kernel_end_193:
   cvt.u32.u64 %r196, %rd195;
-  cvt.u64.u32 %rd197, %r19;
-  cvt.u64.u32 %rd198, %r76;
-  mul.lo.u64 %rd199, %rd197, %rd198;
-  cvt.u64.u32 %rd200, %rd_unknown_M31_P;
-  rem.u64 %rd201, %rd199, %rd200;
-  cvt.u32.u64 %r202, %rd201;
-  cvt.u64.u32 %rd203, %r196;
-  cvt.u64.u32 %rd204, %r202;
-  cvt.u64.u32 %rd205, %rd_unknown_M31_P;
-  setp.ge.u64 %p206, %rd203, %rd204;
-  @%p206 bra qm31_accumulate_kernel_then_207;
-  bra qm31_accumulate_kernel_else_207;
-  qm31_accumulate_kernel_then_207:
-  sub.u64 %rd208, %rd203, %rd204;
-  mov.u64 %rd209, %rd208;
-  bra qm31_accumulate_kernel_end_207;
-  qm31_accumulate_kernel_else_207:
-  add.u64 %rd210, %rd203, %rd205;
-  sub.u64 %rd211, %rd210, %rd204;
-  mov.u64 %rd209, %rd211;
-  qm31_accumulate_kernel_end_207:
-  cvt.u32.u64 %r212, %rd209;
-  cvt.u64.u32 %rd213, %r18;
-  cvt.u64.u32 %rd214, %r76;
-  mul.lo.u64 %rd215, %rd213, %rd214;
-  cvt.u64.u32 %rd216, %rd_unknown_M31_P;
-  rem.u64 %rd217, %rd215, %rd216;
-  cvt.u32.u64 %r218, %rd217;
-  cvt.u64.u32 %rd219, %r19;
-  cvt.u64.u32 %rd220, %r70;
-  mul.lo.u64 %rd221, %rd219, %rd220;
-  cvt.u64.u32 %rd222, %rd_unknown_M31_P;
-  rem.u64 %rd223, %rd221, %rd222;
-  cvt.u32.u64 %r224, %rd223;
-  cvt.u64.u32 %rd225, %r218;
+  mov.b32 %r197, %r162; // param: a
+  mov.b32 %r198, %r197; // param: a
+  mov.b32 %r199, %r197; // param: b
+  cvt.u64.u32 %rd200, %r198;
+  cvt.u64.u32 %rd201, %r199;
+  add.u64 %rd202, %rd200, %rd201;
+  mov.u32 %r203, 2147483647;
+  cvt.u64.u32 %rd204, %r203;
+  setp.ge.u64 %p205, %rd202, %rd204;
+  @%p205 bra qm31_accumulate_kernel_then_206;
+  bra qm31_accumulate_kernel_else_206;
+  qm31_accumulate_kernel_then_206:
+  sub.u64 %rd207, %rd202, %rd204;
+  mov.u64 %rd208, %rd207;
+  bra qm31_accumulate_kernel_end_206;
+  qm31_accumulate_kernel_else_206:
+  mov.u64 %rd208, %rd202;
+  qm31_accumulate_kernel_end_206:
+  cvt.u32.u64 %r209, %rd208;
+  mov.b32 %r210, %r209; // param: a
+  mov.b32 %r211, %r196; // param: b
+  cvt.u64.u32 %rd212, %r210;
+  cvt.u64.u32 %rd213, %r211;
+  mov.u32 %r214, 2147483647;
+  cvt.u64.u32 %rd215, %r214;
+  setp.ge.u64 %p216, %rd212, %rd213;
+  @%p216 bra qm31_accumulate_kernel_then_217;
+  bra qm31_accumulate_kernel_else_217;
+  qm31_accumulate_kernel_then_217:
+  sub.u64 %rd218, %rd212, %rd213;
+  mov.u64 %rd219, %rd218;
+  bra qm31_accumulate_kernel_end_217;
+  qm31_accumulate_kernel_else_217:
+  add.u64 %rd220, %rd212, %rd215;
+  sub.u64 %rd221, %rd220, %rd213;
+  mov.u64 %rd219, %rd221;
+  qm31_accumulate_kernel_end_217:
+  cvt.u32.u64 %r222, %rd219;
+  mov.b32 %r223, %r127; // param: a
+  mov.b32 %r224, %r222; // param: b
+  cvt.u64.u32 %rd225, %r223;
   cvt.u64.u32 %rd226, %r224;
   add.u64 %rd227, %rd225, %rd226;
-  cvt.u64.u32 %rd228, %rd_unknown_M31_P;
-  setp.ge.u64 %p229, %rd227, %rd228;
-  @%p229 bra qm31_accumulate_kernel_then_230;
-  bra qm31_accumulate_kernel_else_230;
-  qm31_accumulate_kernel_then_230:
-  sub.u64 %rd231, %rd227, %rd228;
-  mov.u64 %rd232, %rd231;
-  bra qm31_accumulate_kernel_end_230;
-  qm31_accumulate_kernel_else_230:
-  mov.u64 %rd232, %rd227;
-  qm31_accumulate_kernel_end_230:
-  cvt.u32.u64 %r233, %rd232;
-  cvt.u64.u32 %rd234, %r233;
-  cvt.u64.u32 %rd235, %r233;
-  add.u64 %rd236, %rd234, %rd235;
-  cvt.u64.u32 %rd237, %rd_unknown_M31_P;
-  setp.ge.u64 %p238, %rd236, %rd237;
-  @%p238 bra qm31_accumulate_kernel_then_239;
-  bra qm31_accumulate_kernel_else_239;
-  qm31_accumulate_kernel_then_239:
-  sub.u64 %rd240, %rd236, %rd237;
-  mov.u64 %rd241, %rd240;
-  bra qm31_accumulate_kernel_end_239;
-  qm31_accumulate_kernel_else_239:
-  mov.u64 %rd241, %rd236;
-  qm31_accumulate_kernel_end_239:
-  cvt.u32.u64 %r242, %rd241;
-  cvt.u64.u32 %rd243, %r212;
-  cvt.u64.u32 %rd244, %r242;
-  add.u64 %rd245, %rd243, %rd244;
-  cvt.u64.u32 %rd246, %rd_unknown_M31_P;
-  setp.ge.u64 %p247, %rd245, %rd246;
-  @%p247 bra qm31_accumulate_kernel_then_248;
-  bra qm31_accumulate_kernel_else_248;
-  qm31_accumulate_kernel_then_248:
-  sub.u64 %rd249, %rd245, %rd246;
-  mov.u64 %rd250, %rd249;
-  bra qm31_accumulate_kernel_end_248;
-  qm31_accumulate_kernel_else_248:
-  mov.u64 %rd250, %rd245;
-  qm31_accumulate_kernel_end_248:
-  cvt.u32.u64 %r251, %rd250;
-  cvt.u64.u32 %rd252, %r190;
-  cvt.u64.u32 %rd253, %r251;
-  add.u64 %rd254, %rd252, %rd253;
-  cvt.u64.u32 %rd255, %rd_unknown_M31_P;
-  setp.ge.u64 %p256, %rd254, %rd255;
-  @%p256 bra qm31_accumulate_kernel_then_257;
-  bra qm31_accumulate_kernel_else_257;
-  qm31_accumulate_kernel_then_257:
-  sub.u64 %rd258, %rd254, %rd255;
-  mov.u64 %rd259, %rd258;
-  bra qm31_accumulate_kernel_end_257;
-  qm31_accumulate_kernel_else_257:
-  mov.u64 %rd259, %rd254;
-  qm31_accumulate_kernel_end_257:
-  cvt.u32.u64 %r260, %rd259;
-  cvt.u64.u32 %rd261, %r16;
-  cvt.u64.u32 %rd262, %r70;
-  mul.lo.u64 %rd263, %rd261, %rd262;
-  cvt.u64.u32 %rd264, %rd_unknown_M31_P;
-  rem.u64 %rd265, %rd263, %rd264;
-  cvt.u32.u64 %r266, %rd265;
-  cvt.u64.u32 %rd267, %r17;
-  cvt.u64.u32 %rd268, %r76;
-  mul.lo.u64 %rd269, %rd267, %rd268;
-  cvt.u64.u32 %rd270, %rd_unknown_M31_P;
-  rem.u64 %rd271, %rd269, %rd270;
-  cvt.u32.u64 %r272, %rd271;
-  cvt.u64.u32 %rd273, %r266;
-  cvt.u64.u32 %rd274, %r272;
-  cvt.u64.u32 %rd275, %rd_unknown_M31_P;
-  setp.ge.u64 %p276, %rd273, %rd274;
-  @%p276 bra qm31_accumulate_kernel_then_277;
-  bra qm31_accumulate_kernel_else_277;
-  qm31_accumulate_kernel_then_277:
-  sub.u64 %rd278, %rd273, %rd274;
-  mov.u64 %rd279, %rd278;
-  bra qm31_accumulate_kernel_end_277;
-  qm31_accumulate_kernel_else_277:
-  add.u64 %rd280, %rd273, %rd275;
-  sub.u64 %rd281, %rd280, %rd274;
-  mov.u64 %rd279, %rd281;
-  qm31_accumulate_kernel_end_277:
-  cvt.u32.u64 %r282, %rd279;
-  cvt.u64.u32 %rd283, %r18;
-  cvt.u64.u32 %rd284, %r58;
+  mov.u32 %r228, 2147483647;
+  cvt.u64.u32 %rd229, %r228;
+  setp.ge.u64 %p230, %rd227, %rd229;
+  @%p230 bra qm31_accumulate_kernel_then_231;
+  bra qm31_accumulate_kernel_else_231;
+  qm31_accumulate_kernel_then_231:
+  sub.u64 %rd232, %rd227, %rd229;
+  mov.u64 %rd233, %rd232;
+  bra qm31_accumulate_kernel_end_231;
+  qm31_accumulate_kernel_else_231:
+  mov.u64 %rd233, %rd227;
+  qm31_accumulate_kernel_end_231:
+  cvt.u32.u64 %r234, %rd233;
+  mov.b32 %r235, %r16; // param: a_re
+  mov.b32 %r236, %r17; // param: a_im
+  mov.b32 %r237, %r18; // param: b_re
+  mov.b32 %r238, %r19; // param: b_im
+  mov.b32 %r239, %r63; // param: c_re
+  mov.b32 %r240, %r70; // param: c_im
+  mov.b32 %r241, %r77; // param: d_re
+  mov.b32 %r242, %r84; // param: d_im
+  mov.b32 %r243, %r235; // param: a_re
+  mov.b32 %r244, %r236; // param: a_im
+  mov.b32 %r245, %r239; // param: b_re
+  mov.b32 %r246, %r240; // param: b_im
+  mov.b32 %r247, %r243; // param: a
+  mov.b32 %r248, %r246; // param: b
+  cvt.u64.u32 %rd249, %r247;
+  cvt.u64.u32 %rd250, %r248;
+  mul.lo.u64 %rd251, %rd249, %rd250;
+  mov.u32 %r252, 2147483647;
+  cvt.u64.u32 %rd253, %r252;
+  rem.u64 %rd254, %rd251, %rd253;
+  cvt.u32.u64 %r255, %rd254;
+  mov.b32 %r256, %r244; // param: a
+  mov.b32 %r257, %r245; // param: b
+  cvt.u64.u32 %rd258, %r256;
+  cvt.u64.u32 %rd259, %r257;
+  mul.lo.u64 %rd260, %rd258, %rd259;
+  mov.u32 %r261, 2147483647;
+  cvt.u64.u32 %rd262, %r261;
+  rem.u64 %rd263, %rd260, %rd262;
+  cvt.u32.u64 %r264, %rd263;
+  mov.b32 %r265, %r255; // param: a
+  mov.b32 %r266, %r264; // param: b
+  cvt.u64.u32 %rd267, %r265;
+  cvt.u64.u32 %rd268, %r266;
+  add.u64 %rd269, %rd267, %rd268;
+  mov.u32 %r270, 2147483647;
+  cvt.u64.u32 %rd271, %r270;
+  setp.ge.u64 %p272, %rd269, %rd271;
+  @%p272 bra qm31_accumulate_kernel_then_273;
+  bra qm31_accumulate_kernel_else_273;
+  qm31_accumulate_kernel_then_273:
+  sub.u64 %rd274, %rd269, %rd271;
+  mov.u64 %rd275, %rd274;
+  bra qm31_accumulate_kernel_end_273;
+  qm31_accumulate_kernel_else_273:
+  mov.u64 %rd275, %rd269;
+  qm31_accumulate_kernel_end_273:
+  cvt.u32.u64 %r276, %rd275;
+  mov.b32 %r277, %r237; // param: a_re
+  mov.b32 %r278, %r238; // param: a_im
+  mov.b32 %r279, %r241; // param: b_re
+  mov.b32 %r280, %r242; // param: b_im
+  mov.b32 %r281, %r277; // param: a
+  mov.b32 %r282, %r279; // param: b
+  cvt.u64.u32 %rd283, %r281;
+  cvt.u64.u32 %rd284, %r282;
   mul.lo.u64 %rd285, %rd283, %rd284;
-  cvt.u64.u32 %rd286, %rd_unknown_M31_P;
-  rem.u64 %rd287, %rd285, %rd286;
-  cvt.u32.u64 %r288, %rd287;
-  cvt.u64.u32 %rd289, %r19;
-  cvt.u64.u32 %rd290, %r64;
-  mul.lo.u64 %rd291, %rd289, %rd290;
-  cvt.u64.u32 %rd292, %rd_unknown_M31_P;
-  rem.u64 %rd293, %rd291, %rd292;
-  cvt.u32.u64 %r294, %rd293;
-  cvt.u64.u32 %rd295, %r288;
-  cvt.u64.u32 %rd296, %r294;
-  cvt.u64.u32 %rd297, %rd_unknown_M31_P;
-  setp.ge.u64 %p298, %rd295, %rd296;
-  @%p298 bra qm31_accumulate_kernel_then_299;
-  bra qm31_accumulate_kernel_else_299;
-  qm31_accumulate_kernel_then_299:
-  sub.u64 %rd300, %rd295, %rd296;
-  mov.u64 %rd301, %rd300;
-  bra qm31_accumulate_kernel_end_299;
-  qm31_accumulate_kernel_else_299:
-  add.u64 %rd302, %rd295, %rd297;
-  sub.u64 %rd303, %rd302, %rd296;
-  mov.u64 %rd301, %rd303;
-  qm31_accumulate_kernel_end_299:
-  cvt.u32.u64 %r304, %rd301;
-  cvt.u64.u32 %rd305, %r282;
-  cvt.u64.u32 %rd306, %r304;
-  add.u64 %rd307, %rd305, %rd306;
-  cvt.u64.u32 %rd308, %rd_unknown_M31_P;
-  setp.ge.u64 %p309, %rd307, %rd308;
-  @%p309 bra qm31_accumulate_kernel_then_310;
-  bra qm31_accumulate_kernel_else_310;
-  qm31_accumulate_kernel_then_310:
-  sub.u64 %rd311, %rd307, %rd308;
-  mov.u64 %rd312, %rd311;
-  bra qm31_accumulate_kernel_end_310;
-  qm31_accumulate_kernel_else_310:
-  mov.u64 %rd312, %rd307;
-  qm31_accumulate_kernel_end_310:
-  cvt.u32.u64 %r313, %rd312;
-  cvt.u64.u32 %rd314, %r16;
-  cvt.u64.u32 %rd315, %r76;
-  mul.lo.u64 %rd316, %rd314, %rd315;
-  cvt.u64.u32 %rd317, %rd_unknown_M31_P;
-  rem.u64 %rd318, %rd316, %rd317;
-  cvt.u32.u64 %r319, %rd318;
-  cvt.u64.u32 %rd320, %r17;
-  cvt.u64.u32 %rd321, %r70;
-  mul.lo.u64 %rd322, %rd320, %rd321;
-  cvt.u64.u32 %rd323, %rd_unknown_M31_P;
-  rem.u64 %rd324, %rd322, %rd323;
-  cvt.u32.u64 %r325, %rd324;
-  cvt.u64.u32 %rd326, %r319;
+  mov.u32 %r286, 2147483647;
+  cvt.u64.u32 %rd287, %r286;
+  rem.u64 %rd288, %rd285, %rd287;
+  cvt.u32.u64 %r289, %rd288;
+  mov.b32 %r290, %r278; // param: a
+  mov.b32 %r291, %r280; // param: b
+  cvt.u64.u32 %rd292, %r290;
+  cvt.u64.u32 %rd293, %r291;
+  mul.lo.u64 %rd294, %rd292, %rd293;
+  mov.u32 %r295, 2147483647;
+  cvt.u64.u32 %rd296, %r295;
+  rem.u64 %rd297, %rd294, %rd296;
+  cvt.u32.u64 %r298, %rd297;
+  mov.b32 %r299, %r289; // param: a
+  mov.b32 %r300, %r298; // param: b
+  cvt.u64.u32 %rd301, %r299;
+  cvt.u64.u32 %rd302, %r300;
+  mov.u32 %r303, 2147483647;
+  cvt.u64.u32 %rd304, %r303;
+  setp.ge.u64 %p305, %rd301, %rd302;
+  @%p305 bra qm31_accumulate_kernel_then_306;
+  bra qm31_accumulate_kernel_else_306;
+  qm31_accumulate_kernel_then_306:
+  sub.u64 %rd307, %rd301, %rd302;
+  mov.u64 %rd308, %rd307;
+  bra qm31_accumulate_kernel_end_306;
+  qm31_accumulate_kernel_else_306:
+  add.u64 %rd309, %rd301, %rd304;
+  sub.u64 %rd310, %rd309, %rd302;
+  mov.u64 %rd308, %rd310;
+  qm31_accumulate_kernel_end_306:
+  cvt.u32.u64 %r311, %rd308;
+  mov.b32 %r312, %r237; // param: a_re
+  mov.b32 %r313, %r238; // param: a_im
+  mov.b32 %r314, %r241; // param: b_re
+  mov.b32 %r315, %r242; // param: b_im
+  mov.b32 %r316, %r312; // param: a
+  mov.b32 %r317, %r315; // param: b
+  cvt.u64.u32 %rd318, %r316;
+  cvt.u64.u32 %rd319, %r317;
+  mul.lo.u64 %rd320, %rd318, %rd319;
+  mov.u32 %r321, 2147483647;
+  cvt.u64.u32 %rd322, %r321;
+  rem.u64 %rd323, %rd320, %rd322;
+  cvt.u32.u64 %r324, %rd323;
+  mov.b32 %r325, %r313; // param: a
+  mov.b32 %r326, %r314; // param: b
   cvt.u64.u32 %rd327, %r325;
-  add.u64 %rd328, %rd326, %rd327;
-  cvt.u64.u32 %rd329, %rd_unknown_M31_P;
-  setp.ge.u64 %p330, %rd328, %rd329;
-  @%p330 bra qm31_accumulate_kernel_then_331;
-  bra qm31_accumulate_kernel_else_331;
-  qm31_accumulate_kernel_then_331:
-  sub.u64 %rd332, %rd328, %rd329;
-  mov.u64 %rd333, %rd332;
-  bra qm31_accumulate_kernel_end_331;
-  qm31_accumulate_kernel_else_331:
-  mov.u64 %rd333, %rd328;
-  qm31_accumulate_kernel_end_331:
-  cvt.u32.u64 %r334, %rd333;
-  cvt.u64.u32 %rd335, %r18;
-  cvt.u64.u32 %rd336, %r64;
-  mul.lo.u64 %rd337, %rd335, %rd336;
-  cvt.u64.u32 %rd338, %rd_unknown_M31_P;
-  rem.u64 %rd339, %rd337, %rd338;
-  cvt.u32.u64 %r340, %rd339;
-  cvt.u64.u32 %rd341, %r19;
-  cvt.u64.u32 %rd342, %r58;
-  mul.lo.u64 %rd343, %rd341, %rd342;
-  cvt.u64.u32 %rd344, %rd_unknown_M31_P;
-  rem.u64 %rd345, %rd343, %rd344;
-  cvt.u32.u64 %r346, %rd345;
-  cvt.u64.u32 %rd347, %r340;
-  cvt.u64.u32 %rd348, %r346;
-  add.u64 %rd349, %rd347, %rd348;
-  cvt.u64.u32 %rd350, %rd_unknown_M31_P;
-  setp.ge.u64 %p351, %rd349, %rd350;
-  @%p351 bra qm31_accumulate_kernel_then_352;
-  bra qm31_accumulate_kernel_else_352;
-  qm31_accumulate_kernel_then_352:
-  sub.u64 %rd353, %rd349, %rd350;
-  mov.u64 %rd354, %rd353;
-  bra qm31_accumulate_kernel_end_352;
-  qm31_accumulate_kernel_else_352:
-  mov.u64 %rd354, %rd349;
-  qm31_accumulate_kernel_end_352:
-  cvt.u32.u64 %r355, %rd354;
-  cvt.u64.u32 %rd356, %r334;
-  cvt.u64.u32 %rd357, %r355;
-  add.u64 %rd358, %rd356, %rd357;
-  cvt.u64.u32 %rd359, %rd_unknown_M31_P;
-  setp.ge.u64 %p360, %rd358, %rd359;
-  @%p360 bra qm31_accumulate_kernel_then_361;
-  bra qm31_accumulate_kernel_else_361;
-  qm31_accumulate_kernel_then_361:
-  sub.u64 %rd362, %rd358, %rd359;
-  mov.u64 %rd363, %rd362;
-  bra qm31_accumulate_kernel_end_361;
-  qm31_accumulate_kernel_else_361:
-  mov.u64 %rd363, %rd358;
-  qm31_accumulate_kernel_end_361:
-  cvt.u32.u64 %r364, %rd363;
-  cvt.u64.u32 %rd365, %r34;
-  cvt.u64.u32 %rd366, %r169;
-  add.u64 %rd367, %rd365, %rd366;
-  cvt.u64.u32 %rd368, %rd_unknown_M31_P;
-  setp.ge.u64 %p369, %rd367, %rd368;
-  @%p369 bra qm31_accumulate_kernel_then_370;
-  bra qm31_accumulate_kernel_else_370;
-  qm31_accumulate_kernel_then_370:
-  sub.u64 %rd371, %rd367, %rd368;
-  mov.u64 %rd372, %rd371;
-  bra qm31_accumulate_kernel_end_370;
-  qm31_accumulate_kernel_else_370:
-  mov.u64 %rd372, %rd367;
-  qm31_accumulate_kernel_end_370:
-  cvt.u32.u64 %r373, %rd372;
-  cvt.u64.u32 %rd374, %r25;
-  mov.u64 %rd375, 4;
-  mul.lo.u64 %rd376, %rd374, %rd375;
-  add.u64 %rd377, %rd0, %rd376;
-  st.global.u32 [%rd377], %r373;
-  cvt.u64.u32 %rd378, %r40;
-  cvt.u64.u32 %rd379, %r260;
-  add.u64 %rd380, %rd378, %rd379;
-  cvt.u64.u32 %rd381, %rd_unknown_M31_P;
-  setp.ge.u64 %p382, %rd380, %rd381;
-  @%p382 bra qm31_accumulate_kernel_then_383;
-  bra qm31_accumulate_kernel_else_383;
-  qm31_accumulate_kernel_then_383:
-  sub.u64 %rd384, %rd380, %rd381;
-  mov.u64 %rd385, %rd384;
-  bra qm31_accumulate_kernel_end_383;
-  qm31_accumulate_kernel_else_383:
-  mov.u64 %rd385, %rd380;
-  qm31_accumulate_kernel_end_383:
-  cvt.u32.u64 %r386, %rd385;
-  cvt.u64.u32 %rd387, %r25;
-  mov.u64 %rd388, 4;
-  mul.lo.u64 %rd389, %rd387, %rd388;
-  add.u64 %rd390, %rd2, %rd389;
-  st.global.u32 [%rd390], %r386;
-  cvt.u64.u32 %rd391, %r46;
-  cvt.u64.u32 %rd392, %r313;
-  add.u64 %rd393, %rd391, %rd392;
-  cvt.u64.u32 %rd394, %rd_unknown_M31_P;
-  setp.ge.u64 %p395, %rd393, %rd394;
-  @%p395 bra qm31_accumulate_kernel_then_396;
-  bra qm31_accumulate_kernel_else_396;
-  qm31_accumulate_kernel_then_396:
-  sub.u64 %rd397, %rd393, %rd394;
-  mov.u64 %rd398, %rd397;
-  bra qm31_accumulate_kernel_end_396;
-  qm31_accumulate_kernel_else_396:
-  mov.u64 %rd398, %rd393;
-  qm31_accumulate_kernel_end_396:
-  cvt.u32.u64 %r399, %rd398;
-  cvt.u64.u32 %rd400, %r25;
-  mov.u64 %rd401, 4;
-  mul.lo.u64 %rd402, %rd400, %rd401;
-  add.u64 %rd403, %rd4, %rd402;
-  st.global.u32 [%rd403], %r399;
-  cvt.u64.u32 %rd404, %r52;
-  cvt.u64.u32 %rd405, %r364;
-  add.u64 %rd406, %rd404, %rd405;
-  cvt.u64.u32 %rd407, %rd_unknown_M31_P;
-  setp.ge.u64 %p408, %rd406, %rd407;
-  @%p408 bra qm31_accumulate_kernel_then_409;
-  bra qm31_accumulate_kernel_else_409;
-  qm31_accumulate_kernel_then_409:
-  sub.u64 %rd410, %rd406, %rd407;
-  mov.u64 %rd411, %rd410;
-  bra qm31_accumulate_kernel_end_409;
-  qm31_accumulate_kernel_else_409:
-  mov.u64 %rd411, %rd406;
-  qm31_accumulate_kernel_end_409:
+  cvt.u64.u32 %rd328, %r326;
+  mul.lo.u64 %rd329, %rd327, %rd328;
+  mov.u32 %r330, 2147483647;
+  cvt.u64.u32 %rd331, %r330;
+  rem.u64 %rd332, %rd329, %rd331;
+  cvt.u32.u64 %r333, %rd332;
+  mov.b32 %r334, %r324; // param: a
+  mov.b32 %r335, %r333; // param: b
+  cvt.u64.u32 %rd336, %r334;
+  cvt.u64.u32 %rd337, %r335;
+  add.u64 %rd338, %rd336, %rd337;
+  mov.u32 %r339, 2147483647;
+  cvt.u64.u32 %rd340, %r339;
+  setp.ge.u64 %p341, %rd338, %rd340;
+  @%p341 bra qm31_accumulate_kernel_then_342;
+  bra qm31_accumulate_kernel_else_342;
+  qm31_accumulate_kernel_then_342:
+  sub.u64 %rd343, %rd338, %rd340;
+  mov.u64 %rd344, %rd343;
+  bra qm31_accumulate_kernel_end_342;
+  qm31_accumulate_kernel_else_342:
+  mov.u64 %rd344, %rd338;
+  qm31_accumulate_kernel_end_342:
+  cvt.u32.u64 %r345, %rd344;
+  mov.b32 %r346, %r345; // param: a
+  mov.b32 %r347, %r346; // param: a
+  mov.b32 %r348, %r346; // param: b
+  cvt.u64.u32 %rd349, %r347;
+  cvt.u64.u32 %rd350, %r348;
+  add.u64 %rd351, %rd349, %rd350;
+  mov.u32 %r352, 2147483647;
+  cvt.u64.u32 %rd353, %r352;
+  setp.ge.u64 %p354, %rd351, %rd353;
+  @%p354 bra qm31_accumulate_kernel_then_355;
+  bra qm31_accumulate_kernel_else_355;
+  qm31_accumulate_kernel_then_355:
+  sub.u64 %rd356, %rd351, %rd353;
+  mov.u64 %rd357, %rd356;
+  bra qm31_accumulate_kernel_end_355;
+  qm31_accumulate_kernel_else_355:
+  mov.u64 %rd357, %rd351;
+  qm31_accumulate_kernel_end_355:
+  cvt.u32.u64 %r358, %rd357;
+  mov.b32 %r359, %r311; // param: a
+  mov.b32 %r360, %r358; // param: b
+  cvt.u64.u32 %rd361, %r359;
+  cvt.u64.u32 %rd362, %r360;
+  add.u64 %rd363, %rd361, %rd362;
+  mov.u32 %r364, 2147483647;
+  cvt.u64.u32 %rd365, %r364;
+  setp.ge.u64 %p366, %rd363, %rd365;
+  @%p366 bra qm31_accumulate_kernel_then_367;
+  bra qm31_accumulate_kernel_else_367;
+  qm31_accumulate_kernel_then_367:
+  sub.u64 %rd368, %rd363, %rd365;
+  mov.u64 %rd369, %rd368;
+  bra qm31_accumulate_kernel_end_367;
+  qm31_accumulate_kernel_else_367:
+  mov.u64 %rd369, %rd363;
+  qm31_accumulate_kernel_end_367:
+  cvt.u32.u64 %r370, %rd369;
+  mov.b32 %r371, %r276; // param: a
+  mov.b32 %r372, %r370; // param: b
+  cvt.u64.u32 %rd373, %r371;
+  cvt.u64.u32 %rd374, %r372;
+  add.u64 %rd375, %rd373, %rd374;
+  mov.u32 %r376, 2147483647;
+  cvt.u64.u32 %rd377, %r376;
+  setp.ge.u64 %p378, %rd375, %rd377;
+  @%p378 bra qm31_accumulate_kernel_then_379;
+  bra qm31_accumulate_kernel_else_379;
+  qm31_accumulate_kernel_then_379:
+  sub.u64 %rd380, %rd375, %rd377;
+  mov.u64 %rd381, %rd380;
+  bra qm31_accumulate_kernel_end_379;
+  qm31_accumulate_kernel_else_379:
+  mov.u64 %rd381, %rd375;
+  qm31_accumulate_kernel_end_379:
+  cvt.u32.u64 %r382, %rd381;
+  mov.b32 %r383, %r16; // param: a_re
+  mov.b32 %r384, %r17; // param: a_im
+  mov.b32 %r385, %r18; // param: b_re
+  mov.b32 %r386, %r19; // param: b_im
+  mov.b32 %r387, %r63; // param: c_re
+  mov.b32 %r388, %r70; // param: c_im
+  mov.b32 %r389, %r77; // param: d_re
+  mov.b32 %r390, %r84; // param: d_im
+  mov.b32 %r391, %r383; // param: a_re
+  mov.b32 %r392, %r384; // param: a_im
+  mov.b32 %r393, %r389; // param: b_re
+  mov.b32 %r394, %r390; // param: b_im
+  mov.b32 %r395, %r391; // param: a
+  mov.b32 %r396, %r393; // param: b
+  cvt.u64.u32 %rd397, %r395;
+  cvt.u64.u32 %rd398, %r396;
+  mul.lo.u64 %rd399, %rd397, %rd398;
+  mov.u32 %r400, 2147483647;
+  cvt.u64.u32 %rd401, %r400;
+  rem.u64 %rd402, %rd399, %rd401;
+  cvt.u32.u64 %r403, %rd402;
+  mov.b32 %r404, %r392; // param: a
+  mov.b32 %r405, %r394; // param: b
+  cvt.u64.u32 %rd406, %r404;
+  cvt.u64.u32 %rd407, %r405;
+  mul.lo.u64 %rd408, %rd406, %rd407;
+  mov.u32 %r409, 2147483647;
+  cvt.u64.u32 %rd410, %r409;
+  rem.u64 %rd411, %rd408, %rd410;
   cvt.u32.u64 %r412, %rd411;
-  cvt.u64.u32 %rd413, %r25;
-  mov.u64 %rd414, 4;
-  mul.lo.u64 %rd415, %rd413, %rd414;
-  add.u64 %rd416, %rd6, %rd415;
-  st.global.u32 [%rd416], %r412;
-  mov.u32 %r417, 0; // unit
-  mov.u32 %r418, %r417;
+  mov.b32 %r413, %r403; // param: a
+  mov.b32 %r414, %r412; // param: b
+  cvt.u64.u32 %rd415, %r413;
+  cvt.u64.u32 %rd416, %r414;
+  mov.u32 %r417, 2147483647;
+  cvt.u64.u32 %rd418, %r417;
+  setp.ge.u64 %p419, %rd415, %rd416;
+  @%p419 bra qm31_accumulate_kernel_then_420;
+  bra qm31_accumulate_kernel_else_420;
+  qm31_accumulate_kernel_then_420:
+  sub.u64 %rd421, %rd415, %rd416;
+  mov.u64 %rd422, %rd421;
+  bra qm31_accumulate_kernel_end_420;
+  qm31_accumulate_kernel_else_420:
+  add.u64 %rd423, %rd415, %rd418;
+  sub.u64 %rd424, %rd423, %rd416;
+  mov.u64 %rd422, %rd424;
+  qm31_accumulate_kernel_end_420:
+  cvt.u32.u64 %r425, %rd422;
+  mov.b32 %r426, %r385; // param: a_re
+  mov.b32 %r427, %r386; // param: a_im
+  mov.b32 %r428, %r387; // param: b_re
+  mov.b32 %r429, %r388; // param: b_im
+  mov.b32 %r430, %r426; // param: a
+  mov.b32 %r431, %r428; // param: b
+  cvt.u64.u32 %rd432, %r430;
+  cvt.u64.u32 %rd433, %r431;
+  mul.lo.u64 %rd434, %rd432, %rd433;
+  mov.u32 %r435, 2147483647;
+  cvt.u64.u32 %rd436, %r435;
+  rem.u64 %rd437, %rd434, %rd436;
+  cvt.u32.u64 %r438, %rd437;
+  mov.b32 %r439, %r427; // param: a
+  mov.b32 %r440, %r429; // param: b
+  cvt.u64.u32 %rd441, %r439;
+  cvt.u64.u32 %rd442, %r440;
+  mul.lo.u64 %rd443, %rd441, %rd442;
+  mov.u32 %r444, 2147483647;
+  cvt.u64.u32 %rd445, %r444;
+  rem.u64 %rd446, %rd443, %rd445;
+  cvt.u32.u64 %r447, %rd446;
+  mov.b32 %r448, %r438; // param: a
+  mov.b32 %r449, %r447; // param: b
+  cvt.u64.u32 %rd450, %r448;
+  cvt.u64.u32 %rd451, %r449;
+  mov.u32 %r452, 2147483647;
+  cvt.u64.u32 %rd453, %r452;
+  setp.ge.u64 %p454, %rd450, %rd451;
+  @%p454 bra qm31_accumulate_kernel_then_455;
+  bra qm31_accumulate_kernel_else_455;
+  qm31_accumulate_kernel_then_455:
+  sub.u64 %rd456, %rd450, %rd451;
+  mov.u64 %rd457, %rd456;
+  bra qm31_accumulate_kernel_end_455;
+  qm31_accumulate_kernel_else_455:
+  add.u64 %rd458, %rd450, %rd453;
+  sub.u64 %rd459, %rd458, %rd451;
+  mov.u64 %rd457, %rd459;
+  qm31_accumulate_kernel_end_455:
+  cvt.u32.u64 %r460, %rd457;
+  mov.b32 %r461, %r425; // param: a
+  mov.b32 %r462, %r460; // param: b
+  cvt.u64.u32 %rd463, %r461;
+  cvt.u64.u32 %rd464, %r462;
+  add.u64 %rd465, %rd463, %rd464;
+  mov.u32 %r466, 2147483647;
+  cvt.u64.u32 %rd467, %r466;
+  setp.ge.u64 %p468, %rd465, %rd467;
+  @%p468 bra qm31_accumulate_kernel_then_469;
+  bra qm31_accumulate_kernel_else_469;
+  qm31_accumulate_kernel_then_469:
+  sub.u64 %rd470, %rd465, %rd467;
+  mov.u64 %rd471, %rd470;
+  bra qm31_accumulate_kernel_end_469;
+  qm31_accumulate_kernel_else_469:
+  mov.u64 %rd471, %rd465;
+  qm31_accumulate_kernel_end_469:
+  cvt.u32.u64 %r472, %rd471;
+  mov.b32 %r473, %r16; // param: a_re
+  mov.b32 %r474, %r17; // param: a_im
+  mov.b32 %r475, %r18; // param: b_re
+  mov.b32 %r476, %r19; // param: b_im
+  mov.b32 %r477, %r63; // param: c_re
+  mov.b32 %r478, %r70; // param: c_im
+  mov.b32 %r479, %r77; // param: d_re
+  mov.b32 %r480, %r84; // param: d_im
+  mov.b32 %r481, %r473; // param: a_re
+  mov.b32 %r482, %r474; // param: a_im
+  mov.b32 %r483, %r479; // param: b_re
+  mov.b32 %r484, %r480; // param: b_im
+  mov.b32 %r485, %r481; // param: a
+  mov.b32 %r486, %r484; // param: b
+  cvt.u64.u32 %rd487, %r485;
+  cvt.u64.u32 %rd488, %r486;
+  mul.lo.u64 %rd489, %rd487, %rd488;
+  mov.u32 %r490, 2147483647;
+  cvt.u64.u32 %rd491, %r490;
+  rem.u64 %rd492, %rd489, %rd491;
+  cvt.u32.u64 %r493, %rd492;
+  mov.b32 %r494, %r482; // param: a
+  mov.b32 %r495, %r483; // param: b
+  cvt.u64.u32 %rd496, %r494;
+  cvt.u64.u32 %rd497, %r495;
+  mul.lo.u64 %rd498, %rd496, %rd497;
+  mov.u32 %r499, 2147483647;
+  cvt.u64.u32 %rd500, %r499;
+  rem.u64 %rd501, %rd498, %rd500;
+  cvt.u32.u64 %r502, %rd501;
+  mov.b32 %r503, %r493; // param: a
+  mov.b32 %r504, %r502; // param: b
+  cvt.u64.u32 %rd505, %r503;
+  cvt.u64.u32 %rd506, %r504;
+  add.u64 %rd507, %rd505, %rd506;
+  mov.u32 %r508, 2147483647;
+  cvt.u64.u32 %rd509, %r508;
+  setp.ge.u64 %p510, %rd507, %rd509;
+  @%p510 bra qm31_accumulate_kernel_then_511;
+  bra qm31_accumulate_kernel_else_511;
+  qm31_accumulate_kernel_then_511:
+  sub.u64 %rd512, %rd507, %rd509;
+  mov.u64 %rd513, %rd512;
+  bra qm31_accumulate_kernel_end_511;
+  qm31_accumulate_kernel_else_511:
+  mov.u64 %rd513, %rd507;
+  qm31_accumulate_kernel_end_511:
+  cvt.u32.u64 %r514, %rd513;
+  mov.b32 %r515, %r475; // param: a_re
+  mov.b32 %r516, %r476; // param: a_im
+  mov.b32 %r517, %r477; // param: b_re
+  mov.b32 %r518, %r478; // param: b_im
+  mov.b32 %r519, %r515; // param: a
+  mov.b32 %r520, %r518; // param: b
+  cvt.u64.u32 %rd521, %r519;
+  cvt.u64.u32 %rd522, %r520;
+  mul.lo.u64 %rd523, %rd521, %rd522;
+  mov.u32 %r524, 2147483647;
+  cvt.u64.u32 %rd525, %r524;
+  rem.u64 %rd526, %rd523, %rd525;
+  cvt.u32.u64 %r527, %rd526;
+  mov.b32 %r528, %r516; // param: a
+  mov.b32 %r529, %r517; // param: b
+  cvt.u64.u32 %rd530, %r528;
+  cvt.u64.u32 %rd531, %r529;
+  mul.lo.u64 %rd532, %rd530, %rd531;
+  mov.u32 %r533, 2147483647;
+  cvt.u64.u32 %rd534, %r533;
+  rem.u64 %rd535, %rd532, %rd534;
+  cvt.u32.u64 %r536, %rd535;
+  mov.b32 %r537, %r527; // param: a
+  mov.b32 %r538, %r536; // param: b
+  cvt.u64.u32 %rd539, %r537;
+  cvt.u64.u32 %rd540, %r538;
+  add.u64 %rd541, %rd539, %rd540;
+  mov.u32 %r542, 2147483647;
+  cvt.u64.u32 %rd543, %r542;
+  setp.ge.u64 %p544, %rd541, %rd543;
+  @%p544 bra qm31_accumulate_kernel_then_545;
+  bra qm31_accumulate_kernel_else_545;
+  qm31_accumulate_kernel_then_545:
+  sub.u64 %rd546, %rd541, %rd543;
+  mov.u64 %rd547, %rd546;
+  bra qm31_accumulate_kernel_end_545;
+  qm31_accumulate_kernel_else_545:
+  mov.u64 %rd547, %rd541;
+  qm31_accumulate_kernel_end_545:
+  cvt.u32.u64 %r548, %rd547;
+  mov.b32 %r549, %r514; // param: a
+  mov.b32 %r550, %r548; // param: b
+  cvt.u64.u32 %rd551, %r549;
+  cvt.u64.u32 %rd552, %r550;
+  add.u64 %rd553, %rd551, %rd552;
+  mov.u32 %r554, 2147483647;
+  cvt.u64.u32 %rd555, %r554;
+  setp.ge.u64 %p556, %rd553, %rd555;
+  @%p556 bra qm31_accumulate_kernel_then_557;
+  bra qm31_accumulate_kernel_else_557;
+  qm31_accumulate_kernel_then_557:
+  sub.u64 %rd558, %rd553, %rd555;
+  mov.u64 %rd559, %rd558;
+  bra qm31_accumulate_kernel_end_557;
+  qm31_accumulate_kernel_else_557:
+  mov.u64 %rd559, %rd553;
+  qm31_accumulate_kernel_end_557:
+  cvt.u32.u64 %r560, %rd559;
+  mov.b32 %r561, %r35; // param: a
+  mov.b32 %r562, %r234; // param: b
+  mov.b32 %r563, %r561; // param: a
+  mov.b32 %r564, %r562; // param: b
+  cvt.u64.u32 %rd565, %r563;
+  cvt.u64.u32 %rd566, %r564;
+  add.u64 %rd567, %rd565, %rd566;
+  mov.u32 %r568, 2147483647;
+  cvt.u64.u32 %rd569, %r568;
+  setp.ge.u64 %p570, %rd567, %rd569;
+  @%p570 bra qm31_accumulate_kernel_then_571;
+  bra qm31_accumulate_kernel_else_571;
+  qm31_accumulate_kernel_then_571:
+  sub.u64 %rd572, %rd567, %rd569;
+  mov.u64 %rd573, %rd572;
+  bra qm31_accumulate_kernel_end_571;
+  qm31_accumulate_kernel_else_571:
+  mov.u64 %rd573, %rd567;
+  qm31_accumulate_kernel_end_571:
+  cvt.u32.u64 %r574, %rd573;
+  mov.u64 %rd575, 4;
+  mul.lo.u64 %rd576, %rd26, %rd575;
+  add.u64 %rd577, %rd0, %rd576;
+  st.global.u32 [%rd577], %r574;
+  mov.b32 %r578, %r42; // param: a
+  mov.b32 %r579, %r382; // param: b
+  mov.b32 %r580, %r578; // param: a
+  mov.b32 %r581, %r579; // param: b
+  cvt.u64.u32 %rd582, %r580;
+  cvt.u64.u32 %rd583, %r581;
+  add.u64 %rd584, %rd582, %rd583;
+  mov.u32 %r585, 2147483647;
+  cvt.u64.u32 %rd586, %r585;
+  setp.ge.u64 %p587, %rd584, %rd586;
+  @%p587 bra qm31_accumulate_kernel_then_588;
+  bra qm31_accumulate_kernel_else_588;
+  qm31_accumulate_kernel_then_588:
+  sub.u64 %rd589, %rd584, %rd586;
+  mov.u64 %rd590, %rd589;
+  bra qm31_accumulate_kernel_end_588;
+  qm31_accumulate_kernel_else_588:
+  mov.u64 %rd590, %rd584;
+  qm31_accumulate_kernel_end_588:
+  cvt.u32.u64 %r591, %rd590;
+  mov.u64 %rd592, 4;
+  mul.lo.u64 %rd593, %rd26, %rd592;
+  add.u64 %rd594, %rd2, %rd593;
+  st.global.u32 [%rd594], %r591;
+  mov.b32 %r595, %r49; // param: a
+  mov.b32 %r596, %r472; // param: b
+  mov.b32 %r597, %r595; // param: a
+  mov.b32 %r598, %r596; // param: b
+  cvt.u64.u32 %rd599, %r597;
+  cvt.u64.u32 %rd600, %r598;
+  add.u64 %rd601, %rd599, %rd600;
+  mov.u32 %r602, 2147483647;
+  cvt.u64.u32 %rd603, %r602;
+  setp.ge.u64 %p604, %rd601, %rd603;
+  @%p604 bra qm31_accumulate_kernel_then_605;
+  bra qm31_accumulate_kernel_else_605;
+  qm31_accumulate_kernel_then_605:
+  sub.u64 %rd606, %rd601, %rd603;
+  mov.u64 %rd607, %rd606;
+  bra qm31_accumulate_kernel_end_605;
+  qm31_accumulate_kernel_else_605:
+  mov.u64 %rd607, %rd601;
+  qm31_accumulate_kernel_end_605:
+  cvt.u32.u64 %r608, %rd607;
+  mov.u64 %rd609, 4;
+  mul.lo.u64 %rd610, %rd26, %rd609;
+  add.u64 %rd611, %rd4, %rd610;
+  st.global.u32 [%rd611], %r608;
+  mov.b32 %r612, %r56; // param: a
+  mov.b32 %r613, %r560; // param: b
+  mov.b32 %r614, %r612; // param: a
+  mov.b32 %r615, %r613; // param: b
+  cvt.u64.u32 %rd616, %r614;
+  cvt.u64.u32 %rd617, %r615;
+  add.u64 %rd618, %rd616, %rd617;
+  mov.u32 %r619, 2147483647;
+  cvt.u64.u32 %rd620, %r619;
+  setp.ge.u64 %p621, %rd618, %rd620;
+  @%p621 bra qm31_accumulate_kernel_then_622;
+  bra qm31_accumulate_kernel_else_622;
+  qm31_accumulate_kernel_then_622:
+  sub.u64 %rd623, %rd618, %rd620;
+  mov.u64 %rd624, %rd623;
+  bra qm31_accumulate_kernel_end_622;
+  qm31_accumulate_kernel_else_622:
+  mov.u64 %rd624, %rd618;
+  qm31_accumulate_kernel_end_622:
+  cvt.u32.u64 %r625, %rd624;
+  mov.u64 %rd626, 4;
+  mul.lo.u64 %rd627, %rd26, %rd626;
+  add.u64 %rd628, %rd6, %rd627;
+  st.global.u32 [%rd628], %r625;
+  mov.u32 %r629, 0; // unit
+  mov.u32 %r630, %r629;
   bra qm31_accumulate_kernel_end_28;
   qm31_accumulate_kernel_else_28:
-  mov.u32 %r418, 0; // no else branch
+  mov.u32 %r630, 0; // no else branch
   qm31_accumulate_kernel_end_28:
-  mov.u32 %r419, 0; // unit
+  mov.u32 %r631, 0; // unit
   ret;
 }
 
@@ -624,9 +836,9 @@
     .param .u64 qm31_fri_fold_kernel_param_n
 )
 {
-    .reg .pred %p119, %p142, %p151, %p159, %p170, %p191, %p211, %p234, %p243, %p252, %p261, %p27, %p281, %p303, %p314, %p335, %p356, %p365, %p374, %p387, %p400, %p413, %p97;
-    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd102, %rd104, %rd105, %rd106, %rd107, %rd108, %rd11, %rd110, %rd111, %rd112, %rd113, %rd114, %rd116, %rd117, %rd118, %rd12, %rd121, %rd122, %rd123, %rd124, %rd126, %rd127, %rd128, %rd129, %rd13, %rd130, %rd132, %rd133, %rd134, %rd135, %rd136, %rd138, %rd139, %rd14, %rd140, %rd141, %rd144, %rd145, %rd147, %rd148, %rd149, %rd15, %rd150, %rd153, %rd154, %rd156, %rd157, %rd158, %rd161, %rd162, %rd163, %rd164, %rd166, %rd167, %rd168, %rd169, %rd172, %rd173, %rd175, %rd176, %rd177, %rd178, %rd179, %rd181, %rd182, %rd183, %rd184, %rd185, %rd187, %rd188, %rd189, %rd190, %rd193, %rd194, %rd196, %rd197, %rd198, %rd199, %rd2, %rd20, %rd200, %rd202, %rd203, %rd204, %rd205, %rd206, %rd208, %rd209, %rd21, %rd210, %rd213, %rd214, %rd215, %rd216, %rd218, %rd219, %rd220, %rd221, %rd222, %rd224, %rd225, %rd226, %rd227, %rd228, %rd230, %rd231, %rd232, %rd233, %rd236, %rd237, %rd239, %rd240, %rd241, %rd242, %rd245, %rd246, %rd248, %rd249, %rd250, %rd251, %rd254, %rd255, %rd257, %rd258, %rd259, %rd260, %rd263, %rd264, %rd266, %rd267, %rd268, %rd269, %rd270, %rd272, %rd273, %rd274, %rd275, %rd276, %rd278, %rd279, %rd28, %rd280, %rd283, %rd284, %rd285, %rd286, %rd288, %rd289, %rd290, %rd291, %rd292, %rd294, %rd295, %rd296, %rd297, %rd298, %rd3, %rd30, %rd300, %rd301, %rd302, %rd305, %rd306, %rd307, %rd308, %rd31, %rd310, %rd311, %rd312, %rd313, %rd316, %rd317, %rd319, %rd32, %rd320, %rd321, %rd322, %rd323, %rd325, %rd326, %rd327, %rd328, %rd329, %rd33, %rd331, %rd332, %rd333, %rd334, %rd337, %rd338, %rd34, %rd340, %rd341, %rd342, %rd343, %rd344, %rd346, %rd347, %rd348, %rd349, %rd350, %rd352, %rd353, %rd354, %rd355, %rd358, %rd359, %rd36, %rd361, %rd362, %rd363, %rd364, %rd367, %rd368, %rd37, %rd370, %rd371, %rd372, %rd373, %rd376, %rd377, %rd379, %rd38, %rd380, %rd381, %rd382, %rd383, %rd384, %rd385, %rd386, %rd389, %rd39, %rd390, %rd392, %rd393, %rd394, %rd395, %rd396, %rd397, %rd398, %rd399, %rd4, %rd40, %rd402, %rd403, %rd405, %rd406, %rd407, %rd408, %rd409, %rd410, %rd411, %rd412, %rd415, %rd416, %rd418, %rd419, %rd42, %rd420, %rd421, %rd43, %rd44, %rd45, %rd46, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd54, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd71, %rd72, %rd73, %rd75, %rd76, %rd77, %rd78, %rd79, %rd8, %rd80, %rd82, %rd83, %rd84, %rd85, %rd86, %rd88, %rd89, %rd9, %rd90, %rd91, %rd92, %rd94, %rd95, %rd96, %rd99;
-    .reg .u32 %r103, %r109, %r115, %r125, %r131, %r137, %r146, %r155, %r16, %r165, %r17, %r174, %r18, %r180, %r186, %r19, %r195, %r201, %r207, %r217, %r22, %r223, %r229, %r23, %r238, %r24, %r247, %r25, %r256, %r26, %r265, %r271, %r277, %r287, %r293, %r299, %r309, %r318, %r324, %r330, %r339, %r345, %r35, %r351, %r360, %r369, %r378, %r391, %r404, %r41, %r417, %r422, %r423, %r424, %r47, %r53, %r60, %r67, %r74, %r81, %r87, %r93;
+    .reg .pred %p126, %p161, %p197, %p210, %p221, %p235, %p277, %p28, %p310, %p346, %p359, %p371, %p383, %p424, %p459, %p473, %p515, %p549, %p561, %p575, %p592, %p609, %p626;
+    .reg .u32 %r100, %r101, %r102, %r103, %r107, %r110, %r111, %r112, %r116, %r119, %r120, %r121, %r124, %r132, %r133, %r134, %r135, %r136, %r137, %r138, %r142, %r145, %r146, %r147, %r151, %r154, %r155, %r156, %r159, %r16, %r167, %r168, %r169, %r17, %r170, %r171, %r172, %r173, %r177, %r18, %r180, %r181, %r182, %r186, %r189, %r19, %r190, %r191, %r195, %r201, %r202, %r203, %r204, %r208, %r214, %r215, %r216, %r219, %r22, %r227, %r228, %r229, %r23, %r233, %r239, %r24, %r240, %r241, %r242, %r243, %r244, %r245, %r246, %r247, %r248, %r249, %r25, %r250, %r251, %r252, %r253, %r257, %r26, %r260, %r261, %r262, %r266, %r269, %r270, %r271, %r275, %r281, %r282, %r283, %r284, %r285, %r286, %r287, %r291, %r294, %r295, %r296, %r300, %r303, %r304, %r305, %r308, %r316, %r317, %r318, %r319, %r320, %r321, %r322, %r326, %r329, %r330, %r331, %r335, %r338, %r339, %r340, %r344, %r350, %r351, %r352, %r353, %r357, %r36, %r363, %r364, %r365, %r369, %r375, %r376, %r377, %r381, %r387, %r388, %r389, %r390, %r391, %r392, %r393, %r394, %r395, %r396, %r397, %r398, %r399, %r400, %r401, %r405, %r408, %r409, %r410, %r414, %r417, %r418, %r419, %r422, %r43, %r430, %r431, %r432, %r433, %r434, %r435, %r436, %r440, %r443, %r444, %r445, %r449, %r452, %r453, %r454, %r457, %r465, %r466, %r467, %r471, %r477, %r478, %r479, %r480, %r481, %r482, %r483, %r484, %r485, %r486, %r487, %r488, %r489, %r490, %r491, %r495, %r498, %r499, %r50, %r500, %r504, %r507, %r508, %r509, %r513, %r519, %r520, %r521, %r522, %r523, %r524, %r525, %r529, %r532, %r533, %r534, %r538, %r541, %r542, %r543, %r547, %r553, %r554, %r555, %r559, %r565, %r566, %r567, %r568, %r569, %r57, %r573, %r579, %r583, %r584, %r585, %r586, %r590, %r596, %r600, %r601, %r602, %r603, %r607, %r613, %r617, %r618, %r619, %r620, %r624, %r630, %r634, %r635, %r636, %r65, %r73, %r81, %r89, %r90, %r91, %r92, %r93, %r94, %r95, %r96, %r97, %r98, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd104, %rd105, %rd106, %rd108, %rd109, %rd11, %rd113, %rd114, %rd115, %rd117, %rd118, %rd12, %rd122, %rd123, %rd125, %rd128, %rd129, %rd13, %rd130, %rd131, %rd139, %rd14, %rd140, %rd141, %rd143, %rd144, %rd148, %rd149, %rd15, %rd150, %rd152, %rd153, %rd157, %rd158, %rd160, %rd163, %rd164, %rd165, %rd166, %rd174, %rd175, %rd176, %rd178, %rd179, %rd183, %rd184, %rd185, %rd187, %rd188, %rd192, %rd193, %rd194, %rd196, %rd199, %rd2, %rd20, %rd200, %rd205, %rd206, %rd207, %rd209, %rd21, %rd212, %rd213, %rd217, %rd218, %rd220, %rd223, %rd224, %rd225, %rd226, %rd230, %rd231, %rd232, %rd234, %rd237, %rd238, %rd254, %rd255, %rd256, %rd258, %rd259, %rd263, %rd264, %rd265, %rd267, %rd268, %rd27, %rd272, %rd273, %rd274, %rd276, %rd279, %rd280, %rd288, %rd289, %rd290, %rd292, %rd293, %rd297, %rd298, %rd299, %rd3, %rd30, %rd301, %rd302, %rd306, %rd307, %rd309, %rd31, %rd312, %rd313, %rd314, %rd315, %rd32, %rd323, %rd324, %rd325, %rd327, %rd328, %rd33, %rd332, %rd333, %rd334, %rd336, %rd337, %rd34, %rd341, %rd342, %rd343, %rd345, %rd348, %rd349, %rd35, %rd354, %rd355, %rd356, %rd358, %rd361, %rd362, %rd366, %rd367, %rd368, %rd37, %rd370, %rd373, %rd374, %rd378, %rd379, %rd38, %rd380, %rd382, %rd385, %rd386, %rd39, %rd4, %rd40, %rd402, %rd403, %rd404, %rd406, %rd407, %rd41, %rd411, %rd412, %rd413, %rd415, %rd416, %rd42, %rd420, %rd421, %rd423, %rd426, %rd427, %rd428, %rd429, %rd437, %rd438, %rd439, %rd44, %rd441, %rd442, %rd446, %rd447, %rd448, %rd45, %rd450, %rd451, %rd455, %rd456, %rd458, %rd46, %rd461, %rd462, %rd463, %rd464, %rd468, %rd469, %rd47, %rd470, %rd472, %rd475, %rd476, %rd48, %rd49, %rd492, %rd493, %rd494, %rd496, %rd497, %rd5, %rd501, %rd502, %rd503, %rd505, %rd506, %rd51, %rd510, %rd511, %rd512, %rd514, %rd517, %rd518, %rd52, %rd526, %rd527, %rd528, %rd53, %rd530, %rd531, %rd535, %rd536, %rd537, %rd539, %rd54, %rd540, %rd544, %rd545, %rd546, %rd548, %rd55, %rd551, %rd552, %rd556, %rd557, %rd558, %rd56, %rd560, %rd563, %rd564, %rd570, %rd571, %rd572, %rd574, %rd577, %rd578, %rd58, %rd580, %rd581, %rd582, %rd587, %rd588, %rd589, %rd59, %rd591, %rd594, %rd595, %rd597, %rd598, %rd599, %rd6, %rd60, %rd604, %rd605, %rd606, %rd608, %rd61, %rd611, %rd612, %rd614, %rd615, %rd616, %rd62, %rd621, %rd622, %rd623, %rd625, %rd628, %rd629, %rd63, %rd631, %rd632, %rd633, %rd64, %rd66, %rd67, %rd68, %rd69, %rd7, %rd70, %rd71, %rd72, %rd74, %rd75, %rd76, %rd77, %rd78, %rd79, %rd8, %rd80, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd88, %rd9;
 
   ld.param.u64 %rd0, [qm31_fri_fold_kernel_param_new_are_data];
   ld.param.u64 %rd1, [qm31_fri_fold_kernel_param_new_are_len];
@@ -656,546 +868,758 @@
   mul.lo.u32 %r24, %r22, %r23;
   mov.u32 %r25, %tid.x;
   add.u32 %r26, %r24, %r25;
-  cvt.u64.u32 %rd28, %r26;
-  setp.lt.u64 %p27, %rd28, %rd20;
-  @%p27 bra qm31_fri_fold_kernel_then_29;
+  cvt.u64.u32 %rd27, %r26;
+  setp.lt.u64 %p28, %rd27, %rd20;
+  @%p28 bra qm31_fri_fold_kernel_then_29;
   bra qm31_fri_fold_kernel_else_29;
   qm31_fri_fold_kernel_then_29:
-  cvt.u64.u32 %rd30, %r26;
-  mov.u64 %rd31, 0; // unhandled expr
-  mov.u64 %rd32, 4;
-  mul.lo.u64 %rd33, %rd30, %rd32;
-  add.u64 %rd34, %rd8, %rd33;
-  ld.global.u32 %r35, [%rd34];
-  cvt.u64.u32 %rd36, %r26;
-  mov.u64 %rd37, 0; // unhandled expr
-  mov.u64 %rd38, 4;
-  mul.lo.u64 %rd39, %rd36, %rd38;
-  add.u64 %rd40, %rd10, %rd39;
-  ld.global.u32 %r41, [%rd40];
-  cvt.u64.u32 %rd42, %r26;
-  mov.u64 %rd43, 0; // unhandled expr
-  mov.u64 %rd44, 4;
-  mul.lo.u64 %rd45, %rd42, %rd44;
-  add.u64 %rd46, %rd12, %rd45;
-  ld.global.u32 %r47, [%rd46];
-  cvt.u64.u32 %rd48, %r26;
-  mov.u64 %rd49, 0; // unhandled expr
-  mov.u64 %rd50, 4;
-  mul.lo.u64 %rd51, %rd48, %rd50;
-  add.u64 %rd52, %rd14, %rd51;
-  ld.global.u32 %r53, [%rd52];
-  cvt.u64.u32 %rd54, %r26;
-  add.u64 %rd55, %rd54, %rd20;
-  mov.u64 %rd56, 0; // unhandled expr
-  mov.u64 %rd57, 4;
-  mul.lo.u64 %rd58, %rd55, %rd57;
-  add.u64 %rd59, %rd8, %rd58;
-  ld.global.u32 %r60, [%rd59];
-  cvt.u64.u32 %rd61, %r26;
-  add.u64 %rd62, %rd61, %rd20;
-  mov.u64 %rd63, 0; // unhandled expr
-  mov.u64 %rd64, 4;
-  mul.lo.u64 %rd65, %rd62, %rd64;
-  add.u64 %rd66, %rd10, %rd65;
-  ld.global.u32 %r67, [%rd66];
-  cvt.u64.u32 %rd68, %r26;
-  add.u64 %rd69, %rd68, %rd20;
-  mov.u64 %rd70, 0; // unhandled expr
-  mov.u64 %rd71, 4;
-  mul.lo.u64 %rd72, %rd69, %rd71;
-  add.u64 %rd73, %rd12, %rd72;
-  ld.global.u32 %r74, [%rd73];
-  cvt.u64.u32 %rd75, %r26;
-  add.u64 %rd76, %rd75, %rd20;
+  mov.b64 %rd30, %rd8; // param: arr
+  mov.b64 %rd31, %rd27; // param: idx
+  mov.u64 %rd32, 0; // unhandled expr
+  mov.u64 %rd33, 4;
+  mul.lo.u64 %rd34, %rd31, %rd33;
+  add.u64 %rd35, %rd30, %rd34;
+  ld.global.u32 %r36, [%rd35];
+  mov.b64 %rd37, %rd10; // param: arr
+  mov.b64 %rd38, %rd27; // param: idx
+  mov.u64 %rd39, 0; // unhandled expr
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd38, %rd40;
+  add.u64 %rd42, %rd37, %rd41;
+  ld.global.u32 %r43, [%rd42];
+  mov.b64 %rd44, %rd12; // param: arr
+  mov.b64 %rd45, %rd27; // param: idx
+  mov.u64 %rd46, 0; // unhandled expr
+  mov.u64 %rd47, 4;
+  mul.lo.u64 %rd48, %rd45, %rd47;
+  add.u64 %rd49, %rd44, %rd48;
+  ld.global.u32 %r50, [%rd49];
+  mov.b64 %rd51, %rd14; // param: arr
+  mov.b64 %rd52, %rd27; // param: idx
+  mov.u64 %rd53, 0; // unhandled expr
+  mov.u64 %rd54, 4;
+  mul.lo.u64 %rd55, %rd52, %rd54;
+  add.u64 %rd56, %rd51, %rd55;
+  ld.global.u32 %r57, [%rd56];
+  add.u64 %rd58, %rd27, %rd20;
+  mov.b64 %rd59, %rd8; // param: arr
+  mov.b64 %rd60, %rd58; // param: idx
+  mov.u64 %rd61, 0; // unhandled expr
+  mov.u64 %rd62, 4;
+  mul.lo.u64 %rd63, %rd60, %rd62;
+  add.u64 %rd64, %rd59, %rd63;
+  ld.global.u32 %r65, [%rd64];
+  add.u64 %rd66, %rd27, %rd20;
+  mov.b64 %rd67, %rd10; // param: arr
+  mov.b64 %rd68, %rd66; // param: idx
+  mov.u64 %rd69, 0; // unhandled expr
+  mov.u64 %rd70, 4;
+  mul.lo.u64 %rd71, %rd68, %rd70;
+  add.u64 %rd72, %rd67, %rd71;
+  ld.global.u32 %r73, [%rd72];
+  add.u64 %rd74, %rd27, %rd20;
+  mov.b64 %rd75, %rd12; // param: arr
+  mov.b64 %rd76, %rd74; // param: idx
   mov.u64 %rd77, 0; // unhandled expr
   mov.u64 %rd78, 4;
   mul.lo.u64 %rd79, %rd76, %rd78;
-  add.u64 %rd80, %rd14, %rd79;
+  add.u64 %rd80, %rd75, %rd79;
   ld.global.u32 %r81, [%rd80];
-  cvt.u64.u32 %rd82, %r16;
-  cvt.u64.u32 %rd83, %r60;
-  mul.lo.u64 %rd84, %rd82, %rd83;
-  cvt.u64.u32 %rd85, %rd_unknown_M31_P;
-  rem.u64 %rd86, %rd84, %rd85;
-  cvt.u32.u64 %r87, %rd86;
-  cvt.u64.u32 %rd88, %r17;
-  cvt.u64.u32 %rd89, %r67;
-  mul.lo.u64 %rd90, %rd88, %rd89;
-  cvt.u64.u32 %rd91, %rd_unknown_M31_P;
-  rem.u64 %rd92, %rd90, %rd91;
-  cvt.u32.u64 %r93, %rd92;
-  cvt.u64.u32 %rd94, %r87;
-  cvt.u64.u32 %rd95, %r93;
-  cvt.u64.u32 %rd96, %rd_unknown_M31_P;
-  setp.ge.u64 %p97, %rd94, %rd95;
-  @%p97 bra qm31_fri_fold_kernel_then_98;
-  bra qm31_fri_fold_kernel_else_98;
-  qm31_fri_fold_kernel_then_98:
-  sub.u64 %rd99, %rd94, %rd95;
-  mov.u64 %rd100, %rd99;
-  bra qm31_fri_fold_kernel_end_98;
-  qm31_fri_fold_kernel_else_98:
-  add.u64 %rd101, %rd94, %rd96;
-  sub.u64 %rd102, %rd101, %rd95;
-  mov.u64 %rd100, %rd102;
-  qm31_fri_fold_kernel_end_98:
-  cvt.u32.u64 %r103, %rd100;
-  cvt.u64.u32 %rd104, %r18;
-  cvt.u64.u32 %rd105, %r74;
+  add.u64 %rd82, %rd27, %rd20;
+  mov.b64 %rd83, %rd14; // param: arr
+  mov.b64 %rd84, %rd82; // param: idx
+  mov.u64 %rd85, 0; // unhandled expr
+  mov.u64 %rd86, 4;
+  mul.lo.u64 %rd87, %rd84, %rd86;
+  add.u64 %rd88, %rd83, %rd87;
+  ld.global.u32 %r89, [%rd88];
+  mov.b32 %r90, %r16; // param: a_re
+  mov.b32 %r91, %r17; // param: a_im
+  mov.b32 %r92, %r18; // param: b_re
+  mov.b32 %r93, %r19; // param: b_im
+  mov.b32 %r94, %r65; // param: c_re
+  mov.b32 %r95, %r73; // param: c_im
+  mov.b32 %r96, %r81; // param: d_re
+  mov.b32 %r97, %r89; // param: d_im
+  mov.b32 %r98, %r90; // param: a_re
+  mov.b32 %r99, %r91; // param: a_im
+  mov.b32 %r100, %r94; // param: b_re
+  mov.b32 %r101, %r95; // param: b_im
+  mov.b32 %r102, %r98; // param: a
+  mov.b32 %r103, %r100; // param: b
+  cvt.u64.u32 %rd104, %r102;
+  cvt.u64.u32 %rd105, %r103;
   mul.lo.u64 %rd106, %rd104, %rd105;
-  cvt.u64.u32 %rd107, %rd_unknown_M31_P;
-  rem.u64 %rd108, %rd106, %rd107;
-  cvt.u32.u64 %r109, %rd108;
-  cvt.u64.u32 %rd110, %r19;
-  cvt.u64.u32 %rd111, %r81;
-  mul.lo.u64 %rd112, %rd110, %rd111;
-  cvt.u64.u32 %rd113, %rd_unknown_M31_P;
-  rem.u64 %rd114, %rd112, %rd113;
-  cvt.u32.u64 %r115, %rd114;
-  cvt.u64.u32 %rd116, %r109;
-  cvt.u64.u32 %rd117, %r115;
-  cvt.u64.u32 %rd118, %rd_unknown_M31_P;
-  setp.ge.u64 %p119, %rd116, %rd117;
-  @%p119 bra qm31_fri_fold_kernel_then_120;
-  bra qm31_fri_fold_kernel_else_120;
-  qm31_fri_fold_kernel_then_120:
-  sub.u64 %rd121, %rd116, %rd117;
-  mov.u64 %rd122, %rd121;
-  bra qm31_fri_fold_kernel_end_120;
-  qm31_fri_fold_kernel_else_120:
-  add.u64 %rd123, %rd116, %rd118;
-  sub.u64 %rd124, %rd123, %rd117;
-  mov.u64 %rd122, %rd124;
-  qm31_fri_fold_kernel_end_120:
-  cvt.u32.u64 %r125, %rd122;
-  cvt.u64.u32 %rd126, %r18;
-  cvt.u64.u32 %rd127, %r81;
-  mul.lo.u64 %rd128, %rd126, %rd127;
-  cvt.u64.u32 %rd129, %rd_unknown_M31_P;
-  rem.u64 %rd130, %rd128, %rd129;
-  cvt.u32.u64 %r131, %rd130;
-  cvt.u64.u32 %rd132, %r19;
-  cvt.u64.u32 %rd133, %r74;
-  mul.lo.u64 %rd134, %rd132, %rd133;
-  cvt.u64.u32 %rd135, %rd_unknown_M31_P;
-  rem.u64 %rd136, %rd134, %rd135;
-  cvt.u32.u64 %r137, %rd136;
-  cvt.u64.u32 %rd138, %r131;
+  mov.u32 %r107, 2147483647;
+  cvt.u64.u32 %rd108, %r107;
+  rem.u64 %rd109, %rd106, %rd108;
+  cvt.u32.u64 %r110, %rd109;
+  mov.b32 %r111, %r99; // param: a
+  mov.b32 %r112, %r101; // param: b
+  cvt.u64.u32 %rd113, %r111;
+  cvt.u64.u32 %rd114, %r112;
+  mul.lo.u64 %rd115, %rd113, %rd114;
+  mov.u32 %r116, 2147483647;
+  cvt.u64.u32 %rd117, %r116;
+  rem.u64 %rd118, %rd115, %rd117;
+  cvt.u32.u64 %r119, %rd118;
+  mov.b32 %r120, %r110; // param: a
+  mov.b32 %r121, %r119; // param: b
+  cvt.u64.u32 %rd122, %r120;
+  cvt.u64.u32 %rd123, %r121;
+  mov.u32 %r124, 2147483647;
+  cvt.u64.u32 %rd125, %r124;
+  setp.ge.u64 %p126, %rd122, %rd123;
+  @%p126 bra qm31_fri_fold_kernel_then_127;
+  bra qm31_fri_fold_kernel_else_127;
+  qm31_fri_fold_kernel_then_127:
+  sub.u64 %rd128, %rd122, %rd123;
+  mov.u64 %rd129, %rd128;
+  bra qm31_fri_fold_kernel_end_127;
+  qm31_fri_fold_kernel_else_127:
+  add.u64 %rd130, %rd122, %rd125;
+  sub.u64 %rd131, %rd130, %rd123;
+  mov.u64 %rd129, %rd131;
+  qm31_fri_fold_kernel_end_127:
+  cvt.u32.u64 %r132, %rd129;
+  mov.b32 %r133, %r92; // param: a_re
+  mov.b32 %r134, %r93; // param: a_im
+  mov.b32 %r135, %r96; // param: b_re
+  mov.b32 %r136, %r97; // param: b_im
+  mov.b32 %r137, %r133; // param: a
+  mov.b32 %r138, %r135; // param: b
   cvt.u64.u32 %rd139, %r137;
-  add.u64 %rd140, %rd138, %rd139;
-  cvt.u64.u32 %rd141, %rd_unknown_M31_P;
-  setp.ge.u64 %p142, %rd140, %rd141;
-  @%p142 bra qm31_fri_fold_kernel_then_143;
-  bra qm31_fri_fold_kernel_else_143;
-  qm31_fri_fold_kernel_then_143:
-  sub.u64 %rd144, %rd140, %rd141;
-  mov.u64 %rd145, %rd144;
-  bra qm31_fri_fold_kernel_end_143;
-  qm31_fri_fold_kernel_else_143:
-  mov.u64 %rd145, %rd140;
-  qm31_fri_fold_kernel_end_143:
-  cvt.u32.u64 %r146, %rd145;
-  cvt.u64.u32 %rd147, %r125;
-  cvt.u64.u32 %rd148, %r125;
-  add.u64 %rd149, %rd147, %rd148;
-  cvt.u64.u32 %rd150, %rd_unknown_M31_P;
-  setp.ge.u64 %p151, %rd149, %rd150;
-  @%p151 bra qm31_fri_fold_kernel_then_152;
-  bra qm31_fri_fold_kernel_else_152;
-  qm31_fri_fold_kernel_then_152:
-  sub.u64 %rd153, %rd149, %rd150;
-  mov.u64 %rd154, %rd153;
-  bra qm31_fri_fold_kernel_end_152;
-  qm31_fri_fold_kernel_else_152:
-  mov.u64 %rd154, %rd149;
-  qm31_fri_fold_kernel_end_152:
-  cvt.u32.u64 %r155, %rd154;
-  cvt.u64.u32 %rd156, %r155;
-  cvt.u64.u32 %rd157, %r146;
-  cvt.u64.u32 %rd158, %rd_unknown_M31_P;
-  setp.ge.u64 %p159, %rd156, %rd157;
-  @%p159 bra qm31_fri_fold_kernel_then_160;
-  bra qm31_fri_fold_kernel_else_160;
-  qm31_fri_fold_kernel_then_160:
-  sub.u64 %rd161, %rd156, %rd157;
-  mov.u64 %rd162, %rd161;
-  bra qm31_fri_fold_kernel_end_160;
-  qm31_fri_fold_kernel_else_160:
-  add.u64 %rd163, %rd156, %rd158;
-  sub.u64 %rd164, %rd163, %rd157;
-  mov.u64 %rd162, %rd164;
-  qm31_fri_fold_kernel_end_160:
-  cvt.u32.u64 %r165, %rd162;
-  cvt.u64.u32 %rd166, %r103;
-  cvt.u64.u32 %rd167, %r165;
-  add.u64 %rd168, %rd166, %rd167;
-  cvt.u64.u32 %rd169, %rd_unknown_M31_P;
-  setp.ge.u64 %p170, %rd168, %rd169;
-  @%p170 bra qm31_fri_fold_kernel_then_171;
-  bra qm31_fri_fold_kernel_else_171;
-  qm31_fri_fold_kernel_then_171:
-  sub.u64 %rd172, %rd168, %rd169;
-  mov.u64 %rd173, %rd172;
-  bra qm31_fri_fold_kernel_end_171;
-  qm31_fri_fold_kernel_else_171:
-  mov.u64 %rd173, %rd168;
-  qm31_fri_fold_kernel_end_171:
-  cvt.u32.u64 %r174, %rd173;
-  cvt.u64.u32 %rd175, %r16;
-  cvt.u64.u32 %rd176, %r67;
-  mul.lo.u64 %rd177, %rd175, %rd176;
-  cvt.u64.u32 %rd178, %rd_unknown_M31_P;
-  rem.u64 %rd179, %rd177, %rd178;
+  cvt.u64.u32 %rd140, %r138;
+  mul.lo.u64 %rd141, %rd139, %rd140;
+  mov.u32 %r142, 2147483647;
+  cvt.u64.u32 %rd143, %r142;
+  rem.u64 %rd144, %rd141, %rd143;
+  cvt.u32.u64 %r145, %rd144;
+  mov.b32 %r146, %r134; // param: a
+  mov.b32 %r147, %r136; // param: b
+  cvt.u64.u32 %rd148, %r146;
+  cvt.u64.u32 %rd149, %r147;
+  mul.lo.u64 %rd150, %rd148, %rd149;
+  mov.u32 %r151, 2147483647;
+  cvt.u64.u32 %rd152, %r151;
+  rem.u64 %rd153, %rd150, %rd152;
+  cvt.u32.u64 %r154, %rd153;
+  mov.b32 %r155, %r145; // param: a
+  mov.b32 %r156, %r154; // param: b
+  cvt.u64.u32 %rd157, %r155;
+  cvt.u64.u32 %rd158, %r156;
+  mov.u32 %r159, 2147483647;
+  cvt.u64.u32 %rd160, %r159;
+  setp.ge.u64 %p161, %rd157, %rd158;
+  @%p161 bra qm31_fri_fold_kernel_then_162;
+  bra qm31_fri_fold_kernel_else_162;
+  qm31_fri_fold_kernel_then_162:
+  sub.u64 %rd163, %rd157, %rd158;
+  mov.u64 %rd164, %rd163;
+  bra qm31_fri_fold_kernel_end_162;
+  qm31_fri_fold_kernel_else_162:
+  add.u64 %rd165, %rd157, %rd160;
+  sub.u64 %rd166, %rd165, %rd158;
+  mov.u64 %rd164, %rd166;
+  qm31_fri_fold_kernel_end_162:
+  cvt.u32.u64 %r167, %rd164;
+  mov.b32 %r168, %r92; // param: a_re
+  mov.b32 %r169, %r93; // param: a_im
+  mov.b32 %r170, %r96; // param: b_re
+  mov.b32 %r171, %r97; // param: b_im
+  mov.b32 %r172, %r168; // param: a
+  mov.b32 %r173, %r171; // param: b
+  cvt.u64.u32 %rd174, %r172;
+  cvt.u64.u32 %rd175, %r173;
+  mul.lo.u64 %rd176, %rd174, %rd175;
+  mov.u32 %r177, 2147483647;
+  cvt.u64.u32 %rd178, %r177;
+  rem.u64 %rd179, %rd176, %rd178;
   cvt.u32.u64 %r180, %rd179;
-  cvt.u64.u32 %rd181, %r17;
-  cvt.u64.u32 %rd182, %r60;
-  mul.lo.u64 %rd183, %rd181, %rd182;
-  cvt.u64.u32 %rd184, %rd_unknown_M31_P;
-  rem.u64 %rd185, %rd183, %rd184;
-  cvt.u32.u64 %r186, %rd185;
-  cvt.u64.u32 %rd187, %r180;
-  cvt.u64.u32 %rd188, %r186;
-  add.u64 %rd189, %rd187, %rd188;
-  cvt.u64.u32 %rd190, %rd_unknown_M31_P;
-  setp.ge.u64 %p191, %rd189, %rd190;
-  @%p191 bra qm31_fri_fold_kernel_then_192;
-  bra qm31_fri_fold_kernel_else_192;
-  qm31_fri_fold_kernel_then_192:
-  sub.u64 %rd193, %rd189, %rd190;
-  mov.u64 %rd194, %rd193;
-  bra qm31_fri_fold_kernel_end_192;
-  qm31_fri_fold_kernel_else_192:
-  mov.u64 %rd194, %rd189;
-  qm31_fri_fold_kernel_end_192:
-  cvt.u32.u64 %r195, %rd194;
-  cvt.u64.u32 %rd196, %r18;
-  cvt.u64.u32 %rd197, %r74;
-  mul.lo.u64 %rd198, %rd196, %rd197;
-  cvt.u64.u32 %rd199, %rd_unknown_M31_P;
-  rem.u64 %rd200, %rd198, %rd199;
+  mov.b32 %r181, %r169; // param: a
+  mov.b32 %r182, %r170; // param: b
+  cvt.u64.u32 %rd183, %r181;
+  cvt.u64.u32 %rd184, %r182;
+  mul.lo.u64 %rd185, %rd183, %rd184;
+  mov.u32 %r186, 2147483647;
+  cvt.u64.u32 %rd187, %r186;
+  rem.u64 %rd188, %rd185, %rd187;
+  cvt.u32.u64 %r189, %rd188;
+  mov.b32 %r190, %r180; // param: a
+  mov.b32 %r191, %r189; // param: b
+  cvt.u64.u32 %rd192, %r190;
+  cvt.u64.u32 %rd193, %r191;
+  add.u64 %rd194, %rd192, %rd193;
+  mov.u32 %r195, 2147483647;
+  cvt.u64.u32 %rd196, %r195;
+  setp.ge.u64 %p197, %rd194, %rd196;
+  @%p197 bra qm31_fri_fold_kernel_then_198;
+  bra qm31_fri_fold_kernel_else_198;
+  qm31_fri_fold_kernel_then_198:
+  sub.u64 %rd199, %rd194, %rd196;
+  mov.u64 %rd200, %rd199;
+  bra qm31_fri_fold_kernel_end_198;
+  qm31_fri_fold_kernel_else_198:
+  mov.u64 %rd200, %rd194;
+  qm31_fri_fold_kernel_end_198:
   cvt.u32.u64 %r201, %rd200;
-  cvt.u64.u32 %rd202, %r19;
-  cvt.u64.u32 %rd203, %r81;
-  mul.lo.u64 %rd204, %rd202, %rd203;
-  cvt.u64.u32 %rd205, %rd_unknown_M31_P;
-  rem.u64 %rd206, %rd204, %rd205;
-  cvt.u32.u64 %r207, %rd206;
-  cvt.u64.u32 %rd208, %r201;
-  cvt.u64.u32 %rd209, %r207;
-  cvt.u64.u32 %rd210, %rd_unknown_M31_P;
-  setp.ge.u64 %p211, %rd208, %rd209;
-  @%p211 bra qm31_fri_fold_kernel_then_212;
-  bra qm31_fri_fold_kernel_else_212;
-  qm31_fri_fold_kernel_then_212:
-  sub.u64 %rd213, %rd208, %rd209;
-  mov.u64 %rd214, %rd213;
-  bra qm31_fri_fold_kernel_end_212;
-  qm31_fri_fold_kernel_else_212:
-  add.u64 %rd215, %rd208, %rd210;
-  sub.u64 %rd216, %rd215, %rd209;
-  mov.u64 %rd214, %rd216;
-  qm31_fri_fold_kernel_end_212:
-  cvt.u32.u64 %r217, %rd214;
-  cvt.u64.u32 %rd218, %r18;
-  cvt.u64.u32 %rd219, %r81;
-  mul.lo.u64 %rd220, %rd218, %rd219;
-  cvt.u64.u32 %rd221, %rd_unknown_M31_P;
-  rem.u64 %rd222, %rd220, %rd221;
-  cvt.u32.u64 %r223, %rd222;
-  cvt.u64.u32 %rd224, %r19;
-  cvt.u64.u32 %rd225, %r74;
-  mul.lo.u64 %rd226, %rd224, %rd225;
-  cvt.u64.u32 %rd227, %rd_unknown_M31_P;
-  rem.u64 %rd228, %rd226, %rd227;
-  cvt.u32.u64 %r229, %rd228;
-  cvt.u64.u32 %rd230, %r223;
+  mov.b32 %r202, %r167; // param: a
+  mov.b32 %r203, %r202; // param: a
+  mov.b32 %r204, %r202; // param: b
+  cvt.u64.u32 %rd205, %r203;
+  cvt.u64.u32 %rd206, %r204;
+  add.u64 %rd207, %rd205, %rd206;
+  mov.u32 %r208, 2147483647;
+  cvt.u64.u32 %rd209, %r208;
+  setp.ge.u64 %p210, %rd207, %rd209;
+  @%p210 bra qm31_fri_fold_kernel_then_211;
+  bra qm31_fri_fold_kernel_else_211;
+  qm31_fri_fold_kernel_then_211:
+  sub.u64 %rd212, %rd207, %rd209;
+  mov.u64 %rd213, %rd212;
+  bra qm31_fri_fold_kernel_end_211;
+  qm31_fri_fold_kernel_else_211:
+  mov.u64 %rd213, %rd207;
+  qm31_fri_fold_kernel_end_211:
+  cvt.u32.u64 %r214, %rd213;
+  mov.b32 %r215, %r214; // param: a
+  mov.b32 %r216, %r201; // param: b
+  cvt.u64.u32 %rd217, %r215;
+  cvt.u64.u32 %rd218, %r216;
+  mov.u32 %r219, 2147483647;
+  cvt.u64.u32 %rd220, %r219;
+  setp.ge.u64 %p221, %rd217, %rd218;
+  @%p221 bra qm31_fri_fold_kernel_then_222;
+  bra qm31_fri_fold_kernel_else_222;
+  qm31_fri_fold_kernel_then_222:
+  sub.u64 %rd223, %rd217, %rd218;
+  mov.u64 %rd224, %rd223;
+  bra qm31_fri_fold_kernel_end_222;
+  qm31_fri_fold_kernel_else_222:
+  add.u64 %rd225, %rd217, %rd220;
+  sub.u64 %rd226, %rd225, %rd218;
+  mov.u64 %rd224, %rd226;
+  qm31_fri_fold_kernel_end_222:
+  cvt.u32.u64 %r227, %rd224;
+  mov.b32 %r228, %r132; // param: a
+  mov.b32 %r229, %r227; // param: b
+  cvt.u64.u32 %rd230, %r228;
   cvt.u64.u32 %rd231, %r229;
   add.u64 %rd232, %rd230, %rd231;
-  cvt.u64.u32 %rd233, %rd_unknown_M31_P;
-  setp.ge.u64 %p234, %rd232, %rd233;
-  @%p234 bra qm31_fri_fold_kernel_then_235;
-  bra qm31_fri_fold_kernel_else_235;
-  qm31_fri_fold_kernel_then_235:
-  sub.u64 %rd236, %rd232, %rd233;
-  mov.u64 %rd237, %rd236;
-  bra qm31_fri_fold_kernel_end_235;
-  qm31_fri_fold_kernel_else_235:
-  mov.u64 %rd237, %rd232;
-  qm31_fri_fold_kernel_end_235:
-  cvt.u32.u64 %r238, %rd237;
-  cvt.u64.u32 %rd239, %r238;
-  cvt.u64.u32 %rd240, %r238;
-  add.u64 %rd241, %rd239, %rd240;
-  cvt.u64.u32 %rd242, %rd_unknown_M31_P;
-  setp.ge.u64 %p243, %rd241, %rd242;
-  @%p243 bra qm31_fri_fold_kernel_then_244;
-  bra qm31_fri_fold_kernel_else_244;
-  qm31_fri_fold_kernel_then_244:
-  sub.u64 %rd245, %rd241, %rd242;
-  mov.u64 %rd246, %rd245;
-  bra qm31_fri_fold_kernel_end_244;
-  qm31_fri_fold_kernel_else_244:
-  mov.u64 %rd246, %rd241;
-  qm31_fri_fold_kernel_end_244:
-  cvt.u32.u64 %r247, %rd246;
-  cvt.u64.u32 %rd248, %r217;
-  cvt.u64.u32 %rd249, %r247;
-  add.u64 %rd250, %rd248, %rd249;
-  cvt.u64.u32 %rd251, %rd_unknown_M31_P;
-  setp.ge.u64 %p252, %rd250, %rd251;
-  @%p252 bra qm31_fri_fold_kernel_then_253;
-  bra qm31_fri_fold_kernel_else_253;
-  qm31_fri_fold_kernel_then_253:
-  sub.u64 %rd254, %rd250, %rd251;
-  mov.u64 %rd255, %rd254;
-  bra qm31_fri_fold_kernel_end_253;
-  qm31_fri_fold_kernel_else_253:
-  mov.u64 %rd255, %rd250;
-  qm31_fri_fold_kernel_end_253:
-  cvt.u32.u64 %r256, %rd255;
-  cvt.u64.u32 %rd257, %r195;
-  cvt.u64.u32 %rd258, %r256;
-  add.u64 %rd259, %rd257, %rd258;
-  cvt.u64.u32 %rd260, %rd_unknown_M31_P;
-  setp.ge.u64 %p261, %rd259, %rd260;
-  @%p261 bra qm31_fri_fold_kernel_then_262;
-  bra qm31_fri_fold_kernel_else_262;
-  qm31_fri_fold_kernel_then_262:
-  sub.u64 %rd263, %rd259, %rd260;
-  mov.u64 %rd264, %rd263;
-  bra qm31_fri_fold_kernel_end_262;
-  qm31_fri_fold_kernel_else_262:
-  mov.u64 %rd264, %rd259;
-  qm31_fri_fold_kernel_end_262:
-  cvt.u32.u64 %r265, %rd264;
-  cvt.u64.u32 %rd266, %r16;
-  cvt.u64.u32 %rd267, %r74;
-  mul.lo.u64 %rd268, %rd266, %rd267;
-  cvt.u64.u32 %rd269, %rd_unknown_M31_P;
-  rem.u64 %rd270, %rd268, %rd269;
-  cvt.u32.u64 %r271, %rd270;
-  cvt.u64.u32 %rd272, %r17;
-  cvt.u64.u32 %rd273, %r81;
-  mul.lo.u64 %rd274, %rd272, %rd273;
-  cvt.u64.u32 %rd275, %rd_unknown_M31_P;
-  rem.u64 %rd276, %rd274, %rd275;
-  cvt.u32.u64 %r277, %rd276;
-  cvt.u64.u32 %rd278, %r271;
-  cvt.u64.u32 %rd279, %r277;
-  cvt.u64.u32 %rd280, %rd_unknown_M31_P;
-  setp.ge.u64 %p281, %rd278, %rd279;
-  @%p281 bra qm31_fri_fold_kernel_then_282;
-  bra qm31_fri_fold_kernel_else_282;
-  qm31_fri_fold_kernel_then_282:
-  sub.u64 %rd283, %rd278, %rd279;
-  mov.u64 %rd284, %rd283;
-  bra qm31_fri_fold_kernel_end_282;
-  qm31_fri_fold_kernel_else_282:
-  add.u64 %rd285, %rd278, %rd280;
-  sub.u64 %rd286, %rd285, %rd279;
-  mov.u64 %rd284, %rd286;
-  qm31_fri_fold_kernel_end_282:
-  cvt.u32.u64 %r287, %rd284;
-  cvt.u64.u32 %rd288, %r18;
-  cvt.u64.u32 %rd289, %r60;
+  mov.u32 %r233, 2147483647;
+  cvt.u64.u32 %rd234, %r233;
+  setp.ge.u64 %p235, %rd232, %rd234;
+  @%p235 bra qm31_fri_fold_kernel_then_236;
+  bra qm31_fri_fold_kernel_else_236;
+  qm31_fri_fold_kernel_then_236:
+  sub.u64 %rd237, %rd232, %rd234;
+  mov.u64 %rd238, %rd237;
+  bra qm31_fri_fold_kernel_end_236;
+  qm31_fri_fold_kernel_else_236:
+  mov.u64 %rd238, %rd232;
+  qm31_fri_fold_kernel_end_236:
+  cvt.u32.u64 %r239, %rd238;
+  mov.b32 %r240, %r16; // param: a_re
+  mov.b32 %r241, %r17; // param: a_im
+  mov.b32 %r242, %r18; // param: b_re
+  mov.b32 %r243, %r19; // param: b_im
+  mov.b32 %r244, %r65; // param: c_re
+  mov.b32 %r245, %r73; // param: c_im
+  mov.b32 %r246, %r81; // param: d_re
+  mov.b32 %r247, %r89; // param: d_im
+  mov.b32 %r248, %r240; // param: a_re
+  mov.b32 %r249, %r241; // param: a_im
+  mov.b32 %r250, %r244; // param: b_re
+  mov.b32 %r251, %r245; // param: b_im
+  mov.b32 %r252, %r248; // param: a
+  mov.b32 %r253, %r251; // param: b
+  cvt.u64.u32 %rd254, %r252;
+  cvt.u64.u32 %rd255, %r253;
+  mul.lo.u64 %rd256, %rd254, %rd255;
+  mov.u32 %r257, 2147483647;
+  cvt.u64.u32 %rd258, %r257;
+  rem.u64 %rd259, %rd256, %rd258;
+  cvt.u32.u64 %r260, %rd259;
+  mov.b32 %r261, %r249; // param: a
+  mov.b32 %r262, %r250; // param: b
+  cvt.u64.u32 %rd263, %r261;
+  cvt.u64.u32 %rd264, %r262;
+  mul.lo.u64 %rd265, %rd263, %rd264;
+  mov.u32 %r266, 2147483647;
+  cvt.u64.u32 %rd267, %r266;
+  rem.u64 %rd268, %rd265, %rd267;
+  cvt.u32.u64 %r269, %rd268;
+  mov.b32 %r270, %r260; // param: a
+  mov.b32 %r271, %r269; // param: b
+  cvt.u64.u32 %rd272, %r270;
+  cvt.u64.u32 %rd273, %r271;
+  add.u64 %rd274, %rd272, %rd273;
+  mov.u32 %r275, 2147483647;
+  cvt.u64.u32 %rd276, %r275;
+  setp.ge.u64 %p277, %rd274, %rd276;
+  @%p277 bra qm31_fri_fold_kernel_then_278;
+  bra qm31_fri_fold_kernel_else_278;
+  qm31_fri_fold_kernel_then_278:
+  sub.u64 %rd279, %rd274, %rd276;
+  mov.u64 %rd280, %rd279;
+  bra qm31_fri_fold_kernel_end_278;
+  qm31_fri_fold_kernel_else_278:
+  mov.u64 %rd280, %rd274;
+  qm31_fri_fold_kernel_end_278:
+  cvt.u32.u64 %r281, %rd280;
+  mov.b32 %r282, %r242; // param: a_re
+  mov.b32 %r283, %r243; // param: a_im
+  mov.b32 %r284, %r246; // param: b_re
+  mov.b32 %r285, %r247; // param: b_im
+  mov.b32 %r286, %r282; // param: a
+  mov.b32 %r287, %r284; // param: b
+  cvt.u64.u32 %rd288, %r286;
+  cvt.u64.u32 %rd289, %r287;
   mul.lo.u64 %rd290, %rd288, %rd289;
-  cvt.u64.u32 %rd291, %rd_unknown_M31_P;
-  rem.u64 %rd292, %rd290, %rd291;
-  cvt.u32.u64 %r293, %rd292;
-  cvt.u64.u32 %rd294, %r19;
-  cvt.u64.u32 %rd295, %r67;
-  mul.lo.u64 %rd296, %rd294, %rd295;
-  cvt.u64.u32 %rd297, %rd_unknown_M31_P;
-  rem.u64 %rd298, %rd296, %rd297;
-  cvt.u32.u64 %r299, %rd298;
-  cvt.u64.u32 %rd300, %r293;
-  cvt.u64.u32 %rd301, %r299;
-  cvt.u64.u32 %rd302, %rd_unknown_M31_P;
-  setp.ge.u64 %p303, %rd300, %rd301;
-  @%p303 bra qm31_fri_fold_kernel_then_304;
-  bra qm31_fri_fold_kernel_else_304;
-  qm31_fri_fold_kernel_then_304:
-  sub.u64 %rd305, %rd300, %rd301;
-  mov.u64 %rd306, %rd305;
-  bra qm31_fri_fold_kernel_end_304;
-  qm31_fri_fold_kernel_else_304:
-  add.u64 %rd307, %rd300, %rd302;
-  sub.u64 %rd308, %rd307, %rd301;
-  mov.u64 %rd306, %rd308;
-  qm31_fri_fold_kernel_end_304:
-  cvt.u32.u64 %r309, %rd306;
-  cvt.u64.u32 %rd310, %r287;
-  cvt.u64.u32 %rd311, %r309;
-  add.u64 %rd312, %rd310, %rd311;
-  cvt.u64.u32 %rd313, %rd_unknown_M31_P;
-  setp.ge.u64 %p314, %rd312, %rd313;
-  @%p314 bra qm31_fri_fold_kernel_then_315;
-  bra qm31_fri_fold_kernel_else_315;
-  qm31_fri_fold_kernel_then_315:
-  sub.u64 %rd316, %rd312, %rd313;
-  mov.u64 %rd317, %rd316;
-  bra qm31_fri_fold_kernel_end_315;
-  qm31_fri_fold_kernel_else_315:
-  mov.u64 %rd317, %rd312;
-  qm31_fri_fold_kernel_end_315:
-  cvt.u32.u64 %r318, %rd317;
-  cvt.u64.u32 %rd319, %r16;
-  cvt.u64.u32 %rd320, %r81;
-  mul.lo.u64 %rd321, %rd319, %rd320;
-  cvt.u64.u32 %rd322, %rd_unknown_M31_P;
-  rem.u64 %rd323, %rd321, %rd322;
-  cvt.u32.u64 %r324, %rd323;
-  cvt.u64.u32 %rd325, %r17;
-  cvt.u64.u32 %rd326, %r74;
-  mul.lo.u64 %rd327, %rd325, %rd326;
-  cvt.u64.u32 %rd328, %rd_unknown_M31_P;
-  rem.u64 %rd329, %rd327, %rd328;
-  cvt.u32.u64 %r330, %rd329;
-  cvt.u64.u32 %rd331, %r324;
+  mov.u32 %r291, 2147483647;
+  cvt.u64.u32 %rd292, %r291;
+  rem.u64 %rd293, %rd290, %rd292;
+  cvt.u32.u64 %r294, %rd293;
+  mov.b32 %r295, %r283; // param: a
+  mov.b32 %r296, %r285; // param: b
+  cvt.u64.u32 %rd297, %r295;
+  cvt.u64.u32 %rd298, %r296;
+  mul.lo.u64 %rd299, %rd297, %rd298;
+  mov.u32 %r300, 2147483647;
+  cvt.u64.u32 %rd301, %r300;
+  rem.u64 %rd302, %rd299, %rd301;
+  cvt.u32.u64 %r303, %rd302;
+  mov.b32 %r304, %r294; // param: a
+  mov.b32 %r305, %r303; // param: b
+  cvt.u64.u32 %rd306, %r304;
+  cvt.u64.u32 %rd307, %r305;
+  mov.u32 %r308, 2147483647;
+  cvt.u64.u32 %rd309, %r308;
+  setp.ge.u64 %p310, %rd306, %rd307;
+  @%p310 bra qm31_fri_fold_kernel_then_311;
+  bra qm31_fri_fold_kernel_else_311;
+  qm31_fri_fold_kernel_then_311:
+  sub.u64 %rd312, %rd306, %rd307;
+  mov.u64 %rd313, %rd312;
+  bra qm31_fri_fold_kernel_end_311;
+  qm31_fri_fold_kernel_else_311:
+  add.u64 %rd314, %rd306, %rd309;
+  sub.u64 %rd315, %rd314, %rd307;
+  mov.u64 %rd313, %rd315;
+  qm31_fri_fold_kernel_end_311:
+  cvt.u32.u64 %r316, %rd313;
+  mov.b32 %r317, %r242; // param: a_re
+  mov.b32 %r318, %r243; // param: a_im
+  mov.b32 %r319, %r246; // param: b_re
+  mov.b32 %r320, %r247; // param: b_im
+  mov.b32 %r321, %r317; // param: a
+  mov.b32 %r322, %r320; // param: b
+  cvt.u64.u32 %rd323, %r321;
+  cvt.u64.u32 %rd324, %r322;
+  mul.lo.u64 %rd325, %rd323, %rd324;
+  mov.u32 %r326, 2147483647;
+  cvt.u64.u32 %rd327, %r326;
+  rem.u64 %rd328, %rd325, %rd327;
+  cvt.u32.u64 %r329, %rd328;
+  mov.b32 %r330, %r318; // param: a
+  mov.b32 %r331, %r319; // param: b
   cvt.u64.u32 %rd332, %r330;
-  add.u64 %rd333, %rd331, %rd332;
-  cvt.u64.u32 %rd334, %rd_unknown_M31_P;
-  setp.ge.u64 %p335, %rd333, %rd334;
-  @%p335 bra qm31_fri_fold_kernel_then_336;
-  bra qm31_fri_fold_kernel_else_336;
-  qm31_fri_fold_kernel_then_336:
-  sub.u64 %rd337, %rd333, %rd334;
-  mov.u64 %rd338, %rd337;
-  bra qm31_fri_fold_kernel_end_336;
-  qm31_fri_fold_kernel_else_336:
-  mov.u64 %rd338, %rd333;
-  qm31_fri_fold_kernel_end_336:
-  cvt.u32.u64 %r339, %rd338;
-  cvt.u64.u32 %rd340, %r18;
-  cvt.u64.u32 %rd341, %r67;
-  mul.lo.u64 %rd342, %rd340, %rd341;
-  cvt.u64.u32 %rd343, %rd_unknown_M31_P;
-  rem.u64 %rd344, %rd342, %rd343;
-  cvt.u32.u64 %r345, %rd344;
-  cvt.u64.u32 %rd346, %r19;
-  cvt.u64.u32 %rd347, %r60;
-  mul.lo.u64 %rd348, %rd346, %rd347;
-  cvt.u64.u32 %rd349, %rd_unknown_M31_P;
-  rem.u64 %rd350, %rd348, %rd349;
-  cvt.u32.u64 %r351, %rd350;
-  cvt.u64.u32 %rd352, %r345;
-  cvt.u64.u32 %rd353, %r351;
-  add.u64 %rd354, %rd352, %rd353;
-  cvt.u64.u32 %rd355, %rd_unknown_M31_P;
-  setp.ge.u64 %p356, %rd354, %rd355;
-  @%p356 bra qm31_fri_fold_kernel_then_357;
-  bra qm31_fri_fold_kernel_else_357;
-  qm31_fri_fold_kernel_then_357:
-  sub.u64 %rd358, %rd354, %rd355;
-  mov.u64 %rd359, %rd358;
-  bra qm31_fri_fold_kernel_end_357;
-  qm31_fri_fold_kernel_else_357:
-  mov.u64 %rd359, %rd354;
-  qm31_fri_fold_kernel_end_357:
-  cvt.u32.u64 %r360, %rd359;
-  cvt.u64.u32 %rd361, %r339;
-  cvt.u64.u32 %rd362, %r360;
-  add.u64 %rd363, %rd361, %rd362;
-  cvt.u64.u32 %rd364, %rd_unknown_M31_P;
-  setp.ge.u64 %p365, %rd363, %rd364;
-  @%p365 bra qm31_fri_fold_kernel_then_366;
-  bra qm31_fri_fold_kernel_else_366;
-  qm31_fri_fold_kernel_then_366:
-  sub.u64 %rd367, %rd363, %rd364;
-  mov.u64 %rd368, %rd367;
-  bra qm31_fri_fold_kernel_end_366;
-  qm31_fri_fold_kernel_else_366:
-  mov.u64 %rd368, %rd363;
-  qm31_fri_fold_kernel_end_366:
-  cvt.u32.u64 %r369, %rd368;
-  cvt.u64.u32 %rd370, %r35;
-  cvt.u64.u32 %rd371, %r174;
-  add.u64 %rd372, %rd370, %rd371;
-  cvt.u64.u32 %rd373, %rd_unknown_M31_P;
-  setp.ge.u64 %p374, %rd372, %rd373;
-  @%p374 bra qm31_fri_fold_kernel_then_375;
-  bra qm31_fri_fold_kernel_else_375;
-  qm31_fri_fold_kernel_then_375:
-  sub.u64 %rd376, %rd372, %rd373;
-  mov.u64 %rd377, %rd376;
-  bra qm31_fri_fold_kernel_end_375;
-  qm31_fri_fold_kernel_else_375:
-  mov.u64 %rd377, %rd372;
-  qm31_fri_fold_kernel_end_375:
-  cvt.u32.u64 %r378, %rd377;
-  cvt.u64.u32 %rd379, %r26;
-  mov.u64 %rd380, 4;
-  mul.lo.u64 %rd381, %rd379, %rd380;
-  add.u64 %rd382, %rd0, %rd381;
-  st.global.u32 [%rd382], %r378;
-  cvt.u64.u32 %rd383, %r41;
-  cvt.u64.u32 %rd384, %r265;
-  add.u64 %rd385, %rd383, %rd384;
-  cvt.u64.u32 %rd386, %rd_unknown_M31_P;
-  setp.ge.u64 %p387, %rd385, %rd386;
-  @%p387 bra qm31_fri_fold_kernel_then_388;
-  bra qm31_fri_fold_kernel_else_388;
-  qm31_fri_fold_kernel_then_388:
-  sub.u64 %rd389, %rd385, %rd386;
-  mov.u64 %rd390, %rd389;
-  bra qm31_fri_fold_kernel_end_388;
-  qm31_fri_fold_kernel_else_388:
-  mov.u64 %rd390, %rd385;
-  qm31_fri_fold_kernel_end_388:
-  cvt.u32.u64 %r391, %rd390;
-  cvt.u64.u32 %rd392, %r26;
-  mov.u64 %rd393, 4;
-  mul.lo.u64 %rd394, %rd392, %rd393;
-  add.u64 %rd395, %rd2, %rd394;
-  st.global.u32 [%rd395], %r391;
-  cvt.u64.u32 %rd396, %r47;
-  cvt.u64.u32 %rd397, %r318;
-  add.u64 %rd398, %rd396, %rd397;
-  cvt.u64.u32 %rd399, %rd_unknown_M31_P;
-  setp.ge.u64 %p400, %rd398, %rd399;
-  @%p400 bra qm31_fri_fold_kernel_then_401;
-  bra qm31_fri_fold_kernel_else_401;
-  qm31_fri_fold_kernel_then_401:
-  sub.u64 %rd402, %rd398, %rd399;
-  mov.u64 %rd403, %rd402;
-  bra qm31_fri_fold_kernel_end_401;
-  qm31_fri_fold_kernel_else_401:
-  mov.u64 %rd403, %rd398;
-  qm31_fri_fold_kernel_end_401:
-  cvt.u32.u64 %r404, %rd403;
-  cvt.u64.u32 %rd405, %r26;
-  mov.u64 %rd406, 4;
-  mul.lo.u64 %rd407, %rd405, %rd406;
-  add.u64 %rd408, %rd4, %rd407;
-  st.global.u32 [%rd408], %r404;
-  cvt.u64.u32 %rd409, %r53;
-  cvt.u64.u32 %rd410, %r369;
-  add.u64 %rd411, %rd409, %rd410;
-  cvt.u64.u32 %rd412, %rd_unknown_M31_P;
-  setp.ge.u64 %p413, %rd411, %rd412;
-  @%p413 bra qm31_fri_fold_kernel_then_414;
-  bra qm31_fri_fold_kernel_else_414;
-  qm31_fri_fold_kernel_then_414:
-  sub.u64 %rd415, %rd411, %rd412;
-  mov.u64 %rd416, %rd415;
-  bra qm31_fri_fold_kernel_end_414;
-  qm31_fri_fold_kernel_else_414:
-  mov.u64 %rd416, %rd411;
-  qm31_fri_fold_kernel_end_414:
+  cvt.u64.u32 %rd333, %r331;
+  mul.lo.u64 %rd334, %rd332, %rd333;
+  mov.u32 %r335, 2147483647;
+  cvt.u64.u32 %rd336, %r335;
+  rem.u64 %rd337, %rd334, %rd336;
+  cvt.u32.u64 %r338, %rd337;
+  mov.b32 %r339, %r329; // param: a
+  mov.b32 %r340, %r338; // param: b
+  cvt.u64.u32 %rd341, %r339;
+  cvt.u64.u32 %rd342, %r340;
+  add.u64 %rd343, %rd341, %rd342;
+  mov.u32 %r344, 2147483647;
+  cvt.u64.u32 %rd345, %r344;
+  setp.ge.u64 %p346, %rd343, %rd345;
+  @%p346 bra qm31_fri_fold_kernel_then_347;
+  bra qm31_fri_fold_kernel_else_347;
+  qm31_fri_fold_kernel_then_347:
+  sub.u64 %rd348, %rd343, %rd345;
+  mov.u64 %rd349, %rd348;
+  bra qm31_fri_fold_kernel_end_347;
+  qm31_fri_fold_kernel_else_347:
+  mov.u64 %rd349, %rd343;
+  qm31_fri_fold_kernel_end_347:
+  cvt.u32.u64 %r350, %rd349;
+  mov.b32 %r351, %r350; // param: a
+  mov.b32 %r352, %r351; // param: a
+  mov.b32 %r353, %r351; // param: b
+  cvt.u64.u32 %rd354, %r352;
+  cvt.u64.u32 %rd355, %r353;
+  add.u64 %rd356, %rd354, %rd355;
+  mov.u32 %r357, 2147483647;
+  cvt.u64.u32 %rd358, %r357;
+  setp.ge.u64 %p359, %rd356, %rd358;
+  @%p359 bra qm31_fri_fold_kernel_then_360;
+  bra qm31_fri_fold_kernel_else_360;
+  qm31_fri_fold_kernel_then_360:
+  sub.u64 %rd361, %rd356, %rd358;
+  mov.u64 %rd362, %rd361;
+  bra qm31_fri_fold_kernel_end_360;
+  qm31_fri_fold_kernel_else_360:
+  mov.u64 %rd362, %rd356;
+  qm31_fri_fold_kernel_end_360:
+  cvt.u32.u64 %r363, %rd362;
+  mov.b32 %r364, %r316; // param: a
+  mov.b32 %r365, %r363; // param: b
+  cvt.u64.u32 %rd366, %r364;
+  cvt.u64.u32 %rd367, %r365;
+  add.u64 %rd368, %rd366, %rd367;
+  mov.u32 %r369, 2147483647;
+  cvt.u64.u32 %rd370, %r369;
+  setp.ge.u64 %p371, %rd368, %rd370;
+  @%p371 bra qm31_fri_fold_kernel_then_372;
+  bra qm31_fri_fold_kernel_else_372;
+  qm31_fri_fold_kernel_then_372:
+  sub.u64 %rd373, %rd368, %rd370;
+  mov.u64 %rd374, %rd373;
+  bra qm31_fri_fold_kernel_end_372;
+  qm31_fri_fold_kernel_else_372:
+  mov.u64 %rd374, %rd368;
+  qm31_fri_fold_kernel_end_372:
+  cvt.u32.u64 %r375, %rd374;
+  mov.b32 %r376, %r281; // param: a
+  mov.b32 %r377, %r375; // param: b
+  cvt.u64.u32 %rd378, %r376;
+  cvt.u64.u32 %rd379, %r377;
+  add.u64 %rd380, %rd378, %rd379;
+  mov.u32 %r381, 2147483647;
+  cvt.u64.u32 %rd382, %r381;
+  setp.ge.u64 %p383, %rd380, %rd382;
+  @%p383 bra qm31_fri_fold_kernel_then_384;
+  bra qm31_fri_fold_kernel_else_384;
+  qm31_fri_fold_kernel_then_384:
+  sub.u64 %rd385, %rd380, %rd382;
+  mov.u64 %rd386, %rd385;
+  bra qm31_fri_fold_kernel_end_384;
+  qm31_fri_fold_kernel_else_384:
+  mov.u64 %rd386, %rd380;
+  qm31_fri_fold_kernel_end_384:
+  cvt.u32.u64 %r387, %rd386;
+  mov.b32 %r388, %r16; // param: a_re
+  mov.b32 %r389, %r17; // param: a_im
+  mov.b32 %r390, %r18; // param: b_re
+  mov.b32 %r391, %r19; // param: b_im
+  mov.b32 %r392, %r65; // param: c_re
+  mov.b32 %r393, %r73; // param: c_im
+  mov.b32 %r394, %r81; // param: d_re
+  mov.b32 %r395, %r89; // param: d_im
+  mov.b32 %r396, %r388; // param: a_re
+  mov.b32 %r397, %r389; // param: a_im
+  mov.b32 %r398, %r394; // param: b_re
+  mov.b32 %r399, %r395; // param: b_im
+  mov.b32 %r400, %r396; // param: a
+  mov.b32 %r401, %r398; // param: b
+  cvt.u64.u32 %rd402, %r400;
+  cvt.u64.u32 %rd403, %r401;
+  mul.lo.u64 %rd404, %rd402, %rd403;
+  mov.u32 %r405, 2147483647;
+  cvt.u64.u32 %rd406, %r405;
+  rem.u64 %rd407, %rd404, %rd406;
+  cvt.u32.u64 %r408, %rd407;
+  mov.b32 %r409, %r397; // param: a
+  mov.b32 %r410, %r399; // param: b
+  cvt.u64.u32 %rd411, %r409;
+  cvt.u64.u32 %rd412, %r410;
+  mul.lo.u64 %rd413, %rd411, %rd412;
+  mov.u32 %r414, 2147483647;
+  cvt.u64.u32 %rd415, %r414;
+  rem.u64 %rd416, %rd413, %rd415;
   cvt.u32.u64 %r417, %rd416;
-  cvt.u64.u32 %rd418, %r26;
-  mov.u64 %rd419, 4;
-  mul.lo.u64 %rd420, %rd418, %rd419;
-  add.u64 %rd421, %rd6, %rd420;
-  st.global.u32 [%rd421], %r417;
-  mov.u32 %r422, 0; // unit
-  mov.u32 %r423, %r422;
+  mov.b32 %r418, %r408; // param: a
+  mov.b32 %r419, %r417; // param: b
+  cvt.u64.u32 %rd420, %r418;
+  cvt.u64.u32 %rd421, %r419;
+  mov.u32 %r422, 2147483647;
+  cvt.u64.u32 %rd423, %r422;
+  setp.ge.u64 %p424, %rd420, %rd421;
+  @%p424 bra qm31_fri_fold_kernel_then_425;
+  bra qm31_fri_fold_kernel_else_425;
+  qm31_fri_fold_kernel_then_425:
+  sub.u64 %rd426, %rd420, %rd421;
+  mov.u64 %rd427, %rd426;
+  bra qm31_fri_fold_kernel_end_425;
+  qm31_fri_fold_kernel_else_425:
+  add.u64 %rd428, %rd420, %rd423;
+  sub.u64 %rd429, %rd428, %rd421;
+  mov.u64 %rd427, %rd429;
+  qm31_fri_fold_kernel_end_425:
+  cvt.u32.u64 %r430, %rd427;
+  mov.b32 %r431, %r390; // param: a_re
+  mov.b32 %r432, %r391; // param: a_im
+  mov.b32 %r433, %r392; // param: b_re
+  mov.b32 %r434, %r393; // param: b_im
+  mov.b32 %r435, %r431; // param: a
+  mov.b32 %r436, %r433; // param: b
+  cvt.u64.u32 %rd437, %r435;
+  cvt.u64.u32 %rd438, %r436;
+  mul.lo.u64 %rd439, %rd437, %rd438;
+  mov.u32 %r440, 2147483647;
+  cvt.u64.u32 %rd441, %r440;
+  rem.u64 %rd442, %rd439, %rd441;
+  cvt.u32.u64 %r443, %rd442;
+  mov.b32 %r444, %r432; // param: a
+  mov.b32 %r445, %r434; // param: b
+  cvt.u64.u32 %rd446, %r444;
+  cvt.u64.u32 %rd447, %r445;
+  mul.lo.u64 %rd448, %rd446, %rd447;
+  mov.u32 %r449, 2147483647;
+  cvt.u64.u32 %rd450, %r449;
+  rem.u64 %rd451, %rd448, %rd450;
+  cvt.u32.u64 %r452, %rd451;
+  mov.b32 %r453, %r443; // param: a
+  mov.b32 %r454, %r452; // param: b
+  cvt.u64.u32 %rd455, %r453;
+  cvt.u64.u32 %rd456, %r454;
+  mov.u32 %r457, 2147483647;
+  cvt.u64.u32 %rd458, %r457;
+  setp.ge.u64 %p459, %rd455, %rd456;
+  @%p459 bra qm31_fri_fold_kernel_then_460;
+  bra qm31_fri_fold_kernel_else_460;
+  qm31_fri_fold_kernel_then_460:
+  sub.u64 %rd461, %rd455, %rd456;
+  mov.u64 %rd462, %rd461;
+  bra qm31_fri_fold_kernel_end_460;
+  qm31_fri_fold_kernel_else_460:
+  add.u64 %rd463, %rd455, %rd458;
+  sub.u64 %rd464, %rd463, %rd456;
+  mov.u64 %rd462, %rd464;
+  qm31_fri_fold_kernel_end_460:
+  cvt.u32.u64 %r465, %rd462;
+  mov.b32 %r466, %r430; // param: a
+  mov.b32 %r467, %r465; // param: b
+  cvt.u64.u32 %rd468, %r466;
+  cvt.u64.u32 %rd469, %r467;
+  add.u64 %rd470, %rd468, %rd469;
+  mov.u32 %r471, 2147483647;
+  cvt.u64.u32 %rd472, %r471;
+  setp.ge.u64 %p473, %rd470, %rd472;
+  @%p473 bra qm31_fri_fold_kernel_then_474;
+  bra qm31_fri_fold_kernel_else_474;
+  qm31_fri_fold_kernel_then_474:
+  sub.u64 %rd475, %rd470, %rd472;
+  mov.u64 %rd476, %rd475;
+  bra qm31_fri_fold_kernel_end_474;
+  qm31_fri_fold_kernel_else_474:
+  mov.u64 %rd476, %rd470;
+  qm31_fri_fold_kernel_end_474:
+  cvt.u32.u64 %r477, %rd476;
+  mov.b32 %r478, %r16; // param: a_re
+  mov.b32 %r479, %r17; // param: a_im
+  mov.b32 %r480, %r18; // param: b_re
+  mov.b32 %r481, %r19; // param: b_im
+  mov.b32 %r482, %r65; // param: c_re
+  mov.b32 %r483, %r73; // param: c_im
+  mov.b32 %r484, %r81; // param: d_re
+  mov.b32 %r485, %r89; // param: d_im
+  mov.b32 %r486, %r478; // param: a_re
+  mov.b32 %r487, %r479; // param: a_im
+  mov.b32 %r488, %r484; // param: b_re
+  mov.b32 %r489, %r485; // param: b_im
+  mov.b32 %r490, %r486; // param: a
+  mov.b32 %r491, %r489; // param: b
+  cvt.u64.u32 %rd492, %r490;
+  cvt.u64.u32 %rd493, %r491;
+  mul.lo.u64 %rd494, %rd492, %rd493;
+  mov.u32 %r495, 2147483647;
+  cvt.u64.u32 %rd496, %r495;
+  rem.u64 %rd497, %rd494, %rd496;
+  cvt.u32.u64 %r498, %rd497;
+  mov.b32 %r499, %r487; // param: a
+  mov.b32 %r500, %r488; // param: b
+  cvt.u64.u32 %rd501, %r499;
+  cvt.u64.u32 %rd502, %r500;
+  mul.lo.u64 %rd503, %rd501, %rd502;
+  mov.u32 %r504, 2147483647;
+  cvt.u64.u32 %rd505, %r504;
+  rem.u64 %rd506, %rd503, %rd505;
+  cvt.u32.u64 %r507, %rd506;
+  mov.b32 %r508, %r498; // param: a
+  mov.b32 %r509, %r507; // param: b
+  cvt.u64.u32 %rd510, %r508;
+  cvt.u64.u32 %rd511, %r509;
+  add.u64 %rd512, %rd510, %rd511;
+  mov.u32 %r513, 2147483647;
+  cvt.u64.u32 %rd514, %r513;
+  setp.ge.u64 %p515, %rd512, %rd514;
+  @%p515 bra qm31_fri_fold_kernel_then_516;
+  bra qm31_fri_fold_kernel_else_516;
+  qm31_fri_fold_kernel_then_516:
+  sub.u64 %rd517, %rd512, %rd514;
+  mov.u64 %rd518, %rd517;
+  bra qm31_fri_fold_kernel_end_516;
+  qm31_fri_fold_kernel_else_516:
+  mov.u64 %rd518, %rd512;
+  qm31_fri_fold_kernel_end_516:
+  cvt.u32.u64 %r519, %rd518;
+  mov.b32 %r520, %r480; // param: a_re
+  mov.b32 %r521, %r481; // param: a_im
+  mov.b32 %r522, %r482; // param: b_re
+  mov.b32 %r523, %r483; // param: b_im
+  mov.b32 %r524, %r520; // param: a
+  mov.b32 %r525, %r523; // param: b
+  cvt.u64.u32 %rd526, %r524;
+  cvt.u64.u32 %rd527, %r525;
+  mul.lo.u64 %rd528, %rd526, %rd527;
+  mov.u32 %r529, 2147483647;
+  cvt.u64.u32 %rd530, %r529;
+  rem.u64 %rd531, %rd528, %rd530;
+  cvt.u32.u64 %r532, %rd531;
+  mov.b32 %r533, %r521; // param: a
+  mov.b32 %r534, %r522; // param: b
+  cvt.u64.u32 %rd535, %r533;
+  cvt.u64.u32 %rd536, %r534;
+  mul.lo.u64 %rd537, %rd535, %rd536;
+  mov.u32 %r538, 2147483647;
+  cvt.u64.u32 %rd539, %r538;
+  rem.u64 %rd540, %rd537, %rd539;
+  cvt.u32.u64 %r541, %rd540;
+  mov.b32 %r542, %r532; // param: a
+  mov.b32 %r543, %r541; // param: b
+  cvt.u64.u32 %rd544, %r542;
+  cvt.u64.u32 %rd545, %r543;
+  add.u64 %rd546, %rd544, %rd545;
+  mov.u32 %r547, 2147483647;
+  cvt.u64.u32 %rd548, %r547;
+  setp.ge.u64 %p549, %rd546, %rd548;
+  @%p549 bra qm31_fri_fold_kernel_then_550;
+  bra qm31_fri_fold_kernel_else_550;
+  qm31_fri_fold_kernel_then_550:
+  sub.u64 %rd551, %rd546, %rd548;
+  mov.u64 %rd552, %rd551;
+  bra qm31_fri_fold_kernel_end_550;
+  qm31_fri_fold_kernel_else_550:
+  mov.u64 %rd552, %rd546;
+  qm31_fri_fold_kernel_end_550:
+  cvt.u32.u64 %r553, %rd552;
+  mov.b32 %r554, %r519; // param: a
+  mov.b32 %r555, %r553; // param: b
+  cvt.u64.u32 %rd556, %r554;
+  cvt.u64.u32 %rd557, %r555;
+  add.u64 %rd558, %rd556, %rd557;
+  mov.u32 %r559, 2147483647;
+  cvt.u64.u32 %rd560, %r559;
+  setp.ge.u64 %p561, %rd558, %rd560;
+  @%p561 bra qm31_fri_fold_kernel_then_562;
+  bra qm31_fri_fold_kernel_else_562;
+  qm31_fri_fold_kernel_then_562:
+  sub.u64 %rd563, %rd558, %rd560;
+  mov.u64 %rd564, %rd563;
+  bra qm31_fri_fold_kernel_end_562;
+  qm31_fri_fold_kernel_else_562:
+  mov.u64 %rd564, %rd558;
+  qm31_fri_fold_kernel_end_562:
+  cvt.u32.u64 %r565, %rd564;
+  mov.b32 %r566, %r36; // param: a
+  mov.b32 %r567, %r239; // param: b
+  mov.b32 %r568, %r566; // param: a
+  mov.b32 %r569, %r567; // param: b
+  cvt.u64.u32 %rd570, %r568;
+  cvt.u64.u32 %rd571, %r569;
+  add.u64 %rd572, %rd570, %rd571;
+  mov.u32 %r573, 2147483647;
+  cvt.u64.u32 %rd574, %r573;
+  setp.ge.u64 %p575, %rd572, %rd574;
+  @%p575 bra qm31_fri_fold_kernel_then_576;
+  bra qm31_fri_fold_kernel_else_576;
+  qm31_fri_fold_kernel_then_576:
+  sub.u64 %rd577, %rd572, %rd574;
+  mov.u64 %rd578, %rd577;
+  bra qm31_fri_fold_kernel_end_576;
+  qm31_fri_fold_kernel_else_576:
+  mov.u64 %rd578, %rd572;
+  qm31_fri_fold_kernel_end_576:
+  cvt.u32.u64 %r579, %rd578;
+  mov.u64 %rd580, 4;
+  mul.lo.u64 %rd581, %rd27, %rd580;
+  add.u64 %rd582, %rd0, %rd581;
+  st.global.u32 [%rd582], %r579;
+  mov.b32 %r583, %r43; // param: a
+  mov.b32 %r584, %r387; // param: b
+  mov.b32 %r585, %r583; // param: a
+  mov.b32 %r586, %r584; // param: b
+  cvt.u64.u32 %rd587, %r585;
+  cvt.u64.u32 %rd588, %r586;
+  add.u64 %rd589, %rd587, %rd588;
+  mov.u32 %r590, 2147483647;
+  cvt.u64.u32 %rd591, %r590;
+  setp.ge.u64 %p592, %rd589, %rd591;
+  @%p592 bra qm31_fri_fold_kernel_then_593;
+  bra qm31_fri_fold_kernel_else_593;
+  qm31_fri_fold_kernel_then_593:
+  sub.u64 %rd594, %rd589, %rd591;
+  mov.u64 %rd595, %rd594;
+  bra qm31_fri_fold_kernel_end_593;
+  qm31_fri_fold_kernel_else_593:
+  mov.u64 %rd595, %rd589;
+  qm31_fri_fold_kernel_end_593:
+  cvt.u32.u64 %r596, %rd595;
+  mov.u64 %rd597, 4;
+  mul.lo.u64 %rd598, %rd27, %rd597;
+  add.u64 %rd599, %rd2, %rd598;
+  st.global.u32 [%rd599], %r596;
+  mov.b32 %r600, %r50; // param: a
+  mov.b32 %r601, %r477; // param: b
+  mov.b32 %r602, %r600; // param: a
+  mov.b32 %r603, %r601; // param: b
+  cvt.u64.u32 %rd604, %r602;
+  cvt.u64.u32 %rd605, %r603;
+  add.u64 %rd606, %rd604, %rd605;
+  mov.u32 %r607, 2147483647;
+  cvt.u64.u32 %rd608, %r607;
+  setp.ge.u64 %p609, %rd606, %rd608;
+  @%p609 bra qm31_fri_fold_kernel_then_610;
+  bra qm31_fri_fold_kernel_else_610;
+  qm31_fri_fold_kernel_then_610:
+  sub.u64 %rd611, %rd606, %rd608;
+  mov.u64 %rd612, %rd611;
+  bra qm31_fri_fold_kernel_end_610;
+  qm31_fri_fold_kernel_else_610:
+  mov.u64 %rd612, %rd606;
+  qm31_fri_fold_kernel_end_610:
+  cvt.u32.u64 %r613, %rd612;
+  mov.u64 %rd614, 4;
+  mul.lo.u64 %rd615, %rd27, %rd614;
+  add.u64 %rd616, %rd4, %rd615;
+  st.global.u32 [%rd616], %r613;
+  mov.b32 %r617, %r57; // param: a
+  mov.b32 %r618, %r565; // param: b
+  mov.b32 %r619, %r617; // param: a
+  mov.b32 %r620, %r618; // param: b
+  cvt.u64.u32 %rd621, %r619;
+  cvt.u64.u32 %rd622, %r620;
+  add.u64 %rd623, %rd621, %rd622;
+  mov.u32 %r624, 2147483647;
+  cvt.u64.u32 %rd625, %r624;
+  setp.ge.u64 %p626, %rd623, %rd625;
+  @%p626 bra qm31_fri_fold_kernel_then_627;
+  bra qm31_fri_fold_kernel_else_627;
+  qm31_fri_fold_kernel_then_627:
+  sub.u64 %rd628, %rd623, %rd625;
+  mov.u64 %rd629, %rd628;
+  bra qm31_fri_fold_kernel_end_627;
+  qm31_fri_fold_kernel_else_627:
+  mov.u64 %rd629, %rd623;
+  qm31_fri_fold_kernel_end_627:
+  cvt.u32.u64 %r630, %rd629;
+  mov.u64 %rd631, 4;
+  mul.lo.u64 %rd632, %rd27, %rd631;
+  add.u64 %rd633, %rd6, %rd632;
+  st.global.u32 [%rd633], %r630;
+  mov.u32 %r634, 0; // unit
+  mov.u32 %r635, %r634;
   bra qm31_fri_fold_kernel_end_29;
   qm31_fri_fold_kernel_else_29:
-  mov.u32 %r423, 0; // no else branch
+  mov.u32 %r635, 0; // no else branch
   qm31_fri_fold_kernel_end_29:
-  mov.u32 %r424, 0; // unit
+  mov.u32 %r636, 0; // unit
   ret;
 }
 
@@ -1227,9 +1651,9 @@
     .param .u64 qm31_pointwise_mul_kernel_param_n
 )
 {
-    .reg .pred %p118, %p141, %p150, %p158, %p169, %p194, %p214, %p237, %p246, %p255, %p264, %p288, %p30, %p310, %p321, %p346, %p367, %p376, %p96;
-    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd103, %rd104, %rd105, %rd106, %rd107, %rd109, %rd11, %rd110, %rd111, %rd112, %rd113, %rd115, %rd116, %rd117, %rd12, %rd120, %rd121, %rd122, %rd123, %rd125, %rd126, %rd127, %rd128, %rd129, %rd13, %rd131, %rd132, %rd133, %rd134, %rd135, %rd137, %rd138, %rd139, %rd14, %rd140, %rd143, %rd144, %rd146, %rd147, %rd148, %rd149, %rd15, %rd152, %rd153, %rd155, %rd156, %rd157, %rd16, %rd160, %rd161, %rd162, %rd163, %rd165, %rd166, %rd167, %rd168, %rd17, %rd171, %rd172, %rd174, %rd175, %rd176, %rd177, %rd178, %rd179, %rd18, %rd180, %rd181, %rd182, %rd184, %rd185, %rd186, %rd187, %rd188, %rd19, %rd190, %rd191, %rd192, %rd193, %rd196, %rd197, %rd199, %rd2, %rd20, %rd200, %rd201, %rd202, %rd203, %rd205, %rd206, %rd207, %rd208, %rd209, %rd21, %rd211, %rd212, %rd213, %rd216, %rd217, %rd218, %rd219, %rd22, %rd221, %rd222, %rd223, %rd224, %rd225, %rd227, %rd228, %rd229, %rd23, %rd230, %rd231, %rd233, %rd234, %rd235, %rd236, %rd239, %rd24, %rd240, %rd242, %rd243, %rd244, %rd245, %rd248, %rd249, %rd251, %rd252, %rd253, %rd254, %rd257, %rd258, %rd260, %rd261, %rd262, %rd263, %rd266, %rd267, %rd269, %rd270, %rd271, %rd272, %rd273, %rd274, %rd275, %rd276, %rd277, %rd279, %rd280, %rd281, %rd282, %rd283, %rd285, %rd286, %rd287, %rd290, %rd291, %rd292, %rd293, %rd295, %rd296, %rd297, %rd298, %rd299, %rd3, %rd301, %rd302, %rd303, %rd304, %rd305, %rd307, %rd308, %rd309, %rd31, %rd312, %rd313, %rd314, %rd315, %rd317, %rd318, %rd319, %rd320, %rd323, %rd324, %rd326, %rd327, %rd328, %rd329, %rd33, %rd330, %rd331, %rd332, %rd333, %rd334, %rd336, %rd337, %rd338, %rd339, %rd34, %rd340, %rd342, %rd343, %rd344, %rd345, %rd348, %rd349, %rd35, %rd351, %rd352, %rd353, %rd354, %rd355, %rd357, %rd358, %rd359, %rd36, %rd360, %rd361, %rd363, %rd364, %rd365, %rd366, %rd369, %rd37, %rd370, %rd372, %rd373, %rd374, %rd375, %rd378, %rd379, %rd381, %rd382, %rd383, %rd384, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd45, %rd46, %rd47, %rd48, %rd49, %rd5, %rd51, %rd52, %rd53, %rd54, %rd55, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd63, %rd64, %rd65, %rd66, %rd67, %rd69, %rd7, %rd70, %rd71, %rd72, %rd73, %rd75, %rd76, %rd77, %rd78, %rd79, %rd8, %rd81, %rd82, %rd83, %rd84, %rd85, %rd87, %rd88, %rd89, %rd9, %rd90, %rd91, %rd93, %rd94, %rd95, %rd98, %rd99;
-    .reg .u32 %r102, %r108, %r114, %r124, %r130, %r136, %r145, %r154, %r164, %r173, %r183, %r189, %r198, %r204, %r210, %r220, %r226, %r232, %r241, %r25, %r250, %r259, %r26, %r268, %r27, %r278, %r28, %r284, %r29, %r294, %r300, %r306, %r316, %r325, %r335, %r341, %r350, %r356, %r362, %r371, %r38, %r380, %r385, %r386, %r387, %r44, %r50, %r56, %r62, %r68, %r74, %r80, %r86, %r92;
+    .reg .pred %p125, %p160, %p196, %p209, %p220, %p234, %p279, %p31, %p312, %p348, %p361, %p373, %p385, %p429, %p464, %p478, %p523, %p557, %p569;
+    .reg .u32 %r100, %r101, %r102, %r106, %r109, %r110, %r111, %r115, %r118, %r119, %r120, %r123, %r131, %r132, %r133, %r134, %r135, %r136, %r137, %r141, %r144, %r145, %r146, %r150, %r153, %r154, %r155, %r158, %r166, %r167, %r168, %r169, %r170, %r171, %r172, %r176, %r179, %r180, %r181, %r185, %r188, %r189, %r190, %r194, %r200, %r201, %r202, %r203, %r207, %r213, %r214, %r215, %r218, %r226, %r227, %r228, %r232, %r238, %r242, %r243, %r244, %r245, %r246, %r247, %r248, %r249, %r25, %r250, %r251, %r252, %r253, %r254, %r255, %r259, %r26, %r262, %r263, %r264, %r268, %r27, %r271, %r272, %r273, %r277, %r28, %r283, %r284, %r285, %r286, %r287, %r288, %r289, %r29, %r293, %r296, %r297, %r298, %r302, %r305, %r306, %r307, %r310, %r318, %r319, %r320, %r321, %r322, %r323, %r324, %r328, %r331, %r332, %r333, %r337, %r340, %r341, %r342, %r346, %r352, %r353, %r354, %r355, %r359, %r365, %r366, %r367, %r371, %r377, %r378, %r379, %r383, %r389, %r39, %r393, %r394, %r395, %r396, %r397, %r398, %r399, %r400, %r401, %r402, %r403, %r404, %r405, %r406, %r410, %r413, %r414, %r415, %r419, %r422, %r423, %r424, %r427, %r435, %r436, %r437, %r438, %r439, %r440, %r441, %r445, %r448, %r449, %r450, %r454, %r457, %r458, %r459, %r46, %r462, %r470, %r471, %r472, %r476, %r482, %r486, %r487, %r488, %r489, %r490, %r491, %r492, %r493, %r494, %r495, %r496, %r497, %r498, %r499, %r503, %r506, %r507, %r508, %r512, %r515, %r516, %r517, %r521, %r527, %r528, %r529, %r53, %r530, %r531, %r532, %r533, %r537, %r540, %r541, %r542, %r546, %r549, %r550, %r551, %r555, %r561, %r562, %r563, %r567, %r573, %r577, %r578, %r579, %r60, %r67, %r74, %r81, %r88, %r89, %r90, %r91, %r92, %r93, %r94, %r95, %r96, %r97, %r98, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd103, %rd104, %rd105, %rd107, %rd108, %rd11, %rd112, %rd113, %rd114, %rd116, %rd117, %rd12, %rd121, %rd122, %rd124, %rd127, %rd128, %rd129, %rd13, %rd130, %rd138, %rd139, %rd14, %rd140, %rd142, %rd143, %rd147, %rd148, %rd149, %rd15, %rd151, %rd152, %rd156, %rd157, %rd159, %rd16, %rd162, %rd163, %rd164, %rd165, %rd17, %rd173, %rd174, %rd175, %rd177, %rd178, %rd18, %rd182, %rd183, %rd184, %rd186, %rd187, %rd19, %rd191, %rd192, %rd193, %rd195, %rd198, %rd199, %rd2, %rd20, %rd204, %rd205, %rd206, %rd208, %rd21, %rd211, %rd212, %rd216, %rd217, %rd219, %rd22, %rd222, %rd223, %rd224, %rd225, %rd229, %rd23, %rd230, %rd231, %rd233, %rd236, %rd237, %rd239, %rd24, %rd240, %rd241, %rd256, %rd257, %rd258, %rd260, %rd261, %rd265, %rd266, %rd267, %rd269, %rd270, %rd274, %rd275, %rd276, %rd278, %rd281, %rd282, %rd290, %rd291, %rd292, %rd294, %rd295, %rd299, %rd3, %rd30, %rd300, %rd301, %rd303, %rd304, %rd308, %rd309, %rd311, %rd314, %rd315, %rd316, %rd317, %rd325, %rd326, %rd327, %rd329, %rd33, %rd330, %rd334, %rd335, %rd336, %rd338, %rd339, %rd34, %rd343, %rd344, %rd345, %rd347, %rd35, %rd350, %rd351, %rd356, %rd357, %rd358, %rd36, %rd360, %rd363, %rd364, %rd368, %rd369, %rd37, %rd370, %rd372, %rd375, %rd376, %rd38, %rd380, %rd381, %rd382, %rd384, %rd387, %rd388, %rd390, %rd391, %rd392, %rd4, %rd40, %rd407, %rd408, %rd409, %rd41, %rd411, %rd412, %rd416, %rd417, %rd418, %rd42, %rd420, %rd421, %rd425, %rd426, %rd428, %rd43, %rd431, %rd432, %rd433, %rd434, %rd44, %rd442, %rd443, %rd444, %rd446, %rd447, %rd45, %rd451, %rd452, %rd453, %rd455, %rd456, %rd460, %rd461, %rd463, %rd466, %rd467, %rd468, %rd469, %rd47, %rd473, %rd474, %rd475, %rd477, %rd48, %rd480, %rd481, %rd483, %rd484, %rd485, %rd49, %rd5, %rd50, %rd500, %rd501, %rd502, %rd504, %rd505, %rd509, %rd51, %rd510, %rd511, %rd513, %rd514, %rd518, %rd519, %rd52, %rd520, %rd522, %rd525, %rd526, %rd534, %rd535, %rd536, %rd538, %rd539, %rd54, %rd543, %rd544, %rd545, %rd547, %rd548, %rd55, %rd552, %rd553, %rd554, %rd556, %rd559, %rd56, %rd560, %rd564, %rd565, %rd566, %rd568, %rd57, %rd571, %rd572, %rd574, %rd575, %rd576, %rd58, %rd59, %rd6, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd71, %rd72, %rd73, %rd75, %rd76, %rd77, %rd78, %rd79, %rd8, %rd80, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd9;
 
   ld.param.u64 %rd0, [qm31_pointwise_mul_kernel_param_out_are_data];
   ld.param.u64 %rd1, [qm31_pointwise_mul_kernel_param_out_are_len];
@@ -1262,482 +1686,674 @@
   mul.lo.u32 %r27, %r25, %r26;
   mov.u32 %r28, %tid.x;
   add.u32 %r29, %r27, %r28;
-  cvt.u64.u32 %rd31, %r29;
-  setp.lt.u64 %p30, %rd31, %rd24;
-  @%p30 bra qm31_pointwise_mul_kernel_then_32;
+  cvt.u64.u32 %rd30, %r29;
+  setp.lt.u64 %p31, %rd30, %rd24;
+  @%p31 bra qm31_pointwise_mul_kernel_then_32;
   bra qm31_pointwise_mul_kernel_else_32;
   qm31_pointwise_mul_kernel_then_32:
-  cvt.u64.u32 %rd33, %r29;
-  mov.u64 %rd34, 0; // unhandled expr
-  mov.u64 %rd35, 4;
-  mul.lo.u64 %rd36, %rd33, %rd35;
-  add.u64 %rd37, %rd8, %rd36;
-  ld.global.u32 %r38, [%rd37];
-  cvt.u64.u32 %rd39, %r29;
-  mov.u64 %rd40, 0; // unhandled expr
-  mov.u64 %rd41, 4;
-  mul.lo.u64 %rd42, %rd39, %rd41;
-  add.u64 %rd43, %rd10, %rd42;
-  ld.global.u32 %r44, [%rd43];
-  cvt.u64.u32 %rd45, %r29;
-  mov.u64 %rd46, 0; // unhandled expr
-  mov.u64 %rd47, 4;
-  mul.lo.u64 %rd48, %rd45, %rd47;
-  add.u64 %rd49, %rd12, %rd48;
-  ld.global.u32 %r50, [%rd49];
-  cvt.u64.u32 %rd51, %r29;
-  mov.u64 %rd52, 0; // unhandled expr
-  mov.u64 %rd53, 4;
-  mul.lo.u64 %rd54, %rd51, %rd53;
-  add.u64 %rd55, %rd14, %rd54;
-  ld.global.u32 %r56, [%rd55];
-  cvt.u64.u32 %rd57, %r29;
-  mov.u64 %rd58, 0; // unhandled expr
-  mov.u64 %rd59, 4;
-  mul.lo.u64 %rd60, %rd57, %rd59;
-  add.u64 %rd61, %rd16, %rd60;
-  ld.global.u32 %r62, [%rd61];
-  cvt.u64.u32 %rd63, %r29;
-  mov.u64 %rd64, 0; // unhandled expr
-  mov.u64 %rd65, 4;
-  mul.lo.u64 %rd66, %rd63, %rd65;
-  add.u64 %rd67, %rd18, %rd66;
-  ld.global.u32 %r68, [%rd67];
-  cvt.u64.u32 %rd69, %r29;
+  mov.b64 %rd33, %rd8; // param: arr
+  mov.b64 %rd34, %rd30; // param: idx
+  mov.u64 %rd35, 0; // unhandled expr
+  mov.u64 %rd36, 4;
+  mul.lo.u64 %rd37, %rd34, %rd36;
+  add.u64 %rd38, %rd33, %rd37;
+  ld.global.u32 %r39, [%rd38];
+  mov.b64 %rd40, %rd10; // param: arr
+  mov.b64 %rd41, %rd30; // param: idx
+  mov.u64 %rd42, 0; // unhandled expr
+  mov.u64 %rd43, 4;
+  mul.lo.u64 %rd44, %rd41, %rd43;
+  add.u64 %rd45, %rd40, %rd44;
+  ld.global.u32 %r46, [%rd45];
+  mov.b64 %rd47, %rd12; // param: arr
+  mov.b64 %rd48, %rd30; // param: idx
+  mov.u64 %rd49, 0; // unhandled expr
+  mov.u64 %rd50, 4;
+  mul.lo.u64 %rd51, %rd48, %rd50;
+  add.u64 %rd52, %rd47, %rd51;
+  ld.global.u32 %r53, [%rd52];
+  mov.b64 %rd54, %rd14; // param: arr
+  mov.b64 %rd55, %rd30; // param: idx
+  mov.u64 %rd56, 0; // unhandled expr
+  mov.u64 %rd57, 4;
+  mul.lo.u64 %rd58, %rd55, %rd57;
+  add.u64 %rd59, %rd54, %rd58;
+  ld.global.u32 %r60, [%rd59];
+  mov.b64 %rd61, %rd16; // param: arr
+  mov.b64 %rd62, %rd30; // param: idx
+  mov.u64 %rd63, 0; // unhandled expr
+  mov.u64 %rd64, 4;
+  mul.lo.u64 %rd65, %rd62, %rd64;
+  add.u64 %rd66, %rd61, %rd65;
+  ld.global.u32 %r67, [%rd66];
+  mov.b64 %rd68, %rd18; // param: arr
+  mov.b64 %rd69, %rd30; // param: idx
   mov.u64 %rd70, 0; // unhandled expr
   mov.u64 %rd71, 4;
   mul.lo.u64 %rd72, %rd69, %rd71;
-  add.u64 %rd73, %rd20, %rd72;
+  add.u64 %rd73, %rd68, %rd72;
   ld.global.u32 %r74, [%rd73];
-  cvt.u64.u32 %rd75, %r29;
-  mov.u64 %rd76, 0; // unhandled expr
-  mov.u64 %rd77, 4;
-  mul.lo.u64 %rd78, %rd75, %rd77;
-  add.u64 %rd79, %rd22, %rd78;
-  ld.global.u32 %r80, [%rd79];
-  cvt.u64.u32 %rd81, %r38;
-  cvt.u64.u32 %rd82, %r62;
-  mul.lo.u64 %rd83, %rd81, %rd82;
-  cvt.u64.u32 %rd84, %rd_unknown_M31_P;
-  rem.u64 %rd85, %rd83, %rd84;
-  cvt.u32.u64 %r86, %rd85;
-  cvt.u64.u32 %rd87, %r44;
-  cvt.u64.u32 %rd88, %r68;
-  mul.lo.u64 %rd89, %rd87, %rd88;
-  cvt.u64.u32 %rd90, %rd_unknown_M31_P;
-  rem.u64 %rd91, %rd89, %rd90;
-  cvt.u32.u64 %r92, %rd91;
-  cvt.u64.u32 %rd93, %r86;
-  cvt.u64.u32 %rd94, %r92;
-  cvt.u64.u32 %rd95, %rd_unknown_M31_P;
-  setp.ge.u64 %p96, %rd93, %rd94;
-  @%p96 bra qm31_pointwise_mul_kernel_then_97;
-  bra qm31_pointwise_mul_kernel_else_97;
-  qm31_pointwise_mul_kernel_then_97:
-  sub.u64 %rd98, %rd93, %rd94;
-  mov.u64 %rd99, %rd98;
-  bra qm31_pointwise_mul_kernel_end_97;
-  qm31_pointwise_mul_kernel_else_97:
-  add.u64 %rd100, %rd93, %rd95;
-  sub.u64 %rd101, %rd100, %rd94;
-  mov.u64 %rd99, %rd101;
-  qm31_pointwise_mul_kernel_end_97:
-  cvt.u32.u64 %r102, %rd99;
-  cvt.u64.u32 %rd103, %r50;
-  cvt.u64.u32 %rd104, %r74;
+  mov.b64 %rd75, %rd20; // param: arr
+  mov.b64 %rd76, %rd30; // param: idx
+  mov.u64 %rd77, 0; // unhandled expr
+  mov.u64 %rd78, 4;
+  mul.lo.u64 %rd79, %rd76, %rd78;
+  add.u64 %rd80, %rd75, %rd79;
+  ld.global.u32 %r81, [%rd80];
+  mov.b64 %rd82, %rd22; // param: arr
+  mov.b64 %rd83, %rd30; // param: idx
+  mov.u64 %rd84, 0; // unhandled expr
+  mov.u64 %rd85, 4;
+  mul.lo.u64 %rd86, %rd83, %rd85;
+  add.u64 %rd87, %rd82, %rd86;
+  ld.global.u32 %r88, [%rd87];
+  mov.b32 %r89, %r39; // param: a_re
+  mov.b32 %r90, %r46; // param: a_im
+  mov.b32 %r91, %r53; // param: b_re
+  mov.b32 %r92, %r60; // param: b_im
+  mov.b32 %r93, %r67; // param: c_re
+  mov.b32 %r94, %r74; // param: c_im
+  mov.b32 %r95, %r81; // param: d_re
+  mov.b32 %r96, %r88; // param: d_im
+  mov.b32 %r97, %r89; // param: a_re
+  mov.b32 %r98, %r90; // param: a_im
+  mov.b32 %r99, %r93; // param: b_re
+  mov.b32 %r100, %r94; // param: b_im
+  mov.b32 %r101, %r97; // param: a
+  mov.b32 %r102, %r99; // param: b
+  cvt.u64.u32 %rd103, %r101;
+  cvt.u64.u32 %rd104, %r102;
   mul.lo.u64 %rd105, %rd103, %rd104;
-  cvt.u64.u32 %rd106, %rd_unknown_M31_P;
-  rem.u64 %rd107, %rd105, %rd106;
-  cvt.u32.u64 %r108, %rd107;
-  cvt.u64.u32 %rd109, %r56;
-  cvt.u64.u32 %rd110, %r80;
-  mul.lo.u64 %rd111, %rd109, %rd110;
-  cvt.u64.u32 %rd112, %rd_unknown_M31_P;
-  rem.u64 %rd113, %rd111, %rd112;
-  cvt.u32.u64 %r114, %rd113;
-  cvt.u64.u32 %rd115, %r108;
-  cvt.u64.u32 %rd116, %r114;
-  cvt.u64.u32 %rd117, %rd_unknown_M31_P;
-  setp.ge.u64 %p118, %rd115, %rd116;
-  @%p118 bra qm31_pointwise_mul_kernel_then_119;
-  bra qm31_pointwise_mul_kernel_else_119;
-  qm31_pointwise_mul_kernel_then_119:
-  sub.u64 %rd120, %rd115, %rd116;
-  mov.u64 %rd121, %rd120;
-  bra qm31_pointwise_mul_kernel_end_119;
-  qm31_pointwise_mul_kernel_else_119:
-  add.u64 %rd122, %rd115, %rd117;
-  sub.u64 %rd123, %rd122, %rd116;
-  mov.u64 %rd121, %rd123;
-  qm31_pointwise_mul_kernel_end_119:
-  cvt.u32.u64 %r124, %rd121;
-  cvt.u64.u32 %rd125, %r50;
-  cvt.u64.u32 %rd126, %r80;
-  mul.lo.u64 %rd127, %rd125, %rd126;
-  cvt.u64.u32 %rd128, %rd_unknown_M31_P;
-  rem.u64 %rd129, %rd127, %rd128;
-  cvt.u32.u64 %r130, %rd129;
-  cvt.u64.u32 %rd131, %r56;
-  cvt.u64.u32 %rd132, %r74;
-  mul.lo.u64 %rd133, %rd131, %rd132;
-  cvt.u64.u32 %rd134, %rd_unknown_M31_P;
-  rem.u64 %rd135, %rd133, %rd134;
-  cvt.u32.u64 %r136, %rd135;
-  cvt.u64.u32 %rd137, %r130;
+  mov.u32 %r106, 2147483647;
+  cvt.u64.u32 %rd107, %r106;
+  rem.u64 %rd108, %rd105, %rd107;
+  cvt.u32.u64 %r109, %rd108;
+  mov.b32 %r110, %r98; // param: a
+  mov.b32 %r111, %r100; // param: b
+  cvt.u64.u32 %rd112, %r110;
+  cvt.u64.u32 %rd113, %r111;
+  mul.lo.u64 %rd114, %rd112, %rd113;
+  mov.u32 %r115, 2147483647;
+  cvt.u64.u32 %rd116, %r115;
+  rem.u64 %rd117, %rd114, %rd116;
+  cvt.u32.u64 %r118, %rd117;
+  mov.b32 %r119, %r109; // param: a
+  mov.b32 %r120, %r118; // param: b
+  cvt.u64.u32 %rd121, %r119;
+  cvt.u64.u32 %rd122, %r120;
+  mov.u32 %r123, 2147483647;
+  cvt.u64.u32 %rd124, %r123;
+  setp.ge.u64 %p125, %rd121, %rd122;
+  @%p125 bra qm31_pointwise_mul_kernel_then_126;
+  bra qm31_pointwise_mul_kernel_else_126;
+  qm31_pointwise_mul_kernel_then_126:
+  sub.u64 %rd127, %rd121, %rd122;
+  mov.u64 %rd128, %rd127;
+  bra qm31_pointwise_mul_kernel_end_126;
+  qm31_pointwise_mul_kernel_else_126:
+  add.u64 %rd129, %rd121, %rd124;
+  sub.u64 %rd130, %rd129, %rd122;
+  mov.u64 %rd128, %rd130;
+  qm31_pointwise_mul_kernel_end_126:
+  cvt.u32.u64 %r131, %rd128;
+  mov.b32 %r132, %r91; // param: a_re
+  mov.b32 %r133, %r92; // param: a_im
+  mov.b32 %r134, %r95; // param: b_re
+  mov.b32 %r135, %r96; // param: b_im
+  mov.b32 %r136, %r132; // param: a
+  mov.b32 %r137, %r134; // param: b
   cvt.u64.u32 %rd138, %r136;
-  add.u64 %rd139, %rd137, %rd138;
-  cvt.u64.u32 %rd140, %rd_unknown_M31_P;
-  setp.ge.u64 %p141, %rd139, %rd140;
-  @%p141 bra qm31_pointwise_mul_kernel_then_142;
-  bra qm31_pointwise_mul_kernel_else_142;
-  qm31_pointwise_mul_kernel_then_142:
-  sub.u64 %rd143, %rd139, %rd140;
-  mov.u64 %rd144, %rd143;
-  bra qm31_pointwise_mul_kernel_end_142;
-  qm31_pointwise_mul_kernel_else_142:
-  mov.u64 %rd144, %rd139;
-  qm31_pointwise_mul_kernel_end_142:
-  cvt.u32.u64 %r145, %rd144;
-  cvt.u64.u32 %rd146, %r124;
-  cvt.u64.u32 %rd147, %r124;
-  add.u64 %rd148, %rd146, %rd147;
-  cvt.u64.u32 %rd149, %rd_unknown_M31_P;
-  setp.ge.u64 %p150, %rd148, %rd149;
-  @%p150 bra qm31_pointwise_mul_kernel_then_151;
-  bra qm31_pointwise_mul_kernel_else_151;
-  qm31_pointwise_mul_kernel_then_151:
-  sub.u64 %rd152, %rd148, %rd149;
-  mov.u64 %rd153, %rd152;
-  bra qm31_pointwise_mul_kernel_end_151;
-  qm31_pointwise_mul_kernel_else_151:
-  mov.u64 %rd153, %rd148;
-  qm31_pointwise_mul_kernel_end_151:
-  cvt.u32.u64 %r154, %rd153;
-  cvt.u64.u32 %rd155, %r154;
-  cvt.u64.u32 %rd156, %r145;
-  cvt.u64.u32 %rd157, %rd_unknown_M31_P;
-  setp.ge.u64 %p158, %rd155, %rd156;
-  @%p158 bra qm31_pointwise_mul_kernel_then_159;
-  bra qm31_pointwise_mul_kernel_else_159;
-  qm31_pointwise_mul_kernel_then_159:
-  sub.u64 %rd160, %rd155, %rd156;
-  mov.u64 %rd161, %rd160;
-  bra qm31_pointwise_mul_kernel_end_159;
-  qm31_pointwise_mul_kernel_else_159:
-  add.u64 %rd162, %rd155, %rd157;
-  sub.u64 %rd163, %rd162, %rd156;
-  mov.u64 %rd161, %rd163;
-  qm31_pointwise_mul_kernel_end_159:
-  cvt.u32.u64 %r164, %rd161;
-  cvt.u64.u32 %rd165, %r102;
-  cvt.u64.u32 %rd166, %r164;
-  add.u64 %rd167, %rd165, %rd166;
-  cvt.u64.u32 %rd168, %rd_unknown_M31_P;
-  setp.ge.u64 %p169, %rd167, %rd168;
-  @%p169 bra qm31_pointwise_mul_kernel_then_170;
-  bra qm31_pointwise_mul_kernel_else_170;
-  qm31_pointwise_mul_kernel_then_170:
-  sub.u64 %rd171, %rd167, %rd168;
-  mov.u64 %rd172, %rd171;
-  bra qm31_pointwise_mul_kernel_end_170;
-  qm31_pointwise_mul_kernel_else_170:
-  mov.u64 %rd172, %rd167;
-  qm31_pointwise_mul_kernel_end_170:
-  cvt.u32.u64 %r173, %rd172;
-  cvt.u64.u32 %rd174, %r29;
-  mov.u64 %rd175, 4;
-  mul.lo.u64 %rd176, %rd174, %rd175;
-  add.u64 %rd177, %rd0, %rd176;
-  st.global.u32 [%rd177], %r173;
-  cvt.u64.u32 %rd178, %r38;
-  cvt.u64.u32 %rd179, %r68;
-  mul.lo.u64 %rd180, %rd178, %rd179;
-  cvt.u64.u32 %rd181, %rd_unknown_M31_P;
-  rem.u64 %rd182, %rd180, %rd181;
-  cvt.u32.u64 %r183, %rd182;
-  cvt.u64.u32 %rd184, %r44;
-  cvt.u64.u32 %rd185, %r62;
-  mul.lo.u64 %rd186, %rd184, %rd185;
-  cvt.u64.u32 %rd187, %rd_unknown_M31_P;
-  rem.u64 %rd188, %rd186, %rd187;
-  cvt.u32.u64 %r189, %rd188;
-  cvt.u64.u32 %rd190, %r183;
+  cvt.u64.u32 %rd139, %r137;
+  mul.lo.u64 %rd140, %rd138, %rd139;
+  mov.u32 %r141, 2147483647;
+  cvt.u64.u32 %rd142, %r141;
+  rem.u64 %rd143, %rd140, %rd142;
+  cvt.u32.u64 %r144, %rd143;
+  mov.b32 %r145, %r133; // param: a
+  mov.b32 %r146, %r135; // param: b
+  cvt.u64.u32 %rd147, %r145;
+  cvt.u64.u32 %rd148, %r146;
+  mul.lo.u64 %rd149, %rd147, %rd148;
+  mov.u32 %r150, 2147483647;
+  cvt.u64.u32 %rd151, %r150;
+  rem.u64 %rd152, %rd149, %rd151;
+  cvt.u32.u64 %r153, %rd152;
+  mov.b32 %r154, %r144; // param: a
+  mov.b32 %r155, %r153; // param: b
+  cvt.u64.u32 %rd156, %r154;
+  cvt.u64.u32 %rd157, %r155;
+  mov.u32 %r158, 2147483647;
+  cvt.u64.u32 %rd159, %r158;
+  setp.ge.u64 %p160, %rd156, %rd157;
+  @%p160 bra qm31_pointwise_mul_kernel_then_161;
+  bra qm31_pointwise_mul_kernel_else_161;
+  qm31_pointwise_mul_kernel_then_161:
+  sub.u64 %rd162, %rd156, %rd157;
+  mov.u64 %rd163, %rd162;
+  bra qm31_pointwise_mul_kernel_end_161;
+  qm31_pointwise_mul_kernel_else_161:
+  add.u64 %rd164, %rd156, %rd159;
+  sub.u64 %rd165, %rd164, %rd157;
+  mov.u64 %rd163, %rd165;
+  qm31_pointwise_mul_kernel_end_161:
+  cvt.u32.u64 %r166, %rd163;
+  mov.b32 %r167, %r91; // param: a_re
+  mov.b32 %r168, %r92; // param: a_im
+  mov.b32 %r169, %r95; // param: b_re
+  mov.b32 %r170, %r96; // param: b_im
+  mov.b32 %r171, %r167; // param: a
+  mov.b32 %r172, %r170; // param: b
+  cvt.u64.u32 %rd173, %r171;
+  cvt.u64.u32 %rd174, %r172;
+  mul.lo.u64 %rd175, %rd173, %rd174;
+  mov.u32 %r176, 2147483647;
+  cvt.u64.u32 %rd177, %r176;
+  rem.u64 %rd178, %rd175, %rd177;
+  cvt.u32.u64 %r179, %rd178;
+  mov.b32 %r180, %r168; // param: a
+  mov.b32 %r181, %r169; // param: b
+  cvt.u64.u32 %rd182, %r180;
+  cvt.u64.u32 %rd183, %r181;
+  mul.lo.u64 %rd184, %rd182, %rd183;
+  mov.u32 %r185, 2147483647;
+  cvt.u64.u32 %rd186, %r185;
+  rem.u64 %rd187, %rd184, %rd186;
+  cvt.u32.u64 %r188, %rd187;
+  mov.b32 %r189, %r179; // param: a
+  mov.b32 %r190, %r188; // param: b
   cvt.u64.u32 %rd191, %r189;
-  add.u64 %rd192, %rd190, %rd191;
-  cvt.u64.u32 %rd193, %rd_unknown_M31_P;
-  setp.ge.u64 %p194, %rd192, %rd193;
-  @%p194 bra qm31_pointwise_mul_kernel_then_195;
-  bra qm31_pointwise_mul_kernel_else_195;
-  qm31_pointwise_mul_kernel_then_195:
-  sub.u64 %rd196, %rd192, %rd193;
-  mov.u64 %rd197, %rd196;
-  bra qm31_pointwise_mul_kernel_end_195;
-  qm31_pointwise_mul_kernel_else_195:
-  mov.u64 %rd197, %rd192;
-  qm31_pointwise_mul_kernel_end_195:
-  cvt.u32.u64 %r198, %rd197;
-  cvt.u64.u32 %rd199, %r50;
-  cvt.u64.u32 %rd200, %r74;
-  mul.lo.u64 %rd201, %rd199, %rd200;
-  cvt.u64.u32 %rd202, %rd_unknown_M31_P;
-  rem.u64 %rd203, %rd201, %rd202;
-  cvt.u32.u64 %r204, %rd203;
-  cvt.u64.u32 %rd205, %r56;
-  cvt.u64.u32 %rd206, %r80;
-  mul.lo.u64 %rd207, %rd205, %rd206;
-  cvt.u64.u32 %rd208, %rd_unknown_M31_P;
-  rem.u64 %rd209, %rd207, %rd208;
-  cvt.u32.u64 %r210, %rd209;
-  cvt.u64.u32 %rd211, %r204;
-  cvt.u64.u32 %rd212, %r210;
-  cvt.u64.u32 %rd213, %rd_unknown_M31_P;
-  setp.ge.u64 %p214, %rd211, %rd212;
-  @%p214 bra qm31_pointwise_mul_kernel_then_215;
-  bra qm31_pointwise_mul_kernel_else_215;
-  qm31_pointwise_mul_kernel_then_215:
-  sub.u64 %rd216, %rd211, %rd212;
-  mov.u64 %rd217, %rd216;
-  bra qm31_pointwise_mul_kernel_end_215;
-  qm31_pointwise_mul_kernel_else_215:
-  add.u64 %rd218, %rd211, %rd213;
-  sub.u64 %rd219, %rd218, %rd212;
-  mov.u64 %rd217, %rd219;
-  qm31_pointwise_mul_kernel_end_215:
-  cvt.u32.u64 %r220, %rd217;
-  cvt.u64.u32 %rd221, %r50;
-  cvt.u64.u32 %rd222, %r80;
-  mul.lo.u64 %rd223, %rd221, %rd222;
-  cvt.u64.u32 %rd224, %rd_unknown_M31_P;
-  rem.u64 %rd225, %rd223, %rd224;
-  cvt.u32.u64 %r226, %rd225;
-  cvt.u64.u32 %rd227, %r56;
-  cvt.u64.u32 %rd228, %r74;
-  mul.lo.u64 %rd229, %rd227, %rd228;
-  cvt.u64.u32 %rd230, %rd_unknown_M31_P;
-  rem.u64 %rd231, %rd229, %rd230;
-  cvt.u32.u64 %r232, %rd231;
-  cvt.u64.u32 %rd233, %r226;
-  cvt.u64.u32 %rd234, %r232;
-  add.u64 %rd235, %rd233, %rd234;
-  cvt.u64.u32 %rd236, %rd_unknown_M31_P;
-  setp.ge.u64 %p237, %rd235, %rd236;
-  @%p237 bra qm31_pointwise_mul_kernel_then_238;
-  bra qm31_pointwise_mul_kernel_else_238;
-  qm31_pointwise_mul_kernel_then_238:
-  sub.u64 %rd239, %rd235, %rd236;
-  mov.u64 %rd240, %rd239;
-  bra qm31_pointwise_mul_kernel_end_238;
-  qm31_pointwise_mul_kernel_else_238:
-  mov.u64 %rd240, %rd235;
-  qm31_pointwise_mul_kernel_end_238:
-  cvt.u32.u64 %r241, %rd240;
-  cvt.u64.u32 %rd242, %r241;
-  cvt.u64.u32 %rd243, %r241;
-  add.u64 %rd244, %rd242, %rd243;
-  cvt.u64.u32 %rd245, %rd_unknown_M31_P;
-  setp.ge.u64 %p246, %rd244, %rd245;
-  @%p246 bra qm31_pointwise_mul_kernel_then_247;
-  bra qm31_pointwise_mul_kernel_else_247;
-  qm31_pointwise_mul_kernel_then_247:
-  sub.u64 %rd248, %rd244, %rd245;
-  mov.u64 %rd249, %rd248;
-  bra qm31_pointwise_mul_kernel_end_247;
-  qm31_pointwise_mul_kernel_else_247:
-  mov.u64 %rd249, %rd244;
-  qm31_pointwise_mul_kernel_end_247:
-  cvt.u32.u64 %r250, %rd249;
-  cvt.u64.u32 %rd251, %r220;
-  cvt.u64.u32 %rd252, %r250;
-  add.u64 %rd253, %rd251, %rd252;
-  cvt.u64.u32 %rd254, %rd_unknown_M31_P;
-  setp.ge.u64 %p255, %rd253, %rd254;
-  @%p255 bra qm31_pointwise_mul_kernel_then_256;
-  bra qm31_pointwise_mul_kernel_else_256;
-  qm31_pointwise_mul_kernel_then_256:
-  sub.u64 %rd257, %rd253, %rd254;
-  mov.u64 %rd258, %rd257;
-  bra qm31_pointwise_mul_kernel_end_256;
-  qm31_pointwise_mul_kernel_else_256:
-  mov.u64 %rd258, %rd253;
-  qm31_pointwise_mul_kernel_end_256:
-  cvt.u32.u64 %r259, %rd258;
-  cvt.u64.u32 %rd260, %r198;
-  cvt.u64.u32 %rd261, %r259;
-  add.u64 %rd262, %rd260, %rd261;
-  cvt.u64.u32 %rd263, %rd_unknown_M31_P;
-  setp.ge.u64 %p264, %rd262, %rd263;
-  @%p264 bra qm31_pointwise_mul_kernel_then_265;
-  bra qm31_pointwise_mul_kernel_else_265;
-  qm31_pointwise_mul_kernel_then_265:
-  sub.u64 %rd266, %rd262, %rd263;
-  mov.u64 %rd267, %rd266;
-  bra qm31_pointwise_mul_kernel_end_265;
-  qm31_pointwise_mul_kernel_else_265:
-  mov.u64 %rd267, %rd262;
-  qm31_pointwise_mul_kernel_end_265:
-  cvt.u32.u64 %r268, %rd267;
-  cvt.u64.u32 %rd269, %r29;
-  mov.u64 %rd270, 4;
-  mul.lo.u64 %rd271, %rd269, %rd270;
-  add.u64 %rd272, %rd2, %rd271;
-  st.global.u32 [%rd272], %r268;
-  cvt.u64.u32 %rd273, %r38;
-  cvt.u64.u32 %rd274, %r74;
-  mul.lo.u64 %rd275, %rd273, %rd274;
-  cvt.u64.u32 %rd276, %rd_unknown_M31_P;
-  rem.u64 %rd277, %rd275, %rd276;
-  cvt.u32.u64 %r278, %rd277;
-  cvt.u64.u32 %rd279, %r44;
-  cvt.u64.u32 %rd280, %r80;
-  mul.lo.u64 %rd281, %rd279, %rd280;
-  cvt.u64.u32 %rd282, %rd_unknown_M31_P;
-  rem.u64 %rd283, %rd281, %rd282;
-  cvt.u32.u64 %r284, %rd283;
-  cvt.u64.u32 %rd285, %r278;
-  cvt.u64.u32 %rd286, %r284;
-  cvt.u64.u32 %rd287, %rd_unknown_M31_P;
-  setp.ge.u64 %p288, %rd285, %rd286;
-  @%p288 bra qm31_pointwise_mul_kernel_then_289;
-  bra qm31_pointwise_mul_kernel_else_289;
-  qm31_pointwise_mul_kernel_then_289:
-  sub.u64 %rd290, %rd285, %rd286;
-  mov.u64 %rd291, %rd290;
-  bra qm31_pointwise_mul_kernel_end_289;
-  qm31_pointwise_mul_kernel_else_289:
-  add.u64 %rd292, %rd285, %rd287;
-  sub.u64 %rd293, %rd292, %rd286;
-  mov.u64 %rd291, %rd293;
-  qm31_pointwise_mul_kernel_end_289:
-  cvt.u32.u64 %r294, %rd291;
-  cvt.u64.u32 %rd295, %r50;
-  cvt.u64.u32 %rd296, %r62;
-  mul.lo.u64 %rd297, %rd295, %rd296;
-  cvt.u64.u32 %rd298, %rd_unknown_M31_P;
-  rem.u64 %rd299, %rd297, %rd298;
-  cvt.u32.u64 %r300, %rd299;
-  cvt.u64.u32 %rd301, %r56;
-  cvt.u64.u32 %rd302, %r68;
-  mul.lo.u64 %rd303, %rd301, %rd302;
-  cvt.u64.u32 %rd304, %rd_unknown_M31_P;
-  rem.u64 %rd305, %rd303, %rd304;
-  cvt.u32.u64 %r306, %rd305;
-  cvt.u64.u32 %rd307, %r300;
+  cvt.u64.u32 %rd192, %r190;
+  add.u64 %rd193, %rd191, %rd192;
+  mov.u32 %r194, 2147483647;
+  cvt.u64.u32 %rd195, %r194;
+  setp.ge.u64 %p196, %rd193, %rd195;
+  @%p196 bra qm31_pointwise_mul_kernel_then_197;
+  bra qm31_pointwise_mul_kernel_else_197;
+  qm31_pointwise_mul_kernel_then_197:
+  sub.u64 %rd198, %rd193, %rd195;
+  mov.u64 %rd199, %rd198;
+  bra qm31_pointwise_mul_kernel_end_197;
+  qm31_pointwise_mul_kernel_else_197:
+  mov.u64 %rd199, %rd193;
+  qm31_pointwise_mul_kernel_end_197:
+  cvt.u32.u64 %r200, %rd199;
+  mov.b32 %r201, %r166; // param: a
+  mov.b32 %r202, %r201; // param: a
+  mov.b32 %r203, %r201; // param: b
+  cvt.u64.u32 %rd204, %r202;
+  cvt.u64.u32 %rd205, %r203;
+  add.u64 %rd206, %rd204, %rd205;
+  mov.u32 %r207, 2147483647;
+  cvt.u64.u32 %rd208, %r207;
+  setp.ge.u64 %p209, %rd206, %rd208;
+  @%p209 bra qm31_pointwise_mul_kernel_then_210;
+  bra qm31_pointwise_mul_kernel_else_210;
+  qm31_pointwise_mul_kernel_then_210:
+  sub.u64 %rd211, %rd206, %rd208;
+  mov.u64 %rd212, %rd211;
+  bra qm31_pointwise_mul_kernel_end_210;
+  qm31_pointwise_mul_kernel_else_210:
+  mov.u64 %rd212, %rd206;
+  qm31_pointwise_mul_kernel_end_210:
+  cvt.u32.u64 %r213, %rd212;
+  mov.b32 %r214, %r213; // param: a
+  mov.b32 %r215, %r200; // param: b
+  cvt.u64.u32 %rd216, %r214;
+  cvt.u64.u32 %rd217, %r215;
+  mov.u32 %r218, 2147483647;
+  cvt.u64.u32 %rd219, %r218;
+  setp.ge.u64 %p220, %rd216, %rd217;
+  @%p220 bra qm31_pointwise_mul_kernel_then_221;
+  bra qm31_pointwise_mul_kernel_else_221;
+  qm31_pointwise_mul_kernel_then_221:
+  sub.u64 %rd222, %rd216, %rd217;
+  mov.u64 %rd223, %rd222;
+  bra qm31_pointwise_mul_kernel_end_221;
+  qm31_pointwise_mul_kernel_else_221:
+  add.u64 %rd224, %rd216, %rd219;
+  sub.u64 %rd225, %rd224, %rd217;
+  mov.u64 %rd223, %rd225;
+  qm31_pointwise_mul_kernel_end_221:
+  cvt.u32.u64 %r226, %rd223;
+  mov.b32 %r227, %r131; // param: a
+  mov.b32 %r228, %r226; // param: b
+  cvt.u64.u32 %rd229, %r227;
+  cvt.u64.u32 %rd230, %r228;
+  add.u64 %rd231, %rd229, %rd230;
+  mov.u32 %r232, 2147483647;
+  cvt.u64.u32 %rd233, %r232;
+  setp.ge.u64 %p234, %rd231, %rd233;
+  @%p234 bra qm31_pointwise_mul_kernel_then_235;
+  bra qm31_pointwise_mul_kernel_else_235;
+  qm31_pointwise_mul_kernel_then_235:
+  sub.u64 %rd236, %rd231, %rd233;
+  mov.u64 %rd237, %rd236;
+  bra qm31_pointwise_mul_kernel_end_235;
+  qm31_pointwise_mul_kernel_else_235:
+  mov.u64 %rd237, %rd231;
+  qm31_pointwise_mul_kernel_end_235:
+  cvt.u32.u64 %r238, %rd237;
+  mov.u64 %rd239, 4;
+  mul.lo.u64 %rd240, %rd30, %rd239;
+  add.u64 %rd241, %rd0, %rd240;
+  st.global.u32 [%rd241], %r238;
+  mov.b32 %r242, %r39; // param: a_re
+  mov.b32 %r243, %r46; // param: a_im
+  mov.b32 %r244, %r53; // param: b_re
+  mov.b32 %r245, %r60; // param: b_im
+  mov.b32 %r246, %r67; // param: c_re
+  mov.b32 %r247, %r74; // param: c_im
+  mov.b32 %r248, %r81; // param: d_re
+  mov.b32 %r249, %r88; // param: d_im
+  mov.b32 %r250, %r242; // param: a_re
+  mov.b32 %r251, %r243; // param: a_im
+  mov.b32 %r252, %r246; // param: b_re
+  mov.b32 %r253, %r247; // param: b_im
+  mov.b32 %r254, %r250; // param: a
+  mov.b32 %r255, %r253; // param: b
+  cvt.u64.u32 %rd256, %r254;
+  cvt.u64.u32 %rd257, %r255;
+  mul.lo.u64 %rd258, %rd256, %rd257;
+  mov.u32 %r259, 2147483647;
+  cvt.u64.u32 %rd260, %r259;
+  rem.u64 %rd261, %rd258, %rd260;
+  cvt.u32.u64 %r262, %rd261;
+  mov.b32 %r263, %r251; // param: a
+  mov.b32 %r264, %r252; // param: b
+  cvt.u64.u32 %rd265, %r263;
+  cvt.u64.u32 %rd266, %r264;
+  mul.lo.u64 %rd267, %rd265, %rd266;
+  mov.u32 %r268, 2147483647;
+  cvt.u64.u32 %rd269, %r268;
+  rem.u64 %rd270, %rd267, %rd269;
+  cvt.u32.u64 %r271, %rd270;
+  mov.b32 %r272, %r262; // param: a
+  mov.b32 %r273, %r271; // param: b
+  cvt.u64.u32 %rd274, %r272;
+  cvt.u64.u32 %rd275, %r273;
+  add.u64 %rd276, %rd274, %rd275;
+  mov.u32 %r277, 2147483647;
+  cvt.u64.u32 %rd278, %r277;
+  setp.ge.u64 %p279, %rd276, %rd278;
+  @%p279 bra qm31_pointwise_mul_kernel_then_280;
+  bra qm31_pointwise_mul_kernel_else_280;
+  qm31_pointwise_mul_kernel_then_280:
+  sub.u64 %rd281, %rd276, %rd278;
+  mov.u64 %rd282, %rd281;
+  bra qm31_pointwise_mul_kernel_end_280;
+  qm31_pointwise_mul_kernel_else_280:
+  mov.u64 %rd282, %rd276;
+  qm31_pointwise_mul_kernel_end_280:
+  cvt.u32.u64 %r283, %rd282;
+  mov.b32 %r284, %r244; // param: a_re
+  mov.b32 %r285, %r245; // param: a_im
+  mov.b32 %r286, %r248; // param: b_re
+  mov.b32 %r287, %r249; // param: b_im
+  mov.b32 %r288, %r284; // param: a
+  mov.b32 %r289, %r286; // param: b
+  cvt.u64.u32 %rd290, %r288;
+  cvt.u64.u32 %rd291, %r289;
+  mul.lo.u64 %rd292, %rd290, %rd291;
+  mov.u32 %r293, 2147483647;
+  cvt.u64.u32 %rd294, %r293;
+  rem.u64 %rd295, %rd292, %rd294;
+  cvt.u32.u64 %r296, %rd295;
+  mov.b32 %r297, %r285; // param: a
+  mov.b32 %r298, %r287; // param: b
+  cvt.u64.u32 %rd299, %r297;
+  cvt.u64.u32 %rd300, %r298;
+  mul.lo.u64 %rd301, %rd299, %rd300;
+  mov.u32 %r302, 2147483647;
+  cvt.u64.u32 %rd303, %r302;
+  rem.u64 %rd304, %rd301, %rd303;
+  cvt.u32.u64 %r305, %rd304;
+  mov.b32 %r306, %r296; // param: a
+  mov.b32 %r307, %r305; // param: b
   cvt.u64.u32 %rd308, %r306;
-  cvt.u64.u32 %rd309, %rd_unknown_M31_P;
-  setp.ge.u64 %p310, %rd307, %rd308;
-  @%p310 bra qm31_pointwise_mul_kernel_then_311;
-  bra qm31_pointwise_mul_kernel_else_311;
-  qm31_pointwise_mul_kernel_then_311:
-  sub.u64 %rd312, %rd307, %rd308;
-  mov.u64 %rd313, %rd312;
-  bra qm31_pointwise_mul_kernel_end_311;
-  qm31_pointwise_mul_kernel_else_311:
-  add.u64 %rd314, %rd307, %rd309;
-  sub.u64 %rd315, %rd314, %rd308;
-  mov.u64 %rd313, %rd315;
-  qm31_pointwise_mul_kernel_end_311:
-  cvt.u32.u64 %r316, %rd313;
-  cvt.u64.u32 %rd317, %r294;
-  cvt.u64.u32 %rd318, %r316;
-  add.u64 %rd319, %rd317, %rd318;
-  cvt.u64.u32 %rd320, %rd_unknown_M31_P;
-  setp.ge.u64 %p321, %rd319, %rd320;
-  @%p321 bra qm31_pointwise_mul_kernel_then_322;
-  bra qm31_pointwise_mul_kernel_else_322;
-  qm31_pointwise_mul_kernel_then_322:
-  sub.u64 %rd323, %rd319, %rd320;
-  mov.u64 %rd324, %rd323;
-  bra qm31_pointwise_mul_kernel_end_322;
-  qm31_pointwise_mul_kernel_else_322:
-  mov.u64 %rd324, %rd319;
-  qm31_pointwise_mul_kernel_end_322:
-  cvt.u32.u64 %r325, %rd324;
-  cvt.u64.u32 %rd326, %r29;
-  mov.u64 %rd327, 4;
-  mul.lo.u64 %rd328, %rd326, %rd327;
-  add.u64 %rd329, %rd4, %rd328;
-  st.global.u32 [%rd329], %r325;
-  cvt.u64.u32 %rd330, %r38;
-  cvt.u64.u32 %rd331, %r80;
-  mul.lo.u64 %rd332, %rd330, %rd331;
-  cvt.u64.u32 %rd333, %rd_unknown_M31_P;
-  rem.u64 %rd334, %rd332, %rd333;
-  cvt.u32.u64 %r335, %rd334;
-  cvt.u64.u32 %rd336, %r44;
-  cvt.u64.u32 %rd337, %r74;
-  mul.lo.u64 %rd338, %rd336, %rd337;
-  cvt.u64.u32 %rd339, %rd_unknown_M31_P;
-  rem.u64 %rd340, %rd338, %rd339;
-  cvt.u32.u64 %r341, %rd340;
-  cvt.u64.u32 %rd342, %r335;
+  cvt.u64.u32 %rd309, %r307;
+  mov.u32 %r310, 2147483647;
+  cvt.u64.u32 %rd311, %r310;
+  setp.ge.u64 %p312, %rd308, %rd309;
+  @%p312 bra qm31_pointwise_mul_kernel_then_313;
+  bra qm31_pointwise_mul_kernel_else_313;
+  qm31_pointwise_mul_kernel_then_313:
+  sub.u64 %rd314, %rd308, %rd309;
+  mov.u64 %rd315, %rd314;
+  bra qm31_pointwise_mul_kernel_end_313;
+  qm31_pointwise_mul_kernel_else_313:
+  add.u64 %rd316, %rd308, %rd311;
+  sub.u64 %rd317, %rd316, %rd309;
+  mov.u64 %rd315, %rd317;
+  qm31_pointwise_mul_kernel_end_313:
+  cvt.u32.u64 %r318, %rd315;
+  mov.b32 %r319, %r244; // param: a_re
+  mov.b32 %r320, %r245; // param: a_im
+  mov.b32 %r321, %r248; // param: b_re
+  mov.b32 %r322, %r249; // param: b_im
+  mov.b32 %r323, %r319; // param: a
+  mov.b32 %r324, %r322; // param: b
+  cvt.u64.u32 %rd325, %r323;
+  cvt.u64.u32 %rd326, %r324;
+  mul.lo.u64 %rd327, %rd325, %rd326;
+  mov.u32 %r328, 2147483647;
+  cvt.u64.u32 %rd329, %r328;
+  rem.u64 %rd330, %rd327, %rd329;
+  cvt.u32.u64 %r331, %rd330;
+  mov.b32 %r332, %r320; // param: a
+  mov.b32 %r333, %r321; // param: b
+  cvt.u64.u32 %rd334, %r332;
+  cvt.u64.u32 %rd335, %r333;
+  mul.lo.u64 %rd336, %rd334, %rd335;
+  mov.u32 %r337, 2147483647;
+  cvt.u64.u32 %rd338, %r337;
+  rem.u64 %rd339, %rd336, %rd338;
+  cvt.u32.u64 %r340, %rd339;
+  mov.b32 %r341, %r331; // param: a
+  mov.b32 %r342, %r340; // param: b
   cvt.u64.u32 %rd343, %r341;
-  add.u64 %rd344, %rd342, %rd343;
-  cvt.u64.u32 %rd345, %rd_unknown_M31_P;
-  setp.ge.u64 %p346, %rd344, %rd345;
-  @%p346 bra qm31_pointwise_mul_kernel_then_347;
-  bra qm31_pointwise_mul_kernel_else_347;
-  qm31_pointwise_mul_kernel_then_347:
-  sub.u64 %rd348, %rd344, %rd345;
-  mov.u64 %rd349, %rd348;
-  bra qm31_pointwise_mul_kernel_end_347;
-  qm31_pointwise_mul_kernel_else_347:
-  mov.u64 %rd349, %rd344;
-  qm31_pointwise_mul_kernel_end_347:
-  cvt.u32.u64 %r350, %rd349;
-  cvt.u64.u32 %rd351, %r50;
-  cvt.u64.u32 %rd352, %r68;
-  mul.lo.u64 %rd353, %rd351, %rd352;
-  cvt.u64.u32 %rd354, %rd_unknown_M31_P;
-  rem.u64 %rd355, %rd353, %rd354;
-  cvt.u32.u64 %r356, %rd355;
-  cvt.u64.u32 %rd357, %r56;
-  cvt.u64.u32 %rd358, %r62;
-  mul.lo.u64 %rd359, %rd357, %rd358;
-  cvt.u64.u32 %rd360, %rd_unknown_M31_P;
-  rem.u64 %rd361, %rd359, %rd360;
-  cvt.u32.u64 %r362, %rd361;
-  cvt.u64.u32 %rd363, %r356;
-  cvt.u64.u32 %rd364, %r362;
-  add.u64 %rd365, %rd363, %rd364;
-  cvt.u64.u32 %rd366, %rd_unknown_M31_P;
-  setp.ge.u64 %p367, %rd365, %rd366;
-  @%p367 bra qm31_pointwise_mul_kernel_then_368;
-  bra qm31_pointwise_mul_kernel_else_368;
-  qm31_pointwise_mul_kernel_then_368:
-  sub.u64 %rd369, %rd365, %rd366;
-  mov.u64 %rd370, %rd369;
-  bra qm31_pointwise_mul_kernel_end_368;
-  qm31_pointwise_mul_kernel_else_368:
-  mov.u64 %rd370, %rd365;
-  qm31_pointwise_mul_kernel_end_368:
-  cvt.u32.u64 %r371, %rd370;
-  cvt.u64.u32 %rd372, %r350;
-  cvt.u64.u32 %rd373, %r371;
-  add.u64 %rd374, %rd372, %rd373;
-  cvt.u64.u32 %rd375, %rd_unknown_M31_P;
-  setp.ge.u64 %p376, %rd374, %rd375;
-  @%p376 bra qm31_pointwise_mul_kernel_then_377;
-  bra qm31_pointwise_mul_kernel_else_377;
-  qm31_pointwise_mul_kernel_then_377:
-  sub.u64 %rd378, %rd374, %rd375;
-  mov.u64 %rd379, %rd378;
-  bra qm31_pointwise_mul_kernel_end_377;
-  qm31_pointwise_mul_kernel_else_377:
-  mov.u64 %rd379, %rd374;
-  qm31_pointwise_mul_kernel_end_377:
-  cvt.u32.u64 %r380, %rd379;
-  cvt.u64.u32 %rd381, %r29;
-  mov.u64 %rd382, 4;
-  mul.lo.u64 %rd383, %rd381, %rd382;
-  add.u64 %rd384, %rd6, %rd383;
-  st.global.u32 [%rd384], %r380;
-  mov.u32 %r385, 0; // unit
-  mov.u32 %r386, %r385;
+  cvt.u64.u32 %rd344, %r342;
+  add.u64 %rd345, %rd343, %rd344;
+  mov.u32 %r346, 2147483647;
+  cvt.u64.u32 %rd347, %r346;
+  setp.ge.u64 %p348, %rd345, %rd347;
+  @%p348 bra qm31_pointwise_mul_kernel_then_349;
+  bra qm31_pointwise_mul_kernel_else_349;
+  qm31_pointwise_mul_kernel_then_349:
+  sub.u64 %rd350, %rd345, %rd347;
+  mov.u64 %rd351, %rd350;
+  bra qm31_pointwise_mul_kernel_end_349;
+  qm31_pointwise_mul_kernel_else_349:
+  mov.u64 %rd351, %rd345;
+  qm31_pointwise_mul_kernel_end_349:
+  cvt.u32.u64 %r352, %rd351;
+  mov.b32 %r353, %r352; // param: a
+  mov.b32 %r354, %r353; // param: a
+  mov.b32 %r355, %r353; // param: b
+  cvt.u64.u32 %rd356, %r354;
+  cvt.u64.u32 %rd357, %r355;
+  add.u64 %rd358, %rd356, %rd357;
+  mov.u32 %r359, 2147483647;
+  cvt.u64.u32 %rd360, %r359;
+  setp.ge.u64 %p361, %rd358, %rd360;
+  @%p361 bra qm31_pointwise_mul_kernel_then_362;
+  bra qm31_pointwise_mul_kernel_else_362;
+  qm31_pointwise_mul_kernel_then_362:
+  sub.u64 %rd363, %rd358, %rd360;
+  mov.u64 %rd364, %rd363;
+  bra qm31_pointwise_mul_kernel_end_362;
+  qm31_pointwise_mul_kernel_else_362:
+  mov.u64 %rd364, %rd358;
+  qm31_pointwise_mul_kernel_end_362:
+  cvt.u32.u64 %r365, %rd364;
+  mov.b32 %r366, %r318; // param: a
+  mov.b32 %r367, %r365; // param: b
+  cvt.u64.u32 %rd368, %r366;
+  cvt.u64.u32 %rd369, %r367;
+  add.u64 %rd370, %rd368, %rd369;
+  mov.u32 %r371, 2147483647;
+  cvt.u64.u32 %rd372, %r371;
+  setp.ge.u64 %p373, %rd370, %rd372;
+  @%p373 bra qm31_pointwise_mul_kernel_then_374;
+  bra qm31_pointwise_mul_kernel_else_374;
+  qm31_pointwise_mul_kernel_then_374:
+  sub.u64 %rd375, %rd370, %rd372;
+  mov.u64 %rd376, %rd375;
+  bra qm31_pointwise_mul_kernel_end_374;
+  qm31_pointwise_mul_kernel_else_374:
+  mov.u64 %rd376, %rd370;
+  qm31_pointwise_mul_kernel_end_374:
+  cvt.u32.u64 %r377, %rd376;
+  mov.b32 %r378, %r283; // param: a
+  mov.b32 %r379, %r377; // param: b
+  cvt.u64.u32 %rd380, %r378;
+  cvt.u64.u32 %rd381, %r379;
+  add.u64 %rd382, %rd380, %rd381;
+  mov.u32 %r383, 2147483647;
+  cvt.u64.u32 %rd384, %r383;
+  setp.ge.u64 %p385, %rd382, %rd384;
+  @%p385 bra qm31_pointwise_mul_kernel_then_386;
+  bra qm31_pointwise_mul_kernel_else_386;
+  qm31_pointwise_mul_kernel_then_386:
+  sub.u64 %rd387, %rd382, %rd384;
+  mov.u64 %rd388, %rd387;
+  bra qm31_pointwise_mul_kernel_end_386;
+  qm31_pointwise_mul_kernel_else_386:
+  mov.u64 %rd388, %rd382;
+  qm31_pointwise_mul_kernel_end_386:
+  cvt.u32.u64 %r389, %rd388;
+  mov.u64 %rd390, 4;
+  mul.lo.u64 %rd391, %rd30, %rd390;
+  add.u64 %rd392, %rd2, %rd391;
+  st.global.u32 [%rd392], %r389;
+  mov.b32 %r393, %r39; // param: a_re
+  mov.b32 %r394, %r46; // param: a_im
+  mov.b32 %r395, %r53; // param: b_re
+  mov.b32 %r396, %r60; // param: b_im
+  mov.b32 %r397, %r67; // param: c_re
+  mov.b32 %r398, %r74; // param: c_im
+  mov.b32 %r399, %r81; // param: d_re
+  mov.b32 %r400, %r88; // param: d_im
+  mov.b32 %r401, %r393; // param: a_re
+  mov.b32 %r402, %r394; // param: a_im
+  mov.b32 %r403, %r399; // param: b_re
+  mov.b32 %r404, %r400; // param: b_im
+  mov.b32 %r405, %r401; // param: a
+  mov.b32 %r406, %r403; // param: b
+  cvt.u64.u32 %rd407, %r405;
+  cvt.u64.u32 %rd408, %r406;
+  mul.lo.u64 %rd409, %rd407, %rd408;
+  mov.u32 %r410, 2147483647;
+  cvt.u64.u32 %rd411, %r410;
+  rem.u64 %rd412, %rd409, %rd411;
+  cvt.u32.u64 %r413, %rd412;
+  mov.b32 %r414, %r402; // param: a
+  mov.b32 %r415, %r404; // param: b
+  cvt.u64.u32 %rd416, %r414;
+  cvt.u64.u32 %rd417, %r415;
+  mul.lo.u64 %rd418, %rd416, %rd417;
+  mov.u32 %r419, 2147483647;
+  cvt.u64.u32 %rd420, %r419;
+  rem.u64 %rd421, %rd418, %rd420;
+  cvt.u32.u64 %r422, %rd421;
+  mov.b32 %r423, %r413; // param: a
+  mov.b32 %r424, %r422; // param: b
+  cvt.u64.u32 %rd425, %r423;
+  cvt.u64.u32 %rd426, %r424;
+  mov.u32 %r427, 2147483647;
+  cvt.u64.u32 %rd428, %r427;
+  setp.ge.u64 %p429, %rd425, %rd426;
+  @%p429 bra qm31_pointwise_mul_kernel_then_430;
+  bra qm31_pointwise_mul_kernel_else_430;
+  qm31_pointwise_mul_kernel_then_430:
+  sub.u64 %rd431, %rd425, %rd426;
+  mov.u64 %rd432, %rd431;
+  bra qm31_pointwise_mul_kernel_end_430;
+  qm31_pointwise_mul_kernel_else_430:
+  add.u64 %rd433, %rd425, %rd428;
+  sub.u64 %rd434, %rd433, %rd426;
+  mov.u64 %rd432, %rd434;
+  qm31_pointwise_mul_kernel_end_430:
+  cvt.u32.u64 %r435, %rd432;
+  mov.b32 %r436, %r395; // param: a_re
+  mov.b32 %r437, %r396; // param: a_im
+  mov.b32 %r438, %r397; // param: b_re
+  mov.b32 %r439, %r398; // param: b_im
+  mov.b32 %r440, %r436; // param: a
+  mov.b32 %r441, %r438; // param: b
+  cvt.u64.u32 %rd442, %r440;
+  cvt.u64.u32 %rd443, %r441;
+  mul.lo.u64 %rd444, %rd442, %rd443;
+  mov.u32 %r445, 2147483647;
+  cvt.u64.u32 %rd446, %r445;
+  rem.u64 %rd447, %rd444, %rd446;
+  cvt.u32.u64 %r448, %rd447;
+  mov.b32 %r449, %r437; // param: a
+  mov.b32 %r450, %r439; // param: b
+  cvt.u64.u32 %rd451, %r449;
+  cvt.u64.u32 %rd452, %r450;
+  mul.lo.u64 %rd453, %rd451, %rd452;
+  mov.u32 %r454, 2147483647;
+  cvt.u64.u32 %rd455, %r454;
+  rem.u64 %rd456, %rd453, %rd455;
+  cvt.u32.u64 %r457, %rd456;
+  mov.b32 %r458, %r448; // param: a
+  mov.b32 %r459, %r457; // param: b
+  cvt.u64.u32 %rd460, %r458;
+  cvt.u64.u32 %rd461, %r459;
+  mov.u32 %r462, 2147483647;
+  cvt.u64.u32 %rd463, %r462;
+  setp.ge.u64 %p464, %rd460, %rd461;
+  @%p464 bra qm31_pointwise_mul_kernel_then_465;
+  bra qm31_pointwise_mul_kernel_else_465;
+  qm31_pointwise_mul_kernel_then_465:
+  sub.u64 %rd466, %rd460, %rd461;
+  mov.u64 %rd467, %rd466;
+  bra qm31_pointwise_mul_kernel_end_465;
+  qm31_pointwise_mul_kernel_else_465:
+  add.u64 %rd468, %rd460, %rd463;
+  sub.u64 %rd469, %rd468, %rd461;
+  mov.u64 %rd467, %rd469;
+  qm31_pointwise_mul_kernel_end_465:
+  cvt.u32.u64 %r470, %rd467;
+  mov.b32 %r471, %r435; // param: a
+  mov.b32 %r472, %r470; // param: b
+  cvt.u64.u32 %rd473, %r471;
+  cvt.u64.u32 %rd474, %r472;
+  add.u64 %rd475, %rd473, %rd474;
+  mov.u32 %r476, 2147483647;
+  cvt.u64.u32 %rd477, %r476;
+  setp.ge.u64 %p478, %rd475, %rd477;
+  @%p478 bra qm31_pointwise_mul_kernel_then_479;
+  bra qm31_pointwise_mul_kernel_else_479;
+  qm31_pointwise_mul_kernel_then_479:
+  sub.u64 %rd480, %rd475, %rd477;
+  mov.u64 %rd481, %rd480;
+  bra qm31_pointwise_mul_kernel_end_479;
+  qm31_pointwise_mul_kernel_else_479:
+  mov.u64 %rd481, %rd475;
+  qm31_pointwise_mul_kernel_end_479:
+  cvt.u32.u64 %r482, %rd481;
+  mov.u64 %rd483, 4;
+  mul.lo.u64 %rd484, %rd30, %rd483;
+  add.u64 %rd485, %rd4, %rd484;
+  st.global.u32 [%rd485], %r482;
+  mov.b32 %r486, %r39; // param: a_re
+  mov.b32 %r487, %r46; // param: a_im
+  mov.b32 %r488, %r53; // param: b_re
+  mov.b32 %r489, %r60; // param: b_im
+  mov.b32 %r490, %r67; // param: c_re
+  mov.b32 %r491, %r74; // param: c_im
+  mov.b32 %r492, %r81; // param: d_re
+  mov.b32 %r493, %r88; // param: d_im
+  mov.b32 %r494, %r486; // param: a_re
+  mov.b32 %r495, %r487; // param: a_im
+  mov.b32 %r496, %r492; // param: b_re
+  mov.b32 %r497, %r493; // param: b_im
+  mov.b32 %r498, %r494; // param: a
+  mov.b32 %r499, %r497; // param: b
+  cvt.u64.u32 %rd500, %r498;
+  cvt.u64.u32 %rd501, %r499;
+  mul.lo.u64 %rd502, %rd500, %rd501;
+  mov.u32 %r503, 2147483647;
+  cvt.u64.u32 %rd504, %r503;
+  rem.u64 %rd505, %rd502, %rd504;
+  cvt.u32.u64 %r506, %rd505;
+  mov.b32 %r507, %r495; // param: a
+  mov.b32 %r508, %r496; // param: b
+  cvt.u64.u32 %rd509, %r507;
+  cvt.u64.u32 %rd510, %r508;
+  mul.lo.u64 %rd511, %rd509, %rd510;
+  mov.u32 %r512, 2147483647;
+  cvt.u64.u32 %rd513, %r512;
+  rem.u64 %rd514, %rd511, %rd513;
+  cvt.u32.u64 %r515, %rd514;
+  mov.b32 %r516, %r506; // param: a
+  mov.b32 %r517, %r515; // param: b
+  cvt.u64.u32 %rd518, %r516;
+  cvt.u64.u32 %rd519, %r517;
+  add.u64 %rd520, %rd518, %rd519;
+  mov.u32 %r521, 2147483647;
+  cvt.u64.u32 %rd522, %r521;
+  setp.ge.u64 %p523, %rd520, %rd522;
+  @%p523 bra qm31_pointwise_mul_kernel_then_524;
+  bra qm31_pointwise_mul_kernel_else_524;
+  qm31_pointwise_mul_kernel_then_524:
+  sub.u64 %rd525, %rd520, %rd522;
+  mov.u64 %rd526, %rd525;
+  bra qm31_pointwise_mul_kernel_end_524;
+  qm31_pointwise_mul_kernel_else_524:
+  mov.u64 %rd526, %rd520;
+  qm31_pointwise_mul_kernel_end_524:
+  cvt.u32.u64 %r527, %rd526;
+  mov.b32 %r528, %r488; // param: a_re
+  mov.b32 %r529, %r489; // param: a_im
+  mov.b32 %r530, %r490; // param: b_re
+  mov.b32 %r531, %r491; // param: b_im
+  mov.b32 %r532, %r528; // param: a
+  mov.b32 %r533, %r531; // param: b
+  cvt.u64.u32 %rd534, %r532;
+  cvt.u64.u32 %rd535, %r533;
+  mul.lo.u64 %rd536, %rd534, %rd535;
+  mov.u32 %r537, 2147483647;
+  cvt.u64.u32 %rd538, %r537;
+  rem.u64 %rd539, %rd536, %rd538;
+  cvt.u32.u64 %r540, %rd539;
+  mov.b32 %r541, %r529; // param: a
+  mov.b32 %r542, %r530; // param: b
+  cvt.u64.u32 %rd543, %r541;
+  cvt.u64.u32 %rd544, %r542;
+  mul.lo.u64 %rd545, %rd543, %rd544;
+  mov.u32 %r546, 2147483647;
+  cvt.u64.u32 %rd547, %r546;
+  rem.u64 %rd548, %rd545, %rd547;
+  cvt.u32.u64 %r549, %rd548;
+  mov.b32 %r550, %r540; // param: a
+  mov.b32 %r551, %r549; // param: b
+  cvt.u64.u32 %rd552, %r550;
+  cvt.u64.u32 %rd553, %r551;
+  add.u64 %rd554, %rd552, %rd553;
+  mov.u32 %r555, 2147483647;
+  cvt.u64.u32 %rd556, %r555;
+  setp.ge.u64 %p557, %rd554, %rd556;
+  @%p557 bra qm31_pointwise_mul_kernel_then_558;
+  bra qm31_pointwise_mul_kernel_else_558;
+  qm31_pointwise_mul_kernel_then_558:
+  sub.u64 %rd559, %rd554, %rd556;
+  mov.u64 %rd560, %rd559;
+  bra qm31_pointwise_mul_kernel_end_558;
+  qm31_pointwise_mul_kernel_else_558:
+  mov.u64 %rd560, %rd554;
+  qm31_pointwise_mul_kernel_end_558:
+  cvt.u32.u64 %r561, %rd560;
+  mov.b32 %r562, %r527; // param: a
+  mov.b32 %r563, %r561; // param: b
+  cvt.u64.u32 %rd564, %r562;
+  cvt.u64.u32 %rd565, %r563;
+  add.u64 %rd566, %rd564, %rd565;
+  mov.u32 %r567, 2147483647;
+  cvt.u64.u32 %rd568, %r567;
+  setp.ge.u64 %p569, %rd566, %rd568;
+  @%p569 bra qm31_pointwise_mul_kernel_then_570;
+  bra qm31_pointwise_mul_kernel_else_570;
+  qm31_pointwise_mul_kernel_then_570:
+  sub.u64 %rd571, %rd566, %rd568;
+  mov.u64 %rd572, %rd571;
+  bra qm31_pointwise_mul_kernel_end_570;
+  qm31_pointwise_mul_kernel_else_570:
+  mov.u64 %rd572, %rd566;
+  qm31_pointwise_mul_kernel_end_570:
+  cvt.u32.u64 %r573, %rd572;
+  mov.u64 %rd574, 4;
+  mul.lo.u64 %rd575, %rd30, %rd574;
+  add.u64 %rd576, %rd6, %rd575;
+  st.global.u32 [%rd576], %r573;
+  mov.u32 %r577, 0; // unit
+  mov.u32 %r578, %r577;
   bra qm31_pointwise_mul_kernel_end_32;
   qm31_pointwise_mul_kernel_else_32:
-  mov.u32 %r386, 0; // no else branch
+  mov.u32 %r578, 0; // no else branch
   qm31_pointwise_mul_kernel_end_32:
-  mov.u32 %r387, 0; // unit
+  mov.u32 %r579, 0; // unit
   ret;
 }
 

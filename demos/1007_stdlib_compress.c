@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -58,7 +63,7 @@ __forge_tuple_u64_u64_t lz_find_match(forge_span_u64_t data __attribute__((unuse
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = best_off, ._1 = best_len };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, best_off, best_len);
 }
 
 uint64_t lz_compress(forge_span_u64_t data __attribute__((unused)), uint64_t data_len __attribute__((unused)), forge_span_u64_t output __attribute__((unused)), uint64_t out_cap __attribute__((unused))) {

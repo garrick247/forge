@@ -13,10 +13,10 @@
     .param .u64 softmax_warp_param_n_cols
 )
 {
-    .reg .pred %p11, %p23, %p29, %p34, %p39, %p44, %p49, %p68;
-    .reg .u64 %rd0, %rd1, %rd12, %rd14, %rd15, %rd16, %rd17, %rd18, %rd2, %rd22, %rd24, %rd28, %rd3, %rd33, %rd38, %rd4, %rd43, %rd50, %rd57, %rd59, %rd61, %rd63, %rd65, %rd69, %rd7, %rd72, %rd73, %rd74, %rd75, %rd76, %rd8;
-    .reg .f32 %f10, %f19, %f48, %f52, %f53, %f54, %f58, %f60, %f62, %f64, %f66, %f71, %f9;
-    .reg .u32 %r20, %r21, %r26, %r27, %r31, %r32, %r36, %r37, %r41, %r42, %r46, %r47, %r5, %r55, %r56, %r6, %r67, %r77, %r78, %r79;
+    .reg .pred %p12, %p25, %p32, %p39, %p46, %p53, %p58, %p87;
+    .reg .f32 %f10, %f11, %f18, %f21, %f24, %f31, %f38, %f45, %f52, %f57, %f60, %f61, %f62, %f65, %f68, %f69, %f72, %f73, %f76, %f77, %f80, %f81, %f84, %f85, %f89;
+    .reg .u32 %r19, %r20, %r23, %r27, %r28, %r30, %r34, %r35, %r37, %r41, %r42, %r44, %r48, %r49, %r5, %r51, %r55, %r56, %r63, %r64, %r67, %r7, %r71, %r75, %r79, %r83, %r86, %r94, %r95, %r96;
+    .reg .u64 %rd0, %rd1, %rd14, %rd15, %rd16, %rd17, %rd2, %rd22, %rd29, %rd3, %rd36, %rd4, %rd43, %rd50, %rd6, %rd66, %rd70, %rd74, %rd78, %rd8, %rd82, %rd9, %rd90, %rd91, %rd92, %rd93;
 
   ld.param.u64 %rd0, [softmax_warp_param_inp_data];
   ld.param.u64 %rd1, [softmax_warp_param_inp_len];
@@ -25,129 +25,153 @@
   ld.param.u64 %rd4, [softmax_warp_param_n_cols];
 
   mov.u32 %r5, %tid.x;
-  mov.u32 %r6, %ctaid.x;
-  cvt.u64.u32 %rd7, %r6;
-  mul.lo.u64 %rd8, %rd7, %rd4;
-  mov.f32 %f9, 0f7149F2CA; // 1e+30
-  neg.f32 %f10, %f9;
-  cvt.u64.u32 %rd12, %r5;
-  setp.lt.u64 %p11, %rd12, %rd4;
-  @%p11 bra softmax_warp_then_13;
+  cvt.u64.u32 %rd6, %r5;
+  mov.u32 %r7, %ctaid.x;
+  cvt.u64.u32 %rd8, %r7;
+  mul.lo.u64 %rd9, %rd8, %rd4;
+  mov.f32 %f10, 0f7149F2CA; // 1e+30
+  neg.f32 %f11, %f10;
+  setp.lt.u64 %p12, %rd6, %rd4;
+  @%p12 bra softmax_warp_then_13;
   bra softmax_warp_else_13;
   softmax_warp_then_13:
-  cvt.u64.u32 %rd14, %r5;
-  add.u64 %rd15, %rd8, %rd14;
-  mov.u64 %rd16, 4;
-  mul.lo.u64 %rd17, %rd15, %rd16;
-  add.u64 %rd18, %rd0, %rd17;
-  ld.global.f32 %f19, [%rd18];
-  mov.u32 %r20, 0; // unit
-  mov.u32 %r21, %r20;
+  add.u64 %rd14, %rd9, %rd6;
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd14, %rd15;
+  add.u64 %rd17, %rd0, %rd16;
+  ld.global.f32 %f18, [%rd17];
+  mov.u32 %r19, 0; // unit
+  mov.u32 %r20, %r19;
+  mov.f32 %f11, %f18; // if wb: x
   bra softmax_warp_end_13;
   softmax_warp_else_13:
-  mov.u32 %r21, 0; // no else branch
+  mov.u32 %r20, 0; // no else branch
   softmax_warp_end_13:
-  mov.u64 %rd22, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  cvt.u64.f32 %rd24, %f19;
-  setp.gt.u64 %p23, %rd22, %rd24;
-  @%p23 bra softmax_warp_then_25;
-  bra softmax_warp_else_25;
-  softmax_warp_then_25:
-  mov.u32 %r26, 0; // unit
-  mov.u32 %r27, %r26;
-  bra softmax_warp_end_25;
-  softmax_warp_else_25:
-  mov.u32 %r27, 0; // no else branch
-  softmax_warp_end_25:
-  mov.u64 %rd28, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  setp.gt.u64 %p29, %rd28, %rd22;
-  @%p29 bra softmax_warp_then_30;
-  bra softmax_warp_else_30;
-  softmax_warp_then_30:
-  mov.u32 %r31, 0; // unit
-  mov.u32 %r32, %r31;
-  bra softmax_warp_end_30;
-  softmax_warp_else_30:
-  mov.u32 %r32, 0; // no else branch
-  softmax_warp_end_30:
-  mov.u64 %rd33, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  setp.gt.u64 %p34, %rd33, %rd28;
-  @%p34 bra softmax_warp_then_35;
-  bra softmax_warp_else_35;
-  softmax_warp_then_35:
-  mov.u32 %r36, 0; // unit
-  mov.u32 %r37, %r36;
-  bra softmax_warp_end_35;
-  softmax_warp_else_35:
-  mov.u32 %r37, 0; // no else branch
-  softmax_warp_end_35:
-  mov.u64 %rd38, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  setp.gt.u64 %p39, %rd38, %rd33;
+  mov.b32 %f21, %f11; // param: val
+  mov.u64 %rd22, 16;
+  cvt.u32.u64 %r23, %rd22;
+  shfl.sync.bfly.b32 %f24, %f21, %r23, 31, 0xffffffff;
+  setp.gt.f32 %p25, %f24, %f21;
+  @%p25 bra softmax_warp_then_26;
+  bra softmax_warp_else_26;
+  softmax_warp_then_26:
+  mov.u32 %r27, 0; // unit
+  mov.u32 %r28, %r27;
+  mov.f32 %f21, %f24; // if wb: v
+  bra softmax_warp_end_26;
+  softmax_warp_else_26:
+  mov.u32 %r28, 0; // no else branch
+  softmax_warp_end_26:
+  mov.u64 %rd29, 8;
+  cvt.u32.u64 %r30, %rd29;
+  shfl.sync.bfly.b32 %f31, %f21, %r30, 31, 0xffffffff;
+  setp.gt.f32 %p32, %f31, %f21;
+  @%p32 bra softmax_warp_then_33;
+  bra softmax_warp_else_33;
+  softmax_warp_then_33:
+  mov.u32 %r34, 0; // unit
+  mov.u32 %r35, %r34;
+  mov.f32 %f21, %f31; // if wb: v
+  bra softmax_warp_end_33;
+  softmax_warp_else_33:
+  mov.u32 %r35, 0; // no else branch
+  softmax_warp_end_33:
+  mov.u64 %rd36, 4;
+  cvt.u32.u64 %r37, %rd36;
+  shfl.sync.bfly.b32 %f38, %f21, %r37, 31, 0xffffffff;
+  setp.gt.f32 %p39, %f38, %f21;
   @%p39 bra softmax_warp_then_40;
   bra softmax_warp_else_40;
   softmax_warp_then_40:
   mov.u32 %r41, 0; // unit
   mov.u32 %r42, %r41;
+  mov.f32 %f21, %f38; // if wb: v
   bra softmax_warp_end_40;
   softmax_warp_else_40:
   mov.u32 %r42, 0; // no else branch
   softmax_warp_end_40:
-  mov.u64 %rd43, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  setp.gt.u64 %p44, %rd43, %rd38;
-  @%p44 bra softmax_warp_then_45;
-  bra softmax_warp_else_45;
-  softmax_warp_then_45:
-  mov.u32 %r46, 0; // unit
-  mov.u32 %r47, %r46;
-  bra softmax_warp_end_45;
-  softmax_warp_else_45:
-  mov.u32 %r47, 0; // no else branch
-  softmax_warp_end_45:
-  mov.f32 %f48, 0f00000000; // 0
-  cvt.u64.u32 %rd50, %r5;
-  setp.lt.u64 %p49, %rd50, %rd4;
-  @%p49 bra softmax_warp_then_51;
-  bra softmax_warp_else_51;
-  softmax_warp_then_51:
-  sub.f32 %f52, %f19, %rd43;
-  mul.rn.f32 %f53, %f52, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f54, %f53;
+  mov.u64 %rd43, 2;
+  cvt.u32.u64 %r44, %rd43;
+  shfl.sync.bfly.b32 %f45, %f21, %r44, 31, 0xffffffff;
+  setp.gt.f32 %p46, %f45, %f21;
+  @%p46 bra softmax_warp_then_47;
+  bra softmax_warp_else_47;
+  softmax_warp_then_47:
+  mov.u32 %r48, 0; // unit
+  mov.u32 %r49, %r48;
+  mov.f32 %f21, %f45; // if wb: v
+  bra softmax_warp_end_47;
+  softmax_warp_else_47:
+  mov.u32 %r49, 0; // no else branch
+  softmax_warp_end_47:
+  mov.u64 %rd50, 1;
+  cvt.u32.u64 %r51, %rd50;
+  shfl.sync.bfly.b32 %f52, %f21, %r51, 31, 0xffffffff;
+  setp.gt.f32 %p53, %f52, %f21;
+  @%p53 bra softmax_warp_then_54;
+  bra softmax_warp_else_54;
+  softmax_warp_then_54:
   mov.u32 %r55, 0; // unit
   mov.u32 %r56, %r55;
-  bra softmax_warp_end_51;
-  softmax_warp_else_51:
+  mov.f32 %f21, %f52; // if wb: v
+  bra softmax_warp_end_54;
+  softmax_warp_else_54:
   mov.u32 %r56, 0; // no else branch
-  softmax_warp_end_51:
-  mov.u64 %rd57, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f58, %f54, %rd57;
-  mov.u64 %rd59, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f60, %f58, %rd59;
-  mov.u64 %rd61, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f62, %f60, %rd61;
-  mov.u64 %rd63, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f64, %f62, %rd63;
-  mov.u64 %rd65, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f66, %f64, %rd65;
-  mov.u32 %r67, 0; // proof/assume erased
-  cvt.u64.u32 %rd69, %r5;
-  setp.lt.u64 %p68, %rd69, %rd4;
-  @%p68 bra softmax_warp_then_70;
-  bra softmax_warp_else_70;
-  softmax_warp_then_70:
-  div.f32 %f71, %f54, %f66;
-  cvt.u64.u32 %rd72, %r5;
-  add.u64 %rd73, %rd8, %rd72;
+  softmax_warp_end_54:
+  mov.f32 %f57, 0f00000000; // 0
+  setp.lt.u64 %p58, %rd6, %rd4;
+  @%p58 bra softmax_warp_then_59;
+  bra softmax_warp_else_59;
+  softmax_warp_then_59:
+  sub.f32 %f60, %f11, %f21;
+  mul.rn.f32 %f61, %f60, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f62, %f61;
+  mov.u32 %r63, 0; // unit
+  mov.u32 %r64, %r63;
+  mov.f32 %f57, %f62; // if wb: ex
+  bra softmax_warp_end_59;
+  softmax_warp_else_59:
+  mov.u32 %r64, 0; // no else branch
+  softmax_warp_end_59:
+  mov.b32 %f65, %f57; // param: val
+  mov.u64 %rd66, 16;
+  cvt.u32.u64 %r67, %rd66;
+  shfl.sync.bfly.b32 %f68, %f65, %r67, 31, 0xffffffff;
+  add.f32 %f69, %f65, %f68;
+  mov.u64 %rd70, 8;
+  cvt.u32.u64 %r71, %rd70;
+  shfl.sync.bfly.b32 %f72, %f69, %r71, 31, 0xffffffff;
+  add.f32 %f73, %f69, %f72;
   mov.u64 %rd74, 4;
-  mul.lo.u64 %rd75, %rd73, %rd74;
-  add.u64 %rd76, %rd2, %rd75;
-  st.global.f32 [%rd76], %f71;
-  mov.u32 %r77, 0; // unit
-  mov.u32 %r78, %r77;
-  bra softmax_warp_end_70;
-  softmax_warp_else_70:
-  mov.u32 %r78, 0; // no else branch
-  softmax_warp_end_70:
-  mov.u32 %r79, 0; // unit
+  cvt.u32.u64 %r75, %rd74;
+  shfl.sync.bfly.b32 %f76, %f73, %r75, 31, 0xffffffff;
+  add.f32 %f77, %f73, %f76;
+  mov.u64 %rd78, 2;
+  cvt.u32.u64 %r79, %rd78;
+  shfl.sync.bfly.b32 %f80, %f77, %r79, 31, 0xffffffff;
+  add.f32 %f81, %f77, %f80;
+  mov.u64 %rd82, 1;
+  cvt.u32.u64 %r83, %rd82;
+  shfl.sync.bfly.b32 %f84, %f81, %r83, 31, 0xffffffff;
+  add.f32 %f85, %f81, %f84;
+  mov.u32 %r86, 0; // proof/assume erased
+  setp.lt.u64 %p87, %rd6, %rd4;
+  @%p87 bra softmax_warp_then_88;
+  bra softmax_warp_else_88;
+  softmax_warp_then_88:
+  div.rn.f32 %f89, %f57, %f85;
+  add.u64 %rd90, %rd9, %rd6;
+  mov.u64 %rd91, 4;
+  mul.lo.u64 %rd92, %rd90, %rd91;
+  add.u64 %rd93, %rd2, %rd92;
+  st.global.f32 [%rd93], %f89;
+  mov.u32 %r94, 0; // unit
+  mov.u32 %r95, %r94;
+  bra softmax_warp_end_88;
+  softmax_warp_else_88:
+  mov.u32 %r95, 0; // no else branch
+  softmax_warp_end_88:
+  mov.u32 %r96, 0; // unit
   ret;
 }
 

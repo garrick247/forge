@@ -14,9 +14,9 @@
 )
 {
     .reg .pred %p13;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd26, %rd27, %rd28, %rd3, %rd4, %rd7, %rd8, %rd9;
     .reg .f32 %f18, %f19, %f20, %f21, %f22, %f23, %f24, %f25;
     .reg .u32 %r10, %r29, %r30, %r31, %r5, %r6;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd26, %rd27, %rd28, %rd3, %rd4, %rd7, %rd8, %rd9;
 
   ld.param.u64 %rd0, [silu_kernel_param_inp_data];
   ld.param.u64 %rd1, [silu_kernel_param_inp_len];
@@ -46,7 +46,7 @@
   ex2.approx.f32 %f22, %f21;
   mov.f32 %f23, 0f3F800000; // 1
   add.f32 %f24, %f23, %f22;
-  div.f32 %f25, %f18, %f24;
+  div.rn.f32 %f25, %f18, %f24;
   mov.u64 %rd26, 4;
   mul.lo.u64 %rd27, %rd12, %rd26;
   add.u64 %rd28, %rd2, %rd27;

@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Forward declarations */
 _Bool bmat_get(uint64_t mat __attribute__((unused)), uint64_t row __attribute__((unused)), uint64_t col __attribute__((unused)));

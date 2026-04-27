@@ -83,12 +83,12 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 4
-   [ASSUME] demos/1141_forge_embedding_gather.fg:34  (< pos ids__len)
+   [ASSUME] test/../demos/1141_forge_embedding_gather.fg:34  (< pos ids__len)
              "blockIdx_x < seq_len + seq_len <= ids.len"
-   [ASSUME] demos/1141_forge_embedding_gather.fg:40  (< token_id_64 vocab_size)
+   [ASSUME] test/../demos/1141_forge_embedding_gather.fg:40  (< token_id_64 vocab_size)
              "caller guarantees in-range token ids"
-   [ASSUME] demos/1141_forge_embedding_gather.fg:42  (< (+ embed_offset lane) embed__len)
+   [ASSUME] test/../demos/1141_forge_embedding_gather.fg:42  (< (+ embed_offset lane) embed__len)
              "token_id<vocab_size + lane<d + vocab_size*d<=embed.len"
-   [ASSUME] demos/1141_forge_embedding_gather.fg:47  (< (+ out_offset lane) out__len)
+   [ASSUME] test/../demos/1141_forge_embedding_gather.fg:47  (< (+ out_offset lane) out__len)
              "pos<seq_len + lane<d + seq_len*d<=out.len"
    ---- END AUDIT LOG ---- */

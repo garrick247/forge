@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint8_t* data; uintptr_t len; } forge_span_u8_t;
@@ -238,7 +243,7 @@ __forge_tuple_u64_u64_t ring_dequeue(forge_span_u64_t buf __attribute__((unused)
   } else {
     new_head = (head + 1ULL);
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = val, ._1 = new_head };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, val, new_head);
 }
 
 uint64_t eth_parse_ethertype(forge_span_u64_t pkt __attribute__((unused)), uint64_t pkt_len __attribute__((unused))) {
@@ -251,14 +256,14 @@ __forge_tuple_u64_u64_u64_u64_u64_t ip_parse(forge_span_u64_t pkt __attribute__(
   uint64_t proto __attribute__((unused)) = (pkt.data[23ULL] % 256ULL);
   uint64_t src __attribute__((unused)) = ((((pkt.data[26ULL] * 16777216ULL) + (pkt.data[27ULL] * 65536ULL)) + (pkt.data[28ULL] * 256ULL)) + pkt.data[29ULL]);
   uint64_t dst __attribute__((unused)) = ((((pkt.data[30ULL] * 16777216ULL) + (pkt.data[31ULL] * 65536ULL)) + (pkt.data[32ULL] * 256ULL)) + pkt.data[33ULL]);
-  return (__forge_tuple_u64_u64_u64_u64_u64_t){ ._0 = ver, ._1 = ihl, ._2 = proto, ._3 = src, ._4 = dst };
+  return FORGE_AGG(__forge_tuple_u64_u64_u64_u64_u64_t, ver, ihl, proto, src, dst);
 }
 
 __forge_tuple_u64_u64_u64_t tcp_parse(forge_span_u64_t pkt __attribute__((unused)), uint64_t pkt_len __attribute__((unused)), uint64_t offset __attribute__((unused))) {
   uint64_t src_port __attribute__((unused)) = ((pkt.data[offset] * 256ULL) + pkt.data[(offset + 1ULL)]);
   uint64_t dst_port __attribute__((unused)) = ((pkt.data[(offset + 2ULL)] * 256ULL) + pkt.data[(offset + 3ULL)]);
   uint64_t flags __attribute__((unused)) = (pkt.data[(offset + 13ULL)] % 64ULL);
-  return (__forge_tuple_u64_u64_u64_t){ ._0 = src_port, ._1 = dst_port, ._2 = flags };
+  return FORGE_AGG(__forge_tuple_u64_u64_u64_t, src_port, dst_port, flags);
 }
 
 uint64_t conn_transition(uint64_t state __attribute__((unused)), uint64_t tcp_flags __attribute__((unused))) {
@@ -479,7 +484,7 @@ __forge_tuple_u64_u64_u64_t count_by_verdict(forge_span_u64_t verdicts __attribu
     }
 
   }
-  return (__forge_tuple_u64_u64_u64_t){ ._0 = accepted, ._1 = dropped, ._2 = invalid };
+  return FORGE_AGG(__forge_tuple_u64_u64_u64_t, accepted, dropped, invalid);
 }
 
 int main() {

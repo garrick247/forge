@@ -25,6 +25,11 @@
 #define gridDim_y   ((uint32_t)(gridDim.y))
 #define gridDim_z   ((uint32_t)(gridDim.z))
 
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint32_t* data; uintptr_t len; } forge_span_u32_t;
@@ -43,17 +48,17 @@ __device__ void mbarrier_init(uint64_t* bar, uint64_t expect);  /* extern: forge
 
 __device__ uint64_t mbarrier_arrive_tx(uint64_t* bar, uint64_t tx_bytes);  /* extern: forge_gpu */
 
-_Bool mbarrier_try_wait(uint64_t* bar, uint64_t phase);  /* extern: forge_gpu */
+__device__ _Bool mbarrier_try_wait(uint64_t* bar, uint64_t phase);  /* extern: forge_gpu */
 
 __device__ void fence_proxy_async(void);  /* extern: forge_gpu */
 
-void tma_store_fence(void);  /* extern: forge_gpu */
+__device__ void tma_store_fence(void);  /* extern: forge_gpu */
 
-void tma_load_1d(uint8_t* smem_dst, uint8_t* tma_desc, uint64_t* bar, uint64_t c0);  /* extern: forge_gpu */
+__device__ void tma_load_1d(uint8_t* smem_dst, uint8_t* tma_desc, uint64_t* bar, uint64_t c0);  /* extern: forge_gpu */
 
 __device__ void tma_load_2d(uint8_t* smem_dst, uint8_t* tma_desc, uint64_t* bar, uint64_t c0, uint64_t c1);  /* extern: forge_gpu */
 
-void tma_store_2d(uint8_t* smem_src, uint8_t* tma_desc, uint64_t c0, uint64_t c1);  /* extern: forge_gpu */
+__device__ void tma_store_2d(uint8_t* smem_src, uint8_t* tma_desc, uint64_t c0, uint64_t c1);  /* extern: forge_gpu */
 
 __device__ void qmma_f4f4bf16(uint8_t* smem_a, uint8_t* smem_as, uint8_t* smem_b, uint8_t* smem_bs, forge_span_u32_t acc);  /* extern: forge_gpu */
 
@@ -76,16 +81,15 @@ static const uint64_t B_SCALE_BYTES = 128ULL;
 static const uint64_t ACC_SIZE = 4096ULL;
 
 /* Forward declarations */
-__device__ uint64_t next_phase(uint64_t phase __attribute__((unused)));
-__device__ void mbarrier_init_safe(uint64_t* bar __attribute__((unused)), uint64_t expect __attribute__((unused)));
-__device__ void tma_issue_2d(uint8_t* smem_dst __attribute__((unused)), uint8_t* tma_desc __attribute__((unused)), uint64_t* bar __attribute__((unused)), uint64_t c0 __attribute__((unused)), uint64_t c1 __attribute__((unused)), uint64_t smem_cap __attribute__((unused)), uint64_t tile_bytes __attribute__((unused)));
-int main();
+static __host__ __device__ __forceinline__ uint64_t next_phase(uint64_t phase __attribute__((unused)));
+static __host__ __device__ __forceinline__ void mbarrier_init_safe(uint64_t* bar __attribute__((unused)), uint64_t expect __attribute__((unused)));
+static __host__ __device__ __forceinline__ void tma_issue_2d(uint8_t* smem_dst __attribute__((unused)), uint8_t* tma_desc __attribute__((unused)), uint64_t* bar __attribute__((unused)), uint64_t c0 __attribute__((unused)), uint64_t c1 __attribute__((unused)), uint64_t smem_cap __attribute__((unused)), uint64_t tile_bytes __attribute__((unused)));
 uint64_t output_row(uint64_t pid_m __attribute__((unused)));
 uint64_t output_col(uint64_t pid_n __attribute__((unused)));
 __global__ void qmma_gemm(uint8_t* desc_a __attribute__((unused)), uint8_t* desc_as __attribute__((unused)), uint8_t* desc_b __attribute__((unused)), uint8_t* desc_bs __attribute__((unused)), uint64_t* bar __attribute__((unused)), uint8_t* smem_a __attribute__((unused)), uint8_t* smem_as __attribute__((unused)), uint8_t* smem_b __attribute__((unused)), uint8_t* smem_bs __attribute__((unused)), uint64_t smem_a_cap __attribute__((unused)), uint64_t smem_b_cap __attribute__((unused)), forge_span_u32_t acc __attribute__((unused)), uint64_t K_tiles __attribute__((unused)));
 int main();
 
-__device__ uint64_t next_phase(uint64_t phase __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint64_t next_phase(uint64_t phase __attribute__((unused))) {
   if ((phase == 0ULL)) {
     return 1ULL;
   } else {
@@ -93,18 +97,13 @@ __device__ uint64_t next_phase(uint64_t phase __attribute__((unused))) {
   }
 }
 
-__device__ void mbarrier_init_safe(uint64_t* bar __attribute__((unused)), uint64_t expect __attribute__((unused))) {
+static __host__ __device__ __forceinline__ void mbarrier_init_safe(uint64_t* bar __attribute__((unused)), uint64_t expect __attribute__((unused))) {
   mbarrier_init(bar, expect);
 }
 
-__device__ void tma_issue_2d(uint8_t* smem_dst __attribute__((unused)), uint8_t* tma_desc __attribute__((unused)), uint64_t* bar __attribute__((unused)), uint64_t c0 __attribute__((unused)), uint64_t c1 __attribute__((unused)), uint64_t smem_cap __attribute__((unused)), uint64_t tile_bytes __attribute__((unused))) {
+static __host__ __device__ __forceinline__ void tma_issue_2d(uint8_t* smem_dst __attribute__((unused)), uint8_t* tma_desc __attribute__((unused)), uint64_t* bar __attribute__((unused)), uint64_t c0 __attribute__((unused)), uint64_t c1 __attribute__((unused)), uint64_t smem_cap __attribute__((unused)), uint64_t tile_bytes __attribute__((unused))) {
   uint64_t _tok __attribute__((unused)) = mbarrier_arrive_tx(bar, tile_bytes);
   tma_load_2d(smem_dst, tma_desc, bar, c0, c1);
-}
-
-int main() {
-  return (int)(0ULL);
-
 }
 
 uint64_t output_row(uint64_t pid_m __attribute__((unused))) {

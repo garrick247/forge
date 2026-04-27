@@ -7,6 +7,14 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
+
+/* Function pointer typedefs */
+typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 
 /* Forward declarations */
 float float_scale(float x __attribute__((unused)), float y __attribute__((unused)));

@@ -1,40 +1,64 @@
-.version 9.0
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
 .target sm_120
 .address_size 64
 
 .visible .entry vec_pairwise_sum(
-    .param .u64 a, .param .u64 a_len, .param .u64 out, .param .u64 out_len, .param .u32 n, .param .u32 n_minus_1)
+    .param .u64 vec_pairwise_sum_param_a_data,
+    .param .u64 vec_pairwise_sum_param_a_len,
+    .param .u64 vec_pairwise_sum_param_out_data,
+    .param .u64 vec_pairwise_sum_param_out_len,
+    .param .u32 vec_pairwise_sum_param_n,
+    .param .u32 vec_pairwise_sum_param_n_minus_1
+)
 {
-    .reg .b32 %r<13>;
-    .reg .b64 %rd<5>;
-    .reg .pred %p<1>;
+    .reg .pred %p11;
+    .reg .u32 %r10, %r13, %r14, %r19, %r24, %r25, %r30, %r31, %r32, %r4, %r5, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd26, %rd27, %rd28, %rd29, %rd3;
 
-    ld.param.u64 %rd0, [a];
-    ld.param.u64 %rd1, [a_len];
-    ld.param.u64 %rd1, [out];
-    ld.param.u64 %rd2, [out_len];
-    ld.param.u32 %r0, [n];
-    ld.param.u32 %r1, [n_minus_1];
-    mov.u32 %r2, %ctaid.x;
-    mov.u32 %r3, %ntid.x;
-    mul.lo.u32 %r4, %r2, %r3;
-    mov.u32 %r5, %tid.x;
-    add.u32 %r6, %r4, %r5;
-    setp.lt.u32 %p0, %r6, %r1;
-    @!%p0 ret;
-    add.u32 %r7, %r6, 1;
-    shl.b32 %r8, %r6, 2;
-    cvt.u64.u32 %rd3, %r8;
-    add.u64 %rd2, %rd0, %rd3;
-    ld.global.u32 %r9, [%rd2];
-    shl.b32 %r10, %r7, 2;
-    cvt.u64.u32 %rd4, %r10;
-    add.u64 %rd2, %rd0, %rd4;
-    ld.global.u32 %r11, [%rd2];
-    add.u64 %rd0, %rd1, %rd3;
-    add.u32 %r12, %r9, %r11;
-    st.global.u32 [%rd0], %r12;
-    bra if_merge_4;
-if_merge_4:
-    ret;
+  ld.param.u64 %rd0, [vec_pairwise_sum_param_a_data];
+  ld.param.u64 %rd1, [vec_pairwise_sum_param_a_len];
+  ld.param.u64 %rd2, [vec_pairwise_sum_param_out_data];
+  ld.param.u64 %rd3, [vec_pairwise_sum_param_out_len];
+  ld.param.u32 %r4, [vec_pairwise_sum_param_n];
+  ld.param.u32 %r5, [vec_pairwise_sum_param_n_minus_1];
+
+  mov.u32 %r6, %ctaid.x;
+  mov.u32 %r7, %ntid.x;
+  mul.lo.u32 %r8, %r6, %r7;
+  mov.u32 %r9, %tid.x;
+  add.u32 %r10, %r8, %r9;
+  setp.lt.u32 %p11, %r10, %r5;
+  @%p11 bra vec_pairwise_sum_then_12;
+  bra vec_pairwise_sum_else_12;
+  vec_pairwise_sum_then_12:
+  mov.u32 %r13, 1;
+  add.u32 %r14, %r10, %r13;
+  cvt.u64.u32 %rd15, %r10;
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd15, %rd16;
+  add.u64 %rd18, %rd0, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  cvt.u64.u32 %rd20, %r14;
+  mov.u64 %rd21, 4;
+  mul.lo.u64 %rd22, %rd20, %rd21;
+  add.u64 %rd23, %rd0, %rd22;
+  ld.global.u32 %r24, [%rd23];
+  add.u32 %r25, %r19, %r24;
+  cvt.u64.u32 %rd26, %r10;
+  mov.u64 %rd27, 4;
+  mul.lo.u64 %rd28, %rd26, %rd27;
+  add.u64 %rd29, %rd2, %rd28;
+  st.global.u32 [%rd29], %r25;
+  mov.u32 %r30, 0; // unit
+  mov.u32 %r31, %r30;
+  bra vec_pairwise_sum_end_12;
+  vec_pairwise_sum_else_12:
+  mov.u32 %r31, 0; // no else branch
+  vec_pairwise_sum_end_12:
+  mov.u32 %r32, 0; // unit
+  ret;
 }
+

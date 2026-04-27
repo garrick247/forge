@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -49,7 +54,7 @@ __forge_tuple_u64_u64_u64_t pid_step(uint64_t setpoint __attribute__((unused)), 
   } else {
     output = raw_output;
   }
-  return (__forge_tuple_u64_u64_u64_t){ ._0 = error, ._1 = clamped_integral, ._2 = output };
+  return FORGE_AGG(__forge_tuple_u64_u64_u64_t, error, clamped_integral, output);
 }
 
 void pid_run(forge_span_u64_t setpoints __attribute__((unused)), forge_span_u64_t measurements __attribute__((unused)), uint64_t n __attribute__((unused)), forge_span_u64_t outputs __attribute__((unused)), uint64_t kp __attribute__((unused)), uint64_t ki __attribute__((unused)), uint64_t kd __attribute__((unused)), uint64_t max_integral __attribute__((unused)), uint64_t max_output __attribute__((unused))) {

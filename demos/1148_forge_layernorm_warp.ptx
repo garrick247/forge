@@ -17,10 +17,10 @@
     .param .u64 layernorm_warp_param_n_cols
 )
 {
-    .reg .pred %p17, %p41, %p61;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd18, %rd2, %rd21, %rd22, %rd23, %rd24, %rd25, %rd29, %rd3, %rd31, %rd33, %rd35, %rd37, %rd4, %rd42, %rd48, %rd5, %rd50, %rd52, %rd54, %rd56, %rd6, %rd62, %rd64, %rd65, %rd66, %rd67, %rd69, %rd7, %rd70, %rd71, %rd72, %rd78, %rd79, %rd8, %rd80, %rd81, %rd82;
-    .reg .f32 %f13, %f14, %f16, %f26, %f30, %f32, %f34, %f36, %f38, %f39, %f40, %f44, %f47, %f49, %f51, %f53, %f55, %f57, %f58, %f59, %f60, %f68, %f73, %f75, %f76, %f77;
-    .reg .u32 %r10, %r15, %r20, %r27, %r28, %r45, %r46, %r74, %r83, %r84, %r85, %r9;
+    .reg .pred %p18, %p51, %p81;
+    .reg .f32 %f14, %f15, %f17, %f25, %f28, %f31, %f32, %f35, %f36, %f39, %f40, %f43, %f44, %f47, %f48, %f49, %f50, %f53, %f56, %f57, %f60, %f61, %f64, %f65, %f68, %f69, %f72, %f73, %f76, %f77, %f78, %f79, %f80, %f86, %f90, %f92, %f93, %f94;
+    .reg .u32 %r100, %r101, %r11, %r16, %r20, %r26, %r27, %r30, %r34, %r38, %r42, %r46, %r54, %r55, %r59, %r63, %r67, %r71, %r75, %r9, %r91, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd12, %rd13, %rd2, %rd21, %rd22, %rd23, %rd24, %rd29, %rd3, %rd33, %rd37, %rd4, %rd41, %rd45, %rd5, %rd58, %rd6, %rd62, %rd66, %rd7, %rd70, %rd74, %rd8, %rd83, %rd84, %rd85, %rd87, %rd88, %rd89, %rd95, %rd96, %rd97, %rd98;
 
   ld.param.u64 %rd0, [layernorm_warp_param_inp_data];
   ld.param.u64 %rd1, [layernorm_warp_param_inp_len];
@@ -33,101 +33,119 @@
   ld.param.u64 %rd8, [layernorm_warp_param_n_cols];
 
   mov.u32 %r9, %tid.x;
-  mov.u32 %r10, %ctaid.x;
-  cvt.u64.u32 %rd11, %r10;
-  mul.lo.u64 %rd12, %rd11, %rd8;
-  cvt.f32.u64 %f13, %rd8;
-  mov.f32 %f14, 0f3727C5AC; // 1e-05
-  mov.u32 %r15, 0; // proof/assume erased
-  mov.f32 %f16, 0f00000000; // 0
-  cvt.u64.u32 %rd18, %r9;
-  setp.lt.u64 %p17, %rd18, %rd8;
-  @%p17 bra layernorm_warp_then_19;
+  cvt.u64.u32 %rd10, %r9;
+  mov.u32 %r11, %ctaid.x;
+  cvt.u64.u32 %rd12, %r11;
+  mul.lo.u64 %rd13, %rd12, %rd8;
+  cvt.rn.f32.u64 %f14, %rd8;
+  mov.f32 %f15, 0f3727C5AC; // 1e-05
+  mov.u32 %r16, 0; // proof/assume erased
+  mov.f32 %f17, 0f00000000; // 0
+  setp.lt.u64 %p18, %rd10, %rd8;
+  @%p18 bra layernorm_warp_then_19;
   bra layernorm_warp_else_19;
   layernorm_warp_then_19:
   mov.u32 %r20, 0; // proof/assume erased
-  cvt.u64.u32 %rd21, %r9;
-  add.u64 %rd22, %rd12, %rd21;
-  mov.u64 %rd23, 4;
-  mul.lo.u64 %rd24, %rd22, %rd23;
-  add.u64 %rd25, %rd0, %rd24;
-  ld.global.f32 %f26, [%rd25];
-  mov.u32 %r27, 0; // unit
-  mov.u32 %r28, %r27;
+  add.u64 %rd21, %rd13, %rd10;
+  mov.u64 %rd22, 4;
+  mul.lo.u64 %rd23, %rd21, %rd22;
+  add.u64 %rd24, %rd0, %rd23;
+  ld.global.f32 %f25, [%rd24];
+  mov.u32 %r26, 0; // unit
+  mov.u32 %r27, %r26;
+  mov.f32 %f17, %f25; // if wb: x
   bra layernorm_warp_end_19;
   layernorm_warp_else_19:
-  mov.u32 %r28, 0; // no else branch
+  mov.u32 %r27, 0; // no else branch
   layernorm_warp_end_19:
-  mov.u64 %rd29, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f30, %f26, %rd29;
-  mov.u64 %rd31, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f32, %f30, %rd31;
-  mov.u64 %rd33, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f34, %f32, %rd33;
-  mov.u64 %rd35, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f36, %f34, %rd35;
-  mov.u64 %rd37, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f38, %f36, %rd37;
-  div.f32 %f39, %f38, %f13;
-  mov.f32 %f40, 0f00000000; // 0
-  cvt.u64.u32 %rd42, %r9;
-  setp.lt.u64 %p41, %rd42, %rd8;
-  @%p41 bra layernorm_warp_then_43;
-  bra layernorm_warp_else_43;
-  layernorm_warp_then_43:
-  sub.f32 %f44, %f26, %f39;
-  mov.u32 %r45, 0; // unit
-  mov.u32 %r46, %r45;
-  bra layernorm_warp_end_43;
-  layernorm_warp_else_43:
-  mov.u32 %r46, 0; // no else branch
-  layernorm_warp_end_43:
-  mul.f32 %f47, %f44, %f44;
-  mov.u64 %rd48, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f49, %f47, %rd48;
-  mov.u64 %rd50, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f51, %f49, %rd50;
-  mov.u64 %rd52, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f53, %f51, %rd52;
-  mov.u64 %rd54, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f55, %f53, %rd54;
-  mov.u64 %rd56, 0; // FG-2.6: UNRESOLVED device fn shfl_xor_sync_f32 (stub)
-  add.f32 %f57, %f55, %rd56;
-  div.f32 %f58, %f57, %f13;
-  add.f32 %f59, %f58, %f14;
-  rsqrt.approx.f32 %f60, %f59;
-  cvt.u64.u32 %rd62, %r9;
-  setp.lt.u64 %p61, %rd62, %rd8;
-  @%p61 bra layernorm_warp_then_63;
-  bra layernorm_warp_else_63;
-  layernorm_warp_then_63:
-  cvt.u64.u32 %rd64, %r9;
-  mov.u64 %rd65, 4;
-  mul.lo.u64 %rd66, %rd64, %rd65;
-  add.u64 %rd67, %rd4, %rd66;
-  ld.global.f32 %f68, [%rd67];
-  cvt.u64.u32 %rd69, %r9;
-  mov.u64 %rd70, 4;
-  mul.lo.u64 %rd71, %rd69, %rd70;
-  add.u64 %rd72, %rd6, %rd71;
-  ld.global.f32 %f73, [%rd72];
-  mov.u32 %r74, 0; // proof/assume erased
-  mul.f32 %f75, %f44, %f60;
-  mul.f32 %f76, %f75, %f68;
-  add.f32 %f77, %f76, %f73;
-  cvt.u64.u32 %rd78, %r9;
-  add.u64 %rd79, %rd12, %rd78;
-  mov.u64 %rd80, 4;
-  mul.lo.u64 %rd81, %rd79, %rd80;
-  add.u64 %rd82, %rd2, %rd81;
-  st.global.f32 [%rd82], %f77;
-  mov.u32 %r83, 0; // unit
-  mov.u32 %r84, %r83;
-  bra layernorm_warp_end_63;
-  layernorm_warp_else_63:
-  mov.u32 %r84, 0; // no else branch
-  layernorm_warp_end_63:
-  mov.u32 %r85, 0; // unit
+  mov.b32 %f28, %f17; // param: val
+  mov.u64 %rd29, 16;
+  cvt.u32.u64 %r30, %rd29;
+  shfl.sync.bfly.b32 %f31, %f28, %r30, 31, 0xffffffff;
+  add.f32 %f32, %f28, %f31;
+  mov.u64 %rd33, 8;
+  cvt.u32.u64 %r34, %rd33;
+  shfl.sync.bfly.b32 %f35, %f32, %r34, 31, 0xffffffff;
+  add.f32 %f36, %f32, %f35;
+  mov.u64 %rd37, 4;
+  cvt.u32.u64 %r38, %rd37;
+  shfl.sync.bfly.b32 %f39, %f36, %r38, 31, 0xffffffff;
+  add.f32 %f40, %f36, %f39;
+  mov.u64 %rd41, 2;
+  cvt.u32.u64 %r42, %rd41;
+  shfl.sync.bfly.b32 %f43, %f40, %r42, 31, 0xffffffff;
+  add.f32 %f44, %f40, %f43;
+  mov.u64 %rd45, 1;
+  cvt.u32.u64 %r46, %rd45;
+  shfl.sync.bfly.b32 %f47, %f44, %r46, 31, 0xffffffff;
+  add.f32 %f48, %f44, %f47;
+  div.rn.f32 %f49, %f48, %f14;
+  mov.f32 %f50, 0f00000000; // 0
+  setp.lt.u64 %p51, %rd10, %rd8;
+  @%p51 bra layernorm_warp_then_52;
+  bra layernorm_warp_else_52;
+  layernorm_warp_then_52:
+  sub.f32 %f53, %f17, %f49;
+  mov.u32 %r54, 0; // unit
+  mov.u32 %r55, %r54;
+  mov.f32 %f50, %f53; // if wb: d
+  bra layernorm_warp_end_52;
+  layernorm_warp_else_52:
+  mov.u32 %r55, 0; // no else branch
+  layernorm_warp_end_52:
+  mul.f32 %f56, %f50, %f50;
+  mov.b32 %f57, %f56; // param: val
+  mov.u64 %rd58, 16;
+  cvt.u32.u64 %r59, %rd58;
+  shfl.sync.bfly.b32 %f60, %f57, %r59, 31, 0xffffffff;
+  add.f32 %f61, %f57, %f60;
+  mov.u64 %rd62, 8;
+  cvt.u32.u64 %r63, %rd62;
+  shfl.sync.bfly.b32 %f64, %f61, %r63, 31, 0xffffffff;
+  add.f32 %f65, %f61, %f64;
+  mov.u64 %rd66, 4;
+  cvt.u32.u64 %r67, %rd66;
+  shfl.sync.bfly.b32 %f68, %f65, %r67, 31, 0xffffffff;
+  add.f32 %f69, %f65, %f68;
+  mov.u64 %rd70, 2;
+  cvt.u32.u64 %r71, %rd70;
+  shfl.sync.bfly.b32 %f72, %f69, %r71, 31, 0xffffffff;
+  add.f32 %f73, %f69, %f72;
+  mov.u64 %rd74, 1;
+  cvt.u32.u64 %r75, %rd74;
+  shfl.sync.bfly.b32 %f76, %f73, %r75, 31, 0xffffffff;
+  add.f32 %f77, %f73, %f76;
+  div.rn.f32 %f78, %f77, %f14;
+  add.f32 %f79, %f78, %f15;
+  rsqrt.approx.f32 %f80, %f79;
+  setp.lt.u64 %p81, %rd10, %rd8;
+  @%p81 bra layernorm_warp_then_82;
+  bra layernorm_warp_else_82;
+  layernorm_warp_then_82:
+  mov.u64 %rd83, 4;
+  mul.lo.u64 %rd84, %rd10, %rd83;
+  add.u64 %rd85, %rd4, %rd84;
+  ld.global.f32 %f86, [%rd85];
+  mov.u64 %rd87, 4;
+  mul.lo.u64 %rd88, %rd10, %rd87;
+  add.u64 %rd89, %rd6, %rd88;
+  ld.global.f32 %f90, [%rd89];
+  mov.u32 %r91, 0; // proof/assume erased
+  mul.f32 %f92, %f50, %f80;
+  mul.f32 %f93, %f92, %f86;
+  add.f32 %f94, %f93, %f90;
+  add.u64 %rd95, %rd13, %rd10;
+  mov.u64 %rd96, 4;
+  mul.lo.u64 %rd97, %rd95, %rd96;
+  add.u64 %rd98, %rd2, %rd97;
+  st.global.f32 [%rd98], %f94;
+  mov.u32 %r99, 0; // unit
+  mov.u32 %r100, %r99;
+  bra layernorm_warp_end_82;
+  layernorm_warp_else_82:
+  mov.u32 %r100, 0; // no else branch
+  layernorm_warp_end_82:
+  mov.u32 %r101, 0; // unit
   ret;
 }
 

@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Tuple typedefs */
 typedef struct { uint64_t _0; uint64_t _1; } __forge_tuple_u64_u64_t;
@@ -35,7 +40,7 @@ __forge_tuple_u64_u64_t cordic(uint64_t x0 __attribute__((unused)), uint64_t y0 
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = x, ._1 = y };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, x, y);
 }
 
 int main() {

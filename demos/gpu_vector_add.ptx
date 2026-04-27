@@ -16,9 +16,9 @@
 )
 {
     .reg .pred %p15;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd13, %rd14, %rd17, %rd18, %rd19, %rd2, %rd21, %rd22, %rd23, %rd26, %rd27, %rd28, %rd3, %rd4, %rd5, %rd6, %rd8;
     .reg .f32 %f20, %f24, %f25;
     .reg .u32 %r12, %r29, %r30, %r31, %r7, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd13, %rd14, %rd17, %rd18, %rd19, %rd2, %rd21, %rd22, %rd23, %rd26, %rd27, %rd28, %rd3, %rd4, %rd5, %rd6, %rd8;
 
   ld.param.u64 %rd0, [vector_add_param_a_data];
   ld.param.u64 %rd1, [vector_add_param_a_len];
@@ -71,9 +71,9 @@
 )
 {
     .reg .pred %p12;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd14, %rd15, %rd16, %rd19, %rd20, %rd21, %rd3, %rd5, %rd7, %rd8;
     .reg .f32 %f17, %f18, %f2;
     .reg .u32 %r22, %r23, %r24, %r4, %r6, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd14, %rd15, %rd16, %rd19, %rd20, %rd21, %rd3, %rd5, %rd7, %rd8;
 
   ld.param.u64 %rd0, [vector_scale_param_data_data];
   ld.param.u64 %rd1, [vector_scale_param_data_len];
@@ -121,9 +121,9 @@
 )
 {
     .reg .pred %p14;
-    .reg .u64 %rd0, %rd1, %rd10, %rd12, %rd13, %rd16, %rd17, %rd18, %rd2, %rd21, %rd22, %rd23, %rd26, %rd27, %rd28, %rd3, %rd5, %rd7, %rd9;
     .reg .f32 %f19, %f20, %f24, %f25, %f4;
     .reg .u32 %r11, %r29, %r30, %r31, %r6, %r8;
+    .reg .u64 %rd0, %rd1, %rd10, %rd12, %rd13, %rd16, %rd17, %rd18, %rd2, %rd21, %rd22, %rd23, %rd26, %rd27, %rd28, %rd3, %rd5, %rd7, %rd9;
 
   ld.param.u64 %rd0, [saxpy_param_x_data];
   ld.param.u64 %rd1, [saxpy_param_x_len];

@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -65,7 +70,7 @@ __forge_tuple_u64_u64_t aggregate(forge_span_u64_t s __attribute__((unused)), ui
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = sum, ._1 = mx };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, sum, mx);
 }
 
 _Bool validate(uint64_t sum __attribute__((unused)), uint64_t budget __attribute__((unused))) {

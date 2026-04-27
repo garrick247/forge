@@ -14,9 +14,11 @@
     .param .u32 tiled_stencil_5pt_param_height
 )
 {
+    .shared .u32 __forge_smem_smem[256];
+
     .reg .pred %p110, %p20, %p22, %p26, %p46, %p49, %p52, %p55, %p58, %p62, %p65, %p69;
-    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd111, %rd113, %rd114, %rd115, %rd116, %rd2, %rd27, %rd29, %rd3, %rd30, %rd31, %rd32, %rd34, %rd35, %rd36, %rd37, %rd6, %rd71, %rd72, %rd73, %rd74, %rd78, %rd79, %rd80, %rd81, %rd85, %rd86, %rd87, %rd88, %rd92, %rd93, %rd94, %rd95, %rd99;
     .reg .u32 %r10, %r103, %r104, %r105, %r106, %r107, %r108, %r109, %r11, %r117, %r118, %r119, %r12, %r120, %r121, %r122, %r123, %r124, %r125, %r126, %r127, %r128, %r129, %r13, %r130, %r131, %r132, %r133, %r134, %r135, %r14, %r15, %r16, %r17, %r18, %r19, %r24, %r25, %r33, %r38, %r39, %r4, %r40, %r41, %r42, %r43, %r44, %r45, %r48, %r5, %r51, %r54, %r57, %r60, %r61, %r64, %r67, %r68, %r7, %r75, %r76, %r77, %r8, %r82, %r83, %r84, %r89, %r9, %r90, %r91, %r96, %r97, %r98;
+    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd111, %rd113, %rd114, %rd115, %rd116, %rd2, %rd27, %rd29, %rd3, %rd30, %rd31, %rd32, %rd34, %rd35, %rd36, %rd37, %rd6, %rd71, %rd72, %rd73, %rd74, %rd78, %rd79, %rd80, %rd81, %rd85, %rd86, %rd87, %rd88, %rd92, %rd93, %rd94, %rd95, %rd99;
 
   ld.param.u64 %rd0, [tiled_stencil_5pt_param_inp_data];
   ld.param.u64 %rd1, [tiled_stencil_5pt_param_inp_len];
@@ -25,7 +27,7 @@
   ld.param.u32 %r4, [tiled_stencil_5pt_param_width];
   ld.param.u32 %r5, [tiled_stencil_5pt_param_height];
 
-  mov.u64 %rd6, 0;
+  mov.u64 %rd6, __forge_smem_smem;
   mov.u32 %r7, %tid.x;
   mov.u32 %r8, %tid.y;
   mov.u32 %r9, %ctaid.x;
@@ -63,7 +65,7 @@
   mov.u64 %rd35, 4;
   mul.lo.u64 %rd36, %rd34, %rd35;
   add.u64 %rd37, %rd6, %rd36;
-  st.global.u32 [%rd37], %r33;
+  st.shared.u32 [%rd37], %r33;
   mov.u32 %r38, 0; // unit
   mov.u32 %r39, %r38;
   bra tiled_stencil_5pt_end_28;
@@ -130,35 +132,35 @@
   mov.u64 %rd72, 4;
   mul.lo.u64 %rd73, %rd71, %rd72;
   add.u64 %rd74, %rd6, %rd73;
-  ld.global.u32 %r75, [%rd74];
+  ld.shared.u32 %r75, [%rd74];
   mov.u32 %r76, 16;
   sub.u32 %r77, %r19, %r76;
   cvt.u64.u32 %rd78, %r77;
   mov.u64 %rd79, 4;
   mul.lo.u64 %rd80, %rd78, %rd79;
   add.u64 %rd81, %rd6, %rd80;
-  ld.global.u32 %r82, [%rd81];
+  ld.shared.u32 %r82, [%rd81];
   mov.u32 %r83, 16;
   add.u32 %r84, %r19, %r83;
   cvt.u64.u32 %rd85, %r84;
   mov.u64 %rd86, 4;
   mul.lo.u64 %rd87, %rd85, %rd86;
   add.u64 %rd88, %rd6, %rd87;
-  ld.global.u32 %r89, [%rd88];
+  ld.shared.u32 %r89, [%rd88];
   mov.u32 %r90, 1;
   sub.u32 %r91, %r19, %r90;
   cvt.u64.u32 %rd92, %r91;
   mov.u64 %rd93, 4;
   mul.lo.u64 %rd94, %rd92, %rd93;
   add.u64 %rd95, %rd6, %rd94;
-  ld.global.u32 %r96, [%rd95];
+  ld.shared.u32 %r96, [%rd95];
   mov.u32 %r97, 1;
   add.u32 %r98, %r19, %r97;
   cvt.u64.u32 %rd99, %r98;
   mov.u64 %rd100, 4;
   mul.lo.u64 %rd101, %rd99, %rd100;
   add.u64 %rd102, %rd6, %rd101;
-  ld.global.u32 %r103, [%rd102];
+  ld.shared.u32 %r103, [%rd102];
   add.u32 %r104, %r75, %r82;
   add.u32 %r105, %r104, %r89;
   add.u32 %r106, %r105, %r96;

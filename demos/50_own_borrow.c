@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 typedef struct Point {
   uint64_t x;
@@ -38,7 +43,7 @@ __forge_tuple_u64_own_Point_t point_x(Point* p __attribute__((unused))) {
   const Point* r __attribute__((unused)) = (__tup_27_4)._0;
   Point* p2 __attribute__((unused)) = (__tup_27_4)._1;
   uint64_t xval __attribute__((unused)) = (*r).x;
-  return (__forge_tuple_u64_own_Point_t){ ._0 = xval, ._1 = p2 };
+  return FORGE_AGG(__forge_tuple_u64_own_Point_t, xval, p2);
 }
 
 __forge_tuple_u64_own_Point_t point_y(Point* p __attribute__((unused))) {
@@ -46,7 +51,7 @@ __forge_tuple_u64_own_Point_t point_y(Point* p __attribute__((unused))) {
   const Point* r __attribute__((unused)) = (__tup_33_4)._0;
   Point* p2 __attribute__((unused)) = (__tup_33_4)._1;
   uint64_t yval __attribute__((unused)) = (*r).y;
-  return (__forge_tuple_u64_own_Point_t){ ._0 = yval, ._1 = p2 };
+  return FORGE_AGG(__forge_tuple_u64_own_Point_t, yval, p2);
 }
 
 Point* point_translate(Point* p __attribute__((unused)), uint64_t dx __attribute__((unused)), uint64_t dy __attribute__((unused))) {

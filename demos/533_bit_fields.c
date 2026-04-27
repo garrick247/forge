@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Forward declarations */
 uint64_t extract_bits(uint64_t v __attribute__((unused)), uint64_t lo __attribute__((unused)), uint64_t width __attribute__((unused)));

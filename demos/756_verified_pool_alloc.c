@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -34,7 +39,7 @@ void pool_init(forge_span_u64_t free_list __attribute__((unused)), uint64_t pool
 __forge_tuple_u64_u64_t pool_alloc(forge_span_u64_t free_list __attribute__((unused)), uint64_t pool_size __attribute__((unused)), uint64_t free_count __attribute__((unused))) {
   uint64_t new_count __attribute__((unused)) = (free_count - 1ULL);
   uint64_t block __attribute__((unused)) = free_list.data[new_count];
-  return (__forge_tuple_u64_u64_t){ ._0 = block, ._1 = new_count };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, block, new_count);
 }
 
 uint64_t pool_free(forge_span_u64_t free_list __attribute__((unused)), uint64_t pool_size __attribute__((unused)), uint64_t free_count __attribute__((unused)), uint64_t block __attribute__((unused))) {

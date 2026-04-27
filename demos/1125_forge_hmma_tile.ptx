@@ -15,8 +15,9 @@
 )
 {
     .reg .f32 %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f29;
+    .reg .u32 %r30, %r31, %r6;
     .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd2, %rd3, %rd4, %rd5, %rd7, %rd8, %rd9;
-    .reg .u32 %r16, %r17, %r18, %r19, %r20, %r21, %r30, %r31, %r6;
+    .reg .b32 %rb16, %rb17, %rb18, %rb19, %rb20, %rb21;
 
   ld.param.u64 %rd0, [hmma_tile_param_A_data];
   ld.param.u64 %rd1, [hmma_tile_param_A_len];
@@ -35,17 +36,17 @@
   add.u64 %rd13, %rd2, %rd12;
   mul.lo.u64 %rd14, %rd7, %rd8;
   add.u64 %rd15, %rd4, %rd14;
-  ld.global.u32 %r16, [%rd11+0];
-  ld.global.u32 %r17, [%rd11+4];
-  ld.global.u32 %r18, [%rd11+8];
-  ld.global.u32 %r19, [%rd11+12];
-  ld.global.u32 %r20, [%rd13+0];
-  ld.global.u32 %r21, [%rd13+4];
+  ld.global.b32 %rb16, [%rd11+0];
+  ld.global.b32 %rb17, [%rd11+4];
+  ld.global.b32 %rb18, [%rd11+8];
+  ld.global.b32 %rb19, [%rd11+12];
+  ld.global.b32 %rb20, [%rd13+0];
+  ld.global.b32 %rb21, [%rd13+4];
   ld.global.f32 %f22, [%rd15+0];
   ld.global.f32 %f23, [%rd15+4];
   ld.global.f32 %f24, [%rd15+8];
   ld.global.f32 %f25, [%rd15+12];
-  mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 {%f26, %f27, %f28, %f29}, {%r16, %r17, %r18, %r19}, {%r20, %r21}, {%f22, %f23, %f24, %f25};
+  mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 {%f26, %f27, %f28, %f29}, {%rb16, %rb17, %rb18, %rb19}, {%rb20, %rb21}, {%f22, %f23, %f24, %f25};
   st.global.f32 [%rd15+0],  %f26;
   st.global.f32 [%rd15+4],  %f27;
   st.global.f32 [%rd15+8],  %f28;

@@ -59,39 +59,39 @@ typedef uint64_t (*forge_fn_ptr_u64_u64_ret_u64_t)(uint64_t*, uint64_t);
 typedef uint64_t (*forge_fn__ret_u64_t)(void);
 typedef float (*forge_fn_f32_u64_u64_ret_f32_t)(float, uint64_t, uint64_t);
 
-uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
+__device__ uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
 
-uint64_t lane_id(void);  /* extern: forge_gpu */
+__device__ uint64_t lane_id(void);  /* extern: forge_gpu */
 
-uint64_t warp_id(void);  /* extern: forge_gpu */
+__device__ uint64_t warp_id(void);  /* extern: forge_gpu */
 
 __device__ float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
 /* Forward declarations */
 static __device__ __forceinline__ uint64_t warp_reduce_sum(uint64_t val __attribute__((unused)));
@@ -294,16 +294,16 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 6
-   [ASSUME] demos/1150_forge_cross_entropy.fg:38  (< (+ base lane) logits__len)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:38  (< (+ base lane) logits__len)
              "row<gridDim + lane<n_classes + gridDim*n_classes<=logits.len"
-   [ASSUME] demos/1150_forge_cross_entropy.fg:48  (> denom 0)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:48  (> denom 0)
              "argmax lane contributes p=exp(0)=1, sum>=1"
-   [ASSUME] demos/1150_forge_cross_entropy.fg:55  (< row targets__len)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:55  (< row targets__len)
              "row=blockIdx_x < gridDim_x <= targets.len"
-   [ASSUME] demos/1150_forge_cross_entropy.fg:58  (< t64 n_classes)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:58  (< t64 n_classes)
              "caller guarantees target is in-range class id"
-   [ASSUME] demos/1150_forge_cross_entropy.fg:59  (< (+ base t64) logits__len)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:59  (< (+ base t64) logits__len)
              "row<gridDim + t<n_classes + gridDim*n_classes<=logits.len"
-   [ASSUME] demos/1150_forge_cross_entropy.fg:61  (< row loss__len)
+   [ASSUME] test/../demos/1150_forge_cross_entropy.fg:61  (< row loss__len)
              "row<gridDim_x<=loss.len"
    ---- END AUDIT LOG ---- */

@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -45,7 +50,7 @@ __forge_tuple_u64_u64_t three_way_partition(forge_span_u64_t s __attribute__((un
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = lo, ._1 = hi };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, lo, hi);
 }
 
 int main() {

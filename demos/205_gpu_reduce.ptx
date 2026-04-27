@@ -13,8 +13,8 @@
 )
 {
     .reg .pred %p7;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd3, %rd4, %rd6, %rd8, %rd9;
     .reg .u32 %r24;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd3, %rd4, %rd6, %rd8, %rd9;
 
   ld.param.u64 %rd0, [reduce_step_param_s_data];
   ld.param.u64 %rd1, [reduce_step_param_s_len];

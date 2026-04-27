@@ -14,9 +14,9 @@
 )
 {
     .reg .pred %p13;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd3, %rd32, %rd33, %rd34, %rd4, %rd7, %rd8, %rd9;
     .reg .f32 %f18, %f19, %f20, %f21, %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f29, %f30, %f31;
     .reg .u32 %r10, %r35, %r36, %r37, %r5, %r6;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd3, %rd32, %rd33, %rd34, %rd4, %rd7, %rd8, %rd9;
 
   ld.param.u64 %rd0, [gelu_kernel_param_inp_data];
   ld.param.u64 %rd1, [gelu_kernel_param_inp_len];

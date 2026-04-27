@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -28,9 +33,9 @@ __forge_tuple_u64_u64_t arena_alloc(uint64_t cursor __attribute__((unused)), uin
     aligned = ((cursor + align) - rem);
   }
   if (((aligned + size) <= capacity)) {
-    return (__forge_tuple_u64_u64_t){ ._0 = aligned, ._1 = (aligned + size) };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, aligned, (aligned + size));
   } else {
-    return (__forge_tuple_u64_u64_t){ ._0 = capacity, ._1 = capacity };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, capacity, capacity);
   }
 }
 

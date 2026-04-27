@@ -1,77 +1,133 @@
-.version 9.0
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
 .target sm_120
 .address_size 64
 
 .visible .entry transpose_tile(
-    .param .u64 inp, .param .u64 inp_len, .param .u64 out, .param .u64 out_len, .param .u32 width, .param .u32 height)
+    .param .u64 transpose_tile_param_inp_data,
+    .param .u64 transpose_tile_param_inp_len,
+    .param .u64 transpose_tile_param_out_data,
+    .param .u64 transpose_tile_param_out_len,
+    .param .u32 transpose_tile_param_width,
+    .param .u32 transpose_tile_param_height
+)
 {
-    .shared .u32 smem[256];
-    .reg .b32 %r<28>;
-    .reg .b64 %rd<11>;
-    .reg .pred %p<1>;
+    .shared .u32 __forge_smem_smem[256];
 
-    mov.u64 %rd0, smem;
-    ld.param.u64 %rd1, [inp];
-    ld.param.u64 %rd2, [inp_len];
-    ld.param.u64 %rd2, [out];
-    ld.param.u64 %rd3, [out_len];
-    ld.param.u32 %r0, [width];
-    ld.param.u32 %r1, [height];
-    mov.u32 %r2, %tid.x;
-    mov.u32 %r3, %tid.y;
-    mov.u32 %r4, %ctaid.x;
-    mov.u32 %r5, %ctaid.y;
-    shl.b32 %r6, %r4, 4;
-    add.u32 %r7, %r6, %r2;
-    shl.b32 %r8, %r5, 4;
-    add.u32 %r9, %r8, %r3;
-    setp.lt.u32 %p0, %r7, %r0;
-    @%p0 bra if_true_2;
-    bra if_merge_4;
-if_true_2:
-    setp.lt.u32 %p0, %r9, %r1;
-    @%p0 bra if_true_5;
-    bra if_merge_4;
-if_merge_4:
-    bar.sync 0;
-    shl.b32 %r10, %r5, 4;
-    add.u32 %r11, %r10, %r2;
-    shl.b32 %r12, %r4, 4;
-    add.u32 %r13, %r12, %r3;
-    setp.lt.u32 %p0, %r11, %r1;
-    @!%p0 ret;
-    setp.lt.u32 %p0, %r13, %r0;
-    @!%p0 ret;
-    mul.lo.u32 %r21, %r13, %r1;
-    add.u32 %r22, %r21, %r11;
-    shl.b32 %r23, %r2, 4;
-    add.u32 %r24, %r23, %r3;
-    cvt.u64.u32 %rd6, %r22;
-    setp.lt.u64 %p0, %rd6, %rd3;
-    @!%p0 ret;
-    shl.b32 %r25, %r22, 2;
-    cvt.u64.u32 %rd7, %r25;
-    add.u64 %rd1, %rd2, %rd7;
-    shl.b32 %r26, %r24, 2;
-    cvt.u64.u32 %rd8, %r26;
-    add.u64 %rd4, %rd0, %rd8;
-    ld.shared.u32 %r27, [%rd4];
-    st.global.u32 [%rd1], %r27;
-    bra if_merge_10;
-if_true_5:
-    mul.lo.u32 %r14, %r9, %r0;
-    add.u32 %r15, %r14, %r7;
-    shl.b32 %r16, %r3, 4;
-    add.u32 %r17, %r16, %r2;
-    shl.b32 %r18, %r17, 2;
-    cvt.u64.u32 %rd9, %r18;
-    add.u64 %rd4, %rd0, %rd9;
-    shl.b32 %r19, %r15, 2;
-    cvt.u64.u32 %rd10, %r19;
-    add.u64 %rd5, %rd1, %rd10;
-    ld.global.u32 %r20, [%rd5];
-    st.shared.u32 [%rd4], %r20;
-    bra if_merge_4;
-if_merge_10:
-    ret;
+    .reg .pred %p17, %p19, %p46, %p48, %p55;
+    .reg .u32 %r10, %r11, %r12, %r13, %r14, %r15, %r16, %r21, %r22, %r23, %r24, %r25, %r30, %r35, %r36, %r37, %r38, %r39, %r4, %r40, %r41, %r42, %r43, %r44, %r45, %r5, %r50, %r51, %r52, %r53, %r54, %r62, %r67, %r68, %r69, %r7, %r70, %r71, %r72, %r73, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd2, %rd26, %rd27, %rd28, %rd29, %rd3, %rd31, %rd32, %rd33, %rd34, %rd56, %rd58, %rd59, %rd6, %rd60, %rd61, %rd63, %rd64, %rd65, %rd66;
+
+  ld.param.u64 %rd0, [transpose_tile_param_inp_data];
+  ld.param.u64 %rd1, [transpose_tile_param_inp_len];
+  ld.param.u64 %rd2, [transpose_tile_param_out_data];
+  ld.param.u64 %rd3, [transpose_tile_param_out_len];
+  ld.param.u32 %r4, [transpose_tile_param_width];
+  ld.param.u32 %r5, [transpose_tile_param_height];
+
+  mov.u64 %rd6, __forge_smem_smem;
+  mov.u32 %r7, %tid.x;
+  mov.u32 %r8, %tid.y;
+  mov.u32 %r9, %ctaid.x;
+  mov.u32 %r10, %ctaid.y;
+  mov.u32 %r11, 16;
+  mul.lo.u32 %r12, %r9, %r11;
+  add.u32 %r13, %r12, %r7;
+  mov.u32 %r14, 16;
+  mul.lo.u32 %r15, %r10, %r14;
+  add.u32 %r16, %r15, %r8;
+  setp.lt.u32 %p17, %r13, %r4;
+  @%p17 bra transpose_tile_then_18;
+  bra transpose_tile_else_18;
+  transpose_tile_then_18:
+  setp.lt.u32 %p19, %r16, %r5;
+  @%p19 bra transpose_tile_then_20;
+  bra transpose_tile_else_20;
+  transpose_tile_then_20:
+  mul.lo.u32 %r21, %r16, %r4;
+  add.u32 %r22, %r21, %r13;
+  mov.u32 %r23, 16;
+  mul.lo.u32 %r24, %r8, %r23;
+  add.u32 %r25, %r24, %r7;
+  cvt.u64.u32 %rd26, %r22;
+  mov.u64 %rd27, 4;
+  mul.lo.u64 %rd28, %rd26, %rd27;
+  add.u64 %rd29, %rd0, %rd28;
+  ld.global.u32 %r30, [%rd29];
+  cvt.u64.u32 %rd31, %r25;
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd31, %rd32;
+  add.u64 %rd34, %rd6, %rd33;
+  st.shared.u32 [%rd34], %r30;
+  mov.u32 %r35, 0; // unit
+  mov.u32 %r36, %r35;
+  bra transpose_tile_end_20;
+  transpose_tile_else_20:
+  mov.u32 %r36, 0; // no else branch
+  transpose_tile_end_20:
+  mov.u32 %r37, 0; // unit
+  mov.u32 %r38, %r37;
+  bra transpose_tile_end_18;
+  transpose_tile_else_18:
+  mov.u32 %r38, 0; // no else branch
+  transpose_tile_end_18:
+  bar.sync 0;
+  mov.u32 %r39, 0; // unit
+  mov.u32 %r40, 16;
+  mul.lo.u32 %r41, %r10, %r40;
+  add.u32 %r42, %r41, %r7;
+  mov.u32 %r43, 16;
+  mul.lo.u32 %r44, %r9, %r43;
+  add.u32 %r45, %r44, %r8;
+  setp.lt.u32 %p46, %r42, %r5;
+  @%p46 bra transpose_tile_then_47;
+  bra transpose_tile_else_47;
+  transpose_tile_then_47:
+  setp.lt.u32 %p48, %r45, %r4;
+  @%p48 bra transpose_tile_then_49;
+  bra transpose_tile_else_49;
+  transpose_tile_then_49:
+  mul.lo.u32 %r50, %r45, %r5;
+  add.u32 %r51, %r50, %r42;
+  mov.u32 %r52, 16;
+  mul.lo.u32 %r53, %r7, %r52;
+  add.u32 %r54, %r53, %r8;
+  cvt.u64.u32 %rd56, %r51;
+  setp.lt.u64 %p55, %rd56, %rd3;
+  @%p55 bra transpose_tile_then_57;
+  bra transpose_tile_else_57;
+  transpose_tile_then_57:
+  cvt.u64.u32 %rd58, %r54;
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd58, %rd59;
+  add.u64 %rd61, %rd6, %rd60;
+  ld.shared.u32 %r62, [%rd61];
+  cvt.u64.u32 %rd63, %r51;
+  mov.u64 %rd64, 4;
+  mul.lo.u64 %rd65, %rd63, %rd64;
+  add.u64 %rd66, %rd2, %rd65;
+  st.global.u32 [%rd66], %r62;
+  mov.u32 %r67, 0; // unit
+  mov.u32 %r68, %r67;
+  bra transpose_tile_end_57;
+  transpose_tile_else_57:
+  mov.u32 %r68, 0; // no else branch
+  transpose_tile_end_57:
+  mov.u32 %r69, 0; // unit
+  mov.u32 %r70, %r69;
+  bra transpose_tile_end_49;
+  transpose_tile_else_49:
+  mov.u32 %r70, 0; // no else branch
+  transpose_tile_end_49:
+  mov.u32 %r71, 0; // unit
+  mov.u32 %r72, %r71;
+  bra transpose_tile_end_47;
+  transpose_tile_else_47:
+  mov.u32 %r72, 0; // no else branch
+  transpose_tile_end_47:
+  mov.u32 %r73, 0; // unit
+  ret;
 }
+

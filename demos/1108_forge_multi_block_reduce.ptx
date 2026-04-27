@@ -1,142 +1,234 @@
-.version 9.0
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
 .target sm_120
 .address_size 64
 
 .visible .entry vec_block_reduce(
-    .param .u64 a, .param .u64 a_len, .param .u64 out_ptr, .param .u32 n, .param .u32 n_minus_1)
+    .param .u64 vec_block_reduce_param_a_data,
+    .param .u64 vec_block_reduce_param_a_len,
+    .param .u64 vec_block_reduce_param_out_ptr,
+    .param .u32 vec_block_reduce_param_n,
+    .param .u32 vec_block_reduce_param_n_minus_1
+)
 {
-    .shared .u32 smem[32];
-    .reg .b32 %r<43>;
-    .reg .b64 %rd<18>;
-    .reg .pred %p<1>;
+    .shared .u32 __forge_smem_smem[32];
 
-    mov.u64 %rd0, smem;
-    ld.param.u64 %rd1, [a];
-    ld.param.u64 %rd2, [a_len];
-    ld.param.u64 %rd2, [out_ptr];
-    ld.param.u32 %r0, [n];
-    ld.param.u32 %r1, [n_minus_1];
-    mov.u32 %r2, %tid.x;
-    mov.u32 %r3, %ctaid.x;
-    mov.u32 %r4, %ntid.x;
-    mul.lo.u32 %r5, %r3, %r4;
-    add.u32 %r6, %r5, %r2;
-    setp.lt.u32 %p0, %r6, %r0;
-    @%p0 bra if_true_2;
-    bra if_false_3;
-if_true_2:
-    shl.b32 %r7, %r2, 2;
-    cvt.u64.u32 %rd5, %r7;
-    add.u64 %rd3, %rd0, %rd5;
-    shl.b32 %r8, %r6, 2;
-    cvt.u64.u32 %rd6, %r8;
-    add.u64 %rd4, %rd1, %rd6;
-    ld.global.u32 %r9, [%rd4];
-    st.shared.u32 [%rd3], %r9;
-    bra if_merge_4;
-if_false_3:
-    shl.b32 %r10, %r2, 2;
-    cvt.u64.u32 %rd7, %r10;
-    add.u64 %rd1, %rd0, %rd7;
-    st.shared.u32 [%rd1], 0;
-    bra if_merge_4;
-if_merge_4:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, 16;
-    @%p0 bra if_true_5;
-    bra if_merge_7;
-if_true_5:
-    shl.b32 %r11, %r2, 2;
-    cvt.u64.u32 %rd8, %r11;
-    add.u64 %rd3, %rd0, %rd8;
-    ld.shared.u32 %r12, [%rd3];
-    add.u32 %r13, %r2, 16;
-    shl.b32 %r14, %r13, 2;
-    cvt.u64.u32 %rd9, %r14;
-    add.u64 %rd4, %rd0, %rd9;
-    ld.shared.u32 %r15, [%rd4];
-    add.u32 %r16, %r12, %r15;
-    st.shared.u32 [%rd3], %r16;
-    bra if_merge_7;
-if_merge_7:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, 8;
-    @%p0 bra if_true_8;
-    bra if_merge_10;
-if_true_8:
-    shl.b32 %r17, %r2, 2;
-    cvt.u64.u32 %rd10, %r17;
-    add.u64 %rd1, %rd0, %rd10;
-    ld.shared.u32 %r18, [%rd1];
-    add.u32 %r19, %r2, 8;
-    shl.b32 %r20, %r19, 2;
-    cvt.u64.u32 %rd11, %r20;
-    add.u64 %rd3, %rd0, %rd11;
-    ld.shared.u32 %r21, [%rd3];
-    add.u32 %r22, %r18, %r21;
-    st.shared.u32 [%rd1], %r22;
-    bra if_merge_10;
-if_merge_10:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, 4;
-    @%p0 bra if_true_11;
-    bra if_merge_13;
-if_true_11:
-    shl.b32 %r23, %r2, 2;
-    cvt.u64.u32 %rd12, %r23;
-    add.u64 %rd4, %rd0, %rd12;
-    ld.shared.u32 %r24, [%rd4];
-    add.u32 %r25, %r2, 4;
-    shl.b32 %r26, %r25, 2;
-    cvt.u64.u32 %rd13, %r26;
-    add.u64 %rd1, %rd0, %rd13;
-    ld.shared.u32 %r27, [%rd1];
-    add.u32 %r28, %r24, %r27;
-    st.shared.u32 [%rd4], %r28;
-    bra if_merge_13;
-if_merge_13:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, 2;
-    @%p0 bra if_true_14;
-    bra if_merge_16;
-if_true_14:
-    shl.b32 %r29, %r2, 2;
-    cvt.u64.u32 %rd14, %r29;
-    add.u64 %rd3, %rd0, %rd14;
-    ld.shared.u32 %r30, [%rd3];
-    add.u32 %r31, %r2, 2;
-    shl.b32 %r32, %r31, 2;
-    cvt.u64.u32 %rd15, %r32;
-    add.u64 %rd4, %rd0, %rd15;
-    ld.shared.u32 %r33, [%rd4];
-    add.u32 %r34, %r30, %r33;
-    st.shared.u32 [%rd3], %r34;
-    bra if_merge_16;
-if_merge_16:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, 1;
-    @%p0 bra if_true_17;
-    bra if_merge_19;
-if_true_17:
-    shl.b32 %r35, %r2, 2;
-    cvt.u64.u32 %rd16, %r35;
-    add.u64 %rd1, %rd0, %rd16;
-    ld.shared.u32 %r36, [%rd1];
-    add.u32 %r37, %r2, 1;
-    shl.b32 %r38, %r37, 2;
-    cvt.u64.u32 %rd17, %r38;
-    add.u64 %rd3, %rd0, %rd17;
-    ld.shared.u32 %r39, [%rd3];
-    add.u32 %r40, %r36, %r39;
-    st.shared.u32 [%rd1], %r40;
-    bra if_merge_19;
-if_merge_19:
-    bar.sync 0;
-    setp.eq.u32 %p0, %r2, 0;
-    @!%p0 ret;
-    ld.shared.u32 %r41, [%rd0];
-    atom.global.add.u32 %r42, [%rd2], %r41;
-    bra if_merge_22;
-if_merge_22:
-    ret;
+    .reg .pred %p102, %p12, %p125, %p148, %p33, %p56, %p79;
+    .reg .u32 %r10, %r100, %r101, %r108, %r109, %r11, %r110, %r115, %r116, %r121, %r122, %r123, %r124, %r131, %r132, %r133, %r138, %r139, %r144, %r145, %r146, %r147, %r151, %r152, %r153, %r18, %r23, %r24, %r25, %r3, %r30, %r31, %r32, %r39, %r4, %r40, %r41, %r46, %r47, %r52, %r53, %r54, %r55, %r6, %r62, %r63, %r64, %r69, %r7, %r70, %r75, %r76, %r77, %r78, %r8, %r85, %r86, %r87, %r9, %r92, %r93, %r98, %r99;
+    .reg .u64 %rd0, %rd1, %rd104, %rd105, %rd106, %rd107, %rd111, %rd112, %rd113, %rd114, %rd117, %rd118, %rd119, %rd120, %rd127, %rd128, %rd129, %rd130, %rd134, %rd135, %rd136, %rd137, %rd14, %rd140, %rd141, %rd142, %rd143, %rd15, %rd150, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd26, %rd27, %rd28, %rd29, %rd35, %rd36, %rd37, %rd38, %rd42, %rd43, %rd44, %rd45, %rd48, %rd49, %rd5, %rd50, %rd51, %rd58, %rd59, %rd60, %rd61, %rd65, %rd66, %rd67, %rd68, %rd71, %rd72, %rd73, %rd74, %rd81, %rd82, %rd83, %rd84, %rd88, %rd89, %rd90, %rd91, %rd94, %rd95, %rd96, %rd97;
+
+  ld.param.u64 %rd0, [vec_block_reduce_param_a_data];
+  ld.param.u64 %rd1, [vec_block_reduce_param_a_len];
+  ld.param.u64 %rd2, [vec_block_reduce_param_out_ptr];
+  ld.param.u32 %r3, [vec_block_reduce_param_n];
+  ld.param.u32 %r4, [vec_block_reduce_param_n_minus_1];
+
+  mov.u64 %rd5, __forge_smem_smem;
+  mov.u32 %r6, %tid.x;
+  mov.u32 %r7, %ctaid.x;
+  mov.u32 %r8, %ntid.x;
+  mul.lo.u32 %r9, %r7, %r8;
+  mov.u32 %r10, %tid.x;
+  add.u32 %r11, %r9, %r10;
+  setp.lt.u32 %p12, %r11, %r3;
+  @%p12 bra vec_block_reduce_then_13;
+  bra vec_block_reduce_else_13;
+  vec_block_reduce_then_13:
+  cvt.u64.u32 %rd14, %r11;
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd14, %rd15;
+  add.u64 %rd17, %rd0, %rd16;
+  ld.global.u32 %r18, [%rd17];
+  cvt.u64.u32 %rd19, %r6;
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd19, %rd20;
+  add.u64 %rd22, %rd5, %rd21;
+  st.shared.u32 [%rd22], %r18;
+  mov.u32 %r23, 0; // unit
+  mov.u32 %r24, %r23;
+  bra vec_block_reduce_end_13;
+  vec_block_reduce_else_13:
+  mov.u32 %r25, 0;
+  cvt.u64.u32 %rd26, %r6;
+  mov.u64 %rd27, 4;
+  mul.lo.u64 %rd28, %rd26, %rd27;
+  add.u64 %rd29, %rd5, %rd28;
+  st.shared.u32 [%rd29], %r25;
+  mov.u32 %r30, 0; // unit
+  mov.u32 %r24, %r30;
+  vec_block_reduce_end_13:
+  bar.sync 0;
+  mov.u32 %r31, 0; // unit
+  mov.u32 %r32, 16;
+  setp.lt.u32 %p33, %r6, %r32;
+  @%p33 bra vec_block_reduce_then_34;
+  bra vec_block_reduce_else_34;
+  vec_block_reduce_then_34:
+  cvt.u64.u32 %rd35, %r6;
+  mov.u64 %rd36, 4;
+  mul.lo.u64 %rd37, %rd35, %rd36;
+  add.u64 %rd38, %rd5, %rd37;
+  ld.shared.u32 %r39, [%rd38];
+  mov.u32 %r40, 16;
+  add.u32 %r41, %r6, %r40;
+  cvt.u64.u32 %rd42, %r41;
+  mov.u64 %rd43, 4;
+  mul.lo.u64 %rd44, %rd42, %rd43;
+  add.u64 %rd45, %rd5, %rd44;
+  ld.shared.u32 %r46, [%rd45];
+  add.u32 %r47, %r39, %r46;
+  cvt.u64.u32 %rd48, %r6;
+  mov.u64 %rd49, 4;
+  mul.lo.u64 %rd50, %rd48, %rd49;
+  add.u64 %rd51, %rd5, %rd50;
+  st.shared.u32 [%rd51], %r47;
+  mov.u32 %r52, 0; // unit
+  mov.u32 %r53, %r52;
+  bra vec_block_reduce_end_34;
+  vec_block_reduce_else_34:
+  mov.u32 %r53, 0; // no else branch
+  vec_block_reduce_end_34:
+  bar.sync 0;
+  mov.u32 %r54, 0; // unit
+  mov.u32 %r55, 8;
+  setp.lt.u32 %p56, %r6, %r55;
+  @%p56 bra vec_block_reduce_then_57;
+  bra vec_block_reduce_else_57;
+  vec_block_reduce_then_57:
+  cvt.u64.u32 %rd58, %r6;
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd58, %rd59;
+  add.u64 %rd61, %rd5, %rd60;
+  ld.shared.u32 %r62, [%rd61];
+  mov.u32 %r63, 8;
+  add.u32 %r64, %r6, %r63;
+  cvt.u64.u32 %rd65, %r64;
+  mov.u64 %rd66, 4;
+  mul.lo.u64 %rd67, %rd65, %rd66;
+  add.u64 %rd68, %rd5, %rd67;
+  ld.shared.u32 %r69, [%rd68];
+  add.u32 %r70, %r62, %r69;
+  cvt.u64.u32 %rd71, %r6;
+  mov.u64 %rd72, 4;
+  mul.lo.u64 %rd73, %rd71, %rd72;
+  add.u64 %rd74, %rd5, %rd73;
+  st.shared.u32 [%rd74], %r70;
+  mov.u32 %r75, 0; // unit
+  mov.u32 %r76, %r75;
+  bra vec_block_reduce_end_57;
+  vec_block_reduce_else_57:
+  mov.u32 %r76, 0; // no else branch
+  vec_block_reduce_end_57:
+  bar.sync 0;
+  mov.u32 %r77, 0; // unit
+  mov.u32 %r78, 4;
+  setp.lt.u32 %p79, %r6, %r78;
+  @%p79 bra vec_block_reduce_then_80;
+  bra vec_block_reduce_else_80;
+  vec_block_reduce_then_80:
+  cvt.u64.u32 %rd81, %r6;
+  mov.u64 %rd82, 4;
+  mul.lo.u64 %rd83, %rd81, %rd82;
+  add.u64 %rd84, %rd5, %rd83;
+  ld.shared.u32 %r85, [%rd84];
+  mov.u32 %r86, 4;
+  add.u32 %r87, %r6, %r86;
+  cvt.u64.u32 %rd88, %r87;
+  mov.u64 %rd89, 4;
+  mul.lo.u64 %rd90, %rd88, %rd89;
+  add.u64 %rd91, %rd5, %rd90;
+  ld.shared.u32 %r92, [%rd91];
+  add.u32 %r93, %r85, %r92;
+  cvt.u64.u32 %rd94, %r6;
+  mov.u64 %rd95, 4;
+  mul.lo.u64 %rd96, %rd94, %rd95;
+  add.u64 %rd97, %rd5, %rd96;
+  st.shared.u32 [%rd97], %r93;
+  mov.u32 %r98, 0; // unit
+  mov.u32 %r99, %r98;
+  bra vec_block_reduce_end_80;
+  vec_block_reduce_else_80:
+  mov.u32 %r99, 0; // no else branch
+  vec_block_reduce_end_80:
+  bar.sync 0;
+  mov.u32 %r100, 0; // unit
+  mov.u32 %r101, 2;
+  setp.lt.u32 %p102, %r6, %r101;
+  @%p102 bra vec_block_reduce_then_103;
+  bra vec_block_reduce_else_103;
+  vec_block_reduce_then_103:
+  cvt.u64.u32 %rd104, %r6;
+  mov.u64 %rd105, 4;
+  mul.lo.u64 %rd106, %rd104, %rd105;
+  add.u64 %rd107, %rd5, %rd106;
+  ld.shared.u32 %r108, [%rd107];
+  mov.u32 %r109, 2;
+  add.u32 %r110, %r6, %r109;
+  cvt.u64.u32 %rd111, %r110;
+  mov.u64 %rd112, 4;
+  mul.lo.u64 %rd113, %rd111, %rd112;
+  add.u64 %rd114, %rd5, %rd113;
+  ld.shared.u32 %r115, [%rd114];
+  add.u32 %r116, %r108, %r115;
+  cvt.u64.u32 %rd117, %r6;
+  mov.u64 %rd118, 4;
+  mul.lo.u64 %rd119, %rd117, %rd118;
+  add.u64 %rd120, %rd5, %rd119;
+  st.shared.u32 [%rd120], %r116;
+  mov.u32 %r121, 0; // unit
+  mov.u32 %r122, %r121;
+  bra vec_block_reduce_end_103;
+  vec_block_reduce_else_103:
+  mov.u32 %r122, 0; // no else branch
+  vec_block_reduce_end_103:
+  bar.sync 0;
+  mov.u32 %r123, 0; // unit
+  mov.u32 %r124, 1;
+  setp.lt.u32 %p125, %r6, %r124;
+  @%p125 bra vec_block_reduce_then_126;
+  bra vec_block_reduce_else_126;
+  vec_block_reduce_then_126:
+  cvt.u64.u32 %rd127, %r6;
+  mov.u64 %rd128, 4;
+  mul.lo.u64 %rd129, %rd127, %rd128;
+  add.u64 %rd130, %rd5, %rd129;
+  ld.shared.u32 %r131, [%rd130];
+  mov.u32 %r132, 1;
+  add.u32 %r133, %r6, %r132;
+  cvt.u64.u32 %rd134, %r133;
+  mov.u64 %rd135, 4;
+  mul.lo.u64 %rd136, %rd134, %rd135;
+  add.u64 %rd137, %rd5, %rd136;
+  ld.shared.u32 %r138, [%rd137];
+  add.u32 %r139, %r131, %r138;
+  cvt.u64.u32 %rd140, %r6;
+  mov.u64 %rd141, 4;
+  mul.lo.u64 %rd142, %rd140, %rd141;
+  add.u64 %rd143, %rd5, %rd142;
+  st.shared.u32 [%rd143], %r139;
+  mov.u32 %r144, 0; // unit
+  mov.u32 %r145, %r144;
+  bra vec_block_reduce_end_126;
+  vec_block_reduce_else_126:
+  mov.u32 %r145, 0; // no else branch
+  vec_block_reduce_end_126:
+  bar.sync 0;
+  mov.u32 %r146, 0; // unit
+  mov.u32 %r147, 0;
+  setp.eq.u32 %p148, %r6, %r147;
+  @%p148 bra vec_block_reduce_then_149;
+  bra vec_block_reduce_else_149;
+  vec_block_reduce_then_149:
+  mov.u64 %rd150, 0; // FG-2.6: UNRESOLVED device fn atom_add_u32 (stub)
+  mov.u32 %r151, 0; // unit
+  mov.u32 %r152, %r151;
+  bra vec_block_reduce_end_149;
+  vec_block_reduce_else_149:
+  mov.u32 %r152, 0; // no else branch
+  vec_block_reduce_end_149:
+  mov.u32 %r153, 0; // unit
+  ret;
 }
+

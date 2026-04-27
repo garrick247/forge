@@ -13,11 +13,12 @@
     .param .u64 silu_bf16_param_n
 )
 {
-    .reg .u16 %rs18, %rs27;
+    .reg .b16 %h19, %h28;
     .reg .pred %p13;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd28, %rd29, %rd3, %rd30, %rd4, %rd7, %rd8, %rd9;
-    .reg .f32 %f19, %f20, %f21, %f22, %f23, %f24, %f25, %f26;
-    .reg .u32 %r10, %r31, %r32, %r33, %r5, %r6;
+    .reg .f32 %f20, %f21, %f22, %f23, %f24, %f25, %f26, %f27;
+    .reg .u32 %r10, %r33, %r34, %r35, %r5, %r6;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd3, %rd30, %rd31, %rd32, %rd4, %rd7, %rd8, %rd9;
+    .reg .u16 %rs18, %rs29;
 
   ld.param.u64 %rd0, [silu_bf16_param_inp_data];
   ld.param.u64 %rd1, [silu_bf16_param_inp_len];
@@ -41,26 +42,28 @@
   mul.lo.u64 %rd16, %rd12, %rd15;
   add.u64 %rd17, %rd0, %rd16;
   ld.global.u16 %rs18, [%rd17];
-  cvt.f32.bf16 %f19, %rs18;
-  mov.f32 %f20, 0f00000000; // 0
-  sub.f32 %f21, %f20, %f19;
-  mul.rn.f32 %f22, %f21, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f23, %f22;
-  mov.f32 %f24, 0f3F800000; // 1
-  add.f32 %f25, %f24, %f23;
-  div.f32 %f26, %f19, %f25;
-  cvt.rn.bf16.f32 %rs27, %f26;
-  mov.u64 %rd28, 2;
-  mul.lo.u64 %rd29, %rd12, %rd28;
-  add.u64 %rd30, %rd2, %rd29;
-  st.global.u16 [%rd30], %rs27;
-  mov.u32 %r31, 0; // unit
-  mov.u32 %r32, %r31;
+  mov.b16 %h19, %rs18;
+  cvt.f32.bf16 %f20, %h19;
+  mov.f32 %f21, 0f00000000; // 0
+  sub.f32 %f22, %f21, %f20;
+  mul.rn.f32 %f23, %f22, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f24, %f23;
+  mov.f32 %f25, 0f3F800000; // 1
+  add.f32 %f26, %f25, %f24;
+  div.rn.f32 %f27, %f20, %f26;
+  cvt.rn.bf16.f32 %h28, %f27;
+  mov.b16 %rs29, %h28;
+  mov.u64 %rd30, 2;
+  mul.lo.u64 %rd31, %rd12, %rd30;
+  add.u64 %rd32, %rd2, %rd31;
+  st.global.u16 [%rd32], %rs29;
+  mov.u32 %r33, 0; // unit
+  mov.u32 %r34, %r33;
   bra silu_bf16_end_14;
   silu_bf16_else_14:
-  mov.u32 %r32, 0; // no else branch
+  mov.u32 %r34, 0; // no else branch
   silu_bf16_end_14:
-  mov.u32 %r33, 0; // unit
+  mov.u32 %r35, 0; // unit
   ret;
 }
 

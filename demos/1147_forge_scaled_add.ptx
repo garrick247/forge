@@ -18,9 +18,9 @@
 )
 {
     .reg .pred %p17;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd15, %rd16, %rd19, %rd2, %rd20, %rd21, %rd24, %rd25, %rd26, %rd3, %rd30, %rd31, %rd32, %rd4, %rd5, %rd6;
     .reg .f32 %f22, %f23, %f27, %f28, %f29, %f7, %f8;
     .reg .u32 %r10, %r14, %r33, %r34, %r35, %r9;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd15, %rd16, %rd19, %rd2, %rd20, %rd21, %rd24, %rd25, %rd26, %rd3, %rd30, %rd31, %rd32, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [scaled_add_param_x_data];
   ld.param.u64 %rd1, [scaled_add_param_x_len];

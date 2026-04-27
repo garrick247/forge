@@ -12,8 +12,8 @@
     .param .u64 gpu_fill_kernel_param_tid
 )
 {
-    .reg .u64 %rd0, %rd1, %rd2, %rd3, %rd4, %rd5, %rd6;
     .reg .u32 %r7;
+    .reg .u64 %rd0, %rd1, %rd2, %rd3, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [gpu_fill_kernel_param_s_data];
   ld.param.u64 %rd1, [gpu_fill_kernel_param_s_len];

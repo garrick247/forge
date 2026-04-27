@@ -13,11 +13,12 @@
     .param .u64 gelu_bf16_param_n
 )
 {
-    .reg .u16 %rs18, %rs33;
+    .reg .b16 %h19, %h34;
     .reg .pred %p13;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd3, %rd34, %rd35, %rd36, %rd4, %rd7, %rd8, %rd9;
-    .reg .f32 %f19, %f20, %f21, %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f29, %f30, %f31, %f32;
-    .reg .u32 %r10, %r37, %r38, %r39, %r5, %r6;
+    .reg .f32 %f20, %f21, %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f29, %f30, %f31, %f32, %f33;
+    .reg .u32 %r10, %r39, %r40, %r41, %r5, %r6;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd3, %rd36, %rd37, %rd38, %rd4, %rd7, %rd8, %rd9;
+    .reg .u16 %rs18, %rs35;
 
   ld.param.u64 %rd0, [gelu_bf16_param_inp_data];
   ld.param.u64 %rd1, [gelu_bf16_param_inp_len];
@@ -41,32 +42,34 @@
   mul.lo.u64 %rd16, %rd12, %rd15;
   add.u64 %rd17, %rd0, %rd16;
   ld.global.u16 %rs18, [%rd17];
-  cvt.f32.bf16 %f19, %rs18;
-  mul.f32 %f20, %f19, %f19;
-  mul.f32 %f21, %f20, %f19;
-  mov.f32 %f22, 0f3F4C422A; // 0.797885
-  mov.f32 %f23, 0f3D372713; // 0.044715
-  mul.f32 %f24, %f23, %f21;
-  add.f32 %f25, %f19, %f24;
-  mul.f32 %f26, %f22, %f25;
-  tanh.approx.f32 %f27, %f26;
-  mov.f32 %f28, 0f3F000000; // 0.5
-  mul.f32 %f29, %f28, %f19;
-  mov.f32 %f30, 0f3F800000; // 1
-  add.f32 %f31, %f30, %f27;
-  mul.f32 %f32, %f29, %f31;
-  cvt.rn.bf16.f32 %rs33, %f32;
-  mov.u64 %rd34, 2;
-  mul.lo.u64 %rd35, %rd12, %rd34;
-  add.u64 %rd36, %rd2, %rd35;
-  st.global.u16 [%rd36], %rs33;
-  mov.u32 %r37, 0; // unit
-  mov.u32 %r38, %r37;
+  mov.b16 %h19, %rs18;
+  cvt.f32.bf16 %f20, %h19;
+  mul.f32 %f21, %f20, %f20;
+  mul.f32 %f22, %f21, %f20;
+  mov.f32 %f23, 0f3F4C422A; // 0.797885
+  mov.f32 %f24, 0f3D372713; // 0.044715
+  mul.f32 %f25, %f24, %f22;
+  add.f32 %f26, %f20, %f25;
+  mul.f32 %f27, %f23, %f26;
+  tanh.approx.f32 %f28, %f27;
+  mov.f32 %f29, 0f3F000000; // 0.5
+  mul.f32 %f30, %f29, %f20;
+  mov.f32 %f31, 0f3F800000; // 1
+  add.f32 %f32, %f31, %f28;
+  mul.f32 %f33, %f30, %f32;
+  cvt.rn.bf16.f32 %h34, %f33;
+  mov.b16 %rs35, %h34;
+  mov.u64 %rd36, 2;
+  mul.lo.u64 %rd37, %rd12, %rd36;
+  add.u64 %rd38, %rd2, %rd37;
+  st.global.u16 [%rd38], %rs35;
+  mov.u32 %r39, 0; // unit
+  mov.u32 %r40, %r39;
   bra gelu_bf16_end_14;
   gelu_bf16_else_14:
-  mov.u32 %r38, 0; // no else branch
+  mov.u32 %r40, 0; // no else branch
   gelu_bf16_end_14:
-  mov.u32 %r39, 0; // unit
+  mov.u32 %r41, 0; // unit
   ret;
 }
 

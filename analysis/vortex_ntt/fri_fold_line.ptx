@@ -31,9 +31,9 @@
     .param .u64 fold_line_soa_param_half_n
 )
 {
-    .reg .pred %p101, %p116, %p131, %p146, %p161, %p176, %p192, %p202, %p211, %p220, %p229, %p237, %p247, %p257, %p267, %p28, %p313, %p335, %p358, %p367, %p375, %p386, %p39, %p407, %p41, %p427, %p43, %p45, %p450, %p459, %p468, %p47, %p477, %p497, %p50, %p519, %p53, %p530, %p551, %p56, %p572, %p581, %p59, %p590, %p599, %p608, %p617, %p71, %p86;
-    .reg .u64 %rd0, %rd1, %rd10, %rd102, %rd107, %rd108, %rd109, %rd11, %rd117, %rd12, %rd122, %rd123, %rd124, %rd13, %rd132, %rd137, %rd138, %rd139, %rd14, %rd147, %rd15, %rd152, %rd153, %rd154, %rd16, %rd162, %rd167, %rd168, %rd169, %rd17, %rd177, %rd182, %rd183, %rd184, %rd185, %rd193, %rd198, %rd199, %rd2, %rd200, %rd201, %rd204, %rd205, %rd207, %rd208, %rd209, %rd210, %rd213, %rd214, %rd216, %rd217, %rd218, %rd219, %rd22, %rd222, %rd223, %rd225, %rd226, %rd227, %rd228, %rd231, %rd232, %rd234, %rd235, %rd236, %rd239, %rd240, %rd241, %rd242, %rd244, %rd245, %rd246, %rd249, %rd250, %rd251, %rd252, %rd254, %rd255, %rd256, %rd259, %rd260, %rd261, %rd262, %rd264, %rd265, %rd266, %rd269, %rd270, %rd271, %rd272, %rd274, %rd275, %rd276, %rd277, %rd278, %rd280, %rd281, %rd282, %rd283, %rd284, %rd286, %rd287, %rd288, %rd289, %rd29, %rd290, %rd292, %rd293, %rd294, %rd295, %rd296, %rd298, %rd299, %rd3, %rd300, %rd301, %rd302, %rd304, %rd305, %rd306, %rd307, %rd308, %rd31, %rd310, %rd311, %rd312, %rd315, %rd316, %rd317, %rd318, %rd32, %rd320, %rd321, %rd322, %rd323, %rd324, %rd326, %rd327, %rd328, %rd329, %rd33, %rd330, %rd332, %rd333, %rd334, %rd337, %rd338, %rd339, %rd34, %rd340, %rd342, %rd343, %rd344, %rd345, %rd346, %rd348, %rd349, %rd35, %rd350, %rd351, %rd352, %rd354, %rd355, %rd356, %rd357, %rd36, %rd360, %rd361, %rd363, %rd364, %rd365, %rd366, %rd369, %rd37, %rd370, %rd372, %rd373, %rd374, %rd377, %rd378, %rd379, %rd38, %rd380, %rd382, %rd383, %rd384, %rd385, %rd388, %rd389, %rd391, %rd392, %rd393, %rd394, %rd395, %rd397, %rd398, %rd399, %rd4, %rd400, %rd401, %rd403, %rd404, %rd405, %rd406, %rd409, %rd410, %rd412, %rd413, %rd414, %rd415, %rd416, %rd418, %rd419, %rd420, %rd421, %rd422, %rd424, %rd425, %rd426, %rd429, %rd430, %rd431, %rd432, %rd434, %rd435, %rd436, %rd437, %rd438, %rd440, %rd441, %rd442, %rd443, %rd444, %rd446, %rd447, %rd448, %rd449, %rd452, %rd453, %rd455, %rd456, %rd457, %rd458, %rd461, %rd462, %rd464, %rd465, %rd466, %rd467, %rd470, %rd471, %rd473, %rd474, %rd475, %rd476, %rd479, %rd48, %rd480, %rd482, %rd483, %rd484, %rd485, %rd486, %rd488, %rd489, %rd490, %rd491, %rd492, %rd494, %rd495, %rd496, %rd499, %rd5, %rd500, %rd501, %rd502, %rd504, %rd505, %rd506, %rd507, %rd508, %rd51, %rd510, %rd511, %rd512, %rd513, %rd514, %rd516, %rd517, %rd518, %rd521, %rd522, %rd523, %rd524, %rd526, %rd527, %rd528, %rd529, %rd532, %rd533, %rd535, %rd536, %rd537, %rd538, %rd539, %rd54, %rd541, %rd542, %rd543, %rd544, %rd545, %rd547, %rd548, %rd549, %rd550, %rd553, %rd554, %rd556, %rd557, %rd558, %rd559, %rd560, %rd562, %rd563, %rd564, %rd565, %rd566, %rd568, %rd569, %rd57, %rd570, %rd571, %rd574, %rd575, %rd577, %rd578, %rd579, %rd580, %rd583, %rd584, %rd586, %rd587, %rd588, %rd589, %rd592, %rd593, %rd595, %rd596, %rd597, %rd598, %rd6, %rd60, %rd601, %rd602, %rd604, %rd605, %rd606, %rd607, %rd610, %rd611, %rd613, %rd614, %rd615, %rd616, %rd619, %rd62, %rd620, %rd622, %rd623, %rd624, %rd625, %rd626, %rd627, %rd628, %rd629, %rd63, %rd630, %rd631, %rd632, %rd633, %rd634, %rd635, %rd636, %rd637, %rd64, %rd7, %rd72, %rd77, %rd78, %rd79, %rd8, %rd87, %rd9, %rd92, %rd93, %rd94;
-    .reg .u32 %r100, %r104, %r105, %r106, %r110, %r111, %r112, %r113, %r114, %r115, %r119, %r120, %r121, %r125, %r126, %r127, %r128, %r129, %r130, %r134, %r135, %r136, %r140, %r141, %r142, %r143, %r144, %r145, %r149, %r150, %r151, %r155, %r156, %r157, %r158, %r159, %r160, %r164, %r165, %r166, %r170, %r171, %r172, %r173, %r174, %r175, %r179, %r18, %r180, %r181, %r186, %r187, %r188, %r189, %r19, %r190, %r191, %r195, %r196, %r197, %r20, %r206, %r21, %r215, %r224, %r23, %r233, %r24, %r243, %r25, %r253, %r26, %r263, %r27, %r273, %r279, %r285, %r291, %r297, %r303, %r309, %r319, %r325, %r331, %r341, %r347, %r353, %r362, %r371, %r381, %r390, %r396, %r402, %r411, %r417, %r423, %r433, %r439, %r445, %r454, %r463, %r472, %r481, %r487, %r493, %r503, %r509, %r515, %r525, %r534, %r540, %r546, %r555, %r561, %r567, %r576, %r585, %r594, %r603, %r612, %r621, %r638, %r639, %r640, %r641, %r642, %r643, %r644, %r645, %r646, %r647, %r648, %r649, %r65, %r650, %r651, %r652, %r653, %r654, %r655, %r656, %r657, %r658, %r66, %r67, %r68, %r69, %r70, %r74, %r75, %r76, %r80, %r81, %r82, %r83, %r84, %r85, %r89, %r90, %r91, %r95, %r96, %r97, %r98, %r99;
+    .reg .pred %p107, %p121, %p135, %p149, %p163, %p177, %p190, %p204, %p218, %p232, %p245, %p260, %p275, %p29, %p290, %p369, %p37, %p39, %p404, %p41, %p43, %p440, %p45, %p453, %p464, %p47, %p478, %p49, %p51, %p520, %p53, %p553, %p589, %p602, %p614, %p626, %p65, %p667, %p702, %p716, %p758, %p79, %p792, %p804, %p818, %p832, %p846, %p860, %p93;
+    .reg .u32 %r100, %r101, %r102, %r103, %r104, %r105, %r106, %r109, %r110, %r114, %r115, %r116, %r117, %r118, %r119, %r120, %r123, %r124, %r128, %r129, %r130, %r131, %r132, %r133, %r134, %r137, %r138, %r142, %r143, %r144, %r145, %r146, %r147, %r148, %r151, %r152, %r156, %r157, %r158, %r159, %r160, %r161, %r162, %r165, %r166, %r170, %r171, %r172, %r173, %r174, %r175, %r176, %r179, %r18, %r180, %r181, %r182, %r183, %r184, %r188, %r19, %r194, %r195, %r196, %r197, %r198, %r20, %r202, %r208, %r209, %r21, %r210, %r211, %r212, %r216, %r222, %r223, %r224, %r225, %r226, %r23, %r230, %r236, %r237, %r238, %r239, %r24, %r240, %r243, %r25, %r251, %r252, %r253, %r254, %r255, %r258, %r26, %r266, %r267, %r268, %r269, %r27, %r270, %r273, %r281, %r282, %r283, %r284, %r285, %r288, %r296, %r297, %r298, %r302, %r305, %r306, %r307, %r311, %r314, %r315, %r316, %r320, %r323, %r324, %r325, %r329, %r332, %r333, %r334, %r335, %r336, %r337, %r338, %r339, %r340, %r341, %r342, %r343, %r344, %r345, %r346, %r350, %r353, %r354, %r355, %r359, %r362, %r363, %r364, %r367, %r375, %r376, %r377, %r378, %r379, %r380, %r381, %r385, %r388, %r389, %r390, %r394, %r397, %r398, %r399, %r402, %r410, %r411, %r412, %r413, %r414, %r415, %r416, %r420, %r423, %r424, %r425, %r429, %r432, %r433, %r434, %r438, %r444, %r445, %r446, %r447, %r451, %r457, %r458, %r459, %r462, %r470, %r471, %r472, %r476, %r482, %r483, %r484, %r485, %r486, %r487, %r488, %r489, %r490, %r491, %r492, %r493, %r494, %r495, %r496, %r500, %r503, %r504, %r505, %r509, %r512, %r513, %r514, %r518, %r524, %r525, %r526, %r527, %r528, %r529, %r530, %r534, %r537, %r538, %r539, %r543, %r546, %r547, %r548, %r551, %r559, %r560, %r561, %r562, %r563, %r564, %r565, %r569, %r572, %r573, %r574, %r578, %r58, %r581, %r582, %r583, %r587, %r59, %r593, %r594, %r595, %r596, %r60, %r600, %r606, %r607, %r608, %r61, %r612, %r618, %r619, %r62, %r620, %r624, %r63, %r630, %r631, %r632, %r633, %r634, %r635, %r636, %r637, %r638, %r639, %r64, %r640, %r641, %r642, %r643, %r644, %r648, %r651, %r652, %r653, %r657, %r660, %r661, %r662, %r665, %r67, %r673, %r674, %r675, %r676, %r677, %r678, %r679, %r68, %r683, %r686, %r687, %r688, %r692, %r695, %r696, %r697, %r700, %r708, %r709, %r710, %r714, %r72, %r720, %r721, %r722, %r723, %r724, %r725, %r726, %r727, %r728, %r729, %r73, %r730, %r731, %r732, %r733, %r734, %r738, %r74, %r741, %r742, %r743, %r747, %r75, %r750, %r751, %r752, %r756, %r76, %r762, %r763, %r764, %r765, %r766, %r767, %r768, %r77, %r772, %r775, %r776, %r777, %r78, %r781, %r784, %r785, %r786, %r790, %r796, %r797, %r798, %r802, %r808, %r809, %r81, %r810, %r811, %r812, %r816, %r82, %r822, %r823, %r824, %r825, %r826, %r830, %r836, %r837, %r838, %r839, %r840, %r844, %r850, %r851, %r852, %r853, %r854, %r858, %r86, %r864, %r87, %r877, %r878, %r879, %r88, %r880, %r881, %r882, %r883, %r884, %r885, %r886, %r887, %r888, %r889, %r89, %r890, %r891, %r892, %r893, %r894, %r895, %r896, %r897, %r90, %r91, %r92, %r95, %r96;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd111, %rd112, %rd113, %rd12, %rd125, %rd126, %rd127, %rd13, %rd139, %rd14, %rd140, %rd141, %rd15, %rd153, %rd154, %rd155, %rd16, %rd167, %rd168, %rd169, %rd17, %rd185, %rd186, %rd187, %rd189, %rd192, %rd193, %rd199, %rd2, %rd200, %rd201, %rd203, %rd206, %rd207, %rd213, %rd214, %rd215, %rd217, %rd22, %rd220, %rd221, %rd227, %rd228, %rd229, %rd231, %rd234, %rd235, %rd241, %rd242, %rd244, %rd247, %rd248, %rd249, %rd250, %rd256, %rd257, %rd259, %rd262, %rd263, %rd264, %rd265, %rd271, %rd272, %rd274, %rd277, %rd278, %rd279, %rd28, %rd280, %rd286, %rd287, %rd289, %rd292, %rd293, %rd294, %rd295, %rd299, %rd3, %rd300, %rd301, %rd303, %rd304, %rd308, %rd309, %rd31, %rd310, %rd312, %rd313, %rd317, %rd318, %rd319, %rd32, %rd321, %rd322, %rd326, %rd327, %rd328, %rd33, %rd330, %rd331, %rd34, %rd347, %rd348, %rd349, %rd35, %rd351, %rd352, %rd356, %rd357, %rd358, %rd36, %rd360, %rd361, %rd365, %rd366, %rd368, %rd371, %rd372, %rd373, %rd374, %rd382, %rd383, %rd384, %rd386, %rd387, %rd391, %rd392, %rd393, %rd395, %rd396, %rd4, %rd400, %rd401, %rd403, %rd406, %rd407, %rd408, %rd409, %rd417, %rd418, %rd419, %rd421, %rd422, %rd426, %rd427, %rd428, %rd430, %rd431, %rd435, %rd436, %rd437, %rd439, %rd442, %rd443, %rd448, %rd449, %rd450, %rd452, %rd455, %rd456, %rd460, %rd461, %rd463, %rd466, %rd467, %rd468, %rd469, %rd473, %rd474, %rd475, %rd477, %rd480, %rd481, %rd497, %rd498, %rd499, %rd5, %rd501, %rd502, %rd506, %rd507, %rd508, %rd510, %rd511, %rd515, %rd516, %rd517, %rd519, %rd522, %rd523, %rd531, %rd532, %rd533, %rd535, %rd536, %rd540, %rd541, %rd542, %rd544, %rd545, %rd549, %rd55, %rd550, %rd552, %rd555, %rd556, %rd557, %rd558, %rd56, %rd566, %rd567, %rd568, %rd57, %rd570, %rd571, %rd575, %rd576, %rd577, %rd579, %rd580, %rd584, %rd585, %rd586, %rd588, %rd591, %rd592, %rd597, %rd598, %rd599, %rd6, %rd601, %rd604, %rd605, %rd609, %rd610, %rd611, %rd613, %rd616, %rd617, %rd621, %rd622, %rd623, %rd625, %rd628, %rd629, %rd645, %rd646, %rd647, %rd649, %rd650, %rd654, %rd655, %rd656, %rd658, %rd659, %rd663, %rd664, %rd666, %rd669, %rd670, %rd671, %rd672, %rd680, %rd681, %rd682, %rd684, %rd685, %rd689, %rd69, %rd690, %rd691, %rd693, %rd694, %rd698, %rd699, %rd7, %rd70, %rd701, %rd704, %rd705, %rd706, %rd707, %rd71, %rd711, %rd712, %rd713, %rd715, %rd718, %rd719, %rd735, %rd736, %rd737, %rd739, %rd740, %rd744, %rd745, %rd746, %rd748, %rd749, %rd753, %rd754, %rd755, %rd757, %rd760, %rd761, %rd769, %rd770, %rd771, %rd773, %rd774, %rd778, %rd779, %rd780, %rd782, %rd783, %rd787, %rd788, %rd789, %rd791, %rd794, %rd795, %rd799, %rd8, %rd800, %rd801, %rd803, %rd806, %rd807, %rd813, %rd814, %rd815, %rd817, %rd820, %rd821, %rd827, %rd828, %rd829, %rd83, %rd831, %rd834, %rd835, %rd84, %rd841, %rd842, %rd843, %rd845, %rd848, %rd849, %rd85, %rd855, %rd856, %rd857, %rd859, %rd862, %rd863, %rd865, %rd866, %rd867, %rd868, %rd869, %rd870, %rd871, %rd872, %rd873, %rd874, %rd875, %rd876, %rd9, %rd97, %rd98, %rd99;
 
   ld.param.u64 %rd0, [fold_line_soa_param_in0_data];
   ld.param.u64 %rd1, [fold_line_soa_param_in0_len];
@@ -64,935 +64,1174 @@
   mul.lo.u32 %r25, %r23, %r24;
   mov.u32 %r26, %tid.x;
   add.u32 %r27, %r25, %r26;
-  cvt.u64.u32 %rd29, %r27;
-  setp.lt.u64 %p28, %rd29, %rd22;
-  @%p28 bra fold_line_soa_then_30;
+  cvt.u64.u32 %rd28, %r27;
+  setp.lt.u64 %p29, %rd28, %rd22;
+  @%p29 bra fold_line_soa_then_30;
   bra fold_line_soa_else_30;
   fold_line_soa_then_30:
   mov.u64 %rd31, 2;
-  cvt.u64.u32 %rd32, %r27;
-  mul.lo.u64 %rd33, %rd31, %rd32;
-  mov.u64 %rd34, 2;
-  cvt.u64.u32 %rd35, %r27;
-  mul.lo.u64 %rd36, %rd34, %rd35;
-  mov.u64 %rd37, 1;
-  add.u64 %rd38, %rd36, %rd37;
-  setp.lt.u64 %p39, %rd38, %rd1;
+  mul.lo.u64 %rd32, %rd31, %rd28;
+  mov.u64 %rd33, 2;
+  mul.lo.u64 %rd34, %rd33, %rd28;
+  mov.u64 %rd35, 1;
+  add.u64 %rd36, %rd34, %rd35;
+  setp.lt.u64 %p37, %rd36, %rd1;
+  @%p37 bra fold_line_soa_then_38;
+  bra fold_line_soa_else_38;
+  fold_line_soa_then_38:
+  setp.lt.u64 %p39, %rd36, %rd3;
   @%p39 bra fold_line_soa_then_40;
   bra fold_line_soa_else_40;
   fold_line_soa_then_40:
-  setp.lt.u64 %p41, %rd38, %rd3;
+  setp.lt.u64 %p41, %rd36, %rd5;
   @%p41 bra fold_line_soa_then_42;
   bra fold_line_soa_else_42;
   fold_line_soa_then_42:
-  setp.lt.u64 %p43, %rd38, %rd5;
+  setp.lt.u64 %p43, %rd36, %rd7;
   @%p43 bra fold_line_soa_then_44;
   bra fold_line_soa_else_44;
   fold_line_soa_then_44:
-  setp.lt.u64 %p45, %rd38, %rd7;
+  setp.lt.u64 %p45, %rd28, %rd9;
   @%p45 bra fold_line_soa_then_46;
   bra fold_line_soa_else_46;
   fold_line_soa_then_46:
-  cvt.u64.u32 %rd48, %r27;
-  setp.lt.u64 %p47, %rd48, %rd9;
-  @%p47 bra fold_line_soa_then_49;
-  bra fold_line_soa_else_49;
-  fold_line_soa_then_49:
-  cvt.u64.u32 %rd51, %r27;
-  setp.lt.u64 %p50, %rd51, %rd11;
-  @%p50 bra fold_line_soa_then_52;
+  setp.lt.u64 %p47, %rd28, %rd11;
+  @%p47 bra fold_line_soa_then_48;
+  bra fold_line_soa_else_48;
+  fold_line_soa_then_48:
+  setp.lt.u64 %p49, %rd28, %rd13;
+  @%p49 bra fold_line_soa_then_50;
+  bra fold_line_soa_else_50;
+  fold_line_soa_then_50:
+  setp.lt.u64 %p51, %rd28, %rd15;
+  @%p51 bra fold_line_soa_then_52;
   bra fold_line_soa_else_52;
   fold_line_soa_then_52:
-  cvt.u64.u32 %rd54, %r27;
-  setp.lt.u64 %p53, %rd54, %rd13;
-  @%p53 bra fold_line_soa_then_55;
-  bra fold_line_soa_else_55;
-  fold_line_soa_then_55:
-  cvt.u64.u32 %rd57, %r27;
-  setp.lt.u64 %p56, %rd57, %rd15;
-  @%p56 bra fold_line_soa_then_58;
-  bra fold_line_soa_else_58;
-  fold_line_soa_then_58:
-  cvt.u64.u32 %rd60, %r27;
-  setp.lt.u64 %p59, %rd60, %rd17;
-  @%p59 bra fold_line_soa_then_61;
-  bra fold_line_soa_else_61;
-  fold_line_soa_then_61:
-  mov.u64 %rd62, 4;
-  mul.lo.u64 %rd63, %rd33, %rd62;
-  add.u64 %rd64, %rd0, %rd63;
-  ld.global.u32 %r65, [%rd64];
-  cvt.u32.u64 %r66, %rd_unknown_M31_P;
-  and.b32 %r67, %r65, %rd_unknown_M31_P;
-  mov.u32 %r68, 31;
-  shr.u32 %r69, %r65, %r68;
-  add.u32 %r70, %r67, %r69;
-  cvt.u64.u32 %rd72, %r70;
-  setp.ge.u64 %p71, %rd72, %rd_unknown_M31_P;
-  @%p71 bra fold_line_soa_then_73;
-  bra fold_line_soa_else_73;
-  fold_line_soa_then_73:
-  cvt.u32.u64 %r74, %rd_unknown_M31_P;
-  sub.u32 %r75, %r70, %r74;
-  mov.u32 %r76, %r75;
-  bra fold_line_soa_end_73;
-  fold_line_soa_else_73:
-  mov.u32 %r76, %r70;
-  fold_line_soa_end_73:
-  mov.u64 %rd77, 4;
-  mul.lo.u64 %rd78, %rd33, %rd77;
-  add.u64 %rd79, %rd2, %rd78;
-  ld.global.u32 %r80, [%rd79];
-  cvt.u32.u64 %r81, %rd_unknown_M31_P;
-  and.b32 %r82, %r80, %rd_unknown_M31_P;
-  mov.u32 %r83, 31;
-  shr.u32 %r84, %r80, %r83;
-  add.u32 %r85, %r82, %r84;
-  cvt.u64.u32 %rd87, %r85;
-  setp.ge.u64 %p86, %rd87, %rd_unknown_M31_P;
-  @%p86 bra fold_line_soa_then_88;
-  bra fold_line_soa_else_88;
-  fold_line_soa_then_88:
-  cvt.u32.u64 %r89, %rd_unknown_M31_P;
-  sub.u32 %r90, %r85, %r89;
-  mov.u32 %r91, %r90;
-  bra fold_line_soa_end_88;
-  fold_line_soa_else_88:
-  mov.u32 %r91, %r85;
-  fold_line_soa_end_88:
-  mov.u64 %rd92, 4;
-  mul.lo.u64 %rd93, %rd33, %rd92;
-  add.u64 %rd94, %rd4, %rd93;
-  ld.global.u32 %r95, [%rd94];
-  cvt.u32.u64 %r96, %rd_unknown_M31_P;
-  and.b32 %r97, %r95, %rd_unknown_M31_P;
-  mov.u32 %r98, 31;
-  shr.u32 %r99, %r95, %r98;
-  add.u32 %r100, %r97, %r99;
-  cvt.u64.u32 %rd102, %r100;
-  setp.ge.u64 %p101, %rd102, %rd_unknown_M31_P;
-  @%p101 bra fold_line_soa_then_103;
-  bra fold_line_soa_else_103;
-  fold_line_soa_then_103:
-  cvt.u32.u64 %r104, %rd_unknown_M31_P;
-  sub.u32 %r105, %r100, %r104;
-  mov.u32 %r106, %r105;
-  bra fold_line_soa_end_103;
-  fold_line_soa_else_103:
-  mov.u32 %r106, %r100;
-  fold_line_soa_end_103:
-  mov.u64 %rd107, 4;
-  mul.lo.u64 %rd108, %rd33, %rd107;
-  add.u64 %rd109, %rd6, %rd108;
-  ld.global.u32 %r110, [%rd109];
-  cvt.u32.u64 %r111, %rd_unknown_M31_P;
-  and.b32 %r112, %r110, %rd_unknown_M31_P;
-  mov.u32 %r113, 31;
-  shr.u32 %r114, %r110, %r113;
-  add.u32 %r115, %r112, %r114;
-  cvt.u64.u32 %rd117, %r115;
-  setp.ge.u64 %p116, %rd117, %rd_unknown_M31_P;
-  @%p116 bra fold_line_soa_then_118;
-  bra fold_line_soa_else_118;
-  fold_line_soa_then_118:
-  cvt.u32.u64 %r119, %rd_unknown_M31_P;
-  sub.u32 %r120, %r115, %r119;
-  mov.u32 %r121, %r120;
-  bra fold_line_soa_end_118;
-  fold_line_soa_else_118:
-  mov.u32 %r121, %r115;
-  fold_line_soa_end_118:
-  mov.u64 %rd122, 4;
-  mul.lo.u64 %rd123, %rd38, %rd122;
-  add.u64 %rd124, %rd0, %rd123;
-  ld.global.u32 %r125, [%rd124];
-  cvt.u32.u64 %r126, %rd_unknown_M31_P;
-  and.b32 %r127, %r125, %rd_unknown_M31_P;
-  mov.u32 %r128, 31;
-  shr.u32 %r129, %r125, %r128;
-  add.u32 %r130, %r127, %r129;
-  cvt.u64.u32 %rd132, %r130;
-  setp.ge.u64 %p131, %rd132, %rd_unknown_M31_P;
-  @%p131 bra fold_line_soa_then_133;
-  bra fold_line_soa_else_133;
-  fold_line_soa_then_133:
-  cvt.u32.u64 %r134, %rd_unknown_M31_P;
-  sub.u32 %r135, %r130, %r134;
-  mov.u32 %r136, %r135;
-  bra fold_line_soa_end_133;
-  fold_line_soa_else_133:
-  mov.u32 %r136, %r130;
-  fold_line_soa_end_133:
-  mov.u64 %rd137, 4;
-  mul.lo.u64 %rd138, %rd38, %rd137;
-  add.u64 %rd139, %rd2, %rd138;
-  ld.global.u32 %r140, [%rd139];
-  cvt.u32.u64 %r141, %rd_unknown_M31_P;
-  and.b32 %r142, %r140, %rd_unknown_M31_P;
-  mov.u32 %r143, 31;
-  shr.u32 %r144, %r140, %r143;
-  add.u32 %r145, %r142, %r144;
-  cvt.u64.u32 %rd147, %r145;
-  setp.ge.u64 %p146, %rd147, %rd_unknown_M31_P;
-  @%p146 bra fold_line_soa_then_148;
-  bra fold_line_soa_else_148;
-  fold_line_soa_then_148:
-  cvt.u32.u64 %r149, %rd_unknown_M31_P;
-  sub.u32 %r150, %r145, %r149;
-  mov.u32 %r151, %r150;
-  bra fold_line_soa_end_148;
-  fold_line_soa_else_148:
-  mov.u32 %r151, %r145;
-  fold_line_soa_end_148:
-  mov.u64 %rd152, 4;
-  mul.lo.u64 %rd153, %rd38, %rd152;
-  add.u64 %rd154, %rd4, %rd153;
-  ld.global.u32 %r155, [%rd154];
-  cvt.u32.u64 %r156, %rd_unknown_M31_P;
-  and.b32 %r157, %r155, %rd_unknown_M31_P;
-  mov.u32 %r158, 31;
-  shr.u32 %r159, %r155, %r158;
-  add.u32 %r160, %r157, %r159;
-  cvt.u64.u32 %rd162, %r160;
-  setp.ge.u64 %p161, %rd162, %rd_unknown_M31_P;
-  @%p161 bra fold_line_soa_then_163;
-  bra fold_line_soa_else_163;
-  fold_line_soa_then_163:
-  cvt.u32.u64 %r164, %rd_unknown_M31_P;
-  sub.u32 %r165, %r160, %r164;
+  setp.lt.u64 %p53, %rd28, %rd17;
+  @%p53 bra fold_line_soa_then_54;
+  bra fold_line_soa_else_54;
+  fold_line_soa_then_54:
+  mov.u64 %rd55, 4;
+  mul.lo.u64 %rd56, %rd32, %rd55;
+  add.u64 %rd57, %rd0, %rd56;
+  ld.global.u32 %r58, [%rd57];
+  mov.b32 %r59, %r58; // param: v
+  mov.u32 %r60, 2147483647;
+  and.b32 %r61, %r59, %r60;
+  mov.u32 %r62, 31;
+  shr.u32 %r63, %r59, %r62;
+  add.u32 %r64, %r61, %r63;
+  setp.ge.u32 %p65, %r64, %r60;
+  @%p65 bra fold_line_soa_then_66;
+  bra fold_line_soa_else_66;
+  fold_line_soa_then_66:
+  sub.u32 %r67, %r64, %r60;
+  mov.u32 %r68, %r67;
+  bra fold_line_soa_end_66;
+  fold_line_soa_else_66:
+  mov.u32 %r68, %r64;
+  fold_line_soa_end_66:
+  mov.u64 %rd69, 4;
+  mul.lo.u64 %rd70, %rd32, %rd69;
+  add.u64 %rd71, %rd2, %rd70;
+  ld.global.u32 %r72, [%rd71];
+  mov.b32 %r73, %r72; // param: v
+  mov.u32 %r74, 2147483647;
+  and.b32 %r75, %r73, %r74;
+  mov.u32 %r76, 31;
+  shr.u32 %r77, %r73, %r76;
+  add.u32 %r78, %r75, %r77;
+  setp.ge.u32 %p79, %r78, %r74;
+  @%p79 bra fold_line_soa_then_80;
+  bra fold_line_soa_else_80;
+  fold_line_soa_then_80:
+  sub.u32 %r81, %r78, %r74;
+  mov.u32 %r82, %r81;
+  bra fold_line_soa_end_80;
+  fold_line_soa_else_80:
+  mov.u32 %r82, %r78;
+  fold_line_soa_end_80:
+  mov.u64 %rd83, 4;
+  mul.lo.u64 %rd84, %rd32, %rd83;
+  add.u64 %rd85, %rd4, %rd84;
+  ld.global.u32 %r86, [%rd85];
+  mov.b32 %r87, %r86; // param: v
+  mov.u32 %r88, 2147483647;
+  and.b32 %r89, %r87, %r88;
+  mov.u32 %r90, 31;
+  shr.u32 %r91, %r87, %r90;
+  add.u32 %r92, %r89, %r91;
+  setp.ge.u32 %p93, %r92, %r88;
+  @%p93 bra fold_line_soa_then_94;
+  bra fold_line_soa_else_94;
+  fold_line_soa_then_94:
+  sub.u32 %r95, %r92, %r88;
+  mov.u32 %r96, %r95;
+  bra fold_line_soa_end_94;
+  fold_line_soa_else_94:
+  mov.u32 %r96, %r92;
+  fold_line_soa_end_94:
+  mov.u64 %rd97, 4;
+  mul.lo.u64 %rd98, %rd32, %rd97;
+  add.u64 %rd99, %rd6, %rd98;
+  ld.global.u32 %r100, [%rd99];
+  mov.b32 %r101, %r100; // param: v
+  mov.u32 %r102, 2147483647;
+  and.b32 %r103, %r101, %r102;
+  mov.u32 %r104, 31;
+  shr.u32 %r105, %r101, %r104;
+  add.u32 %r106, %r103, %r105;
+  setp.ge.u32 %p107, %r106, %r102;
+  @%p107 bra fold_line_soa_then_108;
+  bra fold_line_soa_else_108;
+  fold_line_soa_then_108:
+  sub.u32 %r109, %r106, %r102;
+  mov.u32 %r110, %r109;
+  bra fold_line_soa_end_108;
+  fold_line_soa_else_108:
+  mov.u32 %r110, %r106;
+  fold_line_soa_end_108:
+  mov.u64 %rd111, 4;
+  mul.lo.u64 %rd112, %rd36, %rd111;
+  add.u64 %rd113, %rd0, %rd112;
+  ld.global.u32 %r114, [%rd113];
+  mov.b32 %r115, %r114; // param: v
+  mov.u32 %r116, 2147483647;
+  and.b32 %r117, %r115, %r116;
+  mov.u32 %r118, 31;
+  shr.u32 %r119, %r115, %r118;
+  add.u32 %r120, %r117, %r119;
+  setp.ge.u32 %p121, %r120, %r116;
+  @%p121 bra fold_line_soa_then_122;
+  bra fold_line_soa_else_122;
+  fold_line_soa_then_122:
+  sub.u32 %r123, %r120, %r116;
+  mov.u32 %r124, %r123;
+  bra fold_line_soa_end_122;
+  fold_line_soa_else_122:
+  mov.u32 %r124, %r120;
+  fold_line_soa_end_122:
+  mov.u64 %rd125, 4;
+  mul.lo.u64 %rd126, %rd36, %rd125;
+  add.u64 %rd127, %rd2, %rd126;
+  ld.global.u32 %r128, [%rd127];
+  mov.b32 %r129, %r128; // param: v
+  mov.u32 %r130, 2147483647;
+  and.b32 %r131, %r129, %r130;
+  mov.u32 %r132, 31;
+  shr.u32 %r133, %r129, %r132;
+  add.u32 %r134, %r131, %r133;
+  setp.ge.u32 %p135, %r134, %r130;
+  @%p135 bra fold_line_soa_then_136;
+  bra fold_line_soa_else_136;
+  fold_line_soa_then_136:
+  sub.u32 %r137, %r134, %r130;
+  mov.u32 %r138, %r137;
+  bra fold_line_soa_end_136;
+  fold_line_soa_else_136:
+  mov.u32 %r138, %r134;
+  fold_line_soa_end_136:
+  mov.u64 %rd139, 4;
+  mul.lo.u64 %rd140, %rd36, %rd139;
+  add.u64 %rd141, %rd4, %rd140;
+  ld.global.u32 %r142, [%rd141];
+  mov.b32 %r143, %r142; // param: v
+  mov.u32 %r144, 2147483647;
+  and.b32 %r145, %r143, %r144;
+  mov.u32 %r146, 31;
+  shr.u32 %r147, %r143, %r146;
+  add.u32 %r148, %r145, %r147;
+  setp.ge.u32 %p149, %r148, %r144;
+  @%p149 bra fold_line_soa_then_150;
+  bra fold_line_soa_else_150;
+  fold_line_soa_then_150:
+  sub.u32 %r151, %r148, %r144;
+  mov.u32 %r152, %r151;
+  bra fold_line_soa_end_150;
+  fold_line_soa_else_150:
+  mov.u32 %r152, %r148;
+  fold_line_soa_end_150:
+  mov.u64 %rd153, 4;
+  mul.lo.u64 %rd154, %rd36, %rd153;
+  add.u64 %rd155, %rd6, %rd154;
+  ld.global.u32 %r156, [%rd155];
+  mov.b32 %r157, %r156; // param: v
+  mov.u32 %r158, 2147483647;
+  and.b32 %r159, %r157, %r158;
+  mov.u32 %r160, 31;
+  shr.u32 %r161, %r157, %r160;
+  add.u32 %r162, %r159, %r161;
+  setp.ge.u32 %p163, %r162, %r158;
+  @%p163 bra fold_line_soa_then_164;
+  bra fold_line_soa_else_164;
+  fold_line_soa_then_164:
+  sub.u32 %r165, %r162, %r158;
   mov.u32 %r166, %r165;
-  bra fold_line_soa_end_163;
-  fold_line_soa_else_163:
-  mov.u32 %r166, %r160;
-  fold_line_soa_end_163:
+  bra fold_line_soa_end_164;
+  fold_line_soa_else_164:
+  mov.u32 %r166, %r162;
+  fold_line_soa_end_164:
   mov.u64 %rd167, 4;
-  mul.lo.u64 %rd168, %rd38, %rd167;
-  add.u64 %rd169, %rd6, %rd168;
+  mul.lo.u64 %rd168, %rd28, %rd167;
+  add.u64 %rd169, %rd8, %rd168;
   ld.global.u32 %r170, [%rd169];
-  cvt.u32.u64 %r171, %rd_unknown_M31_P;
-  and.b32 %r172, %r170, %rd_unknown_M31_P;
-  mov.u32 %r173, 31;
-  shr.u32 %r174, %r170, %r173;
-  add.u32 %r175, %r172, %r174;
-  cvt.u64.u32 %rd177, %r175;
-  setp.ge.u64 %p176, %rd177, %rd_unknown_M31_P;
-  @%p176 bra fold_line_soa_then_178;
+  mov.b32 %r171, %r170; // param: v
+  mov.u32 %r172, 2147483647;
+  and.b32 %r173, %r171, %r172;
+  mov.u32 %r174, 31;
+  shr.u32 %r175, %r171, %r174;
+  add.u32 %r176, %r173, %r175;
+  setp.ge.u32 %p177, %r176, %r172;
+  @%p177 bra fold_line_soa_then_178;
   bra fold_line_soa_else_178;
   fold_line_soa_then_178:
-  cvt.u32.u64 %r179, %rd_unknown_M31_P;
-  sub.u32 %r180, %r175, %r179;
-  mov.u32 %r181, %r180;
+  sub.u32 %r179, %r176, %r172;
+  mov.u32 %r180, %r179;
   bra fold_line_soa_end_178;
   fold_line_soa_else_178:
-  mov.u32 %r181, %r175;
+  mov.u32 %r180, %r176;
   fold_line_soa_end_178:
-  cvt.u64.u32 %rd182, %r27;
-  mov.u64 %rd183, 4;
-  mul.lo.u64 %rd184, %rd182, %rd183;
-  add.u64 %rd185, %rd8, %rd184;
-  ld.global.u32 %r186, [%rd185];
-  cvt.u32.u64 %r187, %rd_unknown_M31_P;
-  and.b32 %r188, %r186, %rd_unknown_M31_P;
-  mov.u32 %r189, 31;
-  shr.u32 %r190, %r186, %r189;
-  add.u32 %r191, %r188, %r190;
-  cvt.u64.u32 %rd193, %r191;
-  setp.ge.u64 %p192, %rd193, %rd_unknown_M31_P;
-  @%p192 bra fold_line_soa_then_194;
-  bra fold_line_soa_else_194;
-  fold_line_soa_then_194:
-  cvt.u32.u64 %r195, %rd_unknown_M31_P;
-  sub.u32 %r196, %r191, %r195;
-  mov.u32 %r197, %r196;
-  bra fold_line_soa_end_194;
-  fold_line_soa_else_194:
-  mov.u32 %r197, %r191;
-  fold_line_soa_end_194:
-  cvt.u64.u32 %rd198, %r76;
-  cvt.u64.u32 %rd199, %r136;
-  add.u64 %rd200, %rd198, %rd199;
-  cvt.u64.u32 %rd201, %rd_unknown_M31_P;
-  setp.ge.u64 %p202, %rd200, %rd201;
-  @%p202 bra fold_line_soa_then_203;
-  bra fold_line_soa_else_203;
-  fold_line_soa_then_203:
-  sub.u64 %rd204, %rd200, %rd201;
-  mov.u64 %rd205, %rd204;
-  bra fold_line_soa_end_203;
-  fold_line_soa_else_203:
-  mov.u64 %rd205, %rd200;
-  fold_line_soa_end_203:
-  cvt.u32.u64 %r206, %rd205;
-  cvt.u64.u32 %rd207, %r91;
-  cvt.u64.u32 %rd208, %r151;
-  add.u64 %rd209, %rd207, %rd208;
-  cvt.u64.u32 %rd210, %rd_unknown_M31_P;
-  setp.ge.u64 %p211, %rd209, %rd210;
-  @%p211 bra fold_line_soa_then_212;
-  bra fold_line_soa_else_212;
-  fold_line_soa_then_212:
-  sub.u64 %rd213, %rd209, %rd210;
-  mov.u64 %rd214, %rd213;
-  bra fold_line_soa_end_212;
-  fold_line_soa_else_212:
-  mov.u64 %rd214, %rd209;
-  fold_line_soa_end_212:
-  cvt.u32.u64 %r215, %rd214;
-  cvt.u64.u32 %rd216, %r106;
-  cvt.u64.u32 %rd217, %r166;
-  add.u64 %rd218, %rd216, %rd217;
-  cvt.u64.u32 %rd219, %rd_unknown_M31_P;
-  setp.ge.u64 %p220, %rd218, %rd219;
-  @%p220 bra fold_line_soa_then_221;
-  bra fold_line_soa_else_221;
-  fold_line_soa_then_221:
-  sub.u64 %rd222, %rd218, %rd219;
-  mov.u64 %rd223, %rd222;
-  bra fold_line_soa_end_221;
-  fold_line_soa_else_221:
-  mov.u64 %rd223, %rd218;
-  fold_line_soa_end_221:
-  cvt.u32.u64 %r224, %rd223;
-  cvt.u64.u32 %rd225, %r121;
-  cvt.u64.u32 %rd226, %r181;
-  add.u64 %rd227, %rd225, %rd226;
-  cvt.u64.u32 %rd228, %rd_unknown_M31_P;
-  setp.ge.u64 %p229, %rd227, %rd228;
-  @%p229 bra fold_line_soa_then_230;
-  bra fold_line_soa_else_230;
-  fold_line_soa_then_230:
-  sub.u64 %rd231, %rd227, %rd228;
-  mov.u64 %rd232, %rd231;
-  bra fold_line_soa_end_230;
-  fold_line_soa_else_230:
-  mov.u64 %rd232, %rd227;
-  fold_line_soa_end_230:
-  cvt.u32.u64 %r233, %rd232;
-  cvt.u64.u32 %rd234, %r76;
-  cvt.u64.u32 %rd235, %r136;
-  cvt.u64.u32 %rd236, %rd_unknown_M31_P;
-  setp.ge.u64 %p237, %rd234, %rd235;
-  @%p237 bra fold_line_soa_then_238;
-  bra fold_line_soa_else_238;
-  fold_line_soa_then_238:
-  sub.u64 %rd239, %rd234, %rd235;
-  mov.u64 %rd240, %rd239;
-  bra fold_line_soa_end_238;
-  fold_line_soa_else_238:
-  add.u64 %rd241, %rd234, %rd236;
-  sub.u64 %rd242, %rd241, %rd235;
-  mov.u64 %rd240, %rd242;
-  fold_line_soa_end_238:
-  cvt.u32.u64 %r243, %rd240;
-  cvt.u64.u32 %rd244, %r91;
-  cvt.u64.u32 %rd245, %r151;
-  cvt.u64.u32 %rd246, %rd_unknown_M31_P;
-  setp.ge.u64 %p247, %rd244, %rd245;
-  @%p247 bra fold_line_soa_then_248;
-  bra fold_line_soa_else_248;
-  fold_line_soa_then_248:
-  sub.u64 %rd249, %rd244, %rd245;
-  mov.u64 %rd250, %rd249;
-  bra fold_line_soa_end_248;
-  fold_line_soa_else_248:
-  add.u64 %rd251, %rd244, %rd246;
-  sub.u64 %rd252, %rd251, %rd245;
-  mov.u64 %rd250, %rd252;
-  fold_line_soa_end_248:
-  cvt.u32.u64 %r253, %rd250;
-  cvt.u64.u32 %rd254, %r106;
-  cvt.u64.u32 %rd255, %r166;
-  cvt.u64.u32 %rd256, %rd_unknown_M31_P;
-  setp.ge.u64 %p257, %rd254, %rd255;
-  @%p257 bra fold_line_soa_then_258;
-  bra fold_line_soa_else_258;
-  fold_line_soa_then_258:
-  sub.u64 %rd259, %rd254, %rd255;
-  mov.u64 %rd260, %rd259;
-  bra fold_line_soa_end_258;
-  fold_line_soa_else_258:
-  add.u64 %rd261, %rd254, %rd256;
-  sub.u64 %rd262, %rd261, %rd255;
-  mov.u64 %rd260, %rd262;
-  fold_line_soa_end_258:
-  cvt.u32.u64 %r263, %rd260;
-  cvt.u64.u32 %rd264, %r121;
-  cvt.u64.u32 %rd265, %r181;
-  cvt.u64.u32 %rd266, %rd_unknown_M31_P;
-  setp.ge.u64 %p267, %rd264, %rd265;
-  @%p267 bra fold_line_soa_then_268;
-  bra fold_line_soa_else_268;
-  fold_line_soa_then_268:
-  sub.u64 %rd269, %rd264, %rd265;
-  mov.u64 %rd270, %rd269;
-  bra fold_line_soa_end_268;
-  fold_line_soa_else_268:
-  add.u64 %rd271, %rd264, %rd266;
-  sub.u64 %rd272, %rd271, %rd265;
-  mov.u64 %rd270, %rd272;
-  fold_line_soa_end_268:
-  cvt.u32.u64 %r273, %rd270;
-  cvt.u64.u32 %rd274, %r243;
-  cvt.u64.u32 %rd275, %r197;
-  mul.lo.u64 %rd276, %rd274, %rd275;
-  cvt.u64.u32 %rd277, %rd_unknown_M31_P;
-  rem.u64 %rd278, %rd276, %rd277;
-  cvt.u32.u64 %r279, %rd278;
-  cvt.u64.u32 %rd280, %r253;
-  cvt.u64.u32 %rd281, %r197;
-  mul.lo.u64 %rd282, %rd280, %rd281;
-  cvt.u64.u32 %rd283, %rd_unknown_M31_P;
-  rem.u64 %rd284, %rd282, %rd283;
-  cvt.u32.u64 %r285, %rd284;
-  cvt.u64.u32 %rd286, %r263;
-  cvt.u64.u32 %rd287, %r197;
-  mul.lo.u64 %rd288, %rd286, %rd287;
-  cvt.u64.u32 %rd289, %rd_unknown_M31_P;
-  rem.u64 %rd290, %rd288, %rd289;
-  cvt.u32.u64 %r291, %rd290;
-  cvt.u64.u32 %rd292, %r273;
-  cvt.u64.u32 %rd293, %r197;
-  mul.lo.u64 %rd294, %rd292, %rd293;
-  cvt.u64.u32 %rd295, %rd_unknown_M31_P;
-  rem.u64 %rd296, %rd294, %rd295;
-  cvt.u32.u64 %r297, %rd296;
-  cvt.u64.u32 %rd298, %r18;
-  cvt.u64.u32 %rd299, %r279;
-  mul.lo.u64 %rd300, %rd298, %rd299;
-  cvt.u64.u32 %rd301, %rd_unknown_M31_P;
-  rem.u64 %rd302, %rd300, %rd301;
-  cvt.u32.u64 %r303, %rd302;
-  cvt.u64.u32 %rd304, %r19;
-  cvt.u64.u32 %rd305, %r285;
-  mul.lo.u64 %rd306, %rd304, %rd305;
-  cvt.u64.u32 %rd307, %rd_unknown_M31_P;
-  rem.u64 %rd308, %rd306, %rd307;
-  cvt.u32.u64 %r309, %rd308;
-  cvt.u64.u32 %rd310, %r303;
-  cvt.u64.u32 %rd311, %r309;
-  cvt.u64.u32 %rd312, %rd_unknown_M31_P;
-  setp.ge.u64 %p313, %rd310, %rd311;
-  @%p313 bra fold_line_soa_then_314;
-  bra fold_line_soa_else_314;
-  fold_line_soa_then_314:
-  sub.u64 %rd315, %rd310, %rd311;
-  mov.u64 %rd316, %rd315;
-  bra fold_line_soa_end_314;
-  fold_line_soa_else_314:
-  add.u64 %rd317, %rd310, %rd312;
-  sub.u64 %rd318, %rd317, %rd311;
-  mov.u64 %rd316, %rd318;
-  fold_line_soa_end_314:
-  cvt.u32.u64 %r319, %rd316;
-  cvt.u64.u32 %rd320, %r20;
-  cvt.u64.u32 %rd321, %r291;
-  mul.lo.u64 %rd322, %rd320, %rd321;
-  cvt.u64.u32 %rd323, %rd_unknown_M31_P;
-  rem.u64 %rd324, %rd322, %rd323;
-  cvt.u32.u64 %r325, %rd324;
-  cvt.u64.u32 %rd326, %r21;
-  cvt.u64.u32 %rd327, %r297;
+  mov.b32 %r181, %r68; // param: a
+  mov.b32 %r182, %r124; // param: b
+  mov.b32 %r183, %r181; // param: a
+  mov.b32 %r184, %r182; // param: b
+  cvt.u64.u32 %rd185, %r183;
+  cvt.u64.u32 %rd186, %r184;
+  add.u64 %rd187, %rd185, %rd186;
+  mov.u32 %r188, 2147483647;
+  cvt.u64.u32 %rd189, %r188;
+  setp.ge.u64 %p190, %rd187, %rd189;
+  @%p190 bra fold_line_soa_then_191;
+  bra fold_line_soa_else_191;
+  fold_line_soa_then_191:
+  sub.u64 %rd192, %rd187, %rd189;
+  mov.u64 %rd193, %rd192;
+  bra fold_line_soa_end_191;
+  fold_line_soa_else_191:
+  mov.u64 %rd193, %rd187;
+  fold_line_soa_end_191:
+  cvt.u32.u64 %r194, %rd193;
+  mov.b32 %r195, %r82; // param: a
+  mov.b32 %r196, %r138; // param: b
+  mov.b32 %r197, %r195; // param: a
+  mov.b32 %r198, %r196; // param: b
+  cvt.u64.u32 %rd199, %r197;
+  cvt.u64.u32 %rd200, %r198;
+  add.u64 %rd201, %rd199, %rd200;
+  mov.u32 %r202, 2147483647;
+  cvt.u64.u32 %rd203, %r202;
+  setp.ge.u64 %p204, %rd201, %rd203;
+  @%p204 bra fold_line_soa_then_205;
+  bra fold_line_soa_else_205;
+  fold_line_soa_then_205:
+  sub.u64 %rd206, %rd201, %rd203;
+  mov.u64 %rd207, %rd206;
+  bra fold_line_soa_end_205;
+  fold_line_soa_else_205:
+  mov.u64 %rd207, %rd201;
+  fold_line_soa_end_205:
+  cvt.u32.u64 %r208, %rd207;
+  mov.b32 %r209, %r96; // param: a
+  mov.b32 %r210, %r152; // param: b
+  mov.b32 %r211, %r209; // param: a
+  mov.b32 %r212, %r210; // param: b
+  cvt.u64.u32 %rd213, %r211;
+  cvt.u64.u32 %rd214, %r212;
+  add.u64 %rd215, %rd213, %rd214;
+  mov.u32 %r216, 2147483647;
+  cvt.u64.u32 %rd217, %r216;
+  setp.ge.u64 %p218, %rd215, %rd217;
+  @%p218 bra fold_line_soa_then_219;
+  bra fold_line_soa_else_219;
+  fold_line_soa_then_219:
+  sub.u64 %rd220, %rd215, %rd217;
+  mov.u64 %rd221, %rd220;
+  bra fold_line_soa_end_219;
+  fold_line_soa_else_219:
+  mov.u64 %rd221, %rd215;
+  fold_line_soa_end_219:
+  cvt.u32.u64 %r222, %rd221;
+  mov.b32 %r223, %r110; // param: a
+  mov.b32 %r224, %r166; // param: b
+  mov.b32 %r225, %r223; // param: a
+  mov.b32 %r226, %r224; // param: b
+  cvt.u64.u32 %rd227, %r225;
+  cvt.u64.u32 %rd228, %r226;
+  add.u64 %rd229, %rd227, %rd228;
+  mov.u32 %r230, 2147483647;
+  cvt.u64.u32 %rd231, %r230;
+  setp.ge.u64 %p232, %rd229, %rd231;
+  @%p232 bra fold_line_soa_then_233;
+  bra fold_line_soa_else_233;
+  fold_line_soa_then_233:
+  sub.u64 %rd234, %rd229, %rd231;
+  mov.u64 %rd235, %rd234;
+  bra fold_line_soa_end_233;
+  fold_line_soa_else_233:
+  mov.u64 %rd235, %rd229;
+  fold_line_soa_end_233:
+  cvt.u32.u64 %r236, %rd235;
+  mov.b32 %r237, %r68; // param: a
+  mov.b32 %r238, %r124; // param: b
+  mov.b32 %r239, %r237; // param: a
+  mov.b32 %r240, %r238; // param: b
+  cvt.u64.u32 %rd241, %r239;
+  cvt.u64.u32 %rd242, %r240;
+  mov.u32 %r243, 2147483647;
+  cvt.u64.u32 %rd244, %r243;
+  setp.ge.u64 %p245, %rd241, %rd242;
+  @%p245 bra fold_line_soa_then_246;
+  bra fold_line_soa_else_246;
+  fold_line_soa_then_246:
+  sub.u64 %rd247, %rd241, %rd242;
+  mov.u64 %rd248, %rd247;
+  bra fold_line_soa_end_246;
+  fold_line_soa_else_246:
+  add.u64 %rd249, %rd241, %rd244;
+  sub.u64 %rd250, %rd249, %rd242;
+  mov.u64 %rd248, %rd250;
+  fold_line_soa_end_246:
+  cvt.u32.u64 %r251, %rd248;
+  mov.b32 %r252, %r82; // param: a
+  mov.b32 %r253, %r138; // param: b
+  mov.b32 %r254, %r252; // param: a
+  mov.b32 %r255, %r253; // param: b
+  cvt.u64.u32 %rd256, %r254;
+  cvt.u64.u32 %rd257, %r255;
+  mov.u32 %r258, 2147483647;
+  cvt.u64.u32 %rd259, %r258;
+  setp.ge.u64 %p260, %rd256, %rd257;
+  @%p260 bra fold_line_soa_then_261;
+  bra fold_line_soa_else_261;
+  fold_line_soa_then_261:
+  sub.u64 %rd262, %rd256, %rd257;
+  mov.u64 %rd263, %rd262;
+  bra fold_line_soa_end_261;
+  fold_line_soa_else_261:
+  add.u64 %rd264, %rd256, %rd259;
+  sub.u64 %rd265, %rd264, %rd257;
+  mov.u64 %rd263, %rd265;
+  fold_line_soa_end_261:
+  cvt.u32.u64 %r266, %rd263;
+  mov.b32 %r267, %r96; // param: a
+  mov.b32 %r268, %r152; // param: b
+  mov.b32 %r269, %r267; // param: a
+  mov.b32 %r270, %r268; // param: b
+  cvt.u64.u32 %rd271, %r269;
+  cvt.u64.u32 %rd272, %r270;
+  mov.u32 %r273, 2147483647;
+  cvt.u64.u32 %rd274, %r273;
+  setp.ge.u64 %p275, %rd271, %rd272;
+  @%p275 bra fold_line_soa_then_276;
+  bra fold_line_soa_else_276;
+  fold_line_soa_then_276:
+  sub.u64 %rd277, %rd271, %rd272;
+  mov.u64 %rd278, %rd277;
+  bra fold_line_soa_end_276;
+  fold_line_soa_else_276:
+  add.u64 %rd279, %rd271, %rd274;
+  sub.u64 %rd280, %rd279, %rd272;
+  mov.u64 %rd278, %rd280;
+  fold_line_soa_end_276:
+  cvt.u32.u64 %r281, %rd278;
+  mov.b32 %r282, %r110; // param: a
+  mov.b32 %r283, %r166; // param: b
+  mov.b32 %r284, %r282; // param: a
+  mov.b32 %r285, %r283; // param: b
+  cvt.u64.u32 %rd286, %r284;
+  cvt.u64.u32 %rd287, %r285;
+  mov.u32 %r288, 2147483647;
+  cvt.u64.u32 %rd289, %r288;
+  setp.ge.u64 %p290, %rd286, %rd287;
+  @%p290 bra fold_line_soa_then_291;
+  bra fold_line_soa_else_291;
+  fold_line_soa_then_291:
+  sub.u64 %rd292, %rd286, %rd287;
+  mov.u64 %rd293, %rd292;
+  bra fold_line_soa_end_291;
+  fold_line_soa_else_291:
+  add.u64 %rd294, %rd286, %rd289;
+  sub.u64 %rd295, %rd294, %rd287;
+  mov.u64 %rd293, %rd295;
+  fold_line_soa_end_291:
+  cvt.u32.u64 %r296, %rd293;
+  mov.b32 %r297, %r251; // param: a
+  mov.b32 %r298, %r180; // param: b
+  cvt.u64.u32 %rd299, %r297;
+  cvt.u64.u32 %rd300, %r298;
+  mul.lo.u64 %rd301, %rd299, %rd300;
+  mov.u32 %r302, 2147483647;
+  cvt.u64.u32 %rd303, %r302;
+  rem.u64 %rd304, %rd301, %rd303;
+  cvt.u32.u64 %r305, %rd304;
+  mov.b32 %r306, %r266; // param: a
+  mov.b32 %r307, %r180; // param: b
+  cvt.u64.u32 %rd308, %r306;
+  cvt.u64.u32 %rd309, %r307;
+  mul.lo.u64 %rd310, %rd308, %rd309;
+  mov.u32 %r311, 2147483647;
+  cvt.u64.u32 %rd312, %r311;
+  rem.u64 %rd313, %rd310, %rd312;
+  cvt.u32.u64 %r314, %rd313;
+  mov.b32 %r315, %r281; // param: a
+  mov.b32 %r316, %r180; // param: b
+  cvt.u64.u32 %rd317, %r315;
+  cvt.u64.u32 %rd318, %r316;
+  mul.lo.u64 %rd319, %rd317, %rd318;
+  mov.u32 %r320, 2147483647;
+  cvt.u64.u32 %rd321, %r320;
+  rem.u64 %rd322, %rd319, %rd321;
+  cvt.u32.u64 %r323, %rd322;
+  mov.b32 %r324, %r296; // param: a
+  mov.b32 %r325, %r180; // param: b
+  cvt.u64.u32 %rd326, %r324;
+  cvt.u64.u32 %rd327, %r325;
   mul.lo.u64 %rd328, %rd326, %rd327;
-  cvt.u64.u32 %rd329, %rd_unknown_M31_P;
-  rem.u64 %rd330, %rd328, %rd329;
-  cvt.u32.u64 %r331, %rd330;
-  cvt.u64.u32 %rd332, %r325;
-  cvt.u64.u32 %rd333, %r331;
-  cvt.u64.u32 %rd334, %rd_unknown_M31_P;
-  setp.ge.u64 %p335, %rd332, %rd333;
-  @%p335 bra fold_line_soa_then_336;
-  bra fold_line_soa_else_336;
-  fold_line_soa_then_336:
-  sub.u64 %rd337, %rd332, %rd333;
-  mov.u64 %rd338, %rd337;
-  bra fold_line_soa_end_336;
-  fold_line_soa_else_336:
-  add.u64 %rd339, %rd332, %rd334;
-  sub.u64 %rd340, %rd339, %rd333;
-  mov.u64 %rd338, %rd340;
-  fold_line_soa_end_336:
-  cvt.u32.u64 %r341, %rd338;
-  cvt.u64.u32 %rd342, %r20;
-  cvt.u64.u32 %rd343, %r297;
-  mul.lo.u64 %rd344, %rd342, %rd343;
-  cvt.u64.u32 %rd345, %rd_unknown_M31_P;
-  rem.u64 %rd346, %rd344, %rd345;
-  cvt.u32.u64 %r347, %rd346;
-  cvt.u64.u32 %rd348, %r21;
-  cvt.u64.u32 %rd349, %r291;
-  mul.lo.u64 %rd350, %rd348, %rd349;
-  cvt.u64.u32 %rd351, %rd_unknown_M31_P;
-  rem.u64 %rd352, %rd350, %rd351;
+  mov.u32 %r329, 2147483647;
+  cvt.u64.u32 %rd330, %r329;
+  rem.u64 %rd331, %rd328, %rd330;
+  cvt.u32.u64 %r332, %rd331;
+  mov.b32 %r333, %r18; // param: a_re
+  mov.b32 %r334, %r19; // param: a_im
+  mov.b32 %r335, %r20; // param: b_re
+  mov.b32 %r336, %r21; // param: b_im
+  mov.b32 %r337, %r305; // param: c_re
+  mov.b32 %r338, %r314; // param: c_im
+  mov.b32 %r339, %r323; // param: d_re
+  mov.b32 %r340, %r332; // param: d_im
+  mov.b32 %r341, %r333; // param: a_re
+  mov.b32 %r342, %r334; // param: a_im
+  mov.b32 %r343, %r337; // param: b_re
+  mov.b32 %r344, %r338; // param: b_im
+  mov.b32 %r345, %r341; // param: a
+  mov.b32 %r346, %r343; // param: b
+  cvt.u64.u32 %rd347, %r345;
+  cvt.u64.u32 %rd348, %r346;
+  mul.lo.u64 %rd349, %rd347, %rd348;
+  mov.u32 %r350, 2147483647;
+  cvt.u64.u32 %rd351, %r350;
+  rem.u64 %rd352, %rd349, %rd351;
   cvt.u32.u64 %r353, %rd352;
-  cvt.u64.u32 %rd354, %r347;
-  cvt.u64.u32 %rd355, %r353;
-  add.u64 %rd356, %rd354, %rd355;
-  cvt.u64.u32 %rd357, %rd_unknown_M31_P;
-  setp.ge.u64 %p358, %rd356, %rd357;
-  @%p358 bra fold_line_soa_then_359;
-  bra fold_line_soa_else_359;
-  fold_line_soa_then_359:
-  sub.u64 %rd360, %rd356, %rd357;
-  mov.u64 %rd361, %rd360;
-  bra fold_line_soa_end_359;
-  fold_line_soa_else_359:
-  mov.u64 %rd361, %rd356;
-  fold_line_soa_end_359:
+  mov.b32 %r354, %r342; // param: a
+  mov.b32 %r355, %r344; // param: b
+  cvt.u64.u32 %rd356, %r354;
+  cvt.u64.u32 %rd357, %r355;
+  mul.lo.u64 %rd358, %rd356, %rd357;
+  mov.u32 %r359, 2147483647;
+  cvt.u64.u32 %rd360, %r359;
+  rem.u64 %rd361, %rd358, %rd360;
   cvt.u32.u64 %r362, %rd361;
-  cvt.u64.u32 %rd363, %r341;
-  cvt.u64.u32 %rd364, %r341;
-  add.u64 %rd365, %rd363, %rd364;
-  cvt.u64.u32 %rd366, %rd_unknown_M31_P;
-  setp.ge.u64 %p367, %rd365, %rd366;
-  @%p367 bra fold_line_soa_then_368;
-  bra fold_line_soa_else_368;
-  fold_line_soa_then_368:
-  sub.u64 %rd369, %rd365, %rd366;
-  mov.u64 %rd370, %rd369;
-  bra fold_line_soa_end_368;
-  fold_line_soa_else_368:
-  mov.u64 %rd370, %rd365;
-  fold_line_soa_end_368:
-  cvt.u32.u64 %r371, %rd370;
-  cvt.u64.u32 %rd372, %r371;
-  cvt.u64.u32 %rd373, %r362;
-  cvt.u64.u32 %rd374, %rd_unknown_M31_P;
-  setp.ge.u64 %p375, %rd372, %rd373;
-  @%p375 bra fold_line_soa_then_376;
-  bra fold_line_soa_else_376;
-  fold_line_soa_then_376:
-  sub.u64 %rd377, %rd372, %rd373;
-  mov.u64 %rd378, %rd377;
-  bra fold_line_soa_end_376;
-  fold_line_soa_else_376:
-  add.u64 %rd379, %rd372, %rd374;
-  sub.u64 %rd380, %rd379, %rd373;
-  mov.u64 %rd378, %rd380;
-  fold_line_soa_end_376:
-  cvt.u32.u64 %r381, %rd378;
-  cvt.u64.u32 %rd382, %r319;
+  mov.b32 %r363, %r353; // param: a
+  mov.b32 %r364, %r362; // param: b
+  cvt.u64.u32 %rd365, %r363;
+  cvt.u64.u32 %rd366, %r364;
+  mov.u32 %r367, 2147483647;
+  cvt.u64.u32 %rd368, %r367;
+  setp.ge.u64 %p369, %rd365, %rd366;
+  @%p369 bra fold_line_soa_then_370;
+  bra fold_line_soa_else_370;
+  fold_line_soa_then_370:
+  sub.u64 %rd371, %rd365, %rd366;
+  mov.u64 %rd372, %rd371;
+  bra fold_line_soa_end_370;
+  fold_line_soa_else_370:
+  add.u64 %rd373, %rd365, %rd368;
+  sub.u64 %rd374, %rd373, %rd366;
+  mov.u64 %rd372, %rd374;
+  fold_line_soa_end_370:
+  cvt.u32.u64 %r375, %rd372;
+  mov.b32 %r376, %r335; // param: a_re
+  mov.b32 %r377, %r336; // param: a_im
+  mov.b32 %r378, %r339; // param: b_re
+  mov.b32 %r379, %r340; // param: b_im
+  mov.b32 %r380, %r376; // param: a
+  mov.b32 %r381, %r378; // param: b
+  cvt.u64.u32 %rd382, %r380;
   cvt.u64.u32 %rd383, %r381;
-  add.u64 %rd384, %rd382, %rd383;
-  cvt.u64.u32 %rd385, %rd_unknown_M31_P;
-  setp.ge.u64 %p386, %rd384, %rd385;
-  @%p386 bra fold_line_soa_then_387;
-  bra fold_line_soa_else_387;
-  fold_line_soa_then_387:
-  sub.u64 %rd388, %rd384, %rd385;
-  mov.u64 %rd389, %rd388;
-  bra fold_line_soa_end_387;
-  fold_line_soa_else_387:
-  mov.u64 %rd389, %rd384;
-  fold_line_soa_end_387:
-  cvt.u32.u64 %r390, %rd389;
-  cvt.u64.u32 %rd391, %r18;
-  cvt.u64.u32 %rd392, %r285;
+  mul.lo.u64 %rd384, %rd382, %rd383;
+  mov.u32 %r385, 2147483647;
+  cvt.u64.u32 %rd386, %r385;
+  rem.u64 %rd387, %rd384, %rd386;
+  cvt.u32.u64 %r388, %rd387;
+  mov.b32 %r389, %r377; // param: a
+  mov.b32 %r390, %r379; // param: b
+  cvt.u64.u32 %rd391, %r389;
+  cvt.u64.u32 %rd392, %r390;
   mul.lo.u64 %rd393, %rd391, %rd392;
-  cvt.u64.u32 %rd394, %rd_unknown_M31_P;
-  rem.u64 %rd395, %rd393, %rd394;
-  cvt.u32.u64 %r396, %rd395;
-  cvt.u64.u32 %rd397, %r19;
-  cvt.u64.u32 %rd398, %r279;
-  mul.lo.u64 %rd399, %rd397, %rd398;
-  cvt.u64.u32 %rd400, %rd_unknown_M31_P;
-  rem.u64 %rd401, %rd399, %rd400;
-  cvt.u32.u64 %r402, %rd401;
-  cvt.u64.u32 %rd403, %r396;
-  cvt.u64.u32 %rd404, %r402;
-  add.u64 %rd405, %rd403, %rd404;
-  cvt.u64.u32 %rd406, %rd_unknown_M31_P;
-  setp.ge.u64 %p407, %rd405, %rd406;
-  @%p407 bra fold_line_soa_then_408;
-  bra fold_line_soa_else_408;
-  fold_line_soa_then_408:
-  sub.u64 %rd409, %rd405, %rd406;
-  mov.u64 %rd410, %rd409;
-  bra fold_line_soa_end_408;
-  fold_line_soa_else_408:
-  mov.u64 %rd410, %rd405;
-  fold_line_soa_end_408:
-  cvt.u32.u64 %r411, %rd410;
-  cvt.u64.u32 %rd412, %r20;
-  cvt.u64.u32 %rd413, %r291;
-  mul.lo.u64 %rd414, %rd412, %rd413;
-  cvt.u64.u32 %rd415, %rd_unknown_M31_P;
-  rem.u64 %rd416, %rd414, %rd415;
-  cvt.u32.u64 %r417, %rd416;
-  cvt.u64.u32 %rd418, %r21;
-  cvt.u64.u32 %rd419, %r297;
-  mul.lo.u64 %rd420, %rd418, %rd419;
-  cvt.u64.u32 %rd421, %rd_unknown_M31_P;
-  rem.u64 %rd422, %rd420, %rd421;
+  mov.u32 %r394, 2147483647;
+  cvt.u64.u32 %rd395, %r394;
+  rem.u64 %rd396, %rd393, %rd395;
+  cvt.u32.u64 %r397, %rd396;
+  mov.b32 %r398, %r388; // param: a
+  mov.b32 %r399, %r397; // param: b
+  cvt.u64.u32 %rd400, %r398;
+  cvt.u64.u32 %rd401, %r399;
+  mov.u32 %r402, 2147483647;
+  cvt.u64.u32 %rd403, %r402;
+  setp.ge.u64 %p404, %rd400, %rd401;
+  @%p404 bra fold_line_soa_then_405;
+  bra fold_line_soa_else_405;
+  fold_line_soa_then_405:
+  sub.u64 %rd406, %rd400, %rd401;
+  mov.u64 %rd407, %rd406;
+  bra fold_line_soa_end_405;
+  fold_line_soa_else_405:
+  add.u64 %rd408, %rd400, %rd403;
+  sub.u64 %rd409, %rd408, %rd401;
+  mov.u64 %rd407, %rd409;
+  fold_line_soa_end_405:
+  cvt.u32.u64 %r410, %rd407;
+  mov.b32 %r411, %r335; // param: a_re
+  mov.b32 %r412, %r336; // param: a_im
+  mov.b32 %r413, %r339; // param: b_re
+  mov.b32 %r414, %r340; // param: b_im
+  mov.b32 %r415, %r411; // param: a
+  mov.b32 %r416, %r414; // param: b
+  cvt.u64.u32 %rd417, %r415;
+  cvt.u64.u32 %rd418, %r416;
+  mul.lo.u64 %rd419, %rd417, %rd418;
+  mov.u32 %r420, 2147483647;
+  cvt.u64.u32 %rd421, %r420;
+  rem.u64 %rd422, %rd419, %rd421;
   cvt.u32.u64 %r423, %rd422;
-  cvt.u64.u32 %rd424, %r417;
-  cvt.u64.u32 %rd425, %r423;
-  cvt.u64.u32 %rd426, %rd_unknown_M31_P;
-  setp.ge.u64 %p427, %rd424, %rd425;
-  @%p427 bra fold_line_soa_then_428;
-  bra fold_line_soa_else_428;
-  fold_line_soa_then_428:
-  sub.u64 %rd429, %rd424, %rd425;
-  mov.u64 %rd430, %rd429;
-  bra fold_line_soa_end_428;
-  fold_line_soa_else_428:
-  add.u64 %rd431, %rd424, %rd426;
-  sub.u64 %rd432, %rd431, %rd425;
-  mov.u64 %rd430, %rd432;
-  fold_line_soa_end_428:
-  cvt.u32.u64 %r433, %rd430;
-  cvt.u64.u32 %rd434, %r20;
-  cvt.u64.u32 %rd435, %r297;
-  mul.lo.u64 %rd436, %rd434, %rd435;
-  cvt.u64.u32 %rd437, %rd_unknown_M31_P;
-  rem.u64 %rd438, %rd436, %rd437;
-  cvt.u32.u64 %r439, %rd438;
-  cvt.u64.u32 %rd440, %r21;
-  cvt.u64.u32 %rd441, %r291;
-  mul.lo.u64 %rd442, %rd440, %rd441;
-  cvt.u64.u32 %rd443, %rd_unknown_M31_P;
-  rem.u64 %rd444, %rd442, %rd443;
-  cvt.u32.u64 %r445, %rd444;
-  cvt.u64.u32 %rd446, %r439;
-  cvt.u64.u32 %rd447, %r445;
-  add.u64 %rd448, %rd446, %rd447;
-  cvt.u64.u32 %rd449, %rd_unknown_M31_P;
-  setp.ge.u64 %p450, %rd448, %rd449;
-  @%p450 bra fold_line_soa_then_451;
-  bra fold_line_soa_else_451;
-  fold_line_soa_then_451:
-  sub.u64 %rd452, %rd448, %rd449;
-  mov.u64 %rd453, %rd452;
-  bra fold_line_soa_end_451;
-  fold_line_soa_else_451:
-  mov.u64 %rd453, %rd448;
-  fold_line_soa_end_451:
-  cvt.u32.u64 %r454, %rd453;
-  cvt.u64.u32 %rd455, %r454;
-  cvt.u64.u32 %rd456, %r454;
-  add.u64 %rd457, %rd455, %rd456;
-  cvt.u64.u32 %rd458, %rd_unknown_M31_P;
-  setp.ge.u64 %p459, %rd457, %rd458;
-  @%p459 bra fold_line_soa_then_460;
-  bra fold_line_soa_else_460;
-  fold_line_soa_then_460:
-  sub.u64 %rd461, %rd457, %rd458;
-  mov.u64 %rd462, %rd461;
-  bra fold_line_soa_end_460;
-  fold_line_soa_else_460:
-  mov.u64 %rd462, %rd457;
-  fold_line_soa_end_460:
-  cvt.u32.u64 %r463, %rd462;
-  cvt.u64.u32 %rd464, %r433;
-  cvt.u64.u32 %rd465, %r463;
-  add.u64 %rd466, %rd464, %rd465;
-  cvt.u64.u32 %rd467, %rd_unknown_M31_P;
-  setp.ge.u64 %p468, %rd466, %rd467;
-  @%p468 bra fold_line_soa_then_469;
-  bra fold_line_soa_else_469;
-  fold_line_soa_then_469:
-  sub.u64 %rd470, %rd466, %rd467;
-  mov.u64 %rd471, %rd470;
-  bra fold_line_soa_end_469;
-  fold_line_soa_else_469:
-  mov.u64 %rd471, %rd466;
-  fold_line_soa_end_469:
-  cvt.u32.u64 %r472, %rd471;
-  cvt.u64.u32 %rd473, %r411;
+  mov.b32 %r424, %r412; // param: a
+  mov.b32 %r425, %r413; // param: b
+  cvt.u64.u32 %rd426, %r424;
+  cvt.u64.u32 %rd427, %r425;
+  mul.lo.u64 %rd428, %rd426, %rd427;
+  mov.u32 %r429, 2147483647;
+  cvt.u64.u32 %rd430, %r429;
+  rem.u64 %rd431, %rd428, %rd430;
+  cvt.u32.u64 %r432, %rd431;
+  mov.b32 %r433, %r423; // param: a
+  mov.b32 %r434, %r432; // param: b
+  cvt.u64.u32 %rd435, %r433;
+  cvt.u64.u32 %rd436, %r434;
+  add.u64 %rd437, %rd435, %rd436;
+  mov.u32 %r438, 2147483647;
+  cvt.u64.u32 %rd439, %r438;
+  setp.ge.u64 %p440, %rd437, %rd439;
+  @%p440 bra fold_line_soa_then_441;
+  bra fold_line_soa_else_441;
+  fold_line_soa_then_441:
+  sub.u64 %rd442, %rd437, %rd439;
+  mov.u64 %rd443, %rd442;
+  bra fold_line_soa_end_441;
+  fold_line_soa_else_441:
+  mov.u64 %rd443, %rd437;
+  fold_line_soa_end_441:
+  cvt.u32.u64 %r444, %rd443;
+  mov.b32 %r445, %r410; // param: a
+  mov.b32 %r446, %r445; // param: a
+  mov.b32 %r447, %r445; // param: b
+  cvt.u64.u32 %rd448, %r446;
+  cvt.u64.u32 %rd449, %r447;
+  add.u64 %rd450, %rd448, %rd449;
+  mov.u32 %r451, 2147483647;
+  cvt.u64.u32 %rd452, %r451;
+  setp.ge.u64 %p453, %rd450, %rd452;
+  @%p453 bra fold_line_soa_then_454;
+  bra fold_line_soa_else_454;
+  fold_line_soa_then_454:
+  sub.u64 %rd455, %rd450, %rd452;
+  mov.u64 %rd456, %rd455;
+  bra fold_line_soa_end_454;
+  fold_line_soa_else_454:
+  mov.u64 %rd456, %rd450;
+  fold_line_soa_end_454:
+  cvt.u32.u64 %r457, %rd456;
+  mov.b32 %r458, %r457; // param: a
+  mov.b32 %r459, %r444; // param: b
+  cvt.u64.u32 %rd460, %r458;
+  cvt.u64.u32 %rd461, %r459;
+  mov.u32 %r462, 2147483647;
+  cvt.u64.u32 %rd463, %r462;
+  setp.ge.u64 %p464, %rd460, %rd461;
+  @%p464 bra fold_line_soa_then_465;
+  bra fold_line_soa_else_465;
+  fold_line_soa_then_465:
+  sub.u64 %rd466, %rd460, %rd461;
+  mov.u64 %rd467, %rd466;
+  bra fold_line_soa_end_465;
+  fold_line_soa_else_465:
+  add.u64 %rd468, %rd460, %rd463;
+  sub.u64 %rd469, %rd468, %rd461;
+  mov.u64 %rd467, %rd469;
+  fold_line_soa_end_465:
+  cvt.u32.u64 %r470, %rd467;
+  mov.b32 %r471, %r375; // param: a
+  mov.b32 %r472, %r470; // param: b
+  cvt.u64.u32 %rd473, %r471;
   cvt.u64.u32 %rd474, %r472;
   add.u64 %rd475, %rd473, %rd474;
-  cvt.u64.u32 %rd476, %rd_unknown_M31_P;
-  setp.ge.u64 %p477, %rd475, %rd476;
-  @%p477 bra fold_line_soa_then_478;
-  bra fold_line_soa_else_478;
-  fold_line_soa_then_478:
-  sub.u64 %rd479, %rd475, %rd476;
-  mov.u64 %rd480, %rd479;
-  bra fold_line_soa_end_478;
-  fold_line_soa_else_478:
-  mov.u64 %rd480, %rd475;
-  fold_line_soa_end_478:
-  cvt.u32.u64 %r481, %rd480;
-  cvt.u64.u32 %rd482, %r18;
-  cvt.u64.u32 %rd483, %r291;
-  mul.lo.u64 %rd484, %rd482, %rd483;
-  cvt.u64.u32 %rd485, %rd_unknown_M31_P;
-  rem.u64 %rd486, %rd484, %rd485;
-  cvt.u32.u64 %r487, %rd486;
-  cvt.u64.u32 %rd488, %r19;
-  cvt.u64.u32 %rd489, %r297;
-  mul.lo.u64 %rd490, %rd488, %rd489;
-  cvt.u64.u32 %rd491, %rd_unknown_M31_P;
-  rem.u64 %rd492, %rd490, %rd491;
-  cvt.u32.u64 %r493, %rd492;
-  cvt.u64.u32 %rd494, %r487;
-  cvt.u64.u32 %rd495, %r493;
-  cvt.u64.u32 %rd496, %rd_unknown_M31_P;
-  setp.ge.u64 %p497, %rd494, %rd495;
-  @%p497 bra fold_line_soa_then_498;
-  bra fold_line_soa_else_498;
-  fold_line_soa_then_498:
-  sub.u64 %rd499, %rd494, %rd495;
-  mov.u64 %rd500, %rd499;
-  bra fold_line_soa_end_498;
-  fold_line_soa_else_498:
-  add.u64 %rd501, %rd494, %rd496;
-  sub.u64 %rd502, %rd501, %rd495;
-  mov.u64 %rd500, %rd502;
-  fold_line_soa_end_498:
-  cvt.u32.u64 %r503, %rd500;
-  cvt.u64.u32 %rd504, %r20;
-  cvt.u64.u32 %rd505, %r279;
-  mul.lo.u64 %rd506, %rd504, %rd505;
-  cvt.u64.u32 %rd507, %rd_unknown_M31_P;
-  rem.u64 %rd508, %rd506, %rd507;
-  cvt.u32.u64 %r509, %rd508;
-  cvt.u64.u32 %rd510, %r21;
-  cvt.u64.u32 %rd511, %r285;
-  mul.lo.u64 %rd512, %rd510, %rd511;
-  cvt.u64.u32 %rd513, %rd_unknown_M31_P;
-  rem.u64 %rd514, %rd512, %rd513;
-  cvt.u32.u64 %r515, %rd514;
-  cvt.u64.u32 %rd516, %r509;
-  cvt.u64.u32 %rd517, %r515;
-  cvt.u64.u32 %rd518, %rd_unknown_M31_P;
-  setp.ge.u64 %p519, %rd516, %rd517;
-  @%p519 bra fold_line_soa_then_520;
-  bra fold_line_soa_else_520;
-  fold_line_soa_then_520:
-  sub.u64 %rd521, %rd516, %rd517;
-  mov.u64 %rd522, %rd521;
-  bra fold_line_soa_end_520;
-  fold_line_soa_else_520:
-  add.u64 %rd523, %rd516, %rd518;
-  sub.u64 %rd524, %rd523, %rd517;
-  mov.u64 %rd522, %rd524;
-  fold_line_soa_end_520:
-  cvt.u32.u64 %r525, %rd522;
-  cvt.u64.u32 %rd526, %r503;
-  cvt.u64.u32 %rd527, %r525;
-  add.u64 %rd528, %rd526, %rd527;
-  cvt.u64.u32 %rd529, %rd_unknown_M31_P;
-  setp.ge.u64 %p530, %rd528, %rd529;
-  @%p530 bra fold_line_soa_then_531;
-  bra fold_line_soa_else_531;
-  fold_line_soa_then_531:
-  sub.u64 %rd532, %rd528, %rd529;
-  mov.u64 %rd533, %rd532;
-  bra fold_line_soa_end_531;
-  fold_line_soa_else_531:
-  mov.u64 %rd533, %rd528;
-  fold_line_soa_end_531:
-  cvt.u32.u64 %r534, %rd533;
-  cvt.u64.u32 %rd535, %r18;
-  cvt.u64.u32 %rd536, %r297;
-  mul.lo.u64 %rd537, %rd535, %rd536;
-  cvt.u64.u32 %rd538, %rd_unknown_M31_P;
-  rem.u64 %rd539, %rd537, %rd538;
-  cvt.u32.u64 %r540, %rd539;
-  cvt.u64.u32 %rd541, %r19;
-  cvt.u64.u32 %rd542, %r291;
-  mul.lo.u64 %rd543, %rd541, %rd542;
-  cvt.u64.u32 %rd544, %rd_unknown_M31_P;
-  rem.u64 %rd545, %rd543, %rd544;
+  mov.u32 %r476, 2147483647;
+  cvt.u64.u32 %rd477, %r476;
+  setp.ge.u64 %p478, %rd475, %rd477;
+  @%p478 bra fold_line_soa_then_479;
+  bra fold_line_soa_else_479;
+  fold_line_soa_then_479:
+  sub.u64 %rd480, %rd475, %rd477;
+  mov.u64 %rd481, %rd480;
+  bra fold_line_soa_end_479;
+  fold_line_soa_else_479:
+  mov.u64 %rd481, %rd475;
+  fold_line_soa_end_479:
+  cvt.u32.u64 %r482, %rd481;
+  mov.b32 %r483, %r18; // param: a_re
+  mov.b32 %r484, %r19; // param: a_im
+  mov.b32 %r485, %r20; // param: b_re
+  mov.b32 %r486, %r21; // param: b_im
+  mov.b32 %r487, %r305; // param: c_re
+  mov.b32 %r488, %r314; // param: c_im
+  mov.b32 %r489, %r323; // param: d_re
+  mov.b32 %r490, %r332; // param: d_im
+  mov.b32 %r491, %r483; // param: a_re
+  mov.b32 %r492, %r484; // param: a_im
+  mov.b32 %r493, %r487; // param: b_re
+  mov.b32 %r494, %r488; // param: b_im
+  mov.b32 %r495, %r491; // param: a
+  mov.b32 %r496, %r494; // param: b
+  cvt.u64.u32 %rd497, %r495;
+  cvt.u64.u32 %rd498, %r496;
+  mul.lo.u64 %rd499, %rd497, %rd498;
+  mov.u32 %r500, 2147483647;
+  cvt.u64.u32 %rd501, %r500;
+  rem.u64 %rd502, %rd499, %rd501;
+  cvt.u32.u64 %r503, %rd502;
+  mov.b32 %r504, %r492; // param: a
+  mov.b32 %r505, %r493; // param: b
+  cvt.u64.u32 %rd506, %r504;
+  cvt.u64.u32 %rd507, %r505;
+  mul.lo.u64 %rd508, %rd506, %rd507;
+  mov.u32 %r509, 2147483647;
+  cvt.u64.u32 %rd510, %r509;
+  rem.u64 %rd511, %rd508, %rd510;
+  cvt.u32.u64 %r512, %rd511;
+  mov.b32 %r513, %r503; // param: a
+  mov.b32 %r514, %r512; // param: b
+  cvt.u64.u32 %rd515, %r513;
+  cvt.u64.u32 %rd516, %r514;
+  add.u64 %rd517, %rd515, %rd516;
+  mov.u32 %r518, 2147483647;
+  cvt.u64.u32 %rd519, %r518;
+  setp.ge.u64 %p520, %rd517, %rd519;
+  @%p520 bra fold_line_soa_then_521;
+  bra fold_line_soa_else_521;
+  fold_line_soa_then_521:
+  sub.u64 %rd522, %rd517, %rd519;
+  mov.u64 %rd523, %rd522;
+  bra fold_line_soa_end_521;
+  fold_line_soa_else_521:
+  mov.u64 %rd523, %rd517;
+  fold_line_soa_end_521:
+  cvt.u32.u64 %r524, %rd523;
+  mov.b32 %r525, %r485; // param: a_re
+  mov.b32 %r526, %r486; // param: a_im
+  mov.b32 %r527, %r489; // param: b_re
+  mov.b32 %r528, %r490; // param: b_im
+  mov.b32 %r529, %r525; // param: a
+  mov.b32 %r530, %r527; // param: b
+  cvt.u64.u32 %rd531, %r529;
+  cvt.u64.u32 %rd532, %r530;
+  mul.lo.u64 %rd533, %rd531, %rd532;
+  mov.u32 %r534, 2147483647;
+  cvt.u64.u32 %rd535, %r534;
+  rem.u64 %rd536, %rd533, %rd535;
+  cvt.u32.u64 %r537, %rd536;
+  mov.b32 %r538, %r526; // param: a
+  mov.b32 %r539, %r528; // param: b
+  cvt.u64.u32 %rd540, %r538;
+  cvt.u64.u32 %rd541, %r539;
+  mul.lo.u64 %rd542, %rd540, %rd541;
+  mov.u32 %r543, 2147483647;
+  cvt.u64.u32 %rd544, %r543;
+  rem.u64 %rd545, %rd542, %rd544;
   cvt.u32.u64 %r546, %rd545;
-  cvt.u64.u32 %rd547, %r540;
-  cvt.u64.u32 %rd548, %r546;
-  add.u64 %rd549, %rd547, %rd548;
-  cvt.u64.u32 %rd550, %rd_unknown_M31_P;
-  setp.ge.u64 %p551, %rd549, %rd550;
-  @%p551 bra fold_line_soa_then_552;
-  bra fold_line_soa_else_552;
-  fold_line_soa_then_552:
-  sub.u64 %rd553, %rd549, %rd550;
-  mov.u64 %rd554, %rd553;
-  bra fold_line_soa_end_552;
-  fold_line_soa_else_552:
-  mov.u64 %rd554, %rd549;
-  fold_line_soa_end_552:
-  cvt.u32.u64 %r555, %rd554;
-  cvt.u64.u32 %rd556, %r20;
-  cvt.u64.u32 %rd557, %r285;
-  mul.lo.u64 %rd558, %rd556, %rd557;
-  cvt.u64.u32 %rd559, %rd_unknown_M31_P;
-  rem.u64 %rd560, %rd558, %rd559;
-  cvt.u32.u64 %r561, %rd560;
-  cvt.u64.u32 %rd562, %r21;
-  cvt.u64.u32 %rd563, %r279;
-  mul.lo.u64 %rd564, %rd562, %rd563;
-  cvt.u64.u32 %rd565, %rd_unknown_M31_P;
-  rem.u64 %rd566, %rd564, %rd565;
-  cvt.u32.u64 %r567, %rd566;
-  cvt.u64.u32 %rd568, %r561;
-  cvt.u64.u32 %rd569, %r567;
-  add.u64 %rd570, %rd568, %rd569;
-  cvt.u64.u32 %rd571, %rd_unknown_M31_P;
-  setp.ge.u64 %p572, %rd570, %rd571;
-  @%p572 bra fold_line_soa_then_573;
-  bra fold_line_soa_else_573;
-  fold_line_soa_then_573:
-  sub.u64 %rd574, %rd570, %rd571;
-  mov.u64 %rd575, %rd574;
-  bra fold_line_soa_end_573;
-  fold_line_soa_else_573:
-  mov.u64 %rd575, %rd570;
-  fold_line_soa_end_573:
-  cvt.u32.u64 %r576, %rd575;
-  cvt.u64.u32 %rd577, %r555;
-  cvt.u64.u32 %rd578, %r576;
-  add.u64 %rd579, %rd577, %rd578;
-  cvt.u64.u32 %rd580, %rd_unknown_M31_P;
-  setp.ge.u64 %p581, %rd579, %rd580;
-  @%p581 bra fold_line_soa_then_582;
-  bra fold_line_soa_else_582;
-  fold_line_soa_then_582:
-  sub.u64 %rd583, %rd579, %rd580;
-  mov.u64 %rd584, %rd583;
-  bra fold_line_soa_end_582;
-  fold_line_soa_else_582:
-  mov.u64 %rd584, %rd579;
-  fold_line_soa_end_582:
-  cvt.u32.u64 %r585, %rd584;
-  cvt.u64.u32 %rd586, %r206;
-  cvt.u64.u32 %rd587, %r390;
-  add.u64 %rd588, %rd586, %rd587;
-  cvt.u64.u32 %rd589, %rd_unknown_M31_P;
-  setp.ge.u64 %p590, %rd588, %rd589;
-  @%p590 bra fold_line_soa_then_591;
-  bra fold_line_soa_else_591;
-  fold_line_soa_then_591:
-  sub.u64 %rd592, %rd588, %rd589;
-  mov.u64 %rd593, %rd592;
-  bra fold_line_soa_end_591;
-  fold_line_soa_else_591:
-  mov.u64 %rd593, %rd588;
-  fold_line_soa_end_591:
-  cvt.u32.u64 %r594, %rd593;
-  cvt.u64.u32 %rd595, %r215;
-  cvt.u64.u32 %rd596, %r481;
-  add.u64 %rd597, %rd595, %rd596;
-  cvt.u64.u32 %rd598, %rd_unknown_M31_P;
-  setp.ge.u64 %p599, %rd597, %rd598;
-  @%p599 bra fold_line_soa_then_600;
-  bra fold_line_soa_else_600;
-  fold_line_soa_then_600:
-  sub.u64 %rd601, %rd597, %rd598;
-  mov.u64 %rd602, %rd601;
-  bra fold_line_soa_end_600;
-  fold_line_soa_else_600:
-  mov.u64 %rd602, %rd597;
-  fold_line_soa_end_600:
-  cvt.u32.u64 %r603, %rd602;
-  cvt.u64.u32 %rd604, %r224;
-  cvt.u64.u32 %rd605, %r534;
-  add.u64 %rd606, %rd604, %rd605;
-  cvt.u64.u32 %rd607, %rd_unknown_M31_P;
-  setp.ge.u64 %p608, %rd606, %rd607;
-  @%p608 bra fold_line_soa_then_609;
-  bra fold_line_soa_else_609;
-  fold_line_soa_then_609:
-  sub.u64 %rd610, %rd606, %rd607;
-  mov.u64 %rd611, %rd610;
-  bra fold_line_soa_end_609;
-  fold_line_soa_else_609:
-  mov.u64 %rd611, %rd606;
-  fold_line_soa_end_609:
-  cvt.u32.u64 %r612, %rd611;
-  cvt.u64.u32 %rd613, %r233;
-  cvt.u64.u32 %rd614, %r585;
-  add.u64 %rd615, %rd613, %rd614;
-  cvt.u64.u32 %rd616, %rd_unknown_M31_P;
-  setp.ge.u64 %p617, %rd615, %rd616;
-  @%p617 bra fold_line_soa_then_618;
-  bra fold_line_soa_else_618;
-  fold_line_soa_then_618:
-  sub.u64 %rd619, %rd615, %rd616;
-  mov.u64 %rd620, %rd619;
-  bra fold_line_soa_end_618;
-  fold_line_soa_else_618:
-  mov.u64 %rd620, %rd615;
-  fold_line_soa_end_618:
-  cvt.u32.u64 %r621, %rd620;
-  cvt.u64.u32 %rd622, %r27;
-  mov.u64 %rd623, 4;
-  mul.lo.u64 %rd624, %rd622, %rd623;
-  add.u64 %rd625, %rd10, %rd624;
-  st.global.u32 [%rd625], %r594;
-  cvt.u64.u32 %rd626, %r27;
-  mov.u64 %rd627, 4;
-  mul.lo.u64 %rd628, %rd626, %rd627;
-  add.u64 %rd629, %rd12, %rd628;
-  st.global.u32 [%rd629], %r603;
-  cvt.u64.u32 %rd630, %r27;
-  mov.u64 %rd631, 4;
-  mul.lo.u64 %rd632, %rd630, %rd631;
-  add.u64 %rd633, %rd14, %rd632;
-  st.global.u32 [%rd633], %r612;
-  cvt.u64.u32 %rd634, %r27;
-  mov.u64 %rd635, 4;
-  mul.lo.u64 %rd636, %rd634, %rd635;
-  add.u64 %rd637, %rd16, %rd636;
-  st.global.u32 [%rd637], %r621;
-  mov.u32 %r638, 0; // unit
-  mov.u32 %r639, %r638;
-  bra fold_line_soa_end_61;
-  fold_line_soa_else_61:
-  mov.u32 %r639, 0; // no else branch
-  fold_line_soa_end_61:
-  mov.u32 %r640, 0; // unit
-  mov.u32 %r641, %r640;
-  bra fold_line_soa_end_58;
-  fold_line_soa_else_58:
-  mov.u32 %r641, 0; // no else branch
-  fold_line_soa_end_58:
-  mov.u32 %r642, 0; // unit
-  mov.u32 %r643, %r642;
-  bra fold_line_soa_end_55;
-  fold_line_soa_else_55:
-  mov.u32 %r643, 0; // no else branch
-  fold_line_soa_end_55:
-  mov.u32 %r644, 0; // unit
-  mov.u32 %r645, %r644;
+  mov.b32 %r547, %r537; // param: a
+  mov.b32 %r548, %r546; // param: b
+  cvt.u64.u32 %rd549, %r547;
+  cvt.u64.u32 %rd550, %r548;
+  mov.u32 %r551, 2147483647;
+  cvt.u64.u32 %rd552, %r551;
+  setp.ge.u64 %p553, %rd549, %rd550;
+  @%p553 bra fold_line_soa_then_554;
+  bra fold_line_soa_else_554;
+  fold_line_soa_then_554:
+  sub.u64 %rd555, %rd549, %rd550;
+  mov.u64 %rd556, %rd555;
+  bra fold_line_soa_end_554;
+  fold_line_soa_else_554:
+  add.u64 %rd557, %rd549, %rd552;
+  sub.u64 %rd558, %rd557, %rd550;
+  mov.u64 %rd556, %rd558;
+  fold_line_soa_end_554:
+  cvt.u32.u64 %r559, %rd556;
+  mov.b32 %r560, %r485; // param: a_re
+  mov.b32 %r561, %r486; // param: a_im
+  mov.b32 %r562, %r489; // param: b_re
+  mov.b32 %r563, %r490; // param: b_im
+  mov.b32 %r564, %r560; // param: a
+  mov.b32 %r565, %r563; // param: b
+  cvt.u64.u32 %rd566, %r564;
+  cvt.u64.u32 %rd567, %r565;
+  mul.lo.u64 %rd568, %rd566, %rd567;
+  mov.u32 %r569, 2147483647;
+  cvt.u64.u32 %rd570, %r569;
+  rem.u64 %rd571, %rd568, %rd570;
+  cvt.u32.u64 %r572, %rd571;
+  mov.b32 %r573, %r561; // param: a
+  mov.b32 %r574, %r562; // param: b
+  cvt.u64.u32 %rd575, %r573;
+  cvt.u64.u32 %rd576, %r574;
+  mul.lo.u64 %rd577, %rd575, %rd576;
+  mov.u32 %r578, 2147483647;
+  cvt.u64.u32 %rd579, %r578;
+  rem.u64 %rd580, %rd577, %rd579;
+  cvt.u32.u64 %r581, %rd580;
+  mov.b32 %r582, %r572; // param: a
+  mov.b32 %r583, %r581; // param: b
+  cvt.u64.u32 %rd584, %r582;
+  cvt.u64.u32 %rd585, %r583;
+  add.u64 %rd586, %rd584, %rd585;
+  mov.u32 %r587, 2147483647;
+  cvt.u64.u32 %rd588, %r587;
+  setp.ge.u64 %p589, %rd586, %rd588;
+  @%p589 bra fold_line_soa_then_590;
+  bra fold_line_soa_else_590;
+  fold_line_soa_then_590:
+  sub.u64 %rd591, %rd586, %rd588;
+  mov.u64 %rd592, %rd591;
+  bra fold_line_soa_end_590;
+  fold_line_soa_else_590:
+  mov.u64 %rd592, %rd586;
+  fold_line_soa_end_590:
+  cvt.u32.u64 %r593, %rd592;
+  mov.b32 %r594, %r593; // param: a
+  mov.b32 %r595, %r594; // param: a
+  mov.b32 %r596, %r594; // param: b
+  cvt.u64.u32 %rd597, %r595;
+  cvt.u64.u32 %rd598, %r596;
+  add.u64 %rd599, %rd597, %rd598;
+  mov.u32 %r600, 2147483647;
+  cvt.u64.u32 %rd601, %r600;
+  setp.ge.u64 %p602, %rd599, %rd601;
+  @%p602 bra fold_line_soa_then_603;
+  bra fold_line_soa_else_603;
+  fold_line_soa_then_603:
+  sub.u64 %rd604, %rd599, %rd601;
+  mov.u64 %rd605, %rd604;
+  bra fold_line_soa_end_603;
+  fold_line_soa_else_603:
+  mov.u64 %rd605, %rd599;
+  fold_line_soa_end_603:
+  cvt.u32.u64 %r606, %rd605;
+  mov.b32 %r607, %r559; // param: a
+  mov.b32 %r608, %r606; // param: b
+  cvt.u64.u32 %rd609, %r607;
+  cvt.u64.u32 %rd610, %r608;
+  add.u64 %rd611, %rd609, %rd610;
+  mov.u32 %r612, 2147483647;
+  cvt.u64.u32 %rd613, %r612;
+  setp.ge.u64 %p614, %rd611, %rd613;
+  @%p614 bra fold_line_soa_then_615;
+  bra fold_line_soa_else_615;
+  fold_line_soa_then_615:
+  sub.u64 %rd616, %rd611, %rd613;
+  mov.u64 %rd617, %rd616;
+  bra fold_line_soa_end_615;
+  fold_line_soa_else_615:
+  mov.u64 %rd617, %rd611;
+  fold_line_soa_end_615:
+  cvt.u32.u64 %r618, %rd617;
+  mov.b32 %r619, %r524; // param: a
+  mov.b32 %r620, %r618; // param: b
+  cvt.u64.u32 %rd621, %r619;
+  cvt.u64.u32 %rd622, %r620;
+  add.u64 %rd623, %rd621, %rd622;
+  mov.u32 %r624, 2147483647;
+  cvt.u64.u32 %rd625, %r624;
+  setp.ge.u64 %p626, %rd623, %rd625;
+  @%p626 bra fold_line_soa_then_627;
+  bra fold_line_soa_else_627;
+  fold_line_soa_then_627:
+  sub.u64 %rd628, %rd623, %rd625;
+  mov.u64 %rd629, %rd628;
+  bra fold_line_soa_end_627;
+  fold_line_soa_else_627:
+  mov.u64 %rd629, %rd623;
+  fold_line_soa_end_627:
+  cvt.u32.u64 %r630, %rd629;
+  mov.b32 %r631, %r18; // param: a_re
+  mov.b32 %r632, %r19; // param: a_im
+  mov.b32 %r633, %r20; // param: b_re
+  mov.b32 %r634, %r21; // param: b_im
+  mov.b32 %r635, %r305; // param: c_re
+  mov.b32 %r636, %r314; // param: c_im
+  mov.b32 %r637, %r323; // param: d_re
+  mov.b32 %r638, %r332; // param: d_im
+  mov.b32 %r639, %r631; // param: a_re
+  mov.b32 %r640, %r632; // param: a_im
+  mov.b32 %r641, %r637; // param: b_re
+  mov.b32 %r642, %r638; // param: b_im
+  mov.b32 %r643, %r639; // param: a
+  mov.b32 %r644, %r641; // param: b
+  cvt.u64.u32 %rd645, %r643;
+  cvt.u64.u32 %rd646, %r644;
+  mul.lo.u64 %rd647, %rd645, %rd646;
+  mov.u32 %r648, 2147483647;
+  cvt.u64.u32 %rd649, %r648;
+  rem.u64 %rd650, %rd647, %rd649;
+  cvt.u32.u64 %r651, %rd650;
+  mov.b32 %r652, %r640; // param: a
+  mov.b32 %r653, %r642; // param: b
+  cvt.u64.u32 %rd654, %r652;
+  cvt.u64.u32 %rd655, %r653;
+  mul.lo.u64 %rd656, %rd654, %rd655;
+  mov.u32 %r657, 2147483647;
+  cvt.u64.u32 %rd658, %r657;
+  rem.u64 %rd659, %rd656, %rd658;
+  cvt.u32.u64 %r660, %rd659;
+  mov.b32 %r661, %r651; // param: a
+  mov.b32 %r662, %r660; // param: b
+  cvt.u64.u32 %rd663, %r661;
+  cvt.u64.u32 %rd664, %r662;
+  mov.u32 %r665, 2147483647;
+  cvt.u64.u32 %rd666, %r665;
+  setp.ge.u64 %p667, %rd663, %rd664;
+  @%p667 bra fold_line_soa_then_668;
+  bra fold_line_soa_else_668;
+  fold_line_soa_then_668:
+  sub.u64 %rd669, %rd663, %rd664;
+  mov.u64 %rd670, %rd669;
+  bra fold_line_soa_end_668;
+  fold_line_soa_else_668:
+  add.u64 %rd671, %rd663, %rd666;
+  sub.u64 %rd672, %rd671, %rd664;
+  mov.u64 %rd670, %rd672;
+  fold_line_soa_end_668:
+  cvt.u32.u64 %r673, %rd670;
+  mov.b32 %r674, %r633; // param: a_re
+  mov.b32 %r675, %r634; // param: a_im
+  mov.b32 %r676, %r635; // param: b_re
+  mov.b32 %r677, %r636; // param: b_im
+  mov.b32 %r678, %r674; // param: a
+  mov.b32 %r679, %r676; // param: b
+  cvt.u64.u32 %rd680, %r678;
+  cvt.u64.u32 %rd681, %r679;
+  mul.lo.u64 %rd682, %rd680, %rd681;
+  mov.u32 %r683, 2147483647;
+  cvt.u64.u32 %rd684, %r683;
+  rem.u64 %rd685, %rd682, %rd684;
+  cvt.u32.u64 %r686, %rd685;
+  mov.b32 %r687, %r675; // param: a
+  mov.b32 %r688, %r677; // param: b
+  cvt.u64.u32 %rd689, %r687;
+  cvt.u64.u32 %rd690, %r688;
+  mul.lo.u64 %rd691, %rd689, %rd690;
+  mov.u32 %r692, 2147483647;
+  cvt.u64.u32 %rd693, %r692;
+  rem.u64 %rd694, %rd691, %rd693;
+  cvt.u32.u64 %r695, %rd694;
+  mov.b32 %r696, %r686; // param: a
+  mov.b32 %r697, %r695; // param: b
+  cvt.u64.u32 %rd698, %r696;
+  cvt.u64.u32 %rd699, %r697;
+  mov.u32 %r700, 2147483647;
+  cvt.u64.u32 %rd701, %r700;
+  setp.ge.u64 %p702, %rd698, %rd699;
+  @%p702 bra fold_line_soa_then_703;
+  bra fold_line_soa_else_703;
+  fold_line_soa_then_703:
+  sub.u64 %rd704, %rd698, %rd699;
+  mov.u64 %rd705, %rd704;
+  bra fold_line_soa_end_703;
+  fold_line_soa_else_703:
+  add.u64 %rd706, %rd698, %rd701;
+  sub.u64 %rd707, %rd706, %rd699;
+  mov.u64 %rd705, %rd707;
+  fold_line_soa_end_703:
+  cvt.u32.u64 %r708, %rd705;
+  mov.b32 %r709, %r673; // param: a
+  mov.b32 %r710, %r708; // param: b
+  cvt.u64.u32 %rd711, %r709;
+  cvt.u64.u32 %rd712, %r710;
+  add.u64 %rd713, %rd711, %rd712;
+  mov.u32 %r714, 2147483647;
+  cvt.u64.u32 %rd715, %r714;
+  setp.ge.u64 %p716, %rd713, %rd715;
+  @%p716 bra fold_line_soa_then_717;
+  bra fold_line_soa_else_717;
+  fold_line_soa_then_717:
+  sub.u64 %rd718, %rd713, %rd715;
+  mov.u64 %rd719, %rd718;
+  bra fold_line_soa_end_717;
+  fold_line_soa_else_717:
+  mov.u64 %rd719, %rd713;
+  fold_line_soa_end_717:
+  cvt.u32.u64 %r720, %rd719;
+  mov.b32 %r721, %r18; // param: a_re
+  mov.b32 %r722, %r19; // param: a_im
+  mov.b32 %r723, %r20; // param: b_re
+  mov.b32 %r724, %r21; // param: b_im
+  mov.b32 %r725, %r305; // param: c_re
+  mov.b32 %r726, %r314; // param: c_im
+  mov.b32 %r727, %r323; // param: d_re
+  mov.b32 %r728, %r332; // param: d_im
+  mov.b32 %r729, %r721; // param: a_re
+  mov.b32 %r730, %r722; // param: a_im
+  mov.b32 %r731, %r727; // param: b_re
+  mov.b32 %r732, %r728; // param: b_im
+  mov.b32 %r733, %r729; // param: a
+  mov.b32 %r734, %r732; // param: b
+  cvt.u64.u32 %rd735, %r733;
+  cvt.u64.u32 %rd736, %r734;
+  mul.lo.u64 %rd737, %rd735, %rd736;
+  mov.u32 %r738, 2147483647;
+  cvt.u64.u32 %rd739, %r738;
+  rem.u64 %rd740, %rd737, %rd739;
+  cvt.u32.u64 %r741, %rd740;
+  mov.b32 %r742, %r730; // param: a
+  mov.b32 %r743, %r731; // param: b
+  cvt.u64.u32 %rd744, %r742;
+  cvt.u64.u32 %rd745, %r743;
+  mul.lo.u64 %rd746, %rd744, %rd745;
+  mov.u32 %r747, 2147483647;
+  cvt.u64.u32 %rd748, %r747;
+  rem.u64 %rd749, %rd746, %rd748;
+  cvt.u32.u64 %r750, %rd749;
+  mov.b32 %r751, %r741; // param: a
+  mov.b32 %r752, %r750; // param: b
+  cvt.u64.u32 %rd753, %r751;
+  cvt.u64.u32 %rd754, %r752;
+  add.u64 %rd755, %rd753, %rd754;
+  mov.u32 %r756, 2147483647;
+  cvt.u64.u32 %rd757, %r756;
+  setp.ge.u64 %p758, %rd755, %rd757;
+  @%p758 bra fold_line_soa_then_759;
+  bra fold_line_soa_else_759;
+  fold_line_soa_then_759:
+  sub.u64 %rd760, %rd755, %rd757;
+  mov.u64 %rd761, %rd760;
+  bra fold_line_soa_end_759;
+  fold_line_soa_else_759:
+  mov.u64 %rd761, %rd755;
+  fold_line_soa_end_759:
+  cvt.u32.u64 %r762, %rd761;
+  mov.b32 %r763, %r723; // param: a_re
+  mov.b32 %r764, %r724; // param: a_im
+  mov.b32 %r765, %r725; // param: b_re
+  mov.b32 %r766, %r726; // param: b_im
+  mov.b32 %r767, %r763; // param: a
+  mov.b32 %r768, %r766; // param: b
+  cvt.u64.u32 %rd769, %r767;
+  cvt.u64.u32 %rd770, %r768;
+  mul.lo.u64 %rd771, %rd769, %rd770;
+  mov.u32 %r772, 2147483647;
+  cvt.u64.u32 %rd773, %r772;
+  rem.u64 %rd774, %rd771, %rd773;
+  cvt.u32.u64 %r775, %rd774;
+  mov.b32 %r776, %r764; // param: a
+  mov.b32 %r777, %r765; // param: b
+  cvt.u64.u32 %rd778, %r776;
+  cvt.u64.u32 %rd779, %r777;
+  mul.lo.u64 %rd780, %rd778, %rd779;
+  mov.u32 %r781, 2147483647;
+  cvt.u64.u32 %rd782, %r781;
+  rem.u64 %rd783, %rd780, %rd782;
+  cvt.u32.u64 %r784, %rd783;
+  mov.b32 %r785, %r775; // param: a
+  mov.b32 %r786, %r784; // param: b
+  cvt.u64.u32 %rd787, %r785;
+  cvt.u64.u32 %rd788, %r786;
+  add.u64 %rd789, %rd787, %rd788;
+  mov.u32 %r790, 2147483647;
+  cvt.u64.u32 %rd791, %r790;
+  setp.ge.u64 %p792, %rd789, %rd791;
+  @%p792 bra fold_line_soa_then_793;
+  bra fold_line_soa_else_793;
+  fold_line_soa_then_793:
+  sub.u64 %rd794, %rd789, %rd791;
+  mov.u64 %rd795, %rd794;
+  bra fold_line_soa_end_793;
+  fold_line_soa_else_793:
+  mov.u64 %rd795, %rd789;
+  fold_line_soa_end_793:
+  cvt.u32.u64 %r796, %rd795;
+  mov.b32 %r797, %r762; // param: a
+  mov.b32 %r798, %r796; // param: b
+  cvt.u64.u32 %rd799, %r797;
+  cvt.u64.u32 %rd800, %r798;
+  add.u64 %rd801, %rd799, %rd800;
+  mov.u32 %r802, 2147483647;
+  cvt.u64.u32 %rd803, %r802;
+  setp.ge.u64 %p804, %rd801, %rd803;
+  @%p804 bra fold_line_soa_then_805;
+  bra fold_line_soa_else_805;
+  fold_line_soa_then_805:
+  sub.u64 %rd806, %rd801, %rd803;
+  mov.u64 %rd807, %rd806;
+  bra fold_line_soa_end_805;
+  fold_line_soa_else_805:
+  mov.u64 %rd807, %rd801;
+  fold_line_soa_end_805:
+  cvt.u32.u64 %r808, %rd807;
+  mov.b32 %r809, %r194; // param: a
+  mov.b32 %r810, %r482; // param: b
+  mov.b32 %r811, %r809; // param: a
+  mov.b32 %r812, %r810; // param: b
+  cvt.u64.u32 %rd813, %r811;
+  cvt.u64.u32 %rd814, %r812;
+  add.u64 %rd815, %rd813, %rd814;
+  mov.u32 %r816, 2147483647;
+  cvt.u64.u32 %rd817, %r816;
+  setp.ge.u64 %p818, %rd815, %rd817;
+  @%p818 bra fold_line_soa_then_819;
+  bra fold_line_soa_else_819;
+  fold_line_soa_then_819:
+  sub.u64 %rd820, %rd815, %rd817;
+  mov.u64 %rd821, %rd820;
+  bra fold_line_soa_end_819;
+  fold_line_soa_else_819:
+  mov.u64 %rd821, %rd815;
+  fold_line_soa_end_819:
+  cvt.u32.u64 %r822, %rd821;
+  mov.b32 %r823, %r208; // param: a
+  mov.b32 %r824, %r630; // param: b
+  mov.b32 %r825, %r823; // param: a
+  mov.b32 %r826, %r824; // param: b
+  cvt.u64.u32 %rd827, %r825;
+  cvt.u64.u32 %rd828, %r826;
+  add.u64 %rd829, %rd827, %rd828;
+  mov.u32 %r830, 2147483647;
+  cvt.u64.u32 %rd831, %r830;
+  setp.ge.u64 %p832, %rd829, %rd831;
+  @%p832 bra fold_line_soa_then_833;
+  bra fold_line_soa_else_833;
+  fold_line_soa_then_833:
+  sub.u64 %rd834, %rd829, %rd831;
+  mov.u64 %rd835, %rd834;
+  bra fold_line_soa_end_833;
+  fold_line_soa_else_833:
+  mov.u64 %rd835, %rd829;
+  fold_line_soa_end_833:
+  cvt.u32.u64 %r836, %rd835;
+  mov.b32 %r837, %r222; // param: a
+  mov.b32 %r838, %r720; // param: b
+  mov.b32 %r839, %r837; // param: a
+  mov.b32 %r840, %r838; // param: b
+  cvt.u64.u32 %rd841, %r839;
+  cvt.u64.u32 %rd842, %r840;
+  add.u64 %rd843, %rd841, %rd842;
+  mov.u32 %r844, 2147483647;
+  cvt.u64.u32 %rd845, %r844;
+  setp.ge.u64 %p846, %rd843, %rd845;
+  @%p846 bra fold_line_soa_then_847;
+  bra fold_line_soa_else_847;
+  fold_line_soa_then_847:
+  sub.u64 %rd848, %rd843, %rd845;
+  mov.u64 %rd849, %rd848;
+  bra fold_line_soa_end_847;
+  fold_line_soa_else_847:
+  mov.u64 %rd849, %rd843;
+  fold_line_soa_end_847:
+  cvt.u32.u64 %r850, %rd849;
+  mov.b32 %r851, %r236; // param: a
+  mov.b32 %r852, %r808; // param: b
+  mov.b32 %r853, %r851; // param: a
+  mov.b32 %r854, %r852; // param: b
+  cvt.u64.u32 %rd855, %r853;
+  cvt.u64.u32 %rd856, %r854;
+  add.u64 %rd857, %rd855, %rd856;
+  mov.u32 %r858, 2147483647;
+  cvt.u64.u32 %rd859, %r858;
+  setp.ge.u64 %p860, %rd857, %rd859;
+  @%p860 bra fold_line_soa_then_861;
+  bra fold_line_soa_else_861;
+  fold_line_soa_then_861:
+  sub.u64 %rd862, %rd857, %rd859;
+  mov.u64 %rd863, %rd862;
+  bra fold_line_soa_end_861;
+  fold_line_soa_else_861:
+  mov.u64 %rd863, %rd857;
+  fold_line_soa_end_861:
+  cvt.u32.u64 %r864, %rd863;
+  mov.u64 %rd865, 4;
+  mul.lo.u64 %rd866, %rd28, %rd865;
+  add.u64 %rd867, %rd10, %rd866;
+  st.global.u32 [%rd867], %r822;
+  mov.u64 %rd868, 4;
+  mul.lo.u64 %rd869, %rd28, %rd868;
+  add.u64 %rd870, %rd12, %rd869;
+  st.global.u32 [%rd870], %r836;
+  mov.u64 %rd871, 4;
+  mul.lo.u64 %rd872, %rd28, %rd871;
+  add.u64 %rd873, %rd14, %rd872;
+  st.global.u32 [%rd873], %r850;
+  mov.u64 %rd874, 4;
+  mul.lo.u64 %rd875, %rd28, %rd874;
+  add.u64 %rd876, %rd16, %rd875;
+  st.global.u32 [%rd876], %r864;
+  mov.u32 %r877, 0; // unit
+  mov.u32 %r878, %r877;
+  bra fold_line_soa_end_54;
+  fold_line_soa_else_54:
+  mov.u32 %r878, 0; // no else branch
+  fold_line_soa_end_54:
+  mov.u32 %r879, 0; // unit
+  mov.u32 %r880, %r879;
   bra fold_line_soa_end_52;
   fold_line_soa_else_52:
-  mov.u32 %r645, 0; // no else branch
+  mov.u32 %r880, 0; // no else branch
   fold_line_soa_end_52:
-  mov.u32 %r646, 0; // unit
-  mov.u32 %r647, %r646;
-  bra fold_line_soa_end_49;
-  fold_line_soa_else_49:
-  mov.u32 %r647, 0; // no else branch
-  fold_line_soa_end_49:
-  mov.u32 %r648, 0; // unit
-  mov.u32 %r649, %r648;
+  mov.u32 %r881, 0; // unit
+  mov.u32 %r882, %r881;
+  bra fold_line_soa_end_50;
+  fold_line_soa_else_50:
+  mov.u32 %r882, 0; // no else branch
+  fold_line_soa_end_50:
+  mov.u32 %r883, 0; // unit
+  mov.u32 %r884, %r883;
+  bra fold_line_soa_end_48;
+  fold_line_soa_else_48:
+  mov.u32 %r884, 0; // no else branch
+  fold_line_soa_end_48:
+  mov.u32 %r885, 0; // unit
+  mov.u32 %r886, %r885;
   bra fold_line_soa_end_46;
   fold_line_soa_else_46:
-  mov.u32 %r649, 0; // no else branch
+  mov.u32 %r886, 0; // no else branch
   fold_line_soa_end_46:
-  mov.u32 %r650, 0; // unit
-  mov.u32 %r651, %r650;
+  mov.u32 %r887, 0; // unit
+  mov.u32 %r888, %r887;
   bra fold_line_soa_end_44;
   fold_line_soa_else_44:
-  mov.u32 %r651, 0; // no else branch
+  mov.u32 %r888, 0; // no else branch
   fold_line_soa_end_44:
-  mov.u32 %r652, 0; // unit
-  mov.u32 %r653, %r652;
+  mov.u32 %r889, 0; // unit
+  mov.u32 %r890, %r889;
   bra fold_line_soa_end_42;
   fold_line_soa_else_42:
-  mov.u32 %r653, 0; // no else branch
+  mov.u32 %r890, 0; // no else branch
   fold_line_soa_end_42:
-  mov.u32 %r654, 0; // unit
-  mov.u32 %r655, %r654;
+  mov.u32 %r891, 0; // unit
+  mov.u32 %r892, %r891;
   bra fold_line_soa_end_40;
   fold_line_soa_else_40:
-  mov.u32 %r655, 0; // no else branch
+  mov.u32 %r892, 0; // no else branch
   fold_line_soa_end_40:
-  mov.u32 %r656, 0; // unit
-  mov.u32 %r657, %r656;
+  mov.u32 %r893, 0; // unit
+  mov.u32 %r894, %r893;
+  bra fold_line_soa_end_38;
+  fold_line_soa_else_38:
+  mov.u32 %r894, 0; // no else branch
+  fold_line_soa_end_38:
+  mov.u32 %r895, 0; // unit
+  mov.u32 %r896, %r895;
   bra fold_line_soa_end_30;
   fold_line_soa_else_30:
-  mov.u32 %r657, 0; // no else branch
+  mov.u32 %r896, 0; // no else branch
   fold_line_soa_end_30:
-  mov.u32 %r658, 0; // unit
+  mov.u32 %r897, 0; // unit
   ret;
 }
 

@@ -13,9 +13,9 @@
     .param .u64 blake2s_leaf_hash_param_n
 )
 {
-    .reg .pred %p10;
-    .reg .u64 %rd0, %rd1, %rd11, %rd13, %rd14, %rd2, %rd3, %rd4;
+    .reg .pred %p11;
     .reg .u32 %r15, %r16, %r17, %r5, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd2, %rd3, %rd4;
 
   ld.param.u64 %rd0, [blake2s_leaf_hash_param_output_data];
   ld.param.u64 %rd1, [blake2s_leaf_hash_param_output_len];
@@ -28,9 +28,9 @@
   mul.lo.u32 %r7, %r5, %r6;
   mov.u32 %r8, %tid.x;
   add.u32 %r9, %r7, %r8;
-  cvt.u64.u32 %rd11, %r9;
-  setp.lt.u64 %p10, %rd11, %rd4;
-  @%p10 bra blake2s_leaf_hash_then_12;
+  cvt.u64.u32 %rd10, %r9;
+  setp.lt.u64 %p11, %rd10, %rd4;
+  @%p11 bra blake2s_leaf_hash_then_12;
   bra blake2s_leaf_hash_else_12;
   blake2s_leaf_hash_then_12:
   mov.u64 %rd13, 0; // unhandled expr

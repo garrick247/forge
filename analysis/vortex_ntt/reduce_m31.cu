@@ -41,39 +41,39 @@ typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 typedef uint64_t (*forge_fn__ret_u64_t)(void);
 typedef float (*forge_fn_f32_u64_u64_ret_f32_t)(float, uint64_t, uint64_t);
 
-uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
+__device__ uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
 
-uint64_t lane_id(void);  /* extern: forge_gpu */
+__device__ uint64_t lane_id(void);  /* extern: forge_gpu */
 
-uint64_t warp_id(void);  /* extern: forge_gpu */
+__device__ uint64_t warp_id(void);  /* extern: forge_gpu */
 
-float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
 static const uint32_t M31_P = 2147483647ULL;
 
@@ -95,7 +95,7 @@ static __host__ __device__ __forceinline__ uint32_t reduce_word(uint32_t v __att
 __global__ void reduce_words_to_m31(forge_span_u32_t data __attribute__((unused)), uint64_t n_words __attribute__((unused))) {
   uint64_t tid __attribute__((unused)) = ((blockIdx_x * blockDim_x) + threadIdx_x);
   if ((tid < n_words)) {
-    uint32_t v __attribute__((unused)) = __ldg((const uint32_t*)&data.data[tid]);
+    uint32_t v __attribute__((unused)) = data.data[tid];
     data.data[tid] = reduce_word(v);
 
   }

@@ -86,8 +86,8 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 2
-   [ASSUME] demos/1142_forge_sinusoidal_pe.fg:44  (< idx_e out__len)
+   [ASSUME] test/../demos/1142_forge_sinusoidal_pe.fg:44  (< idx_e out__len)
              "pos<seq_len + lane<16 + seq_len*32<=out.len"
-   [ASSUME] demos/1142_forge_sinusoidal_pe.fg:45  (< idx_o out__len)
+   [ASSUME] test/../demos/1142_forge_sinusoidal_pe.fg:45  (< idx_o out__len)
              "same chain (idx_o = idx_e + 1 < base + 32)"
    ---- END AUDIT LOG ---- */

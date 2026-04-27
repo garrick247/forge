@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 typedef struct Node {
   uint64_t val;
@@ -38,7 +43,7 @@ __forge_tuple_u64_own_Node_t node_val(Node* p __attribute__((unused))) {
   __forge_tuple_Node_own_Node_t __tup_35_4 __attribute__((unused)) = __forge_own_get_Node(p);
   Node n __attribute__((unused)) = (__tup_35_4)._0;
   Node* q __attribute__((unused)) = (__tup_35_4)._1;
-  return (__forge_tuple_u64_own_Node_t){ ._0 = n.val, ._1 = q };
+  return FORGE_AGG(__forge_tuple_u64_own_Node_t, n.val, q);
 }
 
 uint64_t node_free(Node* p __attribute__((unused))) {

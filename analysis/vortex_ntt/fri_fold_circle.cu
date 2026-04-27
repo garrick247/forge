@@ -41,39 +41,39 @@ typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 typedef uint64_t (*forge_fn__ret_u64_t)(void);
 typedef float (*forge_fn_f32_u64_u64_ret_f32_t)(float, uint64_t, uint64_t);
 
-uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
+__device__ uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
 
-uint64_t lane_id(void);  /* extern: forge_gpu */
+__device__ uint64_t lane_id(void);  /* extern: forge_gpu */
 
-uint64_t warp_id(void);  /* extern: forge_gpu */
+__device__ uint64_t warp_id(void);  /* extern: forge_gpu */
 
-float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
 static const uint32_t M31_P = 2147483647ULL;
 
@@ -232,19 +232,19 @@ __global__ void fold_circle_into_line_soa(forge_span_u32_t dst0 __attribute__((u
                 if ((i < dst1.len)) {
                   if ((i < dst2.len)) {
                     if ((i < dst3.len)) {
-                      uint32_t f0_a_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src0.data[idx0]));
-                      uint32_t f0_a_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src1.data[idx0]));
-                      uint32_t f0_b_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src2.data[idx0]));
-                      uint32_t f0_b_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src3.data[idx0]));
-                      uint32_t f1_a_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src0.data[idx1]));
-                      uint32_t f1_a_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src1.data[idx1]));
-                      uint32_t f1_b_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src2.data[idx1]));
-                      uint32_t f1_b_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&src3.data[idx1]));
-                      uint32_t tw __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&twiddles.data[i]));
-                      uint32_t p_a_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&dst0.data[i]));
-                      uint32_t p_a_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&dst1.data[i]));
-                      uint32_t p_b_re __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&dst2.data[i]));
-                      uint32_t p_b_im __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&dst3.data[i]));
+                      uint32_t f0_a_re __attribute__((unused)) = reduce_word(src0.data[idx0]);
+                      uint32_t f0_a_im __attribute__((unused)) = reduce_word(src1.data[idx0]);
+                      uint32_t f0_b_re __attribute__((unused)) = reduce_word(src2.data[idx0]);
+                      uint32_t f0_b_im __attribute__((unused)) = reduce_word(src3.data[idx0]);
+                      uint32_t f1_a_re __attribute__((unused)) = reduce_word(src0.data[idx1]);
+                      uint32_t f1_a_im __attribute__((unused)) = reduce_word(src1.data[idx1]);
+                      uint32_t f1_b_re __attribute__((unused)) = reduce_word(src2.data[idx1]);
+                      uint32_t f1_b_im __attribute__((unused)) = reduce_word(src3.data[idx1]);
+                      uint32_t tw __attribute__((unused)) = reduce_word(twiddles.data[i]);
+                      uint32_t p_a_re __attribute__((unused)) = reduce_word(dst0.data[i]);
+                      uint32_t p_a_im __attribute__((unused)) = reduce_word(dst1.data[i]);
+                      uint32_t p_b_re __attribute__((unused)) = reduce_word(dst2.data[i]);
+                      uint32_t p_b_im __attribute__((unused)) = reduce_word(dst3.data[i]);
                       uint32_t sum_a_re __attribute__((unused)) = qm31_add_re_re(f0_a_re, f1_a_re);
                       uint32_t sum_a_im __attribute__((unused)) = qm31_add_re_im(f0_a_im, f1_a_im);
                       uint32_t sum_b_re __attribute__((unused)) = qm31_add_im_re(f0_b_re, f1_b_re);

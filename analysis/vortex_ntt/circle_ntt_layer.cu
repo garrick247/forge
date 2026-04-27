@@ -41,39 +41,39 @@ typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 typedef uint64_t (*forge_fn__ret_u64_t)(void);
 typedef float (*forge_fn_f32_u64_u64_ret_f32_t)(float, uint64_t, uint64_t);
 
-uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
+__device__ uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
 
-uint64_t lane_id(void);  /* extern: forge_gpu */
+__device__ uint64_t lane_id(void);  /* extern: forge_gpu */
 
-uint64_t warp_id(void);  /* extern: forge_gpu */
+__device__ uint64_t warp_id(void);  /* extern: forge_gpu */
 
-float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
 static const uint32_t M31_P = 2147483647ULL;
 
@@ -139,9 +139,9 @@ __global__ void circle_ntt_layer_forward(forge_span_u32_t data __attribute__((un
     if ((idx0 < data.len)) {
       if ((idx1 < data.len)) {
         if ((h < twiddles.len)) {
-          uint32_t v0 __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&data.data[idx0]));
-          uint32_t v1 __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&data.data[idx1]));
-          uint32_t t __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&twiddles.data[h]));
+          uint32_t v0 __attribute__((unused)) = reduce_word(data.data[idx0]);
+          uint32_t v1 __attribute__((unused)) = reduce_word(data.data[idx1]);
+          uint32_t t __attribute__((unused)) = reduce_word(twiddles.data[h]);
           uint32_t tmp __attribute__((unused)) = m31_mul(v1, t);
           data.data[idx0] = m31_add(v0, tmp);
           data.data[idx1] = m31_sub(v0, tmp);
@@ -166,9 +166,9 @@ __global__ void circle_ntt_layer_inverse(forge_span_u32_t data __attribute__((un
     if ((idx0 < data.len)) {
       if ((idx1 < data.len)) {
         if ((h < twiddles.len)) {
-          uint32_t v0 __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&data.data[idx0]));
-          uint32_t v1 __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&data.data[idx1]));
-          uint32_t t __attribute__((unused)) = reduce_word(__ldg((const uint32_t*)&twiddles.data[h]));
+          uint32_t v0 __attribute__((unused)) = reduce_word(data.data[idx0]);
+          uint32_t v1 __attribute__((unused)) = reduce_word(data.data[idx1]);
+          uint32_t t __attribute__((unused)) = reduce_word(twiddles.data[h]);
           uint32_t diff __attribute__((unused)) = m31_sub(v0, v1);
           data.data[idx0] = m31_add(v0, v1);
           data.data[idx1] = m31_mul(diff, t);

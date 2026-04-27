@@ -41,39 +41,39 @@ typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 typedef uint64_t (*forge_fn__ret_u64_t)(void);
 typedef float (*forge_fn_f32_u64_u64_ret_f32_t)(float, uint64_t, uint64_t);
 
-uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_down_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_xor_sync(uint64_t val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_add(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_cas(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_max(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_min(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ uint64_t shfl_up_sync(uint64_t val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
-uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_or(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_xor(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_and(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_sub(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
+__device__ uint64_t atom_exch(uint64_t* ptr, uint64_t val);  /* extern: forge_gpu */
 
-uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
+__device__ uint64_t ballot_sync(uint64_t pred);  /* extern: forge_gpu */
 
-uint64_t lane_id(void);  /* extern: forge_gpu */
+__device__ uint64_t lane_id(void);  /* extern: forge_gpu */
 
-uint64_t warp_id(void);  /* extern: forge_gpu */
+__device__ uint64_t warp_id(void);  /* extern: forge_gpu */
 
-float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_xor_sync_f32(float val, uint64_t mask, uint64_t width);  /* extern: forge_gpu */
 
-float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
+__device__ float shfl_down_sync_f32(float val, uint64_t delta, uint64_t width);  /* extern: forge_gpu */
 
 /* Forward declarations */
 __global__ void gather_u32(forge_span_u32_t src __attribute__((unused)), forge_span_u32_t idx __attribute__((unused)), forge_span_u32_t dst __attribute__((unused)), uint64_t n __attribute__((unused)), uint64_t src_len __attribute__((unused)));
@@ -82,9 +82,9 @@ __global__ void gather_u256(forge_span_u32_t src __attribute__((unused)), forge_
 __global__ void gather_u32(forge_span_u32_t src __attribute__((unused)), forge_span_u32_t idx __attribute__((unused)), forge_span_u32_t dst __attribute__((unused)), uint64_t n __attribute__((unused)), uint64_t src_len __attribute__((unused))) {
   uint64_t i __attribute__((unused)) = ((blockIdx_x * blockDim_x) + threadIdx_x);
   if ((i < n)) {
-    uint32_t j __attribute__((unused)) = __ldg((const uint32_t*)&idx.data[i]);
+    uint32_t j __attribute__((unused)) = idx.data[i];
     if ((((uint64_t)j) < src_len)) {
-      dst.data[i] = __ldg((const uint32_t*)&src.data[((uint64_t)j)]);
+      dst.data[i] = src.data[((uint64_t)j)];
 
     }
 
@@ -94,19 +94,19 @@ __global__ void gather_u32(forge_span_u32_t src __attribute__((unused)), forge_s
 __global__ void gather_u256(forge_span_u32_t src __attribute__((unused)), forge_span_u32_t idx __attribute__((unused)), forge_span_u32_t dst __attribute__((unused)), uint64_t n __attribute__((unused)), uint64_t src_len __attribute__((unused))) {
   uint64_t i __attribute__((unused)) = ((blockIdx_x * blockDim_x) + threadIdx_x);
   if ((i < n)) {
-    uint32_t j __attribute__((unused)) = __ldg((const uint32_t*)&idx.data[i]);
+    uint32_t j __attribute__((unused)) = idx.data[i];
     uint64_t src_off __attribute__((unused)) = (((uint64_t)j) * 8ULL);
     uint64_t dst_off __attribute__((unused)) = (i * 8ULL);
     if (((src_off + 7ULL) < src_len)) {
       if (((dst_off + 7ULL) < dst.len)) {
-        dst.data[dst_off] = __ldg((const uint32_t*)&src.data[src_off]);
-        dst.data[(dst_off + 1ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 1ULL)]);
-        dst.data[(dst_off + 2ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 2ULL)]);
-        dst.data[(dst_off + 3ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 3ULL)]);
-        dst.data[(dst_off + 4ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 4ULL)]);
-        dst.data[(dst_off + 5ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 5ULL)]);
-        dst.data[(dst_off + 6ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 6ULL)]);
-        dst.data[(dst_off + 7ULL)] = __ldg((const uint32_t*)&src.data[(src_off + 7ULL)]);
+        dst.data[dst_off] = src.data[src_off];
+        dst.data[(dst_off + 1ULL)] = src.data[(src_off + 1ULL)];
+        dst.data[(dst_off + 2ULL)] = src.data[(src_off + 2ULL)];
+        dst.data[(dst_off + 3ULL)] = src.data[(src_off + 3ULL)];
+        dst.data[(dst_off + 4ULL)] = src.data[(src_off + 4ULL)];
+        dst.data[(dst_off + 5ULL)] = src.data[(src_off + 5ULL)];
+        dst.data[(dst_off + 6ULL)] = src.data[(src_off + 6ULL)];
+        dst.data[(dst_off + 7ULL)] = src.data[(src_off + 7ULL)];
 
       }
 

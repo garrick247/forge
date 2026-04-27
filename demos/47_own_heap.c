@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* own<T> heap helpers (linear ownership) */
 static inline uint64_t* __forge_own_alloc_u64(uint64_t __val) { uint64_t* __p = (uint64_t*)malloc(sizeof(uint64_t)); if (!__p) { abort(); } *__p = __val; return __p; }

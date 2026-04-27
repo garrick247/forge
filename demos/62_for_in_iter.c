@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* Monomorphized generic types */
 typedef enum {
@@ -75,7 +80,6 @@ void unwrap_or(Option_T opt __attribute__((unused)), void forge_default __attrib
 Option_U map(Option_T opt __attribute__((unused)), forge_fn_T_ret_U_t f __attribute__((unused)));
 Option_U and_then(Option_T opt __attribute__((unused)), forge_fn_T_ret_Option_U_t f __attribute__((unused)));
 Option_T or_else(Option_T opt __attribute__((unused)), Option_T forge_default __attribute__((unused)));
-int main();
 Option_u64 Counter__Iterator__next(Counter* self __attribute__((unused)));
 uint64_t sum_to(uint64_t n __attribute__((unused)));
 int main();
@@ -154,11 +158,6 @@ Option_T or_else(Option_T opt __attribute__((unused)), Option_T forge_default __
     }
     default: __builtin_unreachable();
   }
-}
-
-int main() {
-  return (int)(0ULL);
-
 }
 
 Option_u64 Counter__Iterator__next(Counter* self __attribute__((unused))) {

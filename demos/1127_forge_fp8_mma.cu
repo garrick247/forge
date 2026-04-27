@@ -61,17 +61,17 @@ typedef void (*forge_fn_span_u16_span_u16_span_f32_ret_unit_t)(forge_span_u16_t,
 typedef void (*forge_fn_span_f32_span_f32_span_f32_ret_unit_t)(forge_span_f32_t, forge_span_f32_t, forge_span_f32_t);
 typedef void (*forge_fn_span_u8_span_u8_span_f32_ret_unit_t)(forge_span_u8_t, forge_span_u8_t, forge_span_f32_t);
 
-void qmma_f4f4bf16(uint8_t* smem_a, uint8_t* smem_a_scale, uint8_t* smem_b, uint8_t* smem_b_scale, forge_span_u16_t acc);  /* extern: forge_gpu */
+__device__ void qmma_f4f4bf16(uint8_t* smem_a, uint8_t* smem_a_scale, uint8_t* smem_b, uint8_t* smem_b_scale, forge_span_u16_t acc);  /* extern: forge_gpu */
 
-void mma_m16n8k16_fp16(forge_span_u16_t a, forge_span_u16_t b, forge_span_f32_t c);  /* extern: forge_gpu */
+__device__ void mma_m16n8k16_fp16(forge_span_u16_t a, forge_span_u16_t b, forge_span_f32_t c);  /* extern: forge_gpu */
 
-void mma_m16n8k16_bf16(forge_span_u16_t a, forge_span_u16_t b, forge_span_f32_t c);  /* extern: forge_gpu */
+__device__ void mma_m16n8k16_bf16(forge_span_u16_t a, forge_span_u16_t b, forge_span_f32_t c);  /* extern: forge_gpu */
 
-void mma_m16n8k8_tf32(forge_span_f32_t a, forge_span_f32_t b, forge_span_f32_t c);  /* extern: forge_gpu */
+__device__ void mma_m16n8k8_tf32(forge_span_f32_t a, forge_span_f32_t b, forge_span_f32_t c);  /* extern: forge_gpu */
 
 __device__ void mma_m16n8k32_e4m3(forge_span_u8_t a, forge_span_u8_t b, forge_span_f32_t c);  /* extern: forge_gpu */
 
-void mma_m16n8k32_e5m2(forge_span_u8_t a, forge_span_u8_t b, forge_span_f32_t c);  /* extern: forge_gpu */
+__device__ void mma_m16n8k32_e5m2(forge_span_u8_t a, forge_span_u8_t b, forge_span_f32_t c);  /* extern: forge_gpu */
 
 /* Forward declarations */
 uint64_t mma_tile_elements(uint64_t m __attribute__((unused)), uint64_t n __attribute__((unused)));

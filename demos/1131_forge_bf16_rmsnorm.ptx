@@ -15,11 +15,12 @@
 {
     .shared .f32 __forge_smem_smem[256];
 
-    .reg .u16 %rs21, %rs72;
-    .reg .pred %p13, %p34, %p35, %p68;
-    .reg .u64 %rd0, %rd1, %rd14, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd26, %rd27, %rd28, %rd29, %rd3, %rd31, %rd33, %rd36, %rd38, %rd39, %rd4, %rd40, %rd41, %rd43, %rd44, %rd45, %rd46, %rd47, %rd5, %rd50, %rd51, %rd52, %rd53, %rd57, %rd58, %rd60, %rd61, %rd62, %rd63, %rd69, %rd73, %rd74, %rd75, %rd76, %rd77, %rd8, %rd9;
-    .reg .f32 %f10, %f11, %f12, %f22, %f25, %f42, %f48, %f49, %f64, %f65, %f66, %f67, %f71;
-    .reg .u32 %r23, %r24, %r30, %r54, %r55, %r56, %r59, %r6, %r7, %r78, %r79, %r80;
+    .reg .b16 %h21, %h67;
+    .reg .pred %p14, %p33, %p34, %p64;
+    .reg .f32 %f11, %f12, %f13, %f22, %f25, %f39, %f44, %f45, %f60, %f61, %f62, %f63, %f66;
+    .reg .u32 %r23, %r24, %r29, %r49, %r50, %r51, %r54, %r55, %r6, %r73, %r74, %r75, %r8;
+    .reg .u64 %rd0, %rd1, %rd10, %rd16, %rd17, %rd18, %rd19, %rd2, %rd26, %rd27, %rd28, %rd3, %rd30, %rd32, %rd36, %rd37, %rd38, %rd4, %rd40, %rd41, %rd42, %rd43, %rd46, %rd47, %rd48, %rd5, %rd52, %rd53, %rd56, %rd57, %rd58, %rd59, %rd69, %rd7, %rd70, %rd71, %rd72, %rd9;
+    .reg .u16 %rs20, %rs68;
 
   ld.param.u64 %rd0, [rmsnorm_bf16_param_inp_data];
   ld.param.u64 %rd1, [rmsnorm_bf16_param_inp_len];
@@ -29,107 +30,103 @@
 
   mov.u64 %rd5, __forge_smem_smem;
   mov.u32 %r6, %tid.x;
-  mov.u32 %r7, %ctaid.x;
-  cvt.u64.u32 %rd8, %r7;
-  mul.lo.u64 %rd9, %rd8, %rd4;
-  cvt.f32.u64 %f10, %rd4;
-  mov.f32 %f11, 0f3727C5AC; // 1e-05
-  mov.f32 %f12, 0f00000000; // 0
-  cvt.u64.u32 %rd14, %r6;
-  setp.lt.u64 %p13, %rd14, %rd4;
-  @%p13 bra rmsnorm_bf16_then_15;
+  cvt.u64.u32 %rd7, %r6;
+  mov.u32 %r8, %ctaid.x;
+  cvt.u64.u32 %rd9, %r8;
+  mul.lo.u64 %rd10, %rd9, %rd4;
+  cvt.rn.f32.u64 %f11, %rd4;
+  mov.f32 %f12, 0f3727C5AC; // 1e-05
+  mov.f32 %f13, 0f00000000; // 0
+  setp.lt.u64 %p14, %rd7, %rd4;
+  @%p14 bra rmsnorm_bf16_then_15;
   bra rmsnorm_bf16_else_15;
   rmsnorm_bf16_then_15:
-  cvt.u64.u32 %rd16, %r6;
-  add.u64 %rd17, %rd9, %rd16;
-  mov.u64 %rd18, 2;
-  mul.lo.u64 %rd19, %rd17, %rd18;
-  add.u64 %rd20, %rd0, %rd19;
-  ld.global.u16 %rs21, [%rd20];
-  cvt.f32.bf16 %f22, %rs21;
+  add.u64 %rd16, %rd10, %rd7;
+  mov.u64 %rd17, 2;
+  mul.lo.u64 %rd18, %rd16, %rd17;
+  add.u64 %rd19, %rd0, %rd18;
+  ld.global.u16 %rs20, [%rd19];
+  mov.b16 %h21, %rs20;
+  cvt.f32.bf16 %f22, %h21;
   mov.u32 %r23, 0; // unit
   mov.u32 %r24, %r23;
+  mov.f32 %f13, %f22; // if wb: x
   bra rmsnorm_bf16_end_15;
   rmsnorm_bf16_else_15:
   mov.u32 %r24, 0; // no else branch
   rmsnorm_bf16_end_15:
-  mul.f32 %f25, %f22, %f22;
-  cvt.u64.u32 %rd26, %r6;
-  mov.u64 %rd27, 4;
-  mul.lo.u64 %rd28, %rd26, %rd27;
-  add.u64 %rd29, %rd5, %rd28;
-  st.shared.f32 [%rd29], %f25;
+  mul.f32 %f25, %f13, %f13;
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd7, %rd26;
+  add.u64 %rd28, %rd5, %rd27;
+  st.shared.f32 [%rd28], %f25;
   bar.sync 0;
-  mov.u32 %r30, 0; // unit
-  mov.u64 %rd31, 128;
-  rmsnorm_bf16_loop_32:
-  mov.u64 %rd33, 0;
-  setp.gt.u64 %p34, %rd31, %rd33;
-  @!%p34 bra rmsnorm_bf16_loop_end_32;
-  cvt.u64.u32 %rd36, %r6;
-  setp.lt.u64 %p35, %rd36, %rd31;
-  @%p35 bra rmsnorm_bf16_then_37;
-  bra rmsnorm_bf16_else_37;
-  rmsnorm_bf16_then_37:
-  cvt.u64.u32 %rd38, %r6;
-  mov.u64 %rd39, 4;
-  mul.lo.u64 %rd40, %rd38, %rd39;
-  add.u64 %rd41, %rd5, %rd40;
-  ld.shared.f32 %f42, [%rd41];
-  cvt.u64.u32 %rd43, %r6;
-  add.u64 %rd44, %rd43, %rd31;
-  mov.u64 %rd45, 4;
-  mul.lo.u64 %rd46, %rd44, %rd45;
-  add.u64 %rd47, %rd5, %rd46;
-  ld.shared.f32 %f48, [%rd47];
-  add.f32 %f49, %f42, %f48;
-  cvt.u64.u32 %rd50, %r6;
-  mov.u64 %rd51, 4;
-  mul.lo.u64 %rd52, %rd50, %rd51;
-  add.u64 %rd53, %rd5, %rd52;
-  st.shared.f32 [%rd53], %f49;
-  mov.u32 %r54, 0; // unit
-  mov.u32 %r55, %r54;
-  bra rmsnorm_bf16_end_37;
-  rmsnorm_bf16_else_37:
-  mov.u32 %r55, 0; // no else branch
-  rmsnorm_bf16_end_37:
+  mov.u32 %r29, 0; // unit
+  mov.u64 %rd30, 128;
+  rmsnorm_bf16_loop_31:
+  mov.u64 %rd32, 0;
+  setp.gt.u64 %p33, %rd30, %rd32;
+  @!%p33 bra rmsnorm_bf16_loop_end_31;
+  setp.lt.u64 %p34, %rd7, %rd30;
+  @%p34 bra rmsnorm_bf16_then_35;
+  bra rmsnorm_bf16_else_35;
+  rmsnorm_bf16_then_35:
+  mov.u64 %rd36, 4;
+  mul.lo.u64 %rd37, %rd7, %rd36;
+  add.u64 %rd38, %rd5, %rd37;
+  ld.shared.f32 %f39, [%rd38];
+  add.u64 %rd40, %rd7, %rd30;
+  mov.u64 %rd41, 4;
+  mul.lo.u64 %rd42, %rd40, %rd41;
+  add.u64 %rd43, %rd5, %rd42;
+  ld.shared.f32 %f44, [%rd43];
+  add.f32 %f45, %f39, %f44;
+  mov.u64 %rd46, 4;
+  mul.lo.u64 %rd47, %rd7, %rd46;
+  add.u64 %rd48, %rd5, %rd47;
+  st.shared.f32 [%rd48], %f45;
+  mov.u32 %r49, 0; // unit
+  mov.u32 %r50, %r49;
+  bra rmsnorm_bf16_end_35;
+  rmsnorm_bf16_else_35:
+  mov.u32 %r50, 0; // no else branch
+  rmsnorm_bf16_end_35:
   bar.sync 0;
-  mov.u32 %r56, 0; // unit
-  mov.u64 %rd57, 1;
-  shr.u64 %rd58, %rd31, %rd57;
-  mov.u64 %rd31, %rd58; // loop wb: s
-  bra rmsnorm_bf16_loop_32;
-  rmsnorm_bf16_loop_end_32:
-  mov.u32 %r59, 0; // unit
-  mov.u64 %rd60, 0;
-  mov.u64 %rd61, 4;
-  mul.lo.u64 %rd62, %rd60, %rd61;
-  add.u64 %rd63, %rd5, %rd62;
-  ld.shared.f32 %f64, [%rd63];
-  div.f32 %f65, %f64, %f10;
-  add.f32 %f66, %f65, %f11;
-  rsqrt.approx.f32 %f67, %f66;
-  cvt.u64.u32 %rd69, %r6;
-  setp.lt.u64 %p68, %rd69, %rd4;
-  @%p68 bra rmsnorm_bf16_then_70;
-  bra rmsnorm_bf16_else_70;
-  rmsnorm_bf16_then_70:
-  mul.f32 %f71, %f22, %f67;
-  cvt.rn.bf16.f32 %rs72, %f71;
-  cvt.u64.u32 %rd73, %r6;
-  add.u64 %rd74, %rd9, %rd73;
-  mov.u64 %rd75, 2;
-  mul.lo.u64 %rd76, %rd74, %rd75;
-  add.u64 %rd77, %rd2, %rd76;
-  st.global.u16 [%rd77], %rs72;
-  mov.u32 %r78, 0; // unit
-  mov.u32 %r79, %r78;
-  bra rmsnorm_bf16_end_70;
-  rmsnorm_bf16_else_70:
-  mov.u32 %r79, 0; // no else branch
-  rmsnorm_bf16_end_70:
-  mov.u32 %r80, 0; // unit
+  mov.u32 %r51, 0; // unit
+  mov.u64 %rd52, 1;
+  cvt.u32.u64 %r54, %rd52;
+  shr.u64 %rd53, %rd30, %r54;
+  mov.u64 %rd30, %rd53; // loop wb: s
+  bra rmsnorm_bf16_loop_31;
+  rmsnorm_bf16_loop_end_31:
+  mov.u32 %r55, 0; // unit
+  mov.u64 %rd56, 0;
+  mov.u64 %rd57, 4;
+  mul.lo.u64 %rd58, %rd56, %rd57;
+  add.u64 %rd59, %rd5, %rd58;
+  ld.shared.f32 %f60, [%rd59];
+  div.rn.f32 %f61, %f60, %f11;
+  add.f32 %f62, %f61, %f12;
+  rsqrt.approx.f32 %f63, %f62;
+  setp.lt.u64 %p64, %rd7, %rd4;
+  @%p64 bra rmsnorm_bf16_then_65;
+  bra rmsnorm_bf16_else_65;
+  rmsnorm_bf16_then_65:
+  mul.f32 %f66, %f13, %f63;
+  cvt.rn.bf16.f32 %h67, %f66;
+  mov.b16 %rs68, %h67;
+  add.u64 %rd69, %rd10, %rd7;
+  mov.u64 %rd70, 2;
+  mul.lo.u64 %rd71, %rd69, %rd70;
+  add.u64 %rd72, %rd2, %rd71;
+  st.global.u16 [%rd72], %rs68;
+  mov.u32 %r73, 0; // unit
+  mov.u32 %r74, %r73;
+  bra rmsnorm_bf16_end_65;
+  rmsnorm_bf16_else_65:
+  mov.u32 %r74, 0; // no else branch
+  rmsnorm_bf16_end_65:
+  mov.u32 %r75, 0; // unit
   ret;
 }
 

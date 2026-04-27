@@ -64,35 +64,35 @@ __device__ uint16_t f32_to_fp16(float x);  /* extern: forge_gpu */
 
 __device__ float fp16_to_f32(uint16_t x);  /* extern: forge_gpu */
 
-uint16_t f32_to_bf16(float x);  /* extern: forge_gpu */
+__device__ uint16_t f32_to_bf16(float x);  /* extern: forge_gpu */
 
-float bf16_to_f32(uint16_t x);  /* extern: forge_gpu */
+__device__ float bf16_to_f32(uint16_t x);  /* extern: forge_gpu */
 
-uint16_t fp16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
+__device__ uint16_t fp16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
 
-uint16_t fp16_neg(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t fp16_neg(uint16_t a);  /* extern: forge_gpu */
 
-uint16_t fp16_abs(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t fp16_abs(uint16_t a);  /* extern: forge_gpu */
 
-uint16_t fp16_max(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_max(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_min(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_min(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
+__device__ uint16_t bf16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
 
-uint16_t bf16_neg(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t bf16_neg(uint16_t a);  /* extern: forge_gpu */
 
 static const uint16_t FP16_ZERO = 0ULL;
 

@@ -1,51 +1,85 @@
-.version 9.0
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
 .target sm_120
 .address_size 64
 
 .visible .entry vec_shared_neighbor(
-    .param .u64 a, .param .u64 a_len, .param .u64 out, .param .u64 out_len, .param .u32 n, .param .u32 n_minus_1)
+    .param .u64 vec_shared_neighbor_param_a_data,
+    .param .u64 vec_shared_neighbor_param_a_len,
+    .param .u64 vec_shared_neighbor_param_out_data,
+    .param .u64 vec_shared_neighbor_param_out_len,
+    .param .u32 vec_shared_neighbor_param_n,
+    .param .u32 vec_shared_neighbor_param_n_minus_1
+)
 {
-    .shared .u32 smem[256];
-    .reg .b32 %r<11>;
-    .reg .b64 %rd<8>;
-    .reg .pred %p<1>;
+    .shared .u32 __forge_smem_smem[256];
 
-    mov.u64 %rd0, smem;
-    ld.param.u64 %rd1, [a];
-    ld.param.u64 %rd2, [a_len];
-    ld.param.u64 %rd2, [out];
-    ld.param.u64 %rd3, [out_len];
-    ld.param.u32 %r0, [n];
-    ld.param.u32 %r1, [n_minus_1];
-    mov.u32 %r2, %tid.x;
-    setp.lt.u32 %p0, %r2, %r0;
-    @%p0 bra if_true_2;
-    bra if_merge_4;
-if_true_2:
-    shl.b32 %r3, %r2, 2;
-    cvt.u64.u32 %rd5, %r3;
-    add.u64 %rd3, %rd0, %rd5;
-    add.u64 %rd4, %rd1, %rd5;
-    ld.global.u32 %r4, [%rd4];
-    st.shared.u32 [%rd3], %r4;
-    bra if_merge_4;
-if_merge_4:
-    bar.sync 0;
-    setp.lt.u32 %p0, %r2, %r1;
-    @!%p0 ret;
-    shl.b32 %r5, %r2, 2;
-    cvt.u64.u32 %rd6, %r5;
-    add.u64 %rd1, %rd0, %rd6;
-    ld.shared.u32 %r6, [%rd1];
-    add.u32 %r7, %r2, 1;
-    shl.b32 %r8, %r7, 2;
-    cvt.u64.u32 %rd7, %r8;
-    add.u64 %rd3, %rd0, %rd7;
-    ld.shared.u32 %r9, [%rd3];
-    add.u64 %rd4, %rd2, %rd6;
-    add.u32 %r10, %r6, %r9;
-    st.global.u32 [%rd4], %r10;
-    bra if_merge_7;
-if_merge_7:
-    ret;
+    .reg .pred %p22, %p8;
+    .reg .u32 %r14, %r19, %r20, %r21, %r28, %r29, %r30, %r35, %r36, %r4, %r41, %r42, %r43, %r5, %r7;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd16, %rd17, %rd18, %rd2, %rd24, %rd25, %rd26, %rd27, %rd3, %rd31, %rd32, %rd33, %rd34, %rd37, %rd38, %rd39, %rd40, %rd6;
+
+  ld.param.u64 %rd0, [vec_shared_neighbor_param_a_data];
+  ld.param.u64 %rd1, [vec_shared_neighbor_param_a_len];
+  ld.param.u64 %rd2, [vec_shared_neighbor_param_out_data];
+  ld.param.u64 %rd3, [vec_shared_neighbor_param_out_len];
+  ld.param.u32 %r4, [vec_shared_neighbor_param_n];
+  ld.param.u32 %r5, [vec_shared_neighbor_param_n_minus_1];
+
+  mov.u64 %rd6, __forge_smem_smem;
+  mov.u32 %r7, %tid.x;
+  setp.lt.u32 %p8, %r7, %r4;
+  @%p8 bra vec_shared_neighbor_then_9;
+  bra vec_shared_neighbor_else_9;
+  vec_shared_neighbor_then_9:
+  cvt.u64.u32 %rd10, %r7;
+  mov.u64 %rd11, 4;
+  mul.lo.u64 %rd12, %rd10, %rd11;
+  add.u64 %rd13, %rd0, %rd12;
+  ld.global.u32 %r14, [%rd13];
+  cvt.u64.u32 %rd15, %r7;
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd15, %rd16;
+  add.u64 %rd18, %rd6, %rd17;
+  st.shared.u32 [%rd18], %r14;
+  mov.u32 %r19, 0; // unit
+  mov.u32 %r20, %r19;
+  bra vec_shared_neighbor_end_9;
+  vec_shared_neighbor_else_9:
+  mov.u32 %r20, 0; // no else branch
+  vec_shared_neighbor_end_9:
+  bar.sync 0;
+  mov.u32 %r21, 0; // unit
+  setp.lt.u32 %p22, %r7, %r5;
+  @%p22 bra vec_shared_neighbor_then_23;
+  bra vec_shared_neighbor_else_23;
+  vec_shared_neighbor_then_23:
+  cvt.u64.u32 %rd24, %r7;
+  mov.u64 %rd25, 4;
+  mul.lo.u64 %rd26, %rd24, %rd25;
+  add.u64 %rd27, %rd6, %rd26;
+  ld.shared.u32 %r28, [%rd27];
+  mov.u32 %r29, 1;
+  add.u32 %r30, %r7, %r29;
+  cvt.u64.u32 %rd31, %r30;
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd31, %rd32;
+  add.u64 %rd34, %rd6, %rd33;
+  ld.shared.u32 %r35, [%rd34];
+  add.u32 %r36, %r28, %r35;
+  cvt.u64.u32 %rd37, %r7;
+  mov.u64 %rd38, 4;
+  mul.lo.u64 %rd39, %rd37, %rd38;
+  add.u64 %rd40, %rd2, %rd39;
+  st.global.u32 [%rd40], %r36;
+  mov.u32 %r41, 0; // unit
+  mov.u32 %r42, %r41;
+  bra vec_shared_neighbor_end_23;
+  vec_shared_neighbor_else_23:
+  mov.u32 %r42, 0; // no else branch
+  vec_shared_neighbor_end_23:
+  mov.u32 %r43, 0; // unit
+  ret;
 }
+

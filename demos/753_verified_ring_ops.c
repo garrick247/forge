@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -29,7 +34,7 @@ __forge_tuple_u64_u64_t ring_enqueue(forge_span_u64_t buf __attribute__((unused)
   } else {
     new_tail = (tail + 1ULL);
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = new_tail, ._1 = (count + 1ULL) };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, new_tail, (count + 1ULL));
 }
 
 __forge_tuple_u64_u64_u64_t ring_dequeue(forge_span_u64_t buf __attribute__((unused)), uint64_t cap __attribute__((unused)), uint64_t head __attribute__((unused)), uint64_t count __attribute__((unused))) {
@@ -40,7 +45,7 @@ __forge_tuple_u64_u64_u64_t ring_dequeue(forge_span_u64_t buf __attribute__((unu
   } else {
     new_head = (head + 1ULL);
   }
-  return (__forge_tuple_u64_u64_u64_t){ ._0 = val, ._1 = new_head, ._2 = (count - 1ULL) };
+  return FORGE_AGG(__forge_tuple_u64_u64_u64_t, val, new_head, (count - 1ULL));
 }
 
 __forge_tuple_u64_u64_t ring_fill(forge_span_u64_t buf __attribute__((unused)), uint64_t cap __attribute__((unused)), uint64_t val __attribute__((unused))) {
@@ -54,7 +59,7 @@ __forge_tuple_u64_u64_t ring_fill(forge_span_u64_t buf __attribute__((unused)), 
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = tail, ._1 = count };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, tail, count);
 }
 
 int main() {

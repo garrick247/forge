@@ -16,9 +16,9 @@
     .param .u64 conv2d_param_height
 )
 {
-    .reg .pred %p18, %p21, %p28, %p32, %p35, %p37, %p41, %p43, %p49, %p51, %p79;
-    .reg .u64 %rd0, %rd1, %rd19, %rd2, %rd22, %rd24, %rd26, %rd27, %rd3, %rd30, %rd31, %rd33, %rd34, %rd39, %rd4, %rd40, %rd45, %rd46, %rd47, %rd48, %rd5, %rd53, %rd54, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd7, %rd77, %rd78, %rd81, %rd82, %rd83;
-    .reg .u32 %r10, %r11, %r12, %r13, %r14, %r15, %r16, %r17, %r63, %r64, %r65, %r66, %r67, %r68, %r69, %r70, %r71, %r72, %r73, %r74, %r75, %r76, %r8, %r84, %r85, %r86, %r87, %r88, %r89, %r9, %r90;
+    .reg .pred %p20, %p22, %p29, %p33, %p37, %p39, %p43, %p45, %p51, %p53, %p81;
+    .reg .u32 %r10, %r11, %r12, %r14, %r15, %r16, %r17, %r18, %r65, %r66, %r67, %r68, %r69, %r70, %r71, %r72, %r73, %r74, %r75, %r76, %r77, %r78, %r8, %r86, %r87, %r88, %r89, %r9, %r90, %r91, %r92;
+    .reg .u64 %rd0, %rd1, %rd13, %rd19, %rd2, %rd24, %rd26, %rd27, %rd28, %rd3, %rd31, %rd32, %rd34, %rd35, %rd36, %rd4, %rd41, %rd42, %rd47, %rd48, %rd49, %rd5, %rd50, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd64, %rd7, %rd79, %rd80, %rd83, %rd84, %rd85;
 
   ld.param.u64 %rd0, [conv2d_param_input_data];
   ld.param.u64 %rd1, [conv2d_param_input_len];
@@ -34,147 +34,150 @@
   mul.lo.u32 %r10, %r8, %r9;
   mov.u32 %r11, %tid.x;
   add.u32 %r12, %r10, %r11;
-  mov.u32 %r13, %ctaid.y;
-  mov.u32 %r14, %ntid.y;
-  mul.lo.u32 %r15, %r13, %r14;
-  mov.u32 %r16, %tid.y;
-  add.u32 %r17, %r15, %r16;
-  cvt.u64.u32 %rd19, %r12;
-  setp.lt.u64 %p18, %rd19, %rd6;
-  @%p18 bra conv2d_then_20;
-  bra conv2d_else_20;
-  conv2d_then_20:
-  cvt.u64.u32 %rd22, %r17;
-  setp.lt.u64 %p21, %rd22, %rd7;
-  @%p21 bra conv2d_then_23;
+  cvt.u64.u32 %rd13, %r12;
+  mov.u32 %r14, %ctaid.y;
+  mov.u32 %r15, %ntid.y;
+  mul.lo.u32 %r16, %r14, %r15;
+  mov.u32 %r17, %tid.y;
+  add.u32 %r18, %r16, %r17;
+  cvt.u64.u32 %rd19, %r18;
+  setp.lt.u64 %p20, %rd13, %rd6;
+  @%p20 bra conv2d_then_21;
+  bra conv2d_else_21;
+  conv2d_then_21:
+  setp.lt.u64 %p22, %rd19, %rd7;
+  @%p22 bra conv2d_then_23;
   bra conv2d_else_23;
   conv2d_then_23:
   mov.u64 %rd24, 0;
   mov.u64 %rd26, 0;
-  mov.u64 %rd27, %rd26;
+  mov.u64 %rd27, 3;
+  mov.u64 %rd28, %rd26;
   conv2d_for_25:
-  setp.lt.u64 %p28, %rd27, %rd_unknown_KERNEL_SIZE;
-  @!%p28 bra conv2d_for_end_25;
-  mov.u64 %rd30, 0;
-  mov.u64 %rd31, %rd30;
-  conv2d_for_29:
-  setp.lt.u64 %p32, %rd31, %rd_unknown_KERNEL_SIZE;
-  @!%p32 bra conv2d_for_end_29;
-  add.u64 %rd33, %r12, %rd31;
-  add.u64 %rd34, %r17, %rd27;
-  setp.ge.u64 %p35, %rd33, %rd_unknown_KERNEL_RADIUS;
-  @%p35 bra conv2d_then_36;
-  bra conv2d_else_36;
-  conv2d_then_36:
-  setp.ge.u64 %p37, %rd34, %rd_unknown_KERNEL_RADIUS;
+  setp.lt.u64 %p29, %rd28, %rd27;
+  @!%p29 bra conv2d_for_end_25;
+  mov.u64 %rd31, 0;
+  mov.u64 %rd32, %rd31;
+  conv2d_for_30:
+  setp.lt.u64 %p33, %rd32, %rd27;
+  @!%p33 bra conv2d_for_end_30;
+  add.u64 %rd34, %rd13, %rd32;
+  add.u64 %rd35, %rd19, %rd28;
+  mov.u64 %rd36, 1;
+  setp.ge.u64 %p37, %rd34, %rd36;
   @%p37 bra conv2d_then_38;
   bra conv2d_else_38;
   conv2d_then_38:
-  sub.u64 %rd39, %rd33, %rd_unknown_KERNEL_RADIUS;
-  sub.u64 %rd40, %rd34, %rd_unknown_KERNEL_RADIUS;
-  setp.lt.u64 %p41, %rd39, %rd6;
-  @%p41 bra conv2d_then_42;
-  bra conv2d_else_42;
-  conv2d_then_42:
-  setp.lt.u64 %p43, %rd40, %rd7;
+  setp.ge.u64 %p39, %rd35, %rd36;
+  @%p39 bra conv2d_then_40;
+  bra conv2d_else_40;
+  conv2d_then_40:
+  sub.u64 %rd41, %rd34, %rd36;
+  sub.u64 %rd42, %rd35, %rd36;
+  setp.lt.u64 %p43, %rd41, %rd6;
   @%p43 bra conv2d_then_44;
   bra conv2d_else_44;
   conv2d_then_44:
-  mul.lo.u64 %rd45, %rd40, %rd6;
-  add.u64 %rd46, %rd45, %rd39;
-  mul.lo.u64 %rd47, %rd27, %rd_unknown_KERNEL_SIZE;
-  add.u64 %rd48, %rd47, %rd31;
-  setp.lt.u64 %p49, %rd46, %rd1;
-  @%p49 bra conv2d_then_50;
-  bra conv2d_else_50;
-  conv2d_then_50:
-  setp.lt.u64 %p51, %rd48, %rd5;
+  setp.lt.u64 %p45, %rd42, %rd7;
+  @%p45 bra conv2d_then_46;
+  bra conv2d_else_46;
+  conv2d_then_46:
+  mul.lo.u64 %rd47, %rd42, %rd6;
+  add.u64 %rd48, %rd47, %rd41;
+  mul.lo.u64 %rd49, %rd28, %rd27;
+  add.u64 %rd50, %rd49, %rd32;
+  setp.lt.u64 %p51, %rd48, %rd1;
   @%p51 bra conv2d_then_52;
   bra conv2d_else_52;
   conv2d_then_52:
-  mov.u64 %rd53, 8;
-  mul.lo.u64 %rd54, %rd46, %rd53;
-  add.u64 %rd55, %rd0, %rd54;
-  ld.global.u64 %rd56, [%rd55];
-  mov.u64 %rd57, 8;
-  mul.lo.u64 %rd58, %rd48, %rd57;
-  add.u64 %rd59, %rd4, %rd58;
-  ld.global.u64 %rd60, [%rd59];
-  mul.lo.u64 %rd61, %rd56, %rd60;
-  add.u64 %rd62, %rd24, %rd61;
-  mov.u32 %r63, 0; // unit
-  mov.u32 %r64, %r63;
-  bra conv2d_end_52;
-  conv2d_else_52:
-  mov.u32 %r64, 0; // no else branch
-  conv2d_end_52:
+  setp.lt.u64 %p53, %rd50, %rd5;
+  @%p53 bra conv2d_then_54;
+  bra conv2d_else_54;
+  conv2d_then_54:
+  mov.u64 %rd55, 8;
+  mul.lo.u64 %rd56, %rd48, %rd55;
+  add.u64 %rd57, %rd0, %rd56;
+  ld.global.u64 %rd58, [%rd57];
+  mov.u64 %rd59, 8;
+  mul.lo.u64 %rd60, %rd50, %rd59;
+  add.u64 %rd61, %rd4, %rd60;
+  ld.global.u64 %rd62, [%rd61];
+  mul.lo.u64 %rd63, %rd58, %rd62;
+  add.u64 %rd64, %rd24, %rd63;
   mov.u32 %r65, 0; // unit
   mov.u32 %r66, %r65;
-  bra conv2d_end_50;
-  conv2d_else_50:
+  mov.u64 %rd24, %rd64; // if wb: acc
+  bra conv2d_end_54;
+  conv2d_else_54:
   mov.u32 %r66, 0; // no else branch
-  conv2d_end_50:
+  conv2d_end_54:
   mov.u32 %r67, 0; // unit
   mov.u32 %r68, %r67;
-  bra conv2d_end_44;
-  conv2d_else_44:
+  bra conv2d_end_52;
+  conv2d_else_52:
   mov.u32 %r68, 0; // no else branch
-  conv2d_end_44:
+  conv2d_end_52:
   mov.u32 %r69, 0; // unit
   mov.u32 %r70, %r69;
-  bra conv2d_end_42;
-  conv2d_else_42:
+  bra conv2d_end_46;
+  conv2d_else_46:
   mov.u32 %r70, 0; // no else branch
-  conv2d_end_42:
+  conv2d_end_46:
   mov.u32 %r71, 0; // unit
   mov.u32 %r72, %r71;
-  bra conv2d_end_38;
-  conv2d_else_38:
+  bra conv2d_end_44;
+  conv2d_else_44:
   mov.u32 %r72, 0; // no else branch
-  conv2d_end_38:
+  conv2d_end_44:
   mov.u32 %r73, 0; // unit
   mov.u32 %r74, %r73;
-  bra conv2d_end_36;
-  conv2d_else_36:
+  bra conv2d_end_40;
+  conv2d_else_40:
   mov.u32 %r74, 0; // no else branch
-  conv2d_end_36:
-  add.u64 %rd31, %rd31, 1;
-  bra conv2d_for_29;
-  conv2d_for_end_29:
+  conv2d_end_40:
   mov.u32 %r75, 0; // unit
-  add.u64 %rd27, %rd27, 1;
+  mov.u32 %r76, %r75;
+  bra conv2d_end_38;
+  conv2d_else_38:
+  mov.u32 %r76, 0; // no else branch
+  conv2d_end_38:
+  add.u64 %rd32, %rd32, 1;
+  bra conv2d_for_30;
+  conv2d_for_end_30:
+  mov.u32 %r77, 0; // unit
+  add.u64 %rd28, %rd28, 1;
   bra conv2d_for_25;
   conv2d_for_end_25:
-  mov.u32 %r76, 0; // unit
-  mul.lo.u64 %rd77, %r17, %rd6;
-  add.u64 %rd78, %rd77, %r12;
-  setp.lt.u64 %p79, %rd78, %rd3;
-  @%p79 bra conv2d_then_80;
-  bra conv2d_else_80;
-  conv2d_then_80:
-  mov.u64 %rd81, 8;
-  mul.lo.u64 %rd82, %rd78, %rd81;
-  add.u64 %rd83, %rd2, %rd82;
-  st.global.u64 [%rd83], %rd62;
-  mov.u32 %r84, 0; // unit
-  mov.u32 %r85, %r84;
-  bra conv2d_end_80;
-  conv2d_else_80:
-  mov.u32 %r85, 0; // no else branch
-  conv2d_end_80:
+  mov.u32 %r78, 0; // unit
+  mul.lo.u64 %rd79, %rd19, %rd6;
+  add.u64 %rd80, %rd79, %rd13;
+  setp.lt.u64 %p81, %rd80, %rd3;
+  @%p81 bra conv2d_then_82;
+  bra conv2d_else_82;
+  conv2d_then_82:
+  mov.u64 %rd83, 8;
+  mul.lo.u64 %rd84, %rd80, %rd83;
+  add.u64 %rd85, %rd2, %rd84;
+  st.global.u64 [%rd85], %rd24;
   mov.u32 %r86, 0; // unit
   mov.u32 %r87, %r86;
-  bra conv2d_end_23;
-  conv2d_else_23:
+  bra conv2d_end_82;
+  conv2d_else_82:
   mov.u32 %r87, 0; // no else branch
-  conv2d_end_23:
+  conv2d_end_82:
   mov.u32 %r88, 0; // unit
   mov.u32 %r89, %r88;
-  bra conv2d_end_20;
-  conv2d_else_20:
+  bra conv2d_end_23;
+  conv2d_else_23:
   mov.u32 %r89, 0; // no else branch
-  conv2d_end_20:
+  conv2d_end_23:
   mov.u32 %r90, 0; // unit
+  mov.u32 %r91, %r90;
+  bra conv2d_end_21;
+  conv2d_else_21:
+  mov.u32 %r91, 0; // no else branch
+  conv2d_end_21:
+  mov.u32 %r92, 0; // unit
   ret;
 }
 

@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -24,9 +29,9 @@ __forge_tuple_u64_u64_t arith_encode_step(uint64_t lo __attribute__((unused)), u
   uint64_t new_lo __attribute__((unused)) = (lo + ((range * sym_lo) / total));
   uint64_t new_hi __attribute__((unused)) = (lo + ((range * sym_hi) / total));
   if ((new_lo < new_hi)) {
-    return (__forge_tuple_u64_u64_t){ ._0 = new_lo, ._1 = new_hi };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, new_lo, new_hi);
   } else {
-    return (__forge_tuple_u64_u64_t){ ._0 = lo, ._1 = hi };
+    return FORGE_AGG(__forge_tuple_u64_u64_t, lo, hi);
   }
 }
 
@@ -55,7 +60,7 @@ __forge_tuple_u64_u64_t arith_encode_seq(forge_span_u64_t symbols __attribute__(
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = lo, ._1 = hi };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, lo, hi);
 }
 
 int main() {

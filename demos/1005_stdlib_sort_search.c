@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -256,13 +261,13 @@ __forge_tuple_u64_u64_t sort_then_bounds(forge_span_u64_t s __attribute__((unuse
   insertion_sort(s, n);
   uint64_t lb __attribute__((unused)) = lower_bound(s, n, lo);
   uint64_t ub __attribute__((unused)) = upper_bound(s, n, hi);
-  return (__forge_tuple_u64_u64_t){ ._0 = lb, ._1 = ub };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, lb, ub);
 }
 
 __forge_tuple_u64_u64_t find_extremes(forge_span_u64_t s __attribute__((unused)), uint64_t n __attribute__((unused))) {
   uint64_t mi __attribute__((unused)) = min_index(s, n);
   uint64_t mx __attribute__((unused)) = max_index(s, n);
-  return (__forge_tuple_u64_u64_t){ ._0 = mi, ._1 = mx };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, mi, mx);
 }
 
 int main() {

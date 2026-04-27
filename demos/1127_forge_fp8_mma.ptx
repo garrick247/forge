@@ -15,8 +15,8 @@
 )
 {
     .reg .f32 %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f29;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd2, %rd3, %rd4, %rd5, %rd7, %rd8, %rd9;
     .reg .u32 %r16, %r17, %r18, %r19, %r20, %r21, %r30, %r31, %r6;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd2, %rd3, %rd4, %rd5, %rd7, %rd8, %rd9;
 
   ld.param.u64 %rd0, [fp8_mma_tile_param_A_data];
   ld.param.u64 %rd1, [fp8_mma_tile_param_A_len];

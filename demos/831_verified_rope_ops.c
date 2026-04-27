@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -22,11 +27,11 @@ int main();
 
 __forge_tuple_u64_u64_t gap_insert(forge_span_u64_t buf __attribute__((unused)), uint64_t cap __attribute__((unused)), uint64_t gap_start __attribute__((unused)), uint64_t gap_end __attribute__((unused)), uint64_t ch __attribute__((unused))) {
   buf.data[gap_start] = ch;
-  return (__forge_tuple_u64_u64_t){ ._0 = (gap_start + 1ULL), ._1 = gap_end };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, (gap_start + 1ULL), gap_end);
 }
 
 __forge_tuple_u64_u64_t gap_delete(uint64_t gap_start __attribute__((unused)), uint64_t gap_end __attribute__((unused)), uint64_t cap __attribute__((unused))) {
-  return (__forge_tuple_u64_u64_t){ ._0 = (gap_start - 1ULL), ._1 = gap_end };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, (gap_start - 1ULL), gap_end);
 }
 
 __forge_tuple_u64_u64_t gap_move(forge_span_u64_t buf __attribute__((unused)), uint64_t cap __attribute__((unused)), uint64_t gap_start __attribute__((unused)), uint64_t gap_end __attribute__((unused)), uint64_t pos __attribute__((unused))) {
@@ -49,7 +54,7 @@ __forge_tuple_u64_u64_t gap_move(forge_span_u64_t buf __attribute__((unused)), u
     }
 
   }
-  return (__forge_tuple_u64_u64_t){ ._0 = gs, ._1 = ge };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, gs, ge);
 }
 
 int main() {

@@ -25,6 +25,11 @@
 #define gridDim_y   ((uint32_t)(gridDim.y))
 #define gridDim_z   ((uint32_t)(gridDim.z))
 
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint16_t* data; uintptr_t len; } forge_span_u16_t;
@@ -36,39 +41,39 @@ typedef uint16_t (*forge_fn_u16_u16_ret_u16_t)(uint16_t, uint16_t);
 typedef uint16_t (*forge_fn_u16_u16_u16_ret_u16_t)(uint16_t, uint16_t, uint16_t);
 typedef uint16_t (*forge_fn_u16_ret_u16_t)(uint16_t);
 
-uint16_t f32_to_fp16(float x);  /* extern: forge_gpu */
+__device__ uint16_t f32_to_fp16(float x);  /* extern: forge_gpu */
 
-float fp16_to_f32(uint16_t x);  /* extern: forge_gpu */
+__device__ float fp16_to_f32(uint16_t x);  /* extern: forge_gpu */
 
-uint16_t f32_to_bf16(float x);  /* extern: forge_gpu */
+__device__ uint16_t f32_to_bf16(float x);  /* extern: forge_gpu */
 
-float bf16_to_f32(uint16_t x);  /* extern: forge_gpu */
+__device__ float bf16_to_f32(uint16_t x);  /* extern: forge_gpu */
 
-uint16_t fp16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
 __device__ uint16_t fp16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
 
-uint16_t fp16_neg(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t fp16_neg(uint16_t a);  /* extern: forge_gpu */
 
-uint16_t fp16_abs(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t fp16_abs(uint16_t a);  /* extern: forge_gpu */
 
-uint16_t fp16_max(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_max(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t fp16_min(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t fp16_min(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_add(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_sub(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
+__device__ uint16_t bf16_mul(uint16_t a, uint16_t b);  /* extern: forge_gpu */
 
-uint16_t bf16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
+__device__ uint16_t bf16_fma(uint16_t a, uint16_t b, uint16_t c);  /* extern: forge_gpu */
 
-uint16_t bf16_neg(uint16_t a);  /* extern: forge_gpu */
+__device__ uint16_t bf16_neg(uint16_t a);  /* extern: forge_gpu */
 
 static const uint16_t FP16_ZERO = 0ULL;
 
@@ -89,7 +94,6 @@ static const uint64_t SMEM_SIZE = 256ULL;
 /* Forward declarations */
 float fp16_dot_f32(uint16_t a __attribute__((unused)), uint16_t b __attribute__((unused)), float acc __attribute__((unused)));
 float bf16_dot_f32(uint16_t a __attribute__((unused)), uint16_t b __attribute__((unused)), float acc __attribute__((unused)));
-int main();
 __global__ void tiled_gemm(forge_span_u16_t A __attribute__((unused)), forge_span_u16_t B __attribute__((unused)), forge_span_u16_t C __attribute__((unused)), uint64_t M __attribute__((unused)), uint64_t N __attribute__((unused)), uint64_t K __attribute__((unused)));
 int main();
 
@@ -103,11 +107,6 @@ float bf16_dot_f32(uint16_t a __attribute__((unused)), uint16_t b __attribute__(
   float af __attribute__((unused)) = __bfloat162float(a);
   float bf __attribute__((unused)) = __bfloat162float(b);
   return (acc + (af * bf));
-}
-
-int main() {
-  return (int)(0ULL);
-
 }
 
 __global__ void tiled_gemm(forge_span_u16_t A __attribute__((unused)), forge_span_u16_t B __attribute__((unused)), forge_span_u16_t C __attribute__((unused)), uint64_t M __attribute__((unused)), uint64_t N __attribute__((unused)), uint64_t K __attribute__((unused))) {

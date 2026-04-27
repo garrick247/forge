@@ -19,9 +19,9 @@
 )
 {
     .reg .pred %p100, %p18, %p26, %p30, %p49, %p59, %p63, %p92, %p96;
-    .reg .u64 %rd0, %rd1, %rd101, %rd102, %rd103, %rd104, %rd105, %rd107, %rd108, %rd109, %rd110, %rd111, %rd115, %rd116, %rd12, %rd123, %rd124, %rd125, %rd126, %rd127, %rd13, %rd131, %rd132, %rd134, %rd135, %rd136, %rd137, %rd138, %rd139, %rd14, %rd140, %rd16, %rd17, %rd2, %rd24, %rd28, %rd3, %rd31, %rd32, %rd33, %rd34, %rd35, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd45, %rd46, %rd5, %rd53, %rd54, %rd57, %rd6, %rd61, %rd64, %rd65, %rd66, %rd67, %rd68, %rd7, %rd70, %rd71, %rd72, %rd73, %rd74, %rd78, %rd79, %rd8, %rd86, %rd87, %rd9, %rd90, %rd94, %rd98;
     .reg .f32 %f106, %f112, %f113, %f114, %f118, %f119, %f120, %f121, %f122, %f128, %f129, %f130, %f20, %f21, %f22, %f23, %f27, %f36, %f42, %f43, %f44, %f48, %f56, %f60, %f69, %f75, %f76, %f77, %f81, %f82, %f83, %f84, %f85, %f93, %f97;
     .reg .u32 %r10, %r11, %r117, %r133, %r141, %r142, %r143, %r144, %r15, %r47, %r51, %r52, %r55, %r80, %r88, %r89;
+    .reg .u64 %rd0, %rd1, %rd101, %rd102, %rd103, %rd104, %rd105, %rd107, %rd108, %rd109, %rd110, %rd111, %rd115, %rd116, %rd12, %rd123, %rd124, %rd125, %rd126, %rd127, %rd13, %rd131, %rd132, %rd134, %rd135, %rd136, %rd137, %rd138, %rd139, %rd14, %rd140, %rd16, %rd17, %rd2, %rd24, %rd28, %rd3, %rd31, %rd32, %rd33, %rd34, %rd35, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd45, %rd46, %rd5, %rd53, %rd54, %rd57, %rd6, %rd61, %rd64, %rd65, %rd66, %rd67, %rd68, %rd7, %rd70, %rd71, %rd72, %rd73, %rd74, %rd78, %rd79, %rd8, %rd86, %rd87, %rd9, %rd90, %rd94, %rd98;
 
   ld.param.u64 %rd0, [attention_slice_param_Q_data];
   ld.param.u64 %rd1, [attention_slice_param_Q_len];
@@ -46,7 +46,7 @@
   @%p18 bra attention_slice_then_19;
   bra attention_slice_else_19;
   attention_slice_then_19:
-  cvt.f32.u64 %f20, %rd9;
+  cvt.rn.f32.u64 %f20, %rd9;
   rsqrt.approx.f32 %f21, %f20;
   mov.f32 %f22, 0f7149F2CA; // 1e+30
   neg.f32 %f23, %f22;
@@ -87,13 +87,13 @@
   attention_slice_then_50:
   mov.u32 %r51, 0; // unit
   mov.u32 %r52, %r51;
+  mov.f32 %f23, %f48; // if wb: max_s
   bra attention_slice_end_50;
   attention_slice_else_50:
   mov.u32 %r52, 0; // no else branch
   attention_slice_end_50:
   mov.u64 %rd53, 1;
   add.u64 %rd54, %rd24, %rd53;
-  mov.f32 %f23, %f48; // loop wb: max_s
   mov.u64 %rd24, %rd54; // loop wb: j
   bra attention_slice_loop_25;
   attention_slice_loop_end_25:
@@ -136,8 +136,8 @@
   add.f32 %f85, %f56, %f84;
   mov.u64 %rd86, 1;
   add.u64 %rd87, %rd57, %rd86;
-  mov.u64 %rd28, %rd61; // loop wb: e
   mov.f32 %f27, %f60; // loop wb: s
+  mov.u64 %rd28, %rd61; // loop wb: e
   mov.f32 %f56, %f85; // loop wb: denom
   mov.u64 %rd57, %rd87; // loop wb: j2
   bra attention_slice_loop_58;
@@ -183,7 +183,7 @@
   sub.f32 %f119, %f118, %f23;
   mul.rn.f32 %f120, %f119, 0f3FB8AA3B; // log2(e)
   ex2.approx.f32 %f121, %f120;
-  div.f32 %f122, %f121, %f56;
+  div.rn.f32 %f122, %f121, %f56;
   mul.lo.u64 %rd123, %rd94, %rd9;
   add.u64 %rd124, %rd123, %rd90;
   mov.u64 %rd125, 4;
@@ -194,8 +194,8 @@
   add.f32 %f130, %f93, %f129;
   mov.u64 %rd131, 1;
   add.u64 %rd132, %rd94, %rd131;
-  mov.f32 %f27, %f97; // loop wb: s
   mov.u64 %rd28, %rd98; // loop wb: e
+  mov.f32 %f27, %f97; // loop wb: s
   mov.f32 %f93, %f130; // loop wb: acc
   mov.u64 %rd94, %rd132; // loop wb: j3
   bra attention_slice_loop_95;

@@ -14,9 +14,11 @@
     .param .u64 reduce_sum_param_block_size
 )
 {
-    .reg .pred %p11, %p28, %p29, %p54, %p57;
-    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd24, %rd25, %rd27, %rd3, %rd30, %rd32, %rd33, %rd34, %rd35, %rd36, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd45, %rd46, %rd5, %rd50, %rd51, %rd53, %rd55, %rd58, %rd6, %rd60, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd67, %rd68, %rd9;
-    .reg .u32 %r21, %r22, %r23, %r47, %r48, %r49, %r52, %r69, %r7, %r70, %r71, %r8;
+    .shared .u64 __forge_smem_smem[256];
+
+    .reg .pred %p13, %p29, %p30, %p52, %p54;
+    .reg .u32 %r22, %r23, %r24, %r45, %r46, %r47, %r50, %r64, %r65, %r66, %r7, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd25, %rd26, %rd28, %rd3, %rd32, %rd33, %rd34, %rd35, %rd36, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd48, %rd49, %rd5, %rd51, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd8;
 
   ld.param.u64 %rd0, [reduce_sum_param_src_data];
   ld.param.u64 %rd1, [reduce_sum_param_src_len];
@@ -25,105 +27,100 @@
   ld.param.u64 %rd4, [reduce_sum_param_num_blocks];
   ld.param.u64 %rd5, [reduce_sum_param_block_size];
 
-  mov.u64 %rd6, 0;
+  mov.u64 %rd6, __forge_smem_smem;
   mov.u32 %r7, %tid.x;
-  mov.u32 %r8, %ctaid.x;
-  mul.lo.u64 %rd9, %r8, %rd5;
-  add.u64 %rd10, %rd9, %r7;
-  setp.lt.u64 %p11, %rd10, %rd1;
-  @%p11 bra reduce_sum_then_12;
-  bra reduce_sum_else_12;
-  reduce_sum_then_12:
-  mov.u64 %rd13, 8;
-  mul.lo.u64 %rd14, %rd10, %rd13;
-  add.u64 %rd15, %rd0, %rd14;
-  ld.global.u64 %rd16, [%rd15];
-  cvt.u64.u32 %rd17, %r7;
-  mov.u64 %rd18, 8;
-  mul.lo.u64 %rd19, %rd17, %rd18;
-  add.u64 %rd20, %rd6, %rd19;
-  st.global.u64 [%rd20], %rd16;
-  mov.u32 %r21, 0; // unit
-  mov.u32 %r22, %r21;
-  bra reduce_sum_end_12;
-  reduce_sum_else_12:
-  mov.u32 %r22, 0; // no else branch
-  reduce_sum_end_12:
+  cvt.u64.u32 %rd8, %r7;
+  mov.u32 %r9, %ctaid.x;
+  cvt.u64.u32 %rd10, %r9;
+  mul.lo.u64 %rd11, %rd10, %rd5;
+  add.u64 %rd12, %rd11, %rd8;
+  setp.lt.u64 %p13, %rd12, %rd1;
+  @%p13 bra reduce_sum_then_14;
+  bra reduce_sum_else_14;
+  reduce_sum_then_14:
+  mov.u64 %rd15, 8;
+  mul.lo.u64 %rd16, %rd12, %rd15;
+  add.u64 %rd17, %rd0, %rd16;
+  ld.global.u64 %rd18, [%rd17];
+  mov.u64 %rd19, 8;
+  mul.lo.u64 %rd20, %rd8, %rd19;
+  add.u64 %rd21, %rd6, %rd20;
+  st.shared.u64 [%rd21], %rd18;
+  mov.u32 %r22, 0; // unit
+  mov.u32 %r23, %r22;
+  bra reduce_sum_end_14;
+  reduce_sum_else_14:
+  mov.u32 %r23, 0; // no else branch
+  reduce_sum_end_14:
   bar.sync 0;
-  mov.u32 %r23, 0; // unit
-  mov.u64 %rd24, 2;
-  div.u64 %rd25, %rd5, %rd24;
-  reduce_sum_loop_26:
-  mov.u64 %rd27, 0;
-  setp.gt.u64 %p28, %rd25, %rd27;
-  @!%p28 bra reduce_sum_loop_end_26;
-  cvt.u64.u32 %rd30, %r7;
-  setp.lt.u64 %p29, %rd30, %rd25;
-  @%p29 bra reduce_sum_then_31;
+  mov.u32 %r24, 0; // unit
+  mov.u64 %rd25, 2;
+  div.u64 %rd26, %rd5, %rd25;
+  reduce_sum_loop_27:
+  mov.u64 %rd28, 0;
+  setp.gt.u64 %p29, %rd26, %rd28;
+  @!%p29 bra reduce_sum_loop_end_27;
+  setp.lt.u64 %p30, %rd8, %rd26;
+  @%p30 bra reduce_sum_then_31;
   bra reduce_sum_else_31;
   reduce_sum_then_31:
-  cvt.u64.u32 %rd32, %r7;
-  mov.u64 %rd33, 8;
-  mul.lo.u64 %rd34, %rd32, %rd33;
-  add.u64 %rd35, %rd6, %rd34;
-  ld.global.u64 %rd36, [%rd35];
-  add.u64 %rd37, %r7, %rd25;
-  mov.u64 %rd38, 8;
-  mul.lo.u64 %rd39, %rd37, %rd38;
-  add.u64 %rd40, %rd6, %rd39;
-  ld.global.u64 %rd41, [%rd40];
-  add.u64 %rd42, %rd36, %rd41;
-  cvt.u64.u32 %rd43, %r7;
-  mov.u64 %rd44, 8;
-  mul.lo.u64 %rd45, %rd43, %rd44;
-  add.u64 %rd46, %rd6, %rd45;
-  st.global.u64 [%rd46], %rd42;
-  mov.u32 %r47, 0; // unit
-  mov.u32 %r48, %r47;
+  mov.u64 %rd32, 8;
+  mul.lo.u64 %rd33, %rd8, %rd32;
+  add.u64 %rd34, %rd6, %rd33;
+  ld.shared.u64 %rd35, [%rd34];
+  add.u64 %rd36, %rd8, %rd26;
+  mov.u64 %rd37, 8;
+  mul.lo.u64 %rd38, %rd36, %rd37;
+  add.u64 %rd39, %rd6, %rd38;
+  ld.shared.u64 %rd40, [%rd39];
+  add.u64 %rd41, %rd35, %rd40;
+  mov.u64 %rd42, 8;
+  mul.lo.u64 %rd43, %rd8, %rd42;
+  add.u64 %rd44, %rd6, %rd43;
+  st.shared.u64 [%rd44], %rd41;
+  mov.u32 %r45, 0; // unit
+  mov.u32 %r46, %r45;
   bra reduce_sum_end_31;
   reduce_sum_else_31:
-  mov.u32 %r48, 0; // no else branch
+  mov.u32 %r46, 0; // no else branch
   reduce_sum_end_31:
   bar.sync 0;
-  mov.u32 %r49, 0; // unit
-  mov.u64 %rd50, 2;
-  div.u64 %rd51, %rd25, %rd50;
-  mov.u64 %rd25, %rd51; // loop wb: stride
-  bra reduce_sum_loop_26;
-  reduce_sum_loop_end_26:
-  mov.u32 %r52, 0; // unit
-  mov.u64 %rd53, 0;
-  cvt.u64.u32 %rd55, %r7;
-  setp.eq.u64 %p54, %rd55, %rd53;
-  @%p54 bra reduce_sum_then_56;
-  bra reduce_sum_else_56;
-  reduce_sum_then_56:
-  cvt.u64.u32 %rd58, %r8;
-  setp.lt.u64 %p57, %rd58, %rd3;
-  @%p57 bra reduce_sum_then_59;
-  bra reduce_sum_else_59;
-  reduce_sum_then_59:
-  mov.u64 %rd60, 0;
+  mov.u32 %r47, 0; // unit
+  mov.u64 %rd48, 2;
+  div.u64 %rd49, %rd26, %rd48;
+  mov.u64 %rd26, %rd49; // loop wb: stride
+  bra reduce_sum_loop_27;
+  reduce_sum_loop_end_27:
+  mov.u32 %r50, 0; // unit
+  mov.u64 %rd51, 0;
+  setp.eq.u64 %p52, %rd8, %rd51;
+  @%p52 bra reduce_sum_then_53;
+  bra reduce_sum_else_53;
+  reduce_sum_then_53:
+  setp.lt.u64 %p54, %rd10, %rd3;
+  @%p54 bra reduce_sum_then_55;
+  bra reduce_sum_else_55;
+  reduce_sum_then_55:
+  mov.u64 %rd56, 0;
+  mov.u64 %rd57, 8;
+  mul.lo.u64 %rd58, %rd56, %rd57;
+  add.u64 %rd59, %rd6, %rd58;
+  ld.shared.u64 %rd60, [%rd59];
   mov.u64 %rd61, 8;
-  mul.lo.u64 %rd62, %rd60, %rd61;
-  add.u64 %rd63, %rd6, %rd62;
-  ld.global.u64 %rd64, [%rd63];
-  cvt.u64.u32 %rd65, %r8;
-  mov.u64 %rd66, 8;
-  mul.lo.u64 %rd67, %rd65, %rd66;
-  add.u64 %rd68, %rd2, %rd67;
-  st.global.u64 [%rd68], %rd64;
-  mov.u32 %r69, 0; // unit
-  mov.u32 %r70, %r69;
-  bra reduce_sum_end_59;
-  reduce_sum_else_59:
-  mov.u32 %r70, 0; // no else branch
-  reduce_sum_end_59:
-  mov.u32 %r71, %r70;
-  bra reduce_sum_end_56;
-  reduce_sum_else_56:
-  mov.u32 %r71, 0; // no else branch
-  reduce_sum_end_56:
+  mul.lo.u64 %rd62, %rd10, %rd61;
+  add.u64 %rd63, %rd2, %rd62;
+  st.global.u64 [%rd63], %rd60;
+  mov.u32 %r64, 0; // unit
+  mov.u32 %r65, %r64;
+  bra reduce_sum_end_55;
+  reduce_sum_else_55:
+  mov.u32 %r65, 0; // no else branch
+  reduce_sum_end_55:
+  mov.u32 %r66, %r65;
+  bra reduce_sum_end_53;
+  reduce_sum_else_53:
+  mov.u32 %r66, 0; // no else branch
+  reduce_sum_end_53:
   ret;
 }
 

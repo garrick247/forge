@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -45,14 +50,14 @@ __forge_tuple_u64_u64_t butterfly(uint64_t a __attribute__((unused)), uint64_t b
   uint64_t t __attribute__((unused)) = ntt_mul(zeta, b, q);
   uint64_t lo __attribute__((unused)) = ntt_add(a, t, q);
   uint64_t hi __attribute__((unused)) = ntt_sub(a, t, q);
-  return (__forge_tuple_u64_u64_t){ ._0 = lo, ._1 = hi };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, lo, hi);
 }
 
 __forge_tuple_u64_u64_t inv_butterfly(uint64_t a __attribute__((unused)), uint64_t b __attribute__((unused)), uint64_t zeta __attribute__((unused)), uint64_t q __attribute__((unused))) {
   uint64_t s __attribute__((unused)) = ntt_add(a, b, q);
   uint64_t d __attribute__((unused)) = ntt_sub(a, b, q);
   uint64_t m __attribute__((unused)) = ntt_mul(zeta, d, q);
-  return (__forge_tuple_u64_u64_t){ ._0 = s, ._1 = m };
+  return FORGE_AGG(__forge_tuple_u64_u64_t, s, m);
 }
 
 uint64_t butterfly_layer(forge_span_u64_t poly __attribute__((unused)), uint64_t half __attribute__((unused)), uint64_t zeta __attribute__((unused)), uint64_t q __attribute__((unused))) {

@@ -13,11 +13,12 @@
     .param .u64 fp16_rsqrt_param_n
 )
 {
-    .reg .u16 %rs18, %rs21;
+    .reg .b16 %h19, %h22;
     .reg .pred %p13;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd22, %rd23, %rd24, %rd3, %rd4, %rd7, %rd8, %rd9;
-    .reg .f32 %f19, %f20;
-    .reg .u32 %r10, %r25, %r26, %r27, %r5, %r6;
+    .reg .f32 %f20, %f21;
+    .reg .u32 %r10, %r27, %r28, %r29, %r5, %r6;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd2, %rd24, %rd25, %rd26, %rd3, %rd4, %rd7, %rd8, %rd9;
+    .reg .u16 %rs18, %rs23;
 
   ld.param.u64 %rd0, [fp16_rsqrt_param_inp_data];
   ld.param.u64 %rd1, [fp16_rsqrt_param_inp_len];
@@ -41,20 +42,22 @@
   mul.lo.u64 %rd16, %rd12, %rd15;
   add.u64 %rd17, %rd0, %rd16;
   ld.global.u16 %rs18, [%rd17];
-  cvt.f32.f16 %f19, %rs18;
-  rsqrt.approx.f32 %f20, %f19;
-  cvt.rn.f16.f32 %rs21, %f20;
-  mov.u64 %rd22, 2;
-  mul.lo.u64 %rd23, %rd12, %rd22;
-  add.u64 %rd24, %rd2, %rd23;
-  st.global.u16 [%rd24], %rs21;
-  mov.u32 %r25, 0; // unit
-  mov.u32 %r26, %r25;
+  mov.b16 %h19, %rs18;
+  cvt.f32.f16 %f20, %h19;
+  rsqrt.approx.f32 %f21, %f20;
+  cvt.rn.f16.f32 %h22, %f21;
+  mov.b16 %rs23, %h22;
+  mov.u64 %rd24, 2;
+  mul.lo.u64 %rd25, %rd12, %rd24;
+  add.u64 %rd26, %rd2, %rd25;
+  st.global.u16 [%rd26], %rs23;
+  mov.u32 %r27, 0; // unit
+  mov.u32 %r28, %r27;
   bra fp16_rsqrt_end_14;
   fp16_rsqrt_else_14:
-  mov.u32 %r26, 0; // no else branch
+  mov.u32 %r28, 0; // no else branch
   fp16_rsqrt_end_14:
-  mov.u32 %r27, 0; // unit
+  mov.u32 %r29, 0; // unit
   ret;
 }
 

@@ -25,19 +25,24 @@
 #define gridDim_y   ((uint32_t)(gridDim.y))
 #define gridDim_z   ((uint32_t)(gridDim.z))
 
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint32_t* data; uintptr_t len; } forge_span_u32_t;
 typedef struct { float* data; uintptr_t len; } forge_span_f32_t;
 
 /* Forward declarations */
-__device__ uint32_t warp_reduce_add(uint32_t v __attribute__((unused)));
+static __device__ __forceinline__ uint32_t warp_reduce_add(uint32_t v __attribute__((unused)));
 __global__ void reduce_sum(forge_span_u32_t input __attribute__((unused)), forge_span_u32_t output __attribute__((unused)), uint64_t n __attribute__((unused)));
 __global__ void vector_fma(forge_span_f32_t a __attribute__((unused)), forge_span_f32_t b __attribute__((unused)), forge_span_f32_t c __attribute__((unused)), forge_span_f32_t out __attribute__((unused)), uint64_t n __attribute__((unused)));
 __global__ void relu(forge_span_u32_t data __attribute__((unused)), uint64_t n __attribute__((unused)));
 __global__ void vector_add_smem(forge_span_f32_t a __attribute__((unused)), forge_span_f32_t b __attribute__((unused)), forge_span_f32_t out __attribute__((unused)), uint64_t n __attribute__((unused)));
 
-__device__ uint32_t warp_reduce_add(uint32_t v __attribute__((unused))) {
+static __device__ __forceinline__ uint32_t warp_reduce_add(uint32_t v __attribute__((unused))) {
   uint32_t x __attribute__((unused)) = v;
   x = (x + __shfl_down_sync(0xffffffff, x, 16ULL, 32ULL));
   x = (x + __shfl_down_sync(0xffffffff, x, 8ULL, 32ULL));

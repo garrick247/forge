@@ -7,6 +7,11 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __cplusplus
+#  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
+#else
+#  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
+#endif
 
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
@@ -49,7 +54,7 @@ void span_copy_slice(forge_span_u64_t dst __attribute__((unused)), forge_span_u6
 }
 
 __forge_tuple_span_u64_span_u64_t span_split(forge_span_u64_t s __attribute__((unused)), uint64_t mid __attribute__((unused))) {
-  return (__forge_tuple_span_u64_span_u64_t){ ._0 = (forge_span_u64_t){ .data = (s).data + (0ULL), .len = (uintptr_t)((mid) - (0ULL)) }, ._1 = (forge_span_u64_t){ .data = (s).data + (mid), .len = (uintptr_t)((s.len) - (mid)) } };
+  return FORGE_AGG(__forge_tuple_span_u64_span_u64_t, (forge_span_u64_t){ .data = (s).data + (0ULL), .len = (uintptr_t)((mid) - (0ULL)) }, (forge_span_u64_t){ .data = (s).data + (mid), .len = (uintptr_t)((s.len) - (mid)) });
 }
 
 _Bool slice_all_zero(forge_span_u64_t s __attribute__((unused)), uint64_t lo __attribute__((unused)), uint64_t hi __attribute__((unused))) {
