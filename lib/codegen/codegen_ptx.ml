@@ -1485,6 +1485,14 @@ and lower_stmt st s =
    span<T> expands to two params: a pointer and a length. *)
 let emit_param st (id, ty) =
   let name = id.name in
+  if List.mem_assoc name st.reg_env then
+    (* Name already bound — typically by a prior span's auto-generated _len
+       suffix matching an explicit primitive param of the same name (e.g.
+       `src: span<u32>` followed by `src_len: u64` with `requires src_len ==
+       src.len`). Reuse the existing binding; emitting a second .param of the
+       same name produces a duplicate-definition error in ptxas. *)
+    ([], [])
+  else
   match ty with
   | TSpan _ | TArray _ ->
       (* span / array: two .param entries — data pointer + length *)
