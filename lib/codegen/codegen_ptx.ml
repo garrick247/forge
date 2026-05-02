@@ -174,6 +174,74 @@ let cvt_rounding src_rty tgt_rty =
   | _ -> ""                (* widening or same-kind: no modifier *)
 
 (* ------------------------------------------------------------------ *)
+(* Inliner support: does an inlined callee body actually mutate a      *)
+(* given parameter name?  When it doesn't, the inliner can bind the    *)
+(* parameter directly to the caller's argument register and skip the   *)
+(* per-parameter staging `mov.bN %fresh, %areg; // param: <name>`.     *)
+(* That mov is dead in the read-only case; ptxas DCE-elides it but     *)
+(* openptxas does not, producing the multi-thousand-instruction        *)
+(* MAJOR_DIFF observed on hash-heavy kernels (BLAKE2 g_mix / rotr32).  *)
+(*                                                                     *)
+(* Conservative: counts EAssign/ERefMut on a same-named EVar as a      *)
+(* mutation even when inner `let name = ...` shadowing means it        *)
+(* really targets a fresh local — over-approximation only inhibits    *)
+(* the optimization, never breaks correctness.                         *)
+let rec expr_mutates_name (n : string) (e : expr) : bool =
+  match e.expr_desc with
+  | EAssign ({ expr_desc = EVar id; _ }, rhs) ->
+      id.name = n || expr_mutates_name n rhs
+  | EAssign (lhs, rhs) ->
+      expr_mutates_name n lhs || expr_mutates_name n rhs
+  | ERefMut { expr_desc = EVar id; _ } -> id.name = n
+  | ELit _ | EVar _ | ESync -> false
+  | EBinop (_, a, b) -> expr_mutates_name n a || expr_mutates_name n b
+  | EUnop (_, a) -> expr_mutates_name n a
+  | ECall (f, args) ->
+      expr_mutates_name n f || List.exists (expr_mutates_name n) args
+  | EIndex (a, b) -> expr_mutates_name n a || expr_mutates_name n b
+  | EField (a, _) | EField_n (a, _) -> expr_mutates_name n a
+  | EBlock (stmts, last) ->
+      List.exists (stmt_mutates_name n) stmts ||
+      (match last with Some e' -> expr_mutates_name n e' | None -> false)
+  | EIf (c, t, eopt) ->
+      expr_mutates_name n c || expr_mutates_name n t ||
+      (match eopt with Some e' -> expr_mutates_name n e' | None -> false)
+  | EMatch (sc, arms) ->
+      expr_mutates_name n sc ||
+      List.exists (fun a -> expr_mutates_name n a.body) arms
+  | ERef a | ERefMut a | EDeref a | ECast (a, _) ->
+      expr_mutates_name n a
+  | EProof _ | EAssume _ | EAssert _ -> false
+  | ERaw rb -> List.exists (stmt_mutates_name n) rb.rb_stmts
+  | ELoop stmts -> List.exists (stmt_mutates_name n) stmts
+  | EStruct (_, fields) ->
+      List.exists (fun (_, e') -> expr_mutates_name n e') fields
+  | EArrayLit es | ETuple es ->
+      List.exists (expr_mutates_name n) es
+  | EArrayRepeat (a, b) | ERange (a, b) ->
+      expr_mutates_name n a || expr_mutates_name n b
+  | ESubspan (a, b, c) ->
+      expr_mutates_name n a || expr_mutates_name n b || expr_mutates_name n c
+  | ELambda (_, body, _) -> expr_mutates_name n body
+  | EAsm asm ->
+      List.exists (fun (_, id) -> id.name = n) asm.asm_outputs ||
+      List.exists (fun (_, e') -> expr_mutates_name n e') asm.asm_inputs
+
+and stmt_mutates_name (n : string) (s : stmt) : bool =
+  match s.stmt_desc with
+  | SLet (_, _, e, _) -> expr_mutates_name n e
+  | SGhost _ | SGhostAssign _ -> false
+  | SExpr e -> expr_mutates_name n e
+  | SReturn (Some e) -> expr_mutates_name n e
+  | SReturn None -> false
+  | SWhile (c, _, _, body) ->
+      expr_mutates_name n c || List.exists (stmt_mutates_name n) body
+  | SFor (_, it, _, _, body) ->
+      expr_mutates_name n it || List.exists (stmt_mutates_name n) body
+  | SBreak (Some e) -> expr_mutates_name n e
+  | SBreak None | SContinue -> false
+
+(* ------------------------------------------------------------------ *)
 (* Expression lowering: returns the register holding the result        *)
 (* ------------------------------------------------------------------ *)
 
@@ -1217,17 +1285,31 @@ let rec lower_expr st e : string =
                  so we can restore it after the inlined body and
                  avoid leaking the binding. *)
            let saved_env = st.reg_env in
+           let body = match callee.fn_body with
+             | Some b -> b
+             | None -> assert false
+           in
+           (* For each parameter, only emit the staging mov when the
+              callee actually mutates that name; otherwise bind the
+              parameter directly to the caller's arg register.  The
+              dead-mov case dominates (most device fns are pure reads
+              over their params — BLAKE2 g_mix / rotr32, IV constants,
+              etc.) and openptxas keeps those movs verbatim, blowing up
+              hash-heavy SASS by ~6×. *)
            let new_bindings =
              List.map2 (fun (pname, _pty) areg ->
-               let prty = reg_rty st areg in
-               let pr = fresh_reg st prty in
-               let mov_op = match prty with
-                 | Pred -> "mov.pred"
-                 | _ -> Printf.sprintf "mov.b%d" (sizeof_rty prty * 8)
-               in
-               emit st (Printf.sprintf "%s %s, %s; // param: %s"
-                          mov_op pr areg pname.name);
-               (pname.name, pr))
+               if expr_mutates_name pname.name body then begin
+                 let prty = reg_rty st areg in
+                 let pr = fresh_reg st prty in
+                 let mov_op = match prty with
+                   | Pred -> "mov.pred"
+                   | _ -> Printf.sprintf "mov.b%d" (sizeof_rty prty * 8)
+                 in
+                 emit st (Printf.sprintf "%s %s, %s; // param: %s"
+                            mov_op pr areg pname.name);
+                 (pname.name, pr)
+               end else
+                 (pname.name, areg))
                callee.fn_params coerced_regs
            in
            st.reg_env <- new_bindings @ saved_env;
@@ -1235,10 +1317,6 @@ let rec lower_expr st e : string =
                  fresh_reg allocations flow into st, so all emitted
                  instructions belong to the current kernel's register
                  space and there is no cross-function conflict. *)
-           let body = match callee.fn_body with
-             | Some b -> b
-             | None -> assert false
-           in
            let result_reg = lower_expr st body in
            (* 4. Restore the reg_env.  Register decls stay in
                  st.reg_decls (they are per-kernel, not per-scope). *)
