@@ -319,16 +319,16 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 6
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:62  (< (+ q_base lane) Q__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:62  (< (+ q_base lane) Q__len)
              "row<seq_len + lane<32 + seq_len*32<=Q.len → q_base+lane<Q.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:102  (< (+ q_base e) Q__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:102  (< (+ q_base e) Q__len)
              "q_base bounds + e < 32"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:103  (< (+ (* k_row 32) e) K__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:103  (< (+ (* k_row 32) e) K__len)
              "k_row<seq_len + e<32 + seq_len*32<=K.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:125  (< (+ (* k_row 32) lane) V__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:125  (< (+ (* k_row 32) lane) V__len)
              "k_row<seq_len + lane<32 + seq_len*32<=V.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:137  (< (+ q_base lane) O_unnorm__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:137  (< (+ q_base lane) O_unnorm__len)
              "q_base + lane bounds (mirrors Q access)"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1136_forge_flash_attention.fg:140  (< row L_acc__len)
+   [ASSUME] demos/1136_forge_flash_attention.fg:140  (< row L_acc__len)
              "row<seq_len (precondition) + seq_len<=L_acc.len (precondition)"
    ---- END AUDIT LOG ---- */

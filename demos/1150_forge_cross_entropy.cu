@@ -294,16 +294,16 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 6
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:38  (< (+ base lane) logits__len)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:38  (< (+ base lane) logits__len)
              "row<gridDim + lane<n_classes + gridDim*n_classes<=logits.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:48  (> denom 0)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:48  (> denom 0)
              "argmax lane contributes p=exp(0)=1, sum>=1"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:55  (< row targets__len)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:55  (< row targets__len)
              "row=blockIdx_x < gridDim_x <= targets.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:58  (< t64 n_classes)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:58  (< t64 n_classes)
              "caller guarantees target is in-range class id"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:59  (< (+ base t64) logits__len)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:59  (< (+ base t64) logits__len)
              "row<gridDim + t<n_classes + gridDim*n_classes<=logits.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1150_forge_cross_entropy.fg:61  (< row loss__len)
+   [ASSUME] demos/1150_forge_cross_entropy.fg:61  (< row loss__len)
              "row<gridDim_x<=loss.len"
    ---- END AUDIT LOG ---- */

@@ -288,6 +288,6 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 1
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1135_forge_rmsnorm_warp.fg:27  (< (+ base lane) inp__len)
+   [ASSUME] demos/1135_forge_rmsnorm_warp.fg:27  (< (+ base lane) inp__len)
              "from gridDim_x*n_cols <= inp.len + blockIdx_x < gridDim_x + lane < n_cols"
    ---- END AUDIT LOG ---- */

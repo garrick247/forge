@@ -292,10 +292,10 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 3
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1148_forge_layernorm_warp.fg:34  (not (= n_f 0))
+   [ASSUME] demos/1148_forge_layernorm_warp.fg:34  (not (= n_f 0))
              "n_cols >= 1 (precondition) implies (n_cols as f32) != 0"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1148_forge_layernorm_warp.fg:38  (< (+ base lane) inp__len)
+   [ASSUME] demos/1148_forge_layernorm_warp.fg:38  (< (+ base lane) inp__len)
              "row<gridDim + lane<n_cols + gridDim*n_cols<=inp.len"
-   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1148_forge_layernorm_warp.fg:59  (< (+ base lane) out__len)
+   [ASSUME] demos/1148_forge_layernorm_warp.fg:59  (< (+ base lane) out__len)
              "mirrors inp bounds"
    ---- END AUDIT LOG ---- */
