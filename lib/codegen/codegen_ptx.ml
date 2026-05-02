@@ -113,6 +113,13 @@ type emit_state = {
      allocation.  ld/st through these registers must use the .shared
      state space rather than .global. *)
   mutable shared_regs : string list;
+  (* For span<span<T>> indexing: when EIndex produces a span-typed
+     element, the inner span's `_len` is loaded alongside the data ptr.
+     Map from data-ptr register → len register so SLet can also bind
+     `<id>_len` in reg_env, letting subsequent `<id>.len` lookups
+     resolve.  Without this, EField "len" falls through to reg_of_var
+     and emits the `%rd_unknown_<id>_len` placeholder ptxas rejects. *)
+  mutable span_len_of : (string * string) list;
 }
 
 let fresh_reg st rty =
@@ -394,7 +401,15 @@ let rec lower_expr st e : string =
       let base = lower_expr st arr in
       let ridx  = lower_expr st idx in
       let elem_rty = rty_of_expr e in
-      let sz = sizeof_rty elem_rty in
+      (* span<span<T>>: each element is a {data: ptr, len: u64} fat-pointer
+         pair (16 bytes), matching codegen_c's `forge_span_T_t` layout.  We
+         load both fields and record the data→len mapping so SLet can bind
+         `<id>_len` in reg_env for subsequent `<id>.len` lookups. *)
+      let is_span_elem = match e.expr_ty with
+        | Some (TSpan _) | Some (TQual (_, TSpan _)) -> true
+        | _ -> false
+      in
+      let sz = if is_span_elem then 16 else sizeof_rty elem_rty in
       (* Widen idx to 64-bit for address arithmetic if needed *)
       let ridx64 =
         if reg_rty st ridx = U64 then ridx
@@ -410,6 +425,16 @@ let rec lower_expr st e : string =
       emit st (Printf.sprintf "mul.lo.u64 %s, %s, %s;" offset ridx64 rsz);
       let addr = fresh_reg st U64 in
       emit st (Printf.sprintf "add.u64 %s, %s, %s;" addr base offset);
+      if is_span_elem then begin
+        let data_reg = fresh_reg st U64 in
+        emit st (Printf.sprintf "ld.global.u64 %s, [%s];" data_reg addr);
+        let len_addr = fresh_reg st U64 in
+        emit st (Printf.sprintf "add.u64 %s, %s, 8;" len_addr addr);
+        let len_reg = fresh_reg st U64 in
+        emit st (Printf.sprintf "ld.global.u64 %s, [%s];" len_reg len_addr);
+        st.span_len_of <- (data_reg, len_reg) :: st.span_len_of;
+        data_reg
+      end else begin
       (* secret<T> array → cache-volatile load.
          shared<T>[N] → .shared state space (FORGE73). *)
       let is_sec = match e.expr_ty with
@@ -426,6 +451,7 @@ let rec lower_expr st e : string =
             cv (arith_pfx elem_rty) dst addr)
       in
       dst
+      end
 
   (* Field access — span .len and .data *)
   | EField (obj, field) ->
@@ -1375,7 +1401,13 @@ and lower_stmt st s =
             end else r
         | None -> r
       in
-      st.reg_env <- (id.name, r') :: st.reg_env
+      st.reg_env <- (id.name, r') :: st.reg_env;
+      (* Propagate span length: when r' was produced by indexing into a
+         span<span<T>> array, EIndex recorded a (data_reg → len_reg) entry
+         in span_len_of.  Bind `<id>_len` so EField "len" resolves. *)
+      (match List.assoc_opt r' st.span_len_of with
+       | Some lr -> st.reg_env <- (id.name ^ "_len", lr) :: st.reg_env
+       | None -> ())
 
   | SExpr { expr_desc = EAssign (lhs, rhs); _ } ->
       let rv = lower_expr st rhs in
@@ -1550,6 +1582,7 @@ let emit_kernel ?(fn_defs = Hashtbl.create 0)
     consts;
     shared_decls  = [];
     shared_regs   = [];
+    span_len_of   = [];
   } in
   (* Collect param decls and load instrs *)
   let (param_decls_ll, load_instrs_ll) =
