@@ -395,13 +395,23 @@ and emit_stmt st s =
 (* Function emission                                                    *)
 (* ------------------------------------------------------------------ *)
 
-let emit_param (id, ty) =
-  match ty with
+let emit_param seen (id, ty) =
+  let name = id.name in
+  if List.mem name !seen then
+    (* Name already bound — typically by a prior span's auto-generated _len
+       suffix matching an explicit primitive param of the same name (e.g.
+       `src: span<u32>` followed by `src_len: u64` with `requires src_len ==
+       src.len`). Skip; emitting a second C parameter of the same name is
+       a redeclaration error. Mirror of codegen_ptx.ml a10a957. *)
+    None
+  else match ty with
   | TSpan t ->
-      Printf.sprintf "%s* __restrict__ %s, uint64_t %s_len"
-        (emit_ty t) id.name id.name
+      seen := name :: (name ^ "_len") :: !seen;
+      Some (Printf.sprintf "%s* __restrict__ %s, uint64_t %s_len"
+        (emit_ty t) name name)
   | _ ->
-      Printf.sprintf "%s %s" (emit_ty ty) id.name
+      seen := name :: !seen;
+      Some (Printf.sprintf "%s %s" (emit_ty ty) name)
 
 let is_kernel fn =
   List.exists (fun a -> a.attr_name = "kernel") fn.fn_attrs
@@ -439,7 +449,8 @@ let rec emit_expr_as_return st e =
         line st (Printf.sprintf "return %s;" s)
 
 let emit_function st fn =
-  let params = String.concat ", " (List.map emit_param fn.fn_params) in
+  let seen = ref [] in
+  let params = String.concat ", " (List.filter_map (emit_param seen) fn.fn_params) in
   let ret = emit_ret_ty fn.fn_ret in
   let returns_value = fn.fn_ret <> TPrim TUnit in
   (* In CUDA, all non-main non-kernel functions must be __device__
