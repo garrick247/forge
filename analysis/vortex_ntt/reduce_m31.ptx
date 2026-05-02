@@ -11,9 +11,9 @@
     .param .u64 reduce_words_to_m31_param_n_words
 )
 {
-    .reg .pred %p21, %p9;
-    .reg .u32 %r14, %r15, %r16, %r17, %r18, %r19, %r20, %r23, %r24, %r28, %r29, %r3, %r30, %r4, %r5, %r6, %r7;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd2, %rd25, %rd26, %rd27, %rd8;
+    .reg .pred %p20, %p9;
+    .reg .u32 %r14, %r15, %r16, %r17, %r18, %r19, %r22, %r23, %r27, %r28, %r29, %r3, %r4, %r5, %r6, %r7;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd2, %rd24, %rd25, %rd26, %rd8;
 
   ld.param.u64 %rd0, [reduce_words_to_m31_param_data_data];
   ld.param.u64 %rd1, [reduce_words_to_m31_param_data_len];
@@ -33,33 +33,32 @@
   mul.lo.u64 %rd12, %rd8, %rd11;
   add.u64 %rd13, %rd0, %rd12;
   ld.global.u32 %r14, [%rd13];
-  mov.b32 %r15, %r14; // param: v
-  mov.u32 %r16, 2147483647;
-  and.b32 %r17, %r15, %r16;
-  mov.u32 %r18, 31;
-  shr.u32 %r19, %r15, %r18;
-  add.u32 %r20, %r17, %r19;
-  setp.ge.u32 %p21, %r20, %r16;
-  @%p21 bra reduce_words_to_m31_then_22;
-  bra reduce_words_to_m31_else_22;
-  reduce_words_to_m31_then_22:
-  sub.u32 %r23, %r20, %r16;
-  mov.u32 %r24, %r23;
-  bra reduce_words_to_m31_end_22;
-  reduce_words_to_m31_else_22:
-  mov.u32 %r24, %r20;
-  reduce_words_to_m31_end_22:
-  mov.u64 %rd25, 4;
-  mul.lo.u64 %rd26, %rd8, %rd25;
-  add.u64 %rd27, %rd0, %rd26;
-  st.global.u32 [%rd27], %r24;
-  mov.u32 %r28, 0; // unit
-  mov.u32 %r29, %r28;
+  mov.u32 %r15, 2147483647;
+  and.b32 %r16, %r14, %r15;
+  mov.u32 %r17, 31;
+  shr.u32 %r18, %r14, %r17;
+  add.u32 %r19, %r16, %r18;
+  setp.ge.u32 %p20, %r19, %r15;
+  @%p20 bra reduce_words_to_m31_then_21;
+  bra reduce_words_to_m31_else_21;
+  reduce_words_to_m31_then_21:
+  sub.u32 %r22, %r19, %r15;
+  mov.u32 %r23, %r22;
+  bra reduce_words_to_m31_end_21;
+  reduce_words_to_m31_else_21:
+  mov.u32 %r23, %r19;
+  reduce_words_to_m31_end_21:
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd8, %rd24;
+  add.u64 %rd26, %rd0, %rd25;
+  st.global.u32 [%rd26], %r23;
+  mov.u32 %r27, 0; // unit
+  mov.u32 %r28, %r27;
   bra reduce_words_to_m31_end_10;
   reduce_words_to_m31_else_10:
-  mov.u32 %r29, 0; // no else branch
+  mov.u32 %r28, 0; // no else branch
   reduce_words_to_m31_end_10:
-  mov.u32 %r30, 0; // unit
+  mov.u32 %r29, 0; // unit
   ret;
 }
 
