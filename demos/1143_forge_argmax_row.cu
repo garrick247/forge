@@ -290,8 +290,8 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 2
-   [ASSUME] test/../demos/1143_forge_argmax_row.fg:35  (< (+ base lane) logits__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1143_forge_argmax_row.fg:35  (< (+ base lane) logits__len)
              "blockIdx_x<gridDim_x + lane<n_classes + gridDim_x*n_classes<=logits.len"
-   [ASSUME] test/../demos/1143_forge_argmax_row.fg:53  (< row out__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1143_forge_argmax_row.fg:53  (< row out__len)
              "row=blockIdx_x < gridDim_x <= out.len"
    ---- END AUDIT LOG ---- */

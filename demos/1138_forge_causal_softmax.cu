@@ -292,10 +292,10 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 3
-   [ASSUME] test/../demos/1138_forge_causal_softmax.fg:44  (< (+ base lane) scores__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1138_forge_causal_softmax.fg:44  (< (+ base lane) scores__len)
              "row<seq_len + lane<seq_len + gridDim_x*seq_len<=scores.len"
-   [ASSUME] test/../demos/1138_forge_causal_softmax.fg:58  (> denom 0)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1138_forge_causal_softmax.fg:58  (> denom 0)
              "lane=row contributes p=exp(0)=1, valid since 0 <= row"
-   [ASSUME] test/../demos/1138_forge_causal_softmax.fg:61  (< (+ base lane) out__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1138_forge_causal_softmax.fg:61  (< (+ base lane) out__len)
              "mirrors scores bounds chain"
    ---- END AUDIT LOG ---- */

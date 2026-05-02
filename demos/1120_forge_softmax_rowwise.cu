@@ -323,6 +323,6 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 1
-   [ASSUME] test/../demos/1120_forge_softmax_rowwise.fg:87  (> (select smem 0) 0)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1120_forge_softmax_rowwise.fg:87  (> (select smem 0) 0)
              "smem[0] = sum(exp(x_i - row_max)) >= exp(0) = 1.0"
    ---- END AUDIT LOG ---- */

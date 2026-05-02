@@ -296,12 +296,12 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 4
-   [ASSUME] test/../demos/1139_forge_softmax_dropout.fg:38  (< (+ base lane) inp__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1139_forge_softmax_dropout.fg:38  (< (+ base lane) inp__len)
              "blockIdx<gridDim + lane<n_cols + gridDim*n_cols<=inp.len"
-   [ASSUME] test/../demos/1139_forge_softmax_dropout.fg:49  (> denom 0)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1139_forge_softmax_dropout.fg:49  (> denom 0)
              "argmax lane contributes p=exp(0)=1"
-   [ASSUME] test/../demos/1139_forge_softmax_dropout.fg:53  (< (+ base lane) mask__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1139_forge_softmax_dropout.fg:53  (< (+ base lane) mask__len)
              "mirrors inp bounds"
-   [ASSUME] test/../demos/1139_forge_softmax_dropout.fg:58  (< (+ base lane) out__len)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1139_forge_softmax_dropout.fg:58  (< (+ base lane) out__len)
              "mirrors inp bounds"
    ---- END AUDIT LOG ---- */

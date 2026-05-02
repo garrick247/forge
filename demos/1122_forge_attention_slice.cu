@@ -336,6 +336,6 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 1
-   [ASSUME] test/../demos/1122_forge_attention_slice.fg:85  (> denom 0)
+   [ASSUME] /mnt/c/Users/kraken/forge/test/../demos/1122_forge_attention_slice.fg:85  (> denom 0)
              "denom >= exp(0) = 1.0 at the argmax"
    ---- END AUDIT LOG ---- */

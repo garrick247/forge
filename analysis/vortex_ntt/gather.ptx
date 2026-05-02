@@ -12,13 +12,12 @@
     .param .u64 gather_u32_param_idx_len,
     .param .u64 gather_u32_param_dst_data,
     .param .u64 gather_u32_param_dst_len,
-    .param .u64 gather_u32_param_n,
-    .param .u64 gather_u32_param_src_len
+    .param .u64 gather_u32_param_n
 )
 {
-    .reg .pred %p14, %p21;
-    .reg .u32 %r10, %r11, %r12, %r19, %r27, %r31, %r32, %r33, %r34, %r35, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd13, %rd16, %rd17, %rd18, %rd2, %rd20, %rd23, %rd24, %rd25, %rd26, %rd28, %rd29, %rd3, %rd30, %rd4, %rd5, %rd6, %rd7;
+    .reg .pred %p13, %p20;
+    .reg .u32 %r10, %r11, %r18, %r26, %r30, %r31, %r32, %r33, %r34, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd19, %rd2, %rd22, %rd23, %rd24, %rd25, %rd27, %rd28, %rd29, %rd3, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [gather_u32_param_src_data];
   ld.param.u64 %rd1, [gather_u32_param_src_len];
@@ -27,49 +26,48 @@
   ld.param.u64 %rd4, [gather_u32_param_dst_data];
   ld.param.u64 %rd5, [gather_u32_param_dst_len];
   ld.param.u64 %rd6, [gather_u32_param_n];
-  ld.param.u64 %rd7, [gather_u32_param_src_len];
 
-  mov.u32 %r8, %ctaid.x;
-  mov.u32 %r9, %ntid.x;
-  mul.lo.u32 %r10, %r8, %r9;
-  mov.u32 %r11, %tid.x;
-  add.u32 %r12, %r10, %r11;
-  cvt.u64.u32 %rd13, %r12;
-  setp.lt.u64 %p14, %rd13, %rd6;
-  @%p14 bra gather_u32_then_15;
-  bra gather_u32_else_15;
-  gather_u32_then_15:
-  mov.u64 %rd16, 4;
-  mul.lo.u64 %rd17, %rd13, %rd16;
-  add.u64 %rd18, %rd2, %rd17;
-  ld.global.u32 %r19, [%rd18];
-  cvt.u64.u32 %rd20, %r19;
-  setp.lt.u64 %p21, %rd20, %rd7;
-  @%p21 bra gather_u32_then_22;
-  bra gather_u32_else_22;
-  gather_u32_then_22:
-  cvt.u64.u32 %rd23, %r19;
-  mov.u64 %rd24, 4;
-  mul.lo.u64 %rd25, %rd23, %rd24;
-  add.u64 %rd26, %rd0, %rd25;
-  ld.global.u32 %r27, [%rd26];
-  mov.u64 %rd28, 4;
-  mul.lo.u64 %rd29, %rd13, %rd28;
-  add.u64 %rd30, %rd4, %rd29;
-  st.global.u32 [%rd30], %r27;
-  mov.u32 %r31, 0; // unit
-  mov.u32 %r32, %r31;
-  bra gather_u32_end_22;
-  gather_u32_else_22:
-  mov.u32 %r32, 0; // no else branch
-  gather_u32_end_22:
-  mov.u32 %r33, 0; // unit
-  mov.u32 %r34, %r33;
-  bra gather_u32_end_15;
-  gather_u32_else_15:
-  mov.u32 %r34, 0; // no else branch
-  gather_u32_end_15:
-  mov.u32 %r35, 0; // unit
+  mov.u32 %r7, %ctaid.x;
+  mov.u32 %r8, %ntid.x;
+  mul.lo.u32 %r9, %r7, %r8;
+  mov.u32 %r10, %tid.x;
+  add.u32 %r11, %r9, %r10;
+  cvt.u64.u32 %rd12, %r11;
+  setp.lt.u64 %p13, %rd12, %rd6;
+  @%p13 bra gather_u32_then_14;
+  bra gather_u32_else_14;
+  gather_u32_then_14:
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd12, %rd15;
+  add.u64 %rd17, %rd2, %rd16;
+  ld.global.u32 %r18, [%rd17];
+  cvt.u64.u32 %rd19, %r18;
+  setp.lt.u64 %p20, %rd19, %rd1;
+  @%p20 bra gather_u32_then_21;
+  bra gather_u32_else_21;
+  gather_u32_then_21:
+  cvt.u64.u32 %rd22, %r18;
+  mov.u64 %rd23, 4;
+  mul.lo.u64 %rd24, %rd22, %rd23;
+  add.u64 %rd25, %rd0, %rd24;
+  ld.global.u32 %r26, [%rd25];
+  mov.u64 %rd27, 4;
+  mul.lo.u64 %rd28, %rd12, %rd27;
+  add.u64 %rd29, %rd4, %rd28;
+  st.global.u32 [%rd29], %r26;
+  mov.u32 %r30, 0; // unit
+  mov.u32 %r31, %r30;
+  bra gather_u32_end_21;
+  gather_u32_else_21:
+  mov.u32 %r31, 0; // no else branch
+  gather_u32_end_21:
+  mov.u32 %r32, 0; // unit
+  mov.u32 %r33, %r32;
+  bra gather_u32_end_14;
+  gather_u32_else_14:
+  mov.u32 %r33, 0; // no else branch
+  gather_u32_end_14:
+  mov.u32 %r34, 0; // unit
   ret;
 }
 
@@ -80,13 +78,12 @@
     .param .u64 gather_u256_param_idx_len,
     .param .u64 gather_u256_param_dst_data,
     .param .u64 gather_u256_param_dst_len,
-    .param .u64 gather_u256_param_n,
-    .param .u64 gather_u256_param_src_len
+    .param .u64 gather_u256_param_n
 )
 {
-    .reg .pred %p14, %p27, %p31;
-    .reg .u32 %r10, %r100, %r11, %r111, %r117, %r118, %r119, %r12, %r120, %r121, %r122, %r123, %r19, %r36, %r45, %r56, %r67, %r78, %r8, %r89, %r9;
-    .reg .u64 %rd0, %rd1, %rd101, %rd102, %rd103, %rd104, %rd105, %rd106, %rd107, %rd108, %rd109, %rd110, %rd112, %rd113, %rd114, %rd115, %rd116, %rd13, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd25, %rd26, %rd29, %rd3, %rd30, %rd33, %rd34, %rd35, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd46, %rd47, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd53, %rd54, %rd55, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77, %rd79, %rd80, %rd81, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd88, %rd90, %rd91, %rd92, %rd93, %rd94, %rd95, %rd96, %rd97, %rd98, %rd99;
+    .reg .pred %p13, %p26, %p30;
+    .reg .u32 %r10, %r11, %r110, %r116, %r117, %r118, %r119, %r120, %r121, %r122, %r18, %r35, %r44, %r55, %r66, %r7, %r77, %r8, %r88, %r9, %r99;
+    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd103, %rd104, %rd105, %rd106, %rd107, %rd108, %rd109, %rd111, %rd112, %rd113, %rd114, %rd115, %rd12, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd25, %rd28, %rd29, %rd3, %rd32, %rd33, %rd34, %rd36, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd45, %rd46, %rd47, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd53, %rd54, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd64, %rd65, %rd67, %rd68, %rd69, %rd70, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd78, %rd79, %rd80, %rd81, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd89, %rd90, %rd91, %rd92, %rd93, %rd94, %rd95, %rd96, %rd97, %rd98;
 
   ld.param.u64 %rd0, [gather_u256_param_src_data];
   ld.param.u64 %rd1, [gather_u256_param_src_len];
@@ -95,150 +92,149 @@
   ld.param.u64 %rd4, [gather_u256_param_dst_data];
   ld.param.u64 %rd5, [gather_u256_param_dst_len];
   ld.param.u64 %rd6, [gather_u256_param_n];
-  ld.param.u64 %rd7, [gather_u256_param_src_len];
 
-  mov.u32 %r8, %ctaid.x;
-  mov.u32 %r9, %ntid.x;
-  mul.lo.u32 %r10, %r8, %r9;
-  mov.u32 %r11, %tid.x;
-  add.u32 %r12, %r10, %r11;
-  cvt.u64.u32 %rd13, %r12;
-  setp.lt.u64 %p14, %rd13, %rd6;
-  @%p14 bra gather_u256_then_15;
-  bra gather_u256_else_15;
-  gather_u256_then_15:
-  mov.u64 %rd16, 4;
-  mul.lo.u64 %rd17, %rd13, %rd16;
-  add.u64 %rd18, %rd2, %rd17;
-  ld.global.u32 %r19, [%rd18];
-  cvt.u64.u32 %rd20, %r19;
-  mov.u64 %rd21, 8;
-  mul.lo.u64 %rd22, %rd20, %rd21;
-  mov.u64 %rd23, 8;
-  mul.lo.u64 %rd24, %rd13, %rd23;
-  mov.u64 %rd25, 7;
-  add.u64 %rd26, %rd22, %rd25;
-  setp.lt.u64 %p27, %rd26, %rd7;
-  @%p27 bra gather_u256_then_28;
-  bra gather_u256_else_28;
-  gather_u256_then_28:
-  mov.u64 %rd29, 7;
-  add.u64 %rd30, %rd24, %rd29;
-  setp.lt.u64 %p31, %rd30, %rd5;
-  @%p31 bra gather_u256_then_32;
-  bra gather_u256_else_32;
-  gather_u256_then_32:
-  mov.u64 %rd33, 4;
-  mul.lo.u64 %rd34, %rd22, %rd33;
-  add.u64 %rd35, %rd0, %rd34;
-  ld.global.u32 %r36, [%rd35];
-  mov.u64 %rd37, 4;
-  mul.lo.u64 %rd38, %rd24, %rd37;
-  add.u64 %rd39, %rd4, %rd38;
-  st.global.u32 [%rd39], %r36;
-  mov.u64 %rd40, 1;
-  add.u64 %rd41, %rd22, %rd40;
-  mov.u64 %rd42, 4;
-  mul.lo.u64 %rd43, %rd41, %rd42;
-  add.u64 %rd44, %rd0, %rd43;
-  ld.global.u32 %r45, [%rd44];
-  mov.u64 %rd46, 1;
-  add.u64 %rd47, %rd24, %rd46;
-  mov.u64 %rd48, 4;
-  mul.lo.u64 %rd49, %rd47, %rd48;
-  add.u64 %rd50, %rd4, %rd49;
-  st.global.u32 [%rd50], %r45;
-  mov.u64 %rd51, 2;
-  add.u64 %rd52, %rd22, %rd51;
-  mov.u64 %rd53, 4;
-  mul.lo.u64 %rd54, %rd52, %rd53;
-  add.u64 %rd55, %rd0, %rd54;
-  ld.global.u32 %r56, [%rd55];
-  mov.u64 %rd57, 2;
-  add.u64 %rd58, %rd24, %rd57;
-  mov.u64 %rd59, 4;
-  mul.lo.u64 %rd60, %rd58, %rd59;
-  add.u64 %rd61, %rd4, %rd60;
-  st.global.u32 [%rd61], %r56;
-  mov.u64 %rd62, 3;
-  add.u64 %rd63, %rd22, %rd62;
-  mov.u64 %rd64, 4;
-  mul.lo.u64 %rd65, %rd63, %rd64;
-  add.u64 %rd66, %rd0, %rd65;
-  ld.global.u32 %r67, [%rd66];
-  mov.u64 %rd68, 3;
-  add.u64 %rd69, %rd24, %rd68;
-  mov.u64 %rd70, 4;
-  mul.lo.u64 %rd71, %rd69, %rd70;
-  add.u64 %rd72, %rd4, %rd71;
-  st.global.u32 [%rd72], %r67;
-  mov.u64 %rd73, 4;
-  add.u64 %rd74, %rd22, %rd73;
-  mov.u64 %rd75, 4;
-  mul.lo.u64 %rd76, %rd74, %rd75;
-  add.u64 %rd77, %rd0, %rd76;
-  ld.global.u32 %r78, [%rd77];
-  mov.u64 %rd79, 4;
-  add.u64 %rd80, %rd24, %rd79;
-  mov.u64 %rd81, 4;
-  mul.lo.u64 %rd82, %rd80, %rd81;
-  add.u64 %rd83, %rd4, %rd82;
-  st.global.u32 [%rd83], %r78;
-  mov.u64 %rd84, 5;
-  add.u64 %rd85, %rd22, %rd84;
-  mov.u64 %rd86, 4;
-  mul.lo.u64 %rd87, %rd85, %rd86;
-  add.u64 %rd88, %rd0, %rd87;
-  ld.global.u32 %r89, [%rd88];
-  mov.u64 %rd90, 5;
-  add.u64 %rd91, %rd24, %rd90;
-  mov.u64 %rd92, 4;
-  mul.lo.u64 %rd93, %rd91, %rd92;
-  add.u64 %rd94, %rd4, %rd93;
-  st.global.u32 [%rd94], %r89;
-  mov.u64 %rd95, 6;
-  add.u64 %rd96, %rd22, %rd95;
-  mov.u64 %rd97, 4;
-  mul.lo.u64 %rd98, %rd96, %rd97;
-  add.u64 %rd99, %rd0, %rd98;
-  ld.global.u32 %r100, [%rd99];
-  mov.u64 %rd101, 6;
-  add.u64 %rd102, %rd24, %rd101;
-  mov.u64 %rd103, 4;
-  mul.lo.u64 %rd104, %rd102, %rd103;
-  add.u64 %rd105, %rd4, %rd104;
-  st.global.u32 [%rd105], %r100;
-  mov.u64 %rd106, 7;
-  add.u64 %rd107, %rd22, %rd106;
-  mov.u64 %rd108, 4;
-  mul.lo.u64 %rd109, %rd107, %rd108;
-  add.u64 %rd110, %rd0, %rd109;
-  ld.global.u32 %r111, [%rd110];
-  mov.u64 %rd112, 7;
-  add.u64 %rd113, %rd24, %rd112;
-  mov.u64 %rd114, 4;
-  mul.lo.u64 %rd115, %rd113, %rd114;
-  add.u64 %rd116, %rd4, %rd115;
-  st.global.u32 [%rd116], %r111;
-  mov.u32 %r117, 0; // unit
-  mov.u32 %r118, %r117;
-  bra gather_u256_end_32;
-  gather_u256_else_32:
-  mov.u32 %r118, 0; // no else branch
-  gather_u256_end_32:
-  mov.u32 %r119, 0; // unit
-  mov.u32 %r120, %r119;
-  bra gather_u256_end_28;
-  gather_u256_else_28:
-  mov.u32 %r120, 0; // no else branch
-  gather_u256_end_28:
-  mov.u32 %r121, 0; // unit
-  mov.u32 %r122, %r121;
-  bra gather_u256_end_15;
-  gather_u256_else_15:
-  mov.u32 %r122, 0; // no else branch
-  gather_u256_end_15:
-  mov.u32 %r123, 0; // unit
+  mov.u32 %r7, %ctaid.x;
+  mov.u32 %r8, %ntid.x;
+  mul.lo.u32 %r9, %r7, %r8;
+  mov.u32 %r10, %tid.x;
+  add.u32 %r11, %r9, %r10;
+  cvt.u64.u32 %rd12, %r11;
+  setp.lt.u64 %p13, %rd12, %rd6;
+  @%p13 bra gather_u256_then_14;
+  bra gather_u256_else_14;
+  gather_u256_then_14:
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd12, %rd15;
+  add.u64 %rd17, %rd2, %rd16;
+  ld.global.u32 %r18, [%rd17];
+  cvt.u64.u32 %rd19, %r18;
+  mov.u64 %rd20, 8;
+  mul.lo.u64 %rd21, %rd19, %rd20;
+  mov.u64 %rd22, 8;
+  mul.lo.u64 %rd23, %rd12, %rd22;
+  mov.u64 %rd24, 7;
+  add.u64 %rd25, %rd21, %rd24;
+  setp.lt.u64 %p26, %rd25, %rd1;
+  @%p26 bra gather_u256_then_27;
+  bra gather_u256_else_27;
+  gather_u256_then_27:
+  mov.u64 %rd28, 7;
+  add.u64 %rd29, %rd23, %rd28;
+  setp.lt.u64 %p30, %rd29, %rd5;
+  @%p30 bra gather_u256_then_31;
+  bra gather_u256_else_31;
+  gather_u256_then_31:
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd21, %rd32;
+  add.u64 %rd34, %rd0, %rd33;
+  ld.global.u32 %r35, [%rd34];
+  mov.u64 %rd36, 4;
+  mul.lo.u64 %rd37, %rd23, %rd36;
+  add.u64 %rd38, %rd4, %rd37;
+  st.global.u32 [%rd38], %r35;
+  mov.u64 %rd39, 1;
+  add.u64 %rd40, %rd21, %rd39;
+  mov.u64 %rd41, 4;
+  mul.lo.u64 %rd42, %rd40, %rd41;
+  add.u64 %rd43, %rd0, %rd42;
+  ld.global.u32 %r44, [%rd43];
+  mov.u64 %rd45, 1;
+  add.u64 %rd46, %rd23, %rd45;
+  mov.u64 %rd47, 4;
+  mul.lo.u64 %rd48, %rd46, %rd47;
+  add.u64 %rd49, %rd4, %rd48;
+  st.global.u32 [%rd49], %r44;
+  mov.u64 %rd50, 2;
+  add.u64 %rd51, %rd21, %rd50;
+  mov.u64 %rd52, 4;
+  mul.lo.u64 %rd53, %rd51, %rd52;
+  add.u64 %rd54, %rd0, %rd53;
+  ld.global.u32 %r55, [%rd54];
+  mov.u64 %rd56, 2;
+  add.u64 %rd57, %rd23, %rd56;
+  mov.u64 %rd58, 4;
+  mul.lo.u64 %rd59, %rd57, %rd58;
+  add.u64 %rd60, %rd4, %rd59;
+  st.global.u32 [%rd60], %r55;
+  mov.u64 %rd61, 3;
+  add.u64 %rd62, %rd21, %rd61;
+  mov.u64 %rd63, 4;
+  mul.lo.u64 %rd64, %rd62, %rd63;
+  add.u64 %rd65, %rd0, %rd64;
+  ld.global.u32 %r66, [%rd65];
+  mov.u64 %rd67, 3;
+  add.u64 %rd68, %rd23, %rd67;
+  mov.u64 %rd69, 4;
+  mul.lo.u64 %rd70, %rd68, %rd69;
+  add.u64 %rd71, %rd4, %rd70;
+  st.global.u32 [%rd71], %r66;
+  mov.u64 %rd72, 4;
+  add.u64 %rd73, %rd21, %rd72;
+  mov.u64 %rd74, 4;
+  mul.lo.u64 %rd75, %rd73, %rd74;
+  add.u64 %rd76, %rd0, %rd75;
+  ld.global.u32 %r77, [%rd76];
+  mov.u64 %rd78, 4;
+  add.u64 %rd79, %rd23, %rd78;
+  mov.u64 %rd80, 4;
+  mul.lo.u64 %rd81, %rd79, %rd80;
+  add.u64 %rd82, %rd4, %rd81;
+  st.global.u32 [%rd82], %r77;
+  mov.u64 %rd83, 5;
+  add.u64 %rd84, %rd21, %rd83;
+  mov.u64 %rd85, 4;
+  mul.lo.u64 %rd86, %rd84, %rd85;
+  add.u64 %rd87, %rd0, %rd86;
+  ld.global.u32 %r88, [%rd87];
+  mov.u64 %rd89, 5;
+  add.u64 %rd90, %rd23, %rd89;
+  mov.u64 %rd91, 4;
+  mul.lo.u64 %rd92, %rd90, %rd91;
+  add.u64 %rd93, %rd4, %rd92;
+  st.global.u32 [%rd93], %r88;
+  mov.u64 %rd94, 6;
+  add.u64 %rd95, %rd21, %rd94;
+  mov.u64 %rd96, 4;
+  mul.lo.u64 %rd97, %rd95, %rd96;
+  add.u64 %rd98, %rd0, %rd97;
+  ld.global.u32 %r99, [%rd98];
+  mov.u64 %rd100, 6;
+  add.u64 %rd101, %rd23, %rd100;
+  mov.u64 %rd102, 4;
+  mul.lo.u64 %rd103, %rd101, %rd102;
+  add.u64 %rd104, %rd4, %rd103;
+  st.global.u32 [%rd104], %r99;
+  mov.u64 %rd105, 7;
+  add.u64 %rd106, %rd21, %rd105;
+  mov.u64 %rd107, 4;
+  mul.lo.u64 %rd108, %rd106, %rd107;
+  add.u64 %rd109, %rd0, %rd108;
+  ld.global.u32 %r110, [%rd109];
+  mov.u64 %rd111, 7;
+  add.u64 %rd112, %rd23, %rd111;
+  mov.u64 %rd113, 4;
+  mul.lo.u64 %rd114, %rd112, %rd113;
+  add.u64 %rd115, %rd4, %rd114;
+  st.global.u32 [%rd115], %r110;
+  mov.u32 %r116, 0; // unit
+  mov.u32 %r117, %r116;
+  bra gather_u256_end_31;
+  gather_u256_else_31:
+  mov.u32 %r117, 0; // no else branch
+  gather_u256_end_31:
+  mov.u32 %r118, 0; // unit
+  mov.u32 %r119, %r118;
+  bra gather_u256_end_27;
+  gather_u256_else_27:
+  mov.u32 %r119, 0; // no else branch
+  gather_u256_end_27:
+  mov.u32 %r120, 0; // unit
+  mov.u32 %r121, %r120;
+  bra gather_u256_end_14;
+  gather_u256_else_14:
+  mov.u32 %r121, 0; // no else branch
+  gather_u256_end_14:
+  mov.u32 %r122, 0; // unit
   ret;
 }
 
