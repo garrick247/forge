@@ -5,16 +5,43 @@ silently delete history (mark items resolved with date + PR).
 
 ## Tier 1 — CI hygiene across the stack
 
+### BLOCKER (added 2026-05-06): stwo-fork source recovery
+
+VortexSTARK depends on `stwo` and `stwo-constraint-framework` v2.2.0 from
+`https://github.com/garrick99/stwo-fork.git#cuda-backend` (pinned SHA
+`79b131cb16cf1da179141edf083d5ed9ebc29089`). The garrick99 account is
+dead and the SHA is **not present in upstream `starkware-libs/stwo`**
+(verified via `gh api` — 404). No public mirror found via `gh search`
+or websearch. Without this dep, `cargo` cannot resolve the workspace
+and VortexSTARK is unbuildable from scratch.
+
+Options (need user direction):
+1. **Restore the fork** — requires the original source. Do we have a
+   local clone that survived the wipe? Backup HDD? WSL2 cache?
+2. **Migrate to upstream `starkware-libs/stwo`** — multi-day refactor;
+   the cuda-backend branch likely added GPU-specific extensions that
+   need to be re-implemented or stripped.
+3. **Vendor the fork** — needs source; same blocker as #1.
+
+The Cargo.toml lines deliberately left untouched in the URL-sweep PR so
+they remain visible:
+- `Cargo.toml:176`
+- `crates/cuda-backend/Cargo.toml:22-23`
+
+
 - [x] ~~**openptxas/corpus.yml**~~: ported to Linux self-hosted runner
       with sibling forge-workbench install + cross-platform CUDA loader.
       One kernel (`w2_nested_loop`) hangs the GPU on `cuCtxSynchronize`
       and is allowlisted in `scripts/known_fail.txt` — separate codegen
       bug, see Tier 5. (openptxas PR #1, 2026-05-06.)
-- [ ] **VortexSTARK/ci.yml gpu-tests**: hardcoded `/home/runner/.cargo/bin`
-      — runner user is `garrick`, not `runner`. Update PATH.
-- [ ] **VortexSTARK + Rust toolchain on the runner**: rustup not yet
-      installed system-wide; cargo workflow will fail on first run unless
-      we either provision rustup or have the workflow install it per run.
+- [x] ~~**VortexSTARK/ci.yml gpu-tests**~~: PATH updated to
+      `/home/garrick/.cargo/bin`. (VortexSTARK PR #2, 2026-05-06.)
+- [x] ~~**VortexSTARK + Rust toolchain on the runner**~~: rustup
+      installed for `garrick` (nightly + clippy + rustfmt). cargo
+      1.97.0-nightly available at `/home/garrick/.cargo/bin/cargo`.
+      Verified by re-running CI: gpu-tests now reaches the cargo dep-fetch
+      stage (was failing at command-not-found in 6s; now runs 23s before
+      hitting the stwo-fork 404). 2026-05-06.
 
 ## Tier 2 — Forge codegen bugs
 
@@ -95,6 +122,9 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 rustup install on linux runner box (nightly + clippy + rustfmt)
+- ✅ 2026-05-06 stack-wide garrick99 → garrick247 URL sweep (7 PRs across all repos)
+- ✅ 2026-05-06 VortexSTARK ci.yml gpu-tests PATH fix (VortexSTARK#2)
 - ✅ 2026-05-06 Phase 4 bitwise column demux on batch NTT (PRs forthcoming)
 - ✅ 2026-05-06 generic-fn elision: 7 demos out of quarantine (PR forthcoming)
 - ✅ 2026-05-06 openptxas PR #1: corpus workflow + sweep ported to Linux runner
