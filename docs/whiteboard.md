@@ -49,9 +49,11 @@ with a real C error. Listed in `KNOWN_CODEGEN_BUG_RE` in `test/run_all.sh`.
 - [ ] **8-layer fused via shared memory**: full Phase 3. Needs Forge
       modeling of `shared<T>[N]` writes + `__syncthreads()` barriers.
       Substantial — should be its own design doc once we tackle it.
-- [ ] **Bitwise column demux** (Phase 4 in ANALYSIS.md): replace `tid /
-      half_n` and `tid % half_n` in the batch kernel with bit ops.
-      10-20% on batch NTT; trivial change.
+- [x] ~~**Bitwise column demux** (Phase 4 in ANALYSIS.md)~~: kernels now
+      take `log_half_n` / `log_n` and use `tid >> log_*` + `tid & (n - 1)`.
+      Forge re-verified at 145 obligations (down from 148, all discharged,
+      0 assumes); VortexSTARK shim updated to compute log via
+      `__builtin_ctz`. (PR forthcoming, 2026-05-06.)
 
 ## Tier 4 — Pointer safety (the big one)
 
@@ -93,6 +95,7 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 Phase 4 bitwise column demux on batch NTT (PRs forthcoming)
 - ✅ 2026-05-06 generic-fn elision: 7 demos out of quarantine (PR forthcoming)
 - ✅ 2026-05-06 openptxas PR #1: corpus workflow + sweep ported to Linux runner
 - ✅ 2026-05-06 4-layer fused NTT + 1045 codegen fix (PR forthcoming)
