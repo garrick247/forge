@@ -1,0 +1,609 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry circle_ntt_warp_fused4_forward(
+    .param .u64 circle_ntt_warp_fused4_forward_param_data_data,
+    .param .u64 circle_ntt_warp_fused4_forward_param_data_len,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_a_data,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_a_len,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_b_data,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_b_len,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_c_data,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_c_len,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_d_data,
+    .param .u64 circle_ntt_warp_fused4_forward_param_twiddles_d_len,
+    .param .u32 circle_ntt_warp_fused4_forward_param_layer_idx
+)
+{
+    .reg .pred %p104, %p117, %p130, %p147, %p153, %p167, %p184, %p196, %p213, %p219, %p233, %p250, %p262, %p279, %p285, %p299, %p316, %p328, %p345, %p351, %p365, %p382, %p59, %p61, %p63, %p65, %p67, %p78, %p91;
+    .reg .u32 %r10, %r100, %r101, %r102, %r103, %r106, %r107, %r11, %r111, %r112, %r113, %r114, %r115, %r116, %r119, %r12, %r120, %r124, %r125, %r126, %r127, %r128, %r129, %r13, %r132, %r133, %r135, %r136, %r137, %r138, %r139, %r14, %r141, %r142, %r143, %r144, %r145, %r146, %r149, %r15, %r150, %r158, %r161, %r165, %r171, %r172, %r176, %r179, %r182, %r190, %r191, %r192, %r193, %r194, %r195, %r198, %r199, %r20, %r201, %r202, %r203, %r204, %r205, %r207, %r208, %r209, %r210, %r211, %r212, %r215, %r216, %r22, %r224, %r227, %r23, %r231, %r237, %r238, %r242, %r245, %r248, %r256, %r257, %r258, %r259, %r26, %r260, %r261, %r264, %r265, %r267, %r268, %r269, %r270, %r271, %r273, %r274, %r275, %r276, %r277, %r278, %r28, %r281, %r282, %r29, %r290, %r293, %r297, %r303, %r304, %r308, %r311, %r314, %r32, %r322, %r323, %r324, %r325, %r326, %r327, %r330, %r331, %r333, %r334, %r335, %r336, %r337, %r339, %r34, %r340, %r341, %r342, %r343, %r344, %r347, %r348, %r35, %r356, %r359, %r363, %r369, %r370, %r374, %r377, %r38, %r380, %r388, %r39, %r392, %r393, %r394, %r395, %r396, %r397, %r398, %r399, %r40, %r400, %r401, %r402, %r43, %r44, %r45, %r48, %r49, %r50, %r53, %r54, %r55, %r58, %r72, %r73, %r74, %r75, %r76, %r77, %r80, %r81, %r85, %r86, %r87, %r88, %r89, %r90, %r93, %r94, %r98, %r99;
+    .reg .u64 %rd0, %rd1, %rd108, %rd109, %rd110, %rd121, %rd122, %rd123, %rd134, %rd140, %rd151, %rd152, %rd155, %rd156, %rd157, %rd159, %rd16, %rd160, %rd162, %rd163, %rd164, %rd166, %rd169, %rd17, %rd170, %rd173, %rd174, %rd175, %rd177, %rd178, %rd18, %rd180, %rd181, %rd183, %rd186, %rd187, %rd188, %rd189, %rd19, %rd2, %rd200, %rd206, %rd21, %rd217, %rd218, %rd221, %rd222, %rd223, %rd225, %rd226, %rd228, %rd229, %rd230, %rd232, %rd235, %rd236, %rd239, %rd24, %rd240, %rd241, %rd243, %rd244, %rd246, %rd247, %rd249, %rd25, %rd252, %rd253, %rd254, %rd255, %rd266, %rd27, %rd272, %rd283, %rd284, %rd287, %rd288, %rd289, %rd291, %rd292, %rd294, %rd295, %rd296, %rd298, %rd3, %rd30, %rd301, %rd302, %rd305, %rd306, %rd307, %rd309, %rd31, %rd310, %rd312, %rd313, %rd315, %rd318, %rd319, %rd320, %rd321, %rd33, %rd332, %rd338, %rd349, %rd350, %rd353, %rd354, %rd355, %rd357, %rd358, %rd36, %rd360, %rd361, %rd362, %rd364, %rd367, %rd368, %rd37, %rd371, %rd372, %rd373, %rd375, %rd376, %rd378, %rd379, %rd381, %rd384, %rd385, %rd386, %rd387, %rd389, %rd390, %rd391, %rd4, %rd41, %rd42, %rd46, %rd47, %rd5, %rd51, %rd52, %rd56, %rd57, %rd6, %rd69, %rd7, %rd70, %rd71, %rd8, %rd82, %rd83, %rd84, %rd9, %rd95, %rd96, %rd97;
+
+  ld.param.u64 %rd0, [circle_ntt_warp_fused4_forward_param_data_data];
+  ld.param.u64 %rd1, [circle_ntt_warp_fused4_forward_param_data_len];
+  ld.param.u64 %rd2, [circle_ntt_warp_fused4_forward_param_twiddles_a_data];
+  ld.param.u64 %rd3, [circle_ntt_warp_fused4_forward_param_twiddles_a_len];
+  ld.param.u64 %rd4, [circle_ntt_warp_fused4_forward_param_twiddles_b_data];
+  ld.param.u64 %rd5, [circle_ntt_warp_fused4_forward_param_twiddles_b_len];
+  ld.param.u64 %rd6, [circle_ntt_warp_fused4_forward_param_twiddles_c_data];
+  ld.param.u64 %rd7, [circle_ntt_warp_fused4_forward_param_twiddles_c_len];
+  ld.param.u64 %rd8, [circle_ntt_warp_fused4_forward_param_twiddles_d_data];
+  ld.param.u64 %rd9, [circle_ntt_warp_fused4_forward_param_twiddles_d_len];
+  ld.param.u32 %r10, [circle_ntt_warp_fused4_forward_param_layer_idx];
+
+  mov.u32 %r11, %ctaid.x;
+  mov.u32 %r12, %ntid.x;
+  mul.lo.u32 %r13, %r11, %r12;
+  mov.u32 %r14, %tid.x;
+  add.u32 %r15, %r13, %r14;
+  cvt.u64.u32 %rd16, %r15;
+  mov.u64 %rd17, 1;
+  cvt.u64.u32 %rd18, %r10;
+  cvt.u32.u64 %r20, %rd18;
+  shl.b64 %rd19, %rd17, %r20;
+  mov.u64 %rd21, 1;
+  mov.u32 %r22, 1;
+  add.u32 %r23, %r10, %r22;
+  cvt.u64.u32 %rd24, %r23;
+  cvt.u32.u64 %r26, %rd24;
+  shl.b64 %rd25, %rd21, %r26;
+  mov.u64 %rd27, 1;
+  mov.u32 %r28, 2;
+  add.u32 %r29, %r10, %r28;
+  cvt.u64.u32 %rd30, %r29;
+  cvt.u32.u64 %r32, %rd30;
+  shl.b64 %rd31, %rd27, %r32;
+  mov.u64 %rd33, 1;
+  mov.u32 %r34, 3;
+  add.u32 %r35, %r10, %r34;
+  cvt.u64.u32 %rd36, %r35;
+  cvt.u32.u64 %r38, %rd36;
+  shl.b64 %rd37, %rd33, %r38;
+  mov.u32 %r39, 1;
+  add.u32 %r40, %r10, %r39;
+  cvt.u64.u32 %rd41, %r40;
+  cvt.u32.u64 %r43, %rd41;
+  shr.u64 %rd42, %rd16, %r43;
+  mov.u32 %r44, 2;
+  add.u32 %r45, %r10, %r44;
+  cvt.u64.u32 %rd46, %r45;
+  cvt.u32.u64 %r48, %rd46;
+  shr.u64 %rd47, %rd16, %r48;
+  mov.u32 %r49, 3;
+  add.u32 %r50, %r10, %r49;
+  cvt.u64.u32 %rd51, %r50;
+  cvt.u32.u64 %r53, %rd51;
+  shr.u64 %rd52, %rd16, %r53;
+  mov.u32 %r54, 4;
+  add.u32 %r55, %r10, %r54;
+  cvt.u64.u32 %rd56, %r55;
+  cvt.u32.u64 %r58, %rd56;
+  shr.u64 %rd57, %rd16, %r58;
+  setp.lt.u64 %p59, %rd16, %rd1;
+  @%p59 bra circle_ntt_warp_fused4_forward_then_60;
+  bra circle_ntt_warp_fused4_forward_else_60;
+  circle_ntt_warp_fused4_forward_then_60:
+  setp.lt.u64 %p61, %rd42, %rd3;
+  @%p61 bra circle_ntt_warp_fused4_forward_then_62;
+  bra circle_ntt_warp_fused4_forward_else_62;
+  circle_ntt_warp_fused4_forward_then_62:
+  setp.lt.u64 %p63, %rd47, %rd5;
+  @%p63 bra circle_ntt_warp_fused4_forward_then_64;
+  bra circle_ntt_warp_fused4_forward_else_64;
+  circle_ntt_warp_fused4_forward_then_64:
+  setp.lt.u64 %p65, %rd52, %rd7;
+  @%p65 bra circle_ntt_warp_fused4_forward_then_66;
+  bra circle_ntt_warp_fused4_forward_else_66;
+  circle_ntt_warp_fused4_forward_then_66:
+  setp.lt.u64 %p67, %rd57, %rd9;
+  @%p67 bra circle_ntt_warp_fused4_forward_then_68;
+  bra circle_ntt_warp_fused4_forward_else_68;
+  circle_ntt_warp_fused4_forward_then_68:
+  mov.u64 %rd69, 4;
+  mul.lo.u64 %rd70, %rd16, %rd69;
+  add.u64 %rd71, %rd0, %rd70;
+  ld.global.u32 %r72, [%rd71];
+  mov.u32 %r73, 2147483647;
+  and.b32 %r74, %r72, %r73;
+  mov.u32 %r75, 31;
+  shr.u32 %r76, %r72, %r75;
+  add.u32 %r77, %r74, %r76;
+  setp.ge.u32 %p78, %r77, %r73;
+  @%p78 bra circle_ntt_warp_fused4_forward_then_79;
+  bra circle_ntt_warp_fused4_forward_else_79;
+  circle_ntt_warp_fused4_forward_then_79:
+  sub.u32 %r80, %r77, %r73;
+  mov.u32 %r81, %r80;
+  bra circle_ntt_warp_fused4_forward_end_79;
+  circle_ntt_warp_fused4_forward_else_79:
+  mov.u32 %r81, %r77;
+  circle_ntt_warp_fused4_forward_end_79:
+  mov.u64 %rd82, 4;
+  mul.lo.u64 %rd83, %rd42, %rd82;
+  add.u64 %rd84, %rd2, %rd83;
+  ld.global.u32 %r85, [%rd84];
+  mov.u32 %r86, 2147483647;
+  and.b32 %r87, %r85, %r86;
+  mov.u32 %r88, 31;
+  shr.u32 %r89, %r85, %r88;
+  add.u32 %r90, %r87, %r89;
+  setp.ge.u32 %p91, %r90, %r86;
+  @%p91 bra circle_ntt_warp_fused4_forward_then_92;
+  bra circle_ntt_warp_fused4_forward_else_92;
+  circle_ntt_warp_fused4_forward_then_92:
+  sub.u32 %r93, %r90, %r86;
+  mov.u32 %r94, %r93;
+  bra circle_ntt_warp_fused4_forward_end_92;
+  circle_ntt_warp_fused4_forward_else_92:
+  mov.u32 %r94, %r90;
+  circle_ntt_warp_fused4_forward_end_92:
+  mov.u64 %rd95, 4;
+  mul.lo.u64 %rd96, %rd47, %rd95;
+  add.u64 %rd97, %rd4, %rd96;
+  ld.global.u32 %r98, [%rd97];
+  mov.u32 %r99, 2147483647;
+  and.b32 %r100, %r98, %r99;
+  mov.u32 %r101, 31;
+  shr.u32 %r102, %r98, %r101;
+  add.u32 %r103, %r100, %r102;
+  setp.ge.u32 %p104, %r103, %r99;
+  @%p104 bra circle_ntt_warp_fused4_forward_then_105;
+  bra circle_ntt_warp_fused4_forward_else_105;
+  circle_ntt_warp_fused4_forward_then_105:
+  sub.u32 %r106, %r103, %r99;
+  mov.u32 %r107, %r106;
+  bra circle_ntt_warp_fused4_forward_end_105;
+  circle_ntt_warp_fused4_forward_else_105:
+  mov.u32 %r107, %r103;
+  circle_ntt_warp_fused4_forward_end_105:
+  mov.u64 %rd108, 4;
+  mul.lo.u64 %rd109, %rd52, %rd108;
+  add.u64 %rd110, %rd6, %rd109;
+  ld.global.u32 %r111, [%rd110];
+  mov.u32 %r112, 2147483647;
+  and.b32 %r113, %r111, %r112;
+  mov.u32 %r114, 31;
+  shr.u32 %r115, %r111, %r114;
+  add.u32 %r116, %r113, %r115;
+  setp.ge.u32 %p117, %r116, %r112;
+  @%p117 bra circle_ntt_warp_fused4_forward_then_118;
+  bra circle_ntt_warp_fused4_forward_else_118;
+  circle_ntt_warp_fused4_forward_then_118:
+  sub.u32 %r119, %r116, %r112;
+  mov.u32 %r120, %r119;
+  bra circle_ntt_warp_fused4_forward_end_118;
+  circle_ntt_warp_fused4_forward_else_118:
+  mov.u32 %r120, %r116;
+  circle_ntt_warp_fused4_forward_end_118:
+  mov.u64 %rd121, 4;
+  mul.lo.u64 %rd122, %rd57, %rd121;
+  add.u64 %rd123, %rd8, %rd122;
+  ld.global.u32 %r124, [%rd123];
+  mov.u32 %r125, 2147483647;
+  and.b32 %r126, %r124, %r125;
+  mov.u32 %r127, 31;
+  shr.u32 %r128, %r124, %r127;
+  add.u32 %r129, %r126, %r128;
+  setp.ge.u32 %p130, %r129, %r125;
+  @%p130 bra circle_ntt_warp_fused4_forward_then_131;
+  bra circle_ntt_warp_fused4_forward_else_131;
+  circle_ntt_warp_fused4_forward_then_131:
+  sub.u32 %r132, %r129, %r125;
+  mov.u32 %r133, %r132;
+  bra circle_ntt_warp_fused4_forward_end_131;
+  circle_ntt_warp_fused4_forward_else_131:
+  mov.u32 %r133, %r129;
+  circle_ntt_warp_fused4_forward_end_131:
+  cvt.u64.u32 %rd134, %r81;
+  cvt.u32.u64 %r135, %rd19;
+  mov.b64 {%r136, %r137}, %rd134;
+  shfl.sync.bfly.b32 %r138, %r136, %r135, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r139, %r137, %r135, 31, 0xffffffff;
+  mov.b64 %rd140, {%r138, %r139};
+  cvt.u32.u64 %r141, %rd140;
+  mov.u32 %r142, 2147483647;
+  and.b32 %r143, %r141, %r142;
+  mov.u32 %r144, 31;
+  shr.u32 %r145, %r141, %r144;
+  add.u32 %r146, %r143, %r145;
+  setp.ge.u32 %p147, %r146, %r142;
+  @%p147 bra circle_ntt_warp_fused4_forward_then_148;
+  bra circle_ntt_warp_fused4_forward_else_148;
+  circle_ntt_warp_fused4_forward_then_148:
+  sub.u32 %r149, %r146, %r142;
+  mov.u32 %r150, %r149;
+  bra circle_ntt_warp_fused4_forward_end_148;
+  circle_ntt_warp_fused4_forward_else_148:
+  mov.u32 %r150, %r146;
+  circle_ntt_warp_fused4_forward_end_148:
+  and.b64 %rd151, %rd16, %rd19;
+  mov.u64 %rd152, 0;
+  setp.eq.u64 %p153, %rd151, %rd152;
+  @%p153 bra circle_ntt_warp_fused4_forward_then_154;
+  bra circle_ntt_warp_fused4_forward_else_154;
+  circle_ntt_warp_fused4_forward_then_154:
+  cvt.u64.u32 %rd155, %r150;
+  cvt.u64.u32 %rd156, %r94;
+  mul.lo.u64 %rd157, %rd155, %rd156;
+  mov.u32 %r158, 2147483647;
+  cvt.u64.u32 %rd159, %r158;
+  rem.u64 %rd160, %rd157, %rd159;
+  cvt.u32.u64 %r161, %rd160;
+  cvt.u64.u32 %rd162, %r81;
+  cvt.u64.u32 %rd163, %r161;
+  add.u64 %rd164, %rd162, %rd163;
+  mov.u32 %r165, 2147483647;
+  cvt.u64.u32 %rd166, %r165;
+  setp.ge.u64 %p167, %rd164, %rd166;
+  @%p167 bra circle_ntt_warp_fused4_forward_then_168;
+  bra circle_ntt_warp_fused4_forward_else_168;
+  circle_ntt_warp_fused4_forward_then_168:
+  sub.u64 %rd169, %rd164, %rd166;
+  mov.u64 %rd170, %rd169;
+  bra circle_ntt_warp_fused4_forward_end_168;
+  circle_ntt_warp_fused4_forward_else_168:
+  mov.u64 %rd170, %rd164;
+  circle_ntt_warp_fused4_forward_end_168:
+  cvt.u32.u64 %r171, %rd170;
+  mov.u32 %r172, %r171;
+  bra circle_ntt_warp_fused4_forward_end_154;
+  circle_ntt_warp_fused4_forward_else_154:
+  cvt.u64.u32 %rd173, %r81;
+  cvt.u64.u32 %rd174, %r94;
+  mul.lo.u64 %rd175, %rd173, %rd174;
+  mov.u32 %r176, 2147483647;
+  cvt.u64.u32 %rd177, %r176;
+  rem.u64 %rd178, %rd175, %rd177;
+  cvt.u32.u64 %r179, %rd178;
+  cvt.u64.u32 %rd180, %r150;
+  cvt.u64.u32 %rd181, %r179;
+  mov.u32 %r182, 2147483647;
+  cvt.u64.u32 %rd183, %r182;
+  setp.ge.u64 %p184, %rd180, %rd181;
+  @%p184 bra circle_ntt_warp_fused4_forward_then_185;
+  bra circle_ntt_warp_fused4_forward_else_185;
+  circle_ntt_warp_fused4_forward_then_185:
+  sub.u64 %rd186, %rd180, %rd181;
+  mov.u64 %rd187, %rd186;
+  bra circle_ntt_warp_fused4_forward_end_185;
+  circle_ntt_warp_fused4_forward_else_185:
+  add.u64 %rd188, %rd180, %rd183;
+  sub.u64 %rd189, %rd188, %rd181;
+  mov.u64 %rd187, %rd189;
+  circle_ntt_warp_fused4_forward_end_185:
+  cvt.u32.u64 %r190, %rd187;
+  mov.u32 %r172, %r190;
+  circle_ntt_warp_fused4_forward_end_154:
+  mov.u32 %r191, 2147483647;
+  and.b32 %r192, %r172, %r191;
+  mov.u32 %r193, 31;
+  shr.u32 %r194, %r172, %r193;
+  add.u32 %r195, %r192, %r194;
+  setp.ge.u32 %p196, %r195, %r191;
+  @%p196 bra circle_ntt_warp_fused4_forward_then_197;
+  bra circle_ntt_warp_fused4_forward_else_197;
+  circle_ntt_warp_fused4_forward_then_197:
+  sub.u32 %r198, %r195, %r191;
+  mov.u32 %r199, %r198;
+  bra circle_ntt_warp_fused4_forward_end_197;
+  circle_ntt_warp_fused4_forward_else_197:
+  mov.u32 %r199, %r195;
+  circle_ntt_warp_fused4_forward_end_197:
+  cvt.u64.u32 %rd200, %r199;
+  cvt.u32.u64 %r201, %rd25;
+  mov.b64 {%r202, %r203}, %rd200;
+  shfl.sync.bfly.b32 %r204, %r202, %r201, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r205, %r203, %r201, 31, 0xffffffff;
+  mov.b64 %rd206, {%r204, %r205};
+  cvt.u32.u64 %r207, %rd206;
+  mov.u32 %r208, 2147483647;
+  and.b32 %r209, %r207, %r208;
+  mov.u32 %r210, 31;
+  shr.u32 %r211, %r207, %r210;
+  add.u32 %r212, %r209, %r211;
+  setp.ge.u32 %p213, %r212, %r208;
+  @%p213 bra circle_ntt_warp_fused4_forward_then_214;
+  bra circle_ntt_warp_fused4_forward_else_214;
+  circle_ntt_warp_fused4_forward_then_214:
+  sub.u32 %r215, %r212, %r208;
+  mov.u32 %r216, %r215;
+  bra circle_ntt_warp_fused4_forward_end_214;
+  circle_ntt_warp_fused4_forward_else_214:
+  mov.u32 %r216, %r212;
+  circle_ntt_warp_fused4_forward_end_214:
+  and.b64 %rd217, %rd16, %rd25;
+  mov.u64 %rd218, 0;
+  setp.eq.u64 %p219, %rd217, %rd218;
+  @%p219 bra circle_ntt_warp_fused4_forward_then_220;
+  bra circle_ntt_warp_fused4_forward_else_220;
+  circle_ntt_warp_fused4_forward_then_220:
+  cvt.u64.u32 %rd221, %r216;
+  cvt.u64.u32 %rd222, %r107;
+  mul.lo.u64 %rd223, %rd221, %rd222;
+  mov.u32 %r224, 2147483647;
+  cvt.u64.u32 %rd225, %r224;
+  rem.u64 %rd226, %rd223, %rd225;
+  cvt.u32.u64 %r227, %rd226;
+  cvt.u64.u32 %rd228, %r199;
+  cvt.u64.u32 %rd229, %r227;
+  add.u64 %rd230, %rd228, %rd229;
+  mov.u32 %r231, 2147483647;
+  cvt.u64.u32 %rd232, %r231;
+  setp.ge.u64 %p233, %rd230, %rd232;
+  @%p233 bra circle_ntt_warp_fused4_forward_then_234;
+  bra circle_ntt_warp_fused4_forward_else_234;
+  circle_ntt_warp_fused4_forward_then_234:
+  sub.u64 %rd235, %rd230, %rd232;
+  mov.u64 %rd236, %rd235;
+  bra circle_ntt_warp_fused4_forward_end_234;
+  circle_ntt_warp_fused4_forward_else_234:
+  mov.u64 %rd236, %rd230;
+  circle_ntt_warp_fused4_forward_end_234:
+  cvt.u32.u64 %r237, %rd236;
+  mov.u32 %r238, %r237;
+  mov.u32 %r179, %r227; // if wb: prod
+  bra circle_ntt_warp_fused4_forward_end_220;
+  circle_ntt_warp_fused4_forward_else_220:
+  cvt.u64.u32 %rd239, %r199;
+  cvt.u64.u32 %rd240, %r107;
+  mul.lo.u64 %rd241, %rd239, %rd240;
+  mov.u32 %r242, 2147483647;
+  cvt.u64.u32 %rd243, %r242;
+  rem.u64 %rd244, %rd241, %rd243;
+  cvt.u32.u64 %r245, %rd244;
+  cvt.u64.u32 %rd246, %r216;
+  cvt.u64.u32 %rd247, %r245;
+  mov.u32 %r248, 2147483647;
+  cvt.u64.u32 %rd249, %r248;
+  setp.ge.u64 %p250, %rd246, %rd247;
+  @%p250 bra circle_ntt_warp_fused4_forward_then_251;
+  bra circle_ntt_warp_fused4_forward_else_251;
+  circle_ntt_warp_fused4_forward_then_251:
+  sub.u64 %rd252, %rd246, %rd247;
+  mov.u64 %rd253, %rd252;
+  bra circle_ntt_warp_fused4_forward_end_251;
+  circle_ntt_warp_fused4_forward_else_251:
+  add.u64 %rd254, %rd246, %rd249;
+  sub.u64 %rd255, %rd254, %rd247;
+  mov.u64 %rd253, %rd255;
+  circle_ntt_warp_fused4_forward_end_251:
+  cvt.u32.u64 %r256, %rd253;
+  mov.u32 %r238, %r256;
+  mov.u32 %r179, %r245; // if wb: prod
+  circle_ntt_warp_fused4_forward_end_220:
+  mov.u32 %r257, 2147483647;
+  and.b32 %r258, %r238, %r257;
+  mov.u32 %r259, 31;
+  shr.u32 %r260, %r238, %r259;
+  add.u32 %r261, %r258, %r260;
+  setp.ge.u32 %p262, %r261, %r257;
+  @%p262 bra circle_ntt_warp_fused4_forward_then_263;
+  bra circle_ntt_warp_fused4_forward_else_263;
+  circle_ntt_warp_fused4_forward_then_263:
+  sub.u32 %r264, %r261, %r257;
+  mov.u32 %r265, %r264;
+  bra circle_ntt_warp_fused4_forward_end_263;
+  circle_ntt_warp_fused4_forward_else_263:
+  mov.u32 %r265, %r261;
+  circle_ntt_warp_fused4_forward_end_263:
+  cvt.u64.u32 %rd266, %r265;
+  cvt.u32.u64 %r267, %rd31;
+  mov.b64 {%r268, %r269}, %rd266;
+  shfl.sync.bfly.b32 %r270, %r268, %r267, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r271, %r269, %r267, 31, 0xffffffff;
+  mov.b64 %rd272, {%r270, %r271};
+  cvt.u32.u64 %r273, %rd272;
+  mov.u32 %r274, 2147483647;
+  and.b32 %r275, %r273, %r274;
+  mov.u32 %r276, 31;
+  shr.u32 %r277, %r273, %r276;
+  add.u32 %r278, %r275, %r277;
+  setp.ge.u32 %p279, %r278, %r274;
+  @%p279 bra circle_ntt_warp_fused4_forward_then_280;
+  bra circle_ntt_warp_fused4_forward_else_280;
+  circle_ntt_warp_fused4_forward_then_280:
+  sub.u32 %r281, %r278, %r274;
+  mov.u32 %r282, %r281;
+  bra circle_ntt_warp_fused4_forward_end_280;
+  circle_ntt_warp_fused4_forward_else_280:
+  mov.u32 %r282, %r278;
+  circle_ntt_warp_fused4_forward_end_280:
+  and.b64 %rd283, %rd16, %rd31;
+  mov.u64 %rd284, 0;
+  setp.eq.u64 %p285, %rd283, %rd284;
+  @%p285 bra circle_ntt_warp_fused4_forward_then_286;
+  bra circle_ntt_warp_fused4_forward_else_286;
+  circle_ntt_warp_fused4_forward_then_286:
+  cvt.u64.u32 %rd287, %r282;
+  cvt.u64.u32 %rd288, %r120;
+  mul.lo.u64 %rd289, %rd287, %rd288;
+  mov.u32 %r290, 2147483647;
+  cvt.u64.u32 %rd291, %r290;
+  rem.u64 %rd292, %rd289, %rd291;
+  cvt.u32.u64 %r293, %rd292;
+  cvt.u64.u32 %rd294, %r265;
+  cvt.u64.u32 %rd295, %r293;
+  add.u64 %rd296, %rd294, %rd295;
+  mov.u32 %r297, 2147483647;
+  cvt.u64.u32 %rd298, %r297;
+  setp.ge.u64 %p299, %rd296, %rd298;
+  @%p299 bra circle_ntt_warp_fused4_forward_then_300;
+  bra circle_ntt_warp_fused4_forward_else_300;
+  circle_ntt_warp_fused4_forward_then_300:
+  sub.u64 %rd301, %rd296, %rd298;
+  mov.u64 %rd302, %rd301;
+  bra circle_ntt_warp_fused4_forward_end_300;
+  circle_ntt_warp_fused4_forward_else_300:
+  mov.u64 %rd302, %rd296;
+  circle_ntt_warp_fused4_forward_end_300:
+  cvt.u32.u64 %r303, %rd302;
+  mov.u32 %r304, %r303;
+  mov.u32 %r179, %r293; // if wb: prod
+  bra circle_ntt_warp_fused4_forward_end_286;
+  circle_ntt_warp_fused4_forward_else_286:
+  cvt.u64.u32 %rd305, %r265;
+  cvt.u64.u32 %rd306, %r120;
+  mul.lo.u64 %rd307, %rd305, %rd306;
+  mov.u32 %r308, 2147483647;
+  cvt.u64.u32 %rd309, %r308;
+  rem.u64 %rd310, %rd307, %rd309;
+  cvt.u32.u64 %r311, %rd310;
+  cvt.u64.u32 %rd312, %r282;
+  cvt.u64.u32 %rd313, %r311;
+  mov.u32 %r314, 2147483647;
+  cvt.u64.u32 %rd315, %r314;
+  setp.ge.u64 %p316, %rd312, %rd313;
+  @%p316 bra circle_ntt_warp_fused4_forward_then_317;
+  bra circle_ntt_warp_fused4_forward_else_317;
+  circle_ntt_warp_fused4_forward_then_317:
+  sub.u64 %rd318, %rd312, %rd313;
+  mov.u64 %rd319, %rd318;
+  bra circle_ntt_warp_fused4_forward_end_317;
+  circle_ntt_warp_fused4_forward_else_317:
+  add.u64 %rd320, %rd312, %rd315;
+  sub.u64 %rd321, %rd320, %rd313;
+  mov.u64 %rd319, %rd321;
+  circle_ntt_warp_fused4_forward_end_317:
+  cvt.u32.u64 %r322, %rd319;
+  mov.u32 %r304, %r322;
+  mov.u32 %r179, %r311; // if wb: prod
+  circle_ntt_warp_fused4_forward_end_286:
+  mov.u32 %r323, 2147483647;
+  and.b32 %r324, %r304, %r323;
+  mov.u32 %r325, 31;
+  shr.u32 %r326, %r304, %r325;
+  add.u32 %r327, %r324, %r326;
+  setp.ge.u32 %p328, %r327, %r323;
+  @%p328 bra circle_ntt_warp_fused4_forward_then_329;
+  bra circle_ntt_warp_fused4_forward_else_329;
+  circle_ntt_warp_fused4_forward_then_329:
+  sub.u32 %r330, %r327, %r323;
+  mov.u32 %r331, %r330;
+  bra circle_ntt_warp_fused4_forward_end_329;
+  circle_ntt_warp_fused4_forward_else_329:
+  mov.u32 %r331, %r327;
+  circle_ntt_warp_fused4_forward_end_329:
+  cvt.u64.u32 %rd332, %r331;
+  cvt.u32.u64 %r333, %rd37;
+  mov.b64 {%r334, %r335}, %rd332;
+  shfl.sync.bfly.b32 %r336, %r334, %r333, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r337, %r335, %r333, 31, 0xffffffff;
+  mov.b64 %rd338, {%r336, %r337};
+  cvt.u32.u64 %r339, %rd338;
+  mov.u32 %r340, 2147483647;
+  and.b32 %r341, %r339, %r340;
+  mov.u32 %r342, 31;
+  shr.u32 %r343, %r339, %r342;
+  add.u32 %r344, %r341, %r343;
+  setp.ge.u32 %p345, %r344, %r340;
+  @%p345 bra circle_ntt_warp_fused4_forward_then_346;
+  bra circle_ntt_warp_fused4_forward_else_346;
+  circle_ntt_warp_fused4_forward_then_346:
+  sub.u32 %r347, %r344, %r340;
+  mov.u32 %r348, %r347;
+  bra circle_ntt_warp_fused4_forward_end_346;
+  circle_ntt_warp_fused4_forward_else_346:
+  mov.u32 %r348, %r344;
+  circle_ntt_warp_fused4_forward_end_346:
+  and.b64 %rd349, %rd16, %rd37;
+  mov.u64 %rd350, 0;
+  setp.eq.u64 %p351, %rd349, %rd350;
+  @%p351 bra circle_ntt_warp_fused4_forward_then_352;
+  bra circle_ntt_warp_fused4_forward_else_352;
+  circle_ntt_warp_fused4_forward_then_352:
+  cvt.u64.u32 %rd353, %r348;
+  cvt.u64.u32 %rd354, %r133;
+  mul.lo.u64 %rd355, %rd353, %rd354;
+  mov.u32 %r356, 2147483647;
+  cvt.u64.u32 %rd357, %r356;
+  rem.u64 %rd358, %rd355, %rd357;
+  cvt.u32.u64 %r359, %rd358;
+  cvt.u64.u32 %rd360, %r331;
+  cvt.u64.u32 %rd361, %r359;
+  add.u64 %rd362, %rd360, %rd361;
+  mov.u32 %r363, 2147483647;
+  cvt.u64.u32 %rd364, %r363;
+  setp.ge.u64 %p365, %rd362, %rd364;
+  @%p365 bra circle_ntt_warp_fused4_forward_then_366;
+  bra circle_ntt_warp_fused4_forward_else_366;
+  circle_ntt_warp_fused4_forward_then_366:
+  sub.u64 %rd367, %rd362, %rd364;
+  mov.u64 %rd368, %rd367;
+  bra circle_ntt_warp_fused4_forward_end_366;
+  circle_ntt_warp_fused4_forward_else_366:
+  mov.u64 %rd368, %rd362;
+  circle_ntt_warp_fused4_forward_end_366:
+  cvt.u32.u64 %r369, %rd368;
+  mov.u32 %r370, %r369;
+  mov.u32 %r179, %r359; // if wb: prod
+  bra circle_ntt_warp_fused4_forward_end_352;
+  circle_ntt_warp_fused4_forward_else_352:
+  cvt.u64.u32 %rd371, %r331;
+  cvt.u64.u32 %rd372, %r133;
+  mul.lo.u64 %rd373, %rd371, %rd372;
+  mov.u32 %r374, 2147483647;
+  cvt.u64.u32 %rd375, %r374;
+  rem.u64 %rd376, %rd373, %rd375;
+  cvt.u32.u64 %r377, %rd376;
+  cvt.u64.u32 %rd378, %r348;
+  cvt.u64.u32 %rd379, %r377;
+  mov.u32 %r380, 2147483647;
+  cvt.u64.u32 %rd381, %r380;
+  setp.ge.u64 %p382, %rd378, %rd379;
+  @%p382 bra circle_ntt_warp_fused4_forward_then_383;
+  bra circle_ntt_warp_fused4_forward_else_383;
+  circle_ntt_warp_fused4_forward_then_383:
+  sub.u64 %rd384, %rd378, %rd379;
+  mov.u64 %rd385, %rd384;
+  bra circle_ntt_warp_fused4_forward_end_383;
+  circle_ntt_warp_fused4_forward_else_383:
+  add.u64 %rd386, %rd378, %rd381;
+  sub.u64 %rd387, %rd386, %rd379;
+  mov.u64 %rd385, %rd387;
+  circle_ntt_warp_fused4_forward_end_383:
+  cvt.u32.u64 %r388, %rd385;
+  mov.u32 %r370, %r388;
+  mov.u32 %r179, %r377; // if wb: prod
+  circle_ntt_warp_fused4_forward_end_352:
+  mov.u64 %rd389, 4;
+  mul.lo.u64 %rd390, %rd16, %rd389;
+  add.u64 %rd391, %rd0, %rd390;
+  st.global.u32 [%rd391], %r370;
+  mov.u32 %r392, 0; // unit
+  mov.u32 %r393, %r392;
+  bra circle_ntt_warp_fused4_forward_end_68;
+  circle_ntt_warp_fused4_forward_else_68:
+  mov.u32 %r393, 0; // no else branch
+  circle_ntt_warp_fused4_forward_end_68:
+  mov.u32 %r394, 0; // unit
+  mov.u32 %r395, %r394;
+  bra circle_ntt_warp_fused4_forward_end_66;
+  circle_ntt_warp_fused4_forward_else_66:
+  mov.u32 %r395, 0; // no else branch
+  circle_ntt_warp_fused4_forward_end_66:
+  mov.u32 %r396, 0; // unit
+  mov.u32 %r397, %r396;
+  bra circle_ntt_warp_fused4_forward_end_64;
+  circle_ntt_warp_fused4_forward_else_64:
+  mov.u32 %r397, 0; // no else branch
+  circle_ntt_warp_fused4_forward_end_64:
+  mov.u32 %r398, 0; // unit
+  mov.u32 %r399, %r398;
+  bra circle_ntt_warp_fused4_forward_end_62;
+  circle_ntt_warp_fused4_forward_else_62:
+  mov.u32 %r399, 0; // no else branch
+  circle_ntt_warp_fused4_forward_end_62:
+  mov.u32 %r400, 0; // unit
+  mov.u32 %r401, %r400;
+  bra circle_ntt_warp_fused4_forward_end_60;
+  circle_ntt_warp_fused4_forward_else_60:
+  mov.u32 %r401, 0; // no else branch
+  circle_ntt_warp_fused4_forward_end_60:
+  mov.u32 %r402, 0; // unit
+  ret;
+}
+
