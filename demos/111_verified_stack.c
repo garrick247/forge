@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Stack8 Stack8;
+
 typedef struct Stack8 {
   uint64_t s0;
   uint64_t s1;

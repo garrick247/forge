@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PIDIntegral PIDIntegral;
+
 typedef struct PIDIntegral {
   uint64_t integral;
   uint64_t max_integral;

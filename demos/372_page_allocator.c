@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PageAlloc PageAlloc;
+
 typedef struct PageAlloc {
   uint64_t free_pages;
   uint64_t used_pages;

@@ -5,11 +5,11 @@ silently delete history (mark items resolved with date + PR).
 
 ## Tier 1 — CI hygiene across the stack
 
-- [ ] **openptxas/corpus.yml**: references dead `garrick99/forge-workbench`,
-      Windows PowerShell + `C:\Users\kraken\...` paths. Repurpose for the
-      Linux-native runner (label `[self-hosted, gpu, sm_120]` already
-      registered). Convert `pwsh` step to bash, install sibling deps from
-      `/home/garrick/forge-workbench`.
+- [x] ~~**openptxas/corpus.yml**~~: ported to Linux self-hosted runner
+      with sibling forge-workbench install + cross-platform CUDA loader.
+      One kernel (`w2_nested_loop`) hangs the GPU on `cuCtxSynchronize`
+      and is allowlisted in `scripts/known_fail.txt` — separate codegen
+      bug, see Tier 5. (openptxas PR #1, 2026-05-06.)
 - [ ] **VortexSTARK/ci.yml gpu-tests**: hardcoded `/home/runner/.cargo/bin`
       — runner user is `garrick`, not `runner`. Update PATH.
 - [ ] **VortexSTARK + Rust toolchain on the runner**: rustup not yet
@@ -18,21 +18,24 @@ silently delete history (mark items resolved with date + PR).
 
 ## Tier 2 — Forge codegen bugs
 
-Currently 8 quarantined demos (down from 9). Each fails `gcc -fsyntax-only`
+Currently 1 quarantined demo (down from 8). Each fails `gcc -fsyntax-only`
 with a real C error. Listed in `KNOWN_CODEGEN_BUG_RE` in `test/run_all.sh`.
 
 - [x] ~~**1045_old_span_field**~~: span<UserStruct> typedef ordering. Fixed
       by a forward-typedef pass in `emit_program` (PR forthcoming).
-- [ ] **58_modules.c, 62_for_in_iter.c, 64_std_iter.c, 68_enum_methods.c,
-      71_builder_pattern.c, 77_match_guards.c, 78_nested_match.c**:
-      **all blocked by the same root cause** — generic functions are
-      emitted with un-substituted type-param names (T, U, E, F, ...) in
-      forward decls + bodies. Fixing requires real **per-call-site
-      monomorphization** of generic fns (analogous to how
-      `Option<u64>` → `Option_u64` works for enums today). Substantial:
-      walk every ECall with type params, mangle the callee name + emit
-      a concrete copy with substituted body. Estimate: 1-2 days of
-      focused codegen work, plus testing.
+- [x] ~~**58_modules.c, 62_for_in_iter.c, 64_std_iter.c, 68_enum_methods.c,
+      71_builder_pattern.c, 77_match_guards.c, 78_nested_match.c**~~:
+      fixed via call-site-driven generic-fn elision (2026-05-06). The
+      problem: `use std::option;` pulls in `is_some<T>`, `unwrap_or<T>`
+      etc. that the demos never call; they emitted as broken forward
+      decls AND name-collided across modules (std::option::unwrap_or vs
+      std::result::unwrap_or both erased to `void* unwrap_or(...)`).
+      Generic fns now emit only if called by name in some non-generic
+      body; the existing void-erasure of T at `emit_ty` handles the
+      called ones (demo 73 hash_inline with ref-T parameter and friends).
+      Per-call-site monomorphization with type substitution remains
+      future work for any demo that needs to *call* an Option<T>
+      stdlib helper directly — see Tier 5.
 - [ ] **1044_float_smt.c**: `return f(v);` where `f` is `(n: u64) -> u64`
       param. Codegen emits `f` as `uint64_t f` rather than as fn-ptr. Also
       blocked by the same monomorphization gap (TFn types don't get a
@@ -70,16 +73,28 @@ Open questions resolved by user's "everything" instruction:
 
 ## Tier 5 — Followups
 
-- [ ] Generic-function monomorphization (unblocks 7 of the 8 quarantined
-      demos). Big task — separate effort.
+- [ ] Per-call-site generic-function monomorphization with type
+      substitution. The current call-site-driven elision (2026-05-06)
+      handles all demos in the corpus, but a future demo that calls an
+      Option<T> stdlib helper directly would still hit broken `void`
+      params for bare-T positions. Plan: walk ECall sites, build
+      (callee, [ty_args]) set, emit one mangled copy per pair via a
+      substituting body walker. Plan-agent design exists in chat
+      history; estimate ~1 day.
 - [ ] Move the `KNOWN_CODEGEN_BUG_RE` quarantine list out of `run_all.sh`
       into a tracked allowlist file.
 - [ ] Rust toolchain (`rustup`/`cargo`) on the runner box for VortexSTARK.
-- [ ] CUDA toolkit (`nvcc`, `ptxas`) — driver alone doesn't ship the
+- [ ] CUDA toolkit (`nvcc`, `ptxas`) — driver alone does not ship the
       compiler.
+- [ ] **openptxas `w2_nested_loop` codegen**: kernel SASS hangs the GPU
+      on `cuCtxSynchronize` (15s subprocess timeout in `corpus_sweep.py`).
+      Allowlisted in `openptxas/scripts/known_fail.txt`. Currently
+      single-kernel quarantine; root-cause + fix unknown.
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 generic-fn elision: 7 demos out of quarantine (PR forthcoming)
+- ✅ 2026-05-06 openptxas PR #1: corpus workflow + sweep ported to Linux runner
 - ✅ 2026-05-06 4-layer fused NTT + 1045 codegen fix (PR forthcoming)
 - ✅ 2026-05-06 PR #4: 2-layer fused NTT + pointer-safety design proposal
 - ✅ 2026-05-06 PR #3: parallel test suite (18m → 1m53s) + demo 823 fix

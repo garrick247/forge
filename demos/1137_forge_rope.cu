@@ -92,12 +92,12 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 4
-   [ASSUME] demos/1137_forge_rope.fg:48  (< idx_e inp__len)
+   [ASSUME] /home/garrick/forge/demos/1137_forge_rope.fg:48  (< idx_e inp__len)
              "pos<seq_len + lane<16 + seq_len*32<=inp.len → idx_e<inp.len"
-   [ASSUME] demos/1137_forge_rope.fg:49  (< idx_o inp__len)
+   [ASSUME] /home/garrick/forge/demos/1137_forge_rope.fg:49  (< idx_o inp__len)
              "same chain (idx_o = idx_e + 1 < base + 32)"
-   [ASSUME] demos/1137_forge_rope.fg:58  (< idx_e out__len)
+   [ASSUME] /home/garrick/forge/demos/1137_forge_rope.fg:58  (< idx_e out__len)
              "mirrors inp bounds"
-   [ASSUME] demos/1137_forge_rope.fg:59  (< idx_o out__len)
+   [ASSUME] /home/garrick/forge/demos/1137_forge_rope.fg:59  (< idx_o out__len)
              "mirrors inp bounds"
    ---- END AUDIT LOG ---- */

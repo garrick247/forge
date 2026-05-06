@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct CacheStats CacheStats;
+
 typedef struct CacheStats {
   uint64_t hits;
   uint64_t misses;

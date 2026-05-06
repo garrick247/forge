@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FibState FibState;
+
 typedef struct FibState {
   uint64_t a;
   uint64_t b;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct CreditAccount CreditAccount;
+
 typedef struct CreditAccount {
   uint64_t limit;
   uint64_t debt;

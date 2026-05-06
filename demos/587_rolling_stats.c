@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RollingStats RollingStats;
+
 typedef struct RollingStats {
   uint64_t min_val;
   uint64_t max_val;

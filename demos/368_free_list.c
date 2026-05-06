@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FreeList FreeList;
+
 typedef struct FreeList {
   uint64_t free;
   uint64_t allocated;

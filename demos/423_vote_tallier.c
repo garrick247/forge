@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Tally Tally;
+
 typedef struct Tally {
   uint64_t votes_a;
   uint64_t votes_b;

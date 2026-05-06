@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Range Range;
+
 typedef struct Range {
   uint64_t lo;
   uint64_t hi;

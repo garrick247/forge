@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Scheduler Scheduler;
+
 typedef struct Scheduler {
   uint64_t hi_count;
   uint64_t lo_count;

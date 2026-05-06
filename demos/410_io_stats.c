@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct IOStats IOStats;
+
 typedef struct IOStats {
   uint64_t read_bytes;
   uint64_t write_bytes;

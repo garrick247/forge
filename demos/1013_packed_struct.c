@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct IpHeader IpHeader;
+
 typedef struct __attribute__((packed)) IpHeader {
   uint64_t version_ihl;
   uint64_t tos;

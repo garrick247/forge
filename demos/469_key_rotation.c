@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct KeyRotation KeyRotation;
+
 typedef struct KeyRotation {
   uint64_t version;
   uint64_t use_count;

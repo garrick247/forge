@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct VoteQuorum VoteQuorum;
+
 typedef struct VoteQuorum {
   uint64_t voters;
   uint64_t quorum;

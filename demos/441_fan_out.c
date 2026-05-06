@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FanOut FanOut;
+
 typedef struct FanOut {
   uint64_t dispatched;
   uint64_t sub_a;

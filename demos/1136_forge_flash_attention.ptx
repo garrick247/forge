@@ -19,10 +19,10 @@
     .param .u64 flash_attention_param_seq_len
 )
 {
-    .reg .pred %p100, %p173, %p34, %p43, %p68, %p75, %p82, %p89, %p96;
-    .reg .f32 %f102, %f103, %f104, %f105, %f106, %f107, %f108, %f109, %f112, %f113, %f116, %f117, %f120, %f121, %f124, %f125, %f128, %f129, %f130, %f131, %f139, %f140, %f141, %f144, %f145, %f148, %f149, %f152, %f153, %f156, %f157, %f160, %f161, %f162, %f163, %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f39, %f50, %f57, %f58, %f59, %f63, %f64, %f67, %f74, %f81, %f88, %f95;
-    .reg .u32 %r11, %r111, %r115, %r119, %r123, %r127, %r13, %r132, %r143, %r147, %r151, %r155, %r159, %r166, %r167, %r17, %r175, %r179, %r180, %r181, %r31, %r37, %r44, %r45, %r62, %r66, %r70, %r71, %r73, %r77, %r78, %r80, %r84, %r85, %r87, %r91, %r92, %r94, %r98, %r99;
-    .reg .u64 %rd0, %rd1, %rd10, %rd110, %rd114, %rd118, %rd12, %rd122, %rd126, %rd133, %rd134, %rd135, %rd136, %rd137, %rd138, %rd14, %rd142, %rd146, %rd15, %rd150, %rd154, %rd158, %rd16, %rd164, %rd165, %rd168, %rd169, %rd170, %rd171, %rd172, %rd176, %rd177, %rd178, %rd18, %rd19, %rd2, %rd20, %rd21, %rd29, %rd3, %rd30, %rd32, %rd35, %rd36, %rd38, %rd4, %rd40, %rd42, %rd46, %rd47, %rd48, %rd49, %rd5, %rd51, %rd52, %rd53, %rd54, %rd55, %rd56, %rd6, %rd60, %rd61, %rd65, %rd7, %rd72, %rd79, %rd8, %rd86, %rd9, %rd93;
+    .reg .pred %p170, %p34, %p43, %p67, %p74, %p81, %p88, %p95, %p99;
+    .reg .f32 %f101, %f102, %f103, %f104, %f105, %f106, %f107, %f110, %f111, %f114, %f115, %f118, %f119, %f122, %f123, %f126, %f127, %f128, %f129, %f137, %f138, %f141, %f142, %f145, %f146, %f149, %f150, %f153, %f154, %f157, %f158, %f159, %f160, %f22, %f23, %f24, %f25, %f26, %f27, %f28, %f39, %f50, %f57, %f58, %f59, %f63, %f66, %f73, %f80, %f87, %f94;
+    .reg .u32 %r109, %r11, %r113, %r117, %r121, %r125, %r13, %r130, %r140, %r144, %r148, %r152, %r156, %r163, %r164, %r17, %r172, %r176, %r177, %r178, %r31, %r37, %r44, %r45, %r62, %r65, %r69, %r70, %r72, %r76, %r77, %r79, %r83, %r84, %r86, %r90, %r91, %r93, %r97, %r98;
+    .reg .u64 %rd0, %rd1, %rd10, %rd108, %rd112, %rd116, %rd12, %rd120, %rd124, %rd131, %rd132, %rd133, %rd134, %rd135, %rd136, %rd139, %rd14, %rd143, %rd147, %rd15, %rd151, %rd155, %rd16, %rd161, %rd162, %rd165, %rd166, %rd167, %rd168, %rd169, %rd173, %rd174, %rd175, %rd18, %rd19, %rd2, %rd20, %rd21, %rd29, %rd3, %rd30, %rd32, %rd35, %rd36, %rd38, %rd4, %rd40, %rd42, %rd46, %rd47, %rd48, %rd49, %rd5, %rd51, %rd52, %rd53, %rd54, %rd55, %rd56, %rd6, %rd60, %rd61, %rd64, %rd7, %rd71, %rd78, %rd8, %rd85, %rd9, %rd92;
 
   ld.param.u64 %rd0, [flash_attention_param_Q_data];
   ld.param.u64 %rd1, [flash_attention_param_Q_len];
@@ -95,179 +95,176 @@
   flash_attention_loop_end_41:
   mov.u32 %r62, 0; // unit
   mul.f32 %f63, %f39, %f24;
-  mov.b32 %f64, %f63; // param: val
-  mov.u64 %rd65, 16;
-  cvt.u32.u64 %r66, %rd65;
-  shfl.sync.bfly.b32 %f67, %f64, %r66, 31, 0xffffffff;
-  setp.gt.f32 %p68, %f67, %f64;
-  @%p68 bra flash_attention_then_69;
-  bra flash_attention_else_69;
-  flash_attention_then_69:
-  mov.u32 %r70, 0; // unit
-  mov.u32 %r71, %r70;
-  mov.f32 %f64, %f67; // if wb: v
-  bra flash_attention_end_69;
-  flash_attention_else_69:
-  mov.u32 %r71, 0; // no else branch
-  flash_attention_end_69:
-  mov.u64 %rd72, 8;
-  cvt.u32.u64 %r73, %rd72;
-  shfl.sync.bfly.b32 %f74, %f64, %r73, 31, 0xffffffff;
-  setp.gt.f32 %p75, %f74, %f64;
-  @%p75 bra flash_attention_then_76;
-  bra flash_attention_else_76;
-  flash_attention_then_76:
-  mov.u32 %r77, 0; // unit
-  mov.u32 %r78, %r77;
-  mov.f32 %f64, %f74; // if wb: v
-  bra flash_attention_end_76;
-  flash_attention_else_76:
-  mov.u32 %r78, 0; // no else branch
-  flash_attention_end_76:
-  mov.u64 %rd79, 4;
-  cvt.u32.u64 %r80, %rd79;
-  shfl.sync.bfly.b32 %f81, %f64, %r80, 31, 0xffffffff;
-  setp.gt.f32 %p82, %f81, %f64;
-  @%p82 bra flash_attention_then_83;
-  bra flash_attention_else_83;
-  flash_attention_then_83:
-  mov.u32 %r84, 0; // unit
-  mov.u32 %r85, %r84;
-  mov.f32 %f64, %f81; // if wb: v
-  bra flash_attention_end_83;
-  flash_attention_else_83:
-  mov.u32 %r85, 0; // no else branch
-  flash_attention_end_83:
-  mov.u64 %rd86, 2;
-  cvt.u32.u64 %r87, %rd86;
-  shfl.sync.bfly.b32 %f88, %f64, %r87, 31, 0xffffffff;
-  setp.gt.f32 %p89, %f88, %f64;
-  @%p89 bra flash_attention_then_90;
-  bra flash_attention_else_90;
-  flash_attention_then_90:
-  mov.u32 %r91, 0; // unit
-  mov.u32 %r92, %r91;
-  mov.f32 %f64, %f88; // if wb: v
-  bra flash_attention_end_90;
-  flash_attention_else_90:
-  mov.u32 %r92, 0; // no else branch
-  flash_attention_end_90:
-  mov.u64 %rd93, 1;
-  cvt.u32.u64 %r94, %rd93;
-  shfl.sync.bfly.b32 %f95, %f64, %r94, 31, 0xffffffff;
-  setp.gt.f32 %p96, %f95, %f64;
-  @%p96 bra flash_attention_then_97;
-  bra flash_attention_else_97;
-  flash_attention_then_97:
-  mov.u32 %r98, 0; // unit
-  mov.u32 %r99, %r98;
-  mov.f32 %f64, %f95; // if wb: v
-  bra flash_attention_end_97;
-  flash_attention_else_97:
-  mov.u32 %r99, 0; // no else branch
-  flash_attention_end_97:
-  setp.gt.f32 %p100, %f64, %f26;
-  @%p100 bra flash_attention_then_101;
-  bra flash_attention_else_101;
-  flash_attention_then_101:
-  mov.f32 %f102, %f64;
-  bra flash_attention_end_101;
-  flash_attention_else_101:
-  mov.f32 %f102, %f26;
-  flash_attention_end_101:
-  sub.f32 %f103, %f26, %f102;
-  mul.rn.f32 %f104, %f103, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f105, %f104;
-  sub.f32 %f106, %f63, %f102;
-  mul.rn.f32 %f107, %f106, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f108, %f107;
-  mov.b32 %f109, %f108; // param: val
-  mov.u64 %rd110, 16;
-  cvt.u32.u64 %r111, %rd110;
-  shfl.sync.bfly.b32 %f112, %f109, %r111, 31, 0xffffffff;
-  add.f32 %f113, %f109, %f112;
-  mov.u64 %rd114, 8;
-  cvt.u32.u64 %r115, %rd114;
-  shfl.sync.bfly.b32 %f116, %f113, %r115, 31, 0xffffffff;
-  add.f32 %f117, %f113, %f116;
-  mov.u64 %rd118, 4;
-  cvt.u32.u64 %r119, %rd118;
-  shfl.sync.bfly.b32 %f120, %f117, %r119, 31, 0xffffffff;
-  add.f32 %f121, %f117, %f120;
-  mov.u64 %rd122, 2;
-  cvt.u32.u64 %r123, %rd122;
-  shfl.sync.bfly.b32 %f124, %f121, %r123, 31, 0xffffffff;
-  add.f32 %f125, %f121, %f124;
-  mov.u64 %rd126, 1;
-  cvt.u32.u64 %r127, %rd126;
-  shfl.sync.bfly.b32 %f128, %f125, %r127, 31, 0xffffffff;
-  add.f32 %f129, %f125, %f128;
-  mul.f32 %f130, %f105, %f27;
-  add.f32 %f131, %f130, %f129;
-  mov.u32 %r132, 0; // proof/assume erased
-  mov.u64 %rd133, 32;
-  mul.lo.u64 %rd134, %rd38, %rd133;
-  add.u64 %rd135, %rd134, %rd12;
-  mov.u64 %rd136, 4;
-  mul.lo.u64 %rd137, %rd135, %rd136;
-  add.u64 %rd138, %rd4, %rd137;
-  ld.global.f32 %f139, [%rd138];
-  mul.f32 %f140, %f108, %f139;
-  mov.b32 %f141, %f140; // param: val
-  mov.u64 %rd142, 16;
-  cvt.u32.u64 %r143, %rd142;
-  shfl.sync.bfly.b32 %f144, %f141, %r143, 31, 0xffffffff;
-  add.f32 %f145, %f141, %f144;
-  mov.u64 %rd146, 8;
-  cvt.u32.u64 %r147, %rd146;
-  shfl.sync.bfly.b32 %f148, %f145, %r147, 31, 0xffffffff;
-  add.f32 %f149, %f145, %f148;
-  mov.u64 %rd150, 4;
-  cvt.u32.u64 %r151, %rd150;
-  shfl.sync.bfly.b32 %f152, %f149, %r151, 31, 0xffffffff;
-  add.f32 %f153, %f149, %f152;
-  mov.u64 %rd154, 2;
-  cvt.u32.u64 %r155, %rd154;
-  shfl.sync.bfly.b32 %f156, %f153, %r155, 31, 0xffffffff;
-  add.f32 %f157, %f153, %f156;
-  mov.u64 %rd158, 1;
-  cvt.u32.u64 %r159, %rd158;
-  shfl.sync.bfly.b32 %f160, %f157, %r159, 31, 0xffffffff;
-  add.f32 %f161, %f157, %f160;
-  mul.f32 %f162, %f105, %f28;
-  add.f32 %f163, %f162, %f161;
-  mov.u64 %rd164, 1;
-  add.u64 %rd165, %rd32, %rd164;
-  mov.f32 %f26, %f102; // loop wb: m_running
-  mov.f32 %f27, %f131; // loop wb: l_running
-  mov.f32 %f28, %f163; // loop wb: o_acc
-  mov.u64 %rd32, %rd165; // loop wb: t
+  mov.u64 %rd64, 16;
+  cvt.u32.u64 %r65, %rd64;
+  shfl.sync.bfly.b32 %f66, %f63, %r65, 31, 0xffffffff;
+  setp.gt.f32 %p67, %f66, %f63;
+  @%p67 bra flash_attention_then_68;
+  bra flash_attention_else_68;
+  flash_attention_then_68:
+  mov.u32 %r69, 0; // unit
+  mov.u32 %r70, %r69;
+  mov.f32 %f63, %f66; // if wb: v
+  bra flash_attention_end_68;
+  flash_attention_else_68:
+  mov.u32 %r70, 0; // no else branch
+  flash_attention_end_68:
+  mov.u64 %rd71, 8;
+  cvt.u32.u64 %r72, %rd71;
+  shfl.sync.bfly.b32 %f73, %f63, %r72, 31, 0xffffffff;
+  setp.gt.f32 %p74, %f73, %f63;
+  @%p74 bra flash_attention_then_75;
+  bra flash_attention_else_75;
+  flash_attention_then_75:
+  mov.u32 %r76, 0; // unit
+  mov.u32 %r77, %r76;
+  mov.f32 %f63, %f73; // if wb: v
+  bra flash_attention_end_75;
+  flash_attention_else_75:
+  mov.u32 %r77, 0; // no else branch
+  flash_attention_end_75:
+  mov.u64 %rd78, 4;
+  cvt.u32.u64 %r79, %rd78;
+  shfl.sync.bfly.b32 %f80, %f63, %r79, 31, 0xffffffff;
+  setp.gt.f32 %p81, %f80, %f63;
+  @%p81 bra flash_attention_then_82;
+  bra flash_attention_else_82;
+  flash_attention_then_82:
+  mov.u32 %r83, 0; // unit
+  mov.u32 %r84, %r83;
+  mov.f32 %f63, %f80; // if wb: v
+  bra flash_attention_end_82;
+  flash_attention_else_82:
+  mov.u32 %r84, 0; // no else branch
+  flash_attention_end_82:
+  mov.u64 %rd85, 2;
+  cvt.u32.u64 %r86, %rd85;
+  shfl.sync.bfly.b32 %f87, %f63, %r86, 31, 0xffffffff;
+  setp.gt.f32 %p88, %f87, %f63;
+  @%p88 bra flash_attention_then_89;
+  bra flash_attention_else_89;
+  flash_attention_then_89:
+  mov.u32 %r90, 0; // unit
+  mov.u32 %r91, %r90;
+  mov.f32 %f63, %f87; // if wb: v
+  bra flash_attention_end_89;
+  flash_attention_else_89:
+  mov.u32 %r91, 0; // no else branch
+  flash_attention_end_89:
+  mov.u64 %rd92, 1;
+  cvt.u32.u64 %r93, %rd92;
+  shfl.sync.bfly.b32 %f94, %f63, %r93, 31, 0xffffffff;
+  setp.gt.f32 %p95, %f94, %f63;
+  @%p95 bra flash_attention_then_96;
+  bra flash_attention_else_96;
+  flash_attention_then_96:
+  mov.u32 %r97, 0; // unit
+  mov.u32 %r98, %r97;
+  mov.f32 %f63, %f94; // if wb: v
+  bra flash_attention_end_96;
+  flash_attention_else_96:
+  mov.u32 %r98, 0; // no else branch
+  flash_attention_end_96:
+  setp.gt.f32 %p99, %f63, %f26;
+  @%p99 bra flash_attention_then_100;
+  bra flash_attention_else_100;
+  flash_attention_then_100:
+  mov.f32 %f101, %f63;
+  bra flash_attention_end_100;
+  flash_attention_else_100:
+  mov.f32 %f101, %f26;
+  flash_attention_end_100:
+  sub.f32 %f102, %f26, %f101;
+  mul.rn.f32 %f103, %f102, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f104, %f103;
+  sub.f32 %f105, %f63, %f101;
+  mul.rn.f32 %f106, %f105, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f107, %f106;
+  mov.u64 %rd108, 16;
+  cvt.u32.u64 %r109, %rd108;
+  shfl.sync.bfly.b32 %f110, %f107, %r109, 31, 0xffffffff;
+  add.f32 %f111, %f107, %f110;
+  mov.u64 %rd112, 8;
+  cvt.u32.u64 %r113, %rd112;
+  shfl.sync.bfly.b32 %f114, %f111, %r113, 31, 0xffffffff;
+  add.f32 %f115, %f111, %f114;
+  mov.u64 %rd116, 4;
+  cvt.u32.u64 %r117, %rd116;
+  shfl.sync.bfly.b32 %f118, %f115, %r117, 31, 0xffffffff;
+  add.f32 %f119, %f115, %f118;
+  mov.u64 %rd120, 2;
+  cvt.u32.u64 %r121, %rd120;
+  shfl.sync.bfly.b32 %f122, %f119, %r121, 31, 0xffffffff;
+  add.f32 %f123, %f119, %f122;
+  mov.u64 %rd124, 1;
+  cvt.u32.u64 %r125, %rd124;
+  shfl.sync.bfly.b32 %f126, %f123, %r125, 31, 0xffffffff;
+  add.f32 %f127, %f123, %f126;
+  mul.f32 %f128, %f104, %f27;
+  add.f32 %f129, %f128, %f127;
+  mov.u32 %r130, 0; // proof/assume erased
+  mov.u64 %rd131, 32;
+  mul.lo.u64 %rd132, %rd38, %rd131;
+  add.u64 %rd133, %rd132, %rd12;
+  mov.u64 %rd134, 4;
+  mul.lo.u64 %rd135, %rd133, %rd134;
+  add.u64 %rd136, %rd4, %rd135;
+  ld.global.f32 %f137, [%rd136];
+  mul.f32 %f138, %f107, %f137;
+  mov.u64 %rd139, 16;
+  cvt.u32.u64 %r140, %rd139;
+  shfl.sync.bfly.b32 %f141, %f138, %r140, 31, 0xffffffff;
+  add.f32 %f142, %f138, %f141;
+  mov.u64 %rd143, 8;
+  cvt.u32.u64 %r144, %rd143;
+  shfl.sync.bfly.b32 %f145, %f142, %r144, 31, 0xffffffff;
+  add.f32 %f146, %f142, %f145;
+  mov.u64 %rd147, 4;
+  cvt.u32.u64 %r148, %rd147;
+  shfl.sync.bfly.b32 %f149, %f146, %r148, 31, 0xffffffff;
+  add.f32 %f150, %f146, %f149;
+  mov.u64 %rd151, 2;
+  cvt.u32.u64 %r152, %rd151;
+  shfl.sync.bfly.b32 %f153, %f150, %r152, 31, 0xffffffff;
+  add.f32 %f154, %f150, %f153;
+  mov.u64 %rd155, 1;
+  cvt.u32.u64 %r156, %rd155;
+  shfl.sync.bfly.b32 %f157, %f154, %r156, 31, 0xffffffff;
+  add.f32 %f158, %f154, %f157;
+  mul.f32 %f159, %f104, %f28;
+  add.f32 %f160, %f159, %f158;
+  mov.u64 %rd161, 1;
+  add.u64 %rd162, %rd32, %rd161;
+  mov.f32 %f26, %f101; // loop wb: m_running
+  mov.f32 %f27, %f129; // loop wb: l_running
+  mov.f32 %f28, %f160; // loop wb: o_acc
+  mov.u64 %rd32, %rd162; // loop wb: t
   bra flash_attention_loop_33;
   flash_attention_loop_end_33:
-  mov.u32 %r166, 0; // unit
-  mov.u32 %r167, 0; // proof/assume erased
-  add.u64 %rd168, %rd16, %rd12;
-  mov.u64 %rd169, 4;
-  mul.lo.u64 %rd170, %rd168, %rd169;
-  add.u64 %rd171, %rd6, %rd170;
-  st.global.f32 [%rd171], %f28;
-  mov.u64 %rd172, 0;
-  setp.eq.u64 %p173, %rd12, %rd172;
-  @%p173 bra flash_attention_then_174;
-  bra flash_attention_else_174;
-  flash_attention_then_174:
-  mov.u32 %r175, 0; // proof/assume erased
-  mov.u64 %rd176, 4;
-  mul.lo.u64 %rd177, %rd14, %rd176;
-  add.u64 %rd178, %rd8, %rd177;
-  st.global.f32 [%rd178], %f27;
-  mov.u32 %r179, 0; // unit
-  mov.u32 %r180, %r179;
-  bra flash_attention_end_174;
-  flash_attention_else_174:
-  mov.u32 %r180, 0; // no else branch
-  flash_attention_end_174:
-  mov.u32 %r181, 0; // unit
+  mov.u32 %r163, 0; // unit
+  mov.u32 %r164, 0; // proof/assume erased
+  add.u64 %rd165, %rd16, %rd12;
+  mov.u64 %rd166, 4;
+  mul.lo.u64 %rd167, %rd165, %rd166;
+  add.u64 %rd168, %rd6, %rd167;
+  st.global.f32 [%rd168], %f28;
+  mov.u64 %rd169, 0;
+  setp.eq.u64 %p170, %rd12, %rd169;
+  @%p170 bra flash_attention_then_171;
+  bra flash_attention_else_171;
+  flash_attention_then_171:
+  mov.u32 %r172, 0; // proof/assume erased
+  mov.u64 %rd173, 4;
+  mul.lo.u64 %rd174, %rd14, %rd173;
+  add.u64 %rd175, %rd8, %rd174;
+  st.global.f32 [%rd175], %f27;
+  mov.u32 %r176, 0; // unit
+  mov.u32 %r177, %r176;
+  bra flash_attention_end_171;
+  flash_attention_else_171:
+  mov.u32 %r177, 0; // no else branch
+  flash_attention_end_171:
+  mov.u32 %r178, 0; // unit
   ret;
 }
 

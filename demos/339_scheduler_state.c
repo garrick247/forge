@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Sched Sched;
+
 typedef struct Sched {
   uint64_t current;
   uint64_t count;

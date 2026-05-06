@@ -12,6 +12,18 @@
 
 open Ast
 
+(* True if this fn has any KType / KBounded generic parameters.
+   Generic free fns and generic impl methods are erased from C output:
+   they are emitted neither as forward declarations nor as bodies, and
+   their parameter/return types are not walked when collecting concrete
+   generic-type instantiations. Demos that need to *call* such a fn
+   define their own concrete copy; per-call-site monomorphization is
+   a future-work item documented in docs/whiteboard.md. *)
+let is_generic_fn (fn : fn_def) =
+  List.exists (fun (_, k) ->
+    match k with KType | KBounded _ -> true | _ -> false
+  ) fn.fn_generics
+
 (* ------------------------------------------------------------------ *)
 (* Type name mangling — produces a C-identifier-safe name for a type  *)
 (* ------------------------------------------------------------------ *)
@@ -342,6 +354,7 @@ and collect_fn_ptr_in_stmt acc s =
 let collect_fn_ptr_types items =
   List.fold_left (fun acc item ->
     match item.item_desc with
+    | IFn fn when is_generic_fn fn -> acc  (* generic fns erased; skip *)
     | IFn fn ->
         let acc = List.fold_left (fun a (_, t) -> collect_fn_ptr_tys a t) acc fn.fn_params in
         let acc = collect_fn_ptr_tys acc fn.fn_ret in
@@ -2486,6 +2499,11 @@ and collect_generic_named_stmt acc s =
 
 let rec collect_generic_named_item acc item =
   match item.item_desc with
+  | IFn fn when is_generic_fn fn ->
+      (* Generic fn bodies reference their type parameters as TNamed(T,[])
+         which would otherwise generate spurious Option_T / Option_U typedefs.
+         Generic fns are erased from codegen; their bodies are not walked. *)
+      acc
   | IFn fn ->
       let acc = List.fold_left (fun a (_, t) -> collect_generic_named a t) acc fn.fn_params in
       let acc = collect_generic_named acc fn.fn_ret in
@@ -2809,6 +2827,71 @@ let emit_program ?(lib_mode=false) prog =
     else
       all_fns
   in
+  (* Generic-fn emission policy: emit a generic fn IFF it is called
+     somewhere in the program by name (free-fn ECall through EVar).
+     Demos like 73_where_clauses define their own generic helpers and
+     call them with concrete types; the existing void-erasure of T at
+     emit_ty already produces compilable C for those (param ref<T>
+     becomes const void*, etc.). Demos like 62_for_in_iter only IMPORT
+     std::option helpers via `use std::option;` and never call them;
+     emitting the unused fns produces invalid C (e.g. `void default`)
+     and name conflicts (std::option::unwrap_or vs std::result::unwrap_or
+     both erase to `void* unwrap_or(...)`). Skipping uncalled generics
+     dodges both. Per-call-site monomorphization (substituting a
+     concrete body per (callee, ty_args)) remains future work for any
+     demo that needs to *call* an Option<T> stdlib helper directly. *)
+  let called_names =
+    let rec walk_e acc e =
+      let acc = walk_d acc e.expr_desc in acc
+    and walk_d acc = function
+      | ELit _ | EVar _ | ESync -> acc
+      | EBinop (_, l, r) -> walk_e (walk_e acc l) r
+      | EUnop (_, e) | ERef e | ERefMut e | EDeref e -> walk_e acc e
+      | ECast (e, _) -> walk_e acc e
+      | ECall ({ expr_desc = EVar id; _ }, args) ->
+          let acc = id.name :: acc in
+          List.fold_left walk_e acc args
+      | ECall (f, args) -> List.fold_left walk_e (walk_e acc f) args
+      | EIndex (a, i) -> walk_e (walk_e acc a) i
+      | EField (e, _) | EField_n (e, _) -> walk_e acc e
+      | EAssign (l, r) -> walk_e (walk_e acc l) r
+      | EBlock (stmts, ret) ->
+          let acc = List.fold_left walk_s acc stmts in
+          (match ret with Some e -> walk_e acc e | None -> acc)
+      | EIf (c, t, e) ->
+          let acc = walk_e (walk_e acc c) t in
+          (match e with Some e -> walk_e acc e | None -> acc)
+      | EMatch (s, arms) ->
+          let acc = walk_e acc s in
+          List.fold_left (fun a arm -> walk_e a arm.body) acc arms
+      | EStruct (_, inits) ->
+          List.fold_left (fun a (_, e) -> walk_e a e) acc inits
+      | EArrayLit es -> List.fold_left walk_e acc es
+      | EArrayRepeat (v, n) -> walk_e (walk_e acc v) n
+      | ETuple es -> List.fold_left walk_e acc es
+      | ESubspan (e2, lo, hi) -> List.fold_left walk_e acc [e2; lo; hi]
+      | ERange (lo, hi) -> walk_e (walk_e acc lo) hi
+      | ELoop ss -> List.fold_left walk_s acc ss
+      | ELambda (_, body, _) -> walk_e acc body
+      | EProof _ | ERaw _ | EAssume _ | EAssert _ | EAsm _ -> acc
+    and walk_s acc s = match s.stmt_desc with
+      | SGhost _ | SGhostAssign _ -> acc
+      | SLet (_, _, e, _) | SExpr e | SReturn (Some e) -> walk_e acc e
+      | SReturn None | SBreak None | SContinue -> acc
+      | SBreak (Some e) -> walk_e acc e
+      | SWhile (c, _, _, body) ->
+          let acc = walk_e acc c in List.fold_left walk_s acc body
+      | SFor (_, iter, _, _, body) ->
+          let acc = walk_e acc iter in List.fold_left walk_s acc body
+    in
+    List.fold_left (fun acc fn ->
+      if is_generic_fn fn then acc
+      else match fn.fn_body with Some b -> walk_e acc b | None -> acc
+    ) [] all_fns
+  in
+  let all_fns = List.filter (fun fn ->
+    not (is_generic_fn fn) || List.mem fn.fn_name.name called_names
+  ) all_fns in
   (* Pass 2: forward declarations for all functions with bodies *)
   if all_fns <> [] then begin
     Buffer.add_string buf "/* Forward declarations */\n";

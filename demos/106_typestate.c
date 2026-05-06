@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ConnState ConnState;
+typedef struct Connection Connection;
+
 typedef enum {
   ConnState_tag_Closed = 0,
   ConnState_tag_Listening = 1,

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct SessionTracker SessionTracker;
+
 typedef struct SessionTracker {
   uint64_t active;
   uint64_t total_sessions;

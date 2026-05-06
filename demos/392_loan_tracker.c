@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Loan Loan;
+
 typedef struct Loan {
   uint64_t principal;
   uint64_t accrued;

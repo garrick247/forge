@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Priority Priority;
+
 typedef struct Priority {
   uint64_t level;
   uint64_t max;

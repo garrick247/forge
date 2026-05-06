@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct AckTracker AckTracker;
+
 typedef struct AckTracker {
   uint64_t next_send;
   uint64_t ack_up_to;

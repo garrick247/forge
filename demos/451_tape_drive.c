@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct TapeDrive TapeDrive;
+
 typedef struct TapeDrive {
   uint64_t position;
   uint64_t length;

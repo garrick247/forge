@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PIDState PIDState;
+
 typedef struct PIDState {
   uint64_t integral;
   uint64_t prev_error;

@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Point2D Point2D;
+typedef struct Point1D Point1D;
+
 
 typedef struct Point2D {
   uint64_t x;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ProtocolState ProtocolState;
+
 typedef struct ProtocolState {
   uint64_t init_to_neg;
   uint64_t neg_to_est;

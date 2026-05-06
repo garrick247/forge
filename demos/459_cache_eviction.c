@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct CacheEviction CacheEviction;
+
 typedef struct CacheEviction {
   uint64_t used;
   uint64_t capacity;

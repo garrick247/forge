@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct LRUCache LRUCache;
+
 typedef struct LRUCache {
   uint64_t occupancy;
   uint64_t capacity;

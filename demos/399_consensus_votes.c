@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ConsensusRound ConsensusRound;
+
 typedef struct ConsensusRound {
   uint64_t yes;
   uint64_t no;

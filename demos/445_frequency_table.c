@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FreqTable FreqTable;
+
 typedef struct FreqTable {
   uint64_t count_a;
   uint64_t count_b;

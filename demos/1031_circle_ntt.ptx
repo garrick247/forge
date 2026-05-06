@@ -13,9 +13,9 @@
     .param .u64 cfft_butterfly_kernel_param_half_n
 )
 {
-    .reg .pred %p11, %p44, %p55;
-    .reg .u32 %r21, %r29, %r36, %r37, %r38, %r42, %r48, %r49, %r5, %r50, %r53, %r6, %r61, %r62, %r63, %r67, %r7, %r70, %r78, %r79, %r8, %r80, %r9;
-    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd22, %rd23, %rd24, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd31, %rd32, %rd33, %rd34, %rd35, %rd39, %rd4, %rd40, %rd41, %rd43, %rd46, %rd47, %rd51, %rd52, %rd54, %rd57, %rd58, %rd59, %rd60, %rd64, %rd65, %rd66, %rd68, %rd69, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77;
+    .reg .pred %p11, %p36, %p45;
+    .reg .u32 %r19, %r25, %r30, %r34, %r40, %r43, %r5, %r51, %r55, %r58, %r6, %r66, %r67, %r68, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd28, %rd29, %rd3, %rd31, %rd32, %rd33, %rd35, %rd38, %rd39, %rd4, %rd41, %rd42, %rd44, %rd47, %rd48, %rd49, %rd50, %rd52, %rd53, %rd54, %rd56, %rd57, %rd59, %rd60, %rd61, %rd62, %rd63, %rd64, %rd65;
 
   ld.param.u64 %rd0, [cfft_butterfly_kernel_param_data_data];
   ld.param.u64 %rd1, [cfft_butterfly_kernel_param_data_len];
@@ -35,90 +35,78 @@
   cfft_butterfly_kernel_then_12:
   mov.u64 %rd13, 0; // unhandled expr
   mov.u64 %rd14, 0; // unhandled expr
-  mov.b64 %rd15, %rd0; // param: arr
-  mov.b64 %rd16, %rd10; // param: idx
-  mov.u64 %rd17, 0; // unhandled expr
-  mov.u64 %rd18, 4;
-  mul.lo.u64 %rd19, %rd16, %rd18;
-  add.u64 %rd20, %rd15, %rd19;
-  ld.global.u32 %r21, [%rd20];
-  add.u64 %rd22, %rd10, %rd4;
-  mov.b64 %rd23, %rd0; // param: arr
-  mov.b64 %rd24, %rd22; // param: idx
-  mov.u64 %rd25, 0; // unhandled expr
-  mov.u64 %rd26, 4;
-  mul.lo.u64 %rd27, %rd24, %rd26;
-  add.u64 %rd28, %rd23, %rd27;
-  ld.global.u32 %r29, [%rd28];
-  mov.b64 %rd30, %rd2; // param: arr
-  mov.b64 %rd31, %rd10; // param: idx
-  mov.u64 %rd32, 0; // unhandled expr
-  mov.u64 %rd33, 4;
-  mul.lo.u64 %rd34, %rd31, %rd33;
-  add.u64 %rd35, %rd30, %rd34;
-  ld.global.u32 %r36, [%rd35];
-  mov.b32 %r37, %r21; // param: a
-  mov.b32 %r38, %r29; // param: b
-  cvt.u64.u32 %rd39, %r37;
-  cvt.u64.u32 %rd40, %r38;
-  add.u64 %rd41, %rd39, %rd40;
-  mov.u32 %r42, 2147483647;
-  cvt.u64.u32 %rd43, %r42;
-  setp.ge.u64 %p44, %rd41, %rd43;
-  @%p44 bra cfft_butterfly_kernel_then_45;
-  bra cfft_butterfly_kernel_else_45;
-  cfft_butterfly_kernel_then_45:
-  sub.u64 %rd46, %rd41, %rd43;
-  mov.u64 %rd47, %rd46;
-  bra cfft_butterfly_kernel_end_45;
-  cfft_butterfly_kernel_else_45:
-  mov.u64 %rd47, %rd41;
-  cfft_butterfly_kernel_end_45:
-  cvt.u32.u64 %r48, %rd47;
-  mov.b32 %r49, %r21; // param: a
-  mov.b32 %r50, %r29; // param: b
-  cvt.u64.u32 %rd51, %r49;
-  cvt.u64.u32 %rd52, %r50;
-  mov.u32 %r53, 2147483647;
-  cvt.u64.u32 %rd54, %r53;
-  setp.ge.u64 %p55, %rd51, %rd52;
-  @%p55 bra cfft_butterfly_kernel_then_56;
-  bra cfft_butterfly_kernel_else_56;
-  cfft_butterfly_kernel_then_56:
-  sub.u64 %rd57, %rd51, %rd52;
-  mov.u64 %rd58, %rd57;
-  bra cfft_butterfly_kernel_end_56;
-  cfft_butterfly_kernel_else_56:
-  add.u64 %rd59, %rd51, %rd54;
-  sub.u64 %rd60, %rd59, %rd52;
-  mov.u64 %rd58, %rd60;
-  cfft_butterfly_kernel_end_56:
-  cvt.u32.u64 %r61, %rd58;
-  mov.b32 %r62, %r61; // param: a
-  mov.b32 %r63, %r36; // param: b
-  cvt.u64.u32 %rd64, %r62;
-  cvt.u64.u32 %rd65, %r63;
-  mul.lo.u64 %rd66, %rd64, %rd65;
-  mov.u32 %r67, 2147483647;
-  cvt.u64.u32 %rd68, %r67;
-  rem.u64 %rd69, %rd66, %rd68;
-  cvt.u32.u64 %r70, %rd69;
-  mov.u64 %rd71, 4;
-  mul.lo.u64 %rd72, %rd10, %rd71;
-  add.u64 %rd73, %rd0, %rd72;
-  st.global.u32 [%rd73], %r48;
-  add.u64 %rd74, %rd10, %rd4;
-  mov.u64 %rd75, 4;
-  mul.lo.u64 %rd76, %rd74, %rd75;
-  add.u64 %rd77, %rd0, %rd76;
-  st.global.u32 [%rd77], %r70;
-  mov.u32 %r78, 0; // unit
-  mov.u32 %r79, %r78;
+  mov.u64 %rd15, 0; // unhandled expr
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd10, %rd16;
+  add.u64 %rd18, %rd0, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  add.u64 %rd20, %rd10, %rd4;
+  mov.u64 %rd21, 0; // unhandled expr
+  mov.u64 %rd22, 4;
+  mul.lo.u64 %rd23, %rd20, %rd22;
+  add.u64 %rd24, %rd0, %rd23;
+  ld.global.u32 %r25, [%rd24];
+  mov.u64 %rd26, 0; // unhandled expr
+  mov.u64 %rd27, 4;
+  mul.lo.u64 %rd28, %rd10, %rd27;
+  add.u64 %rd29, %rd2, %rd28;
+  ld.global.u32 %r30, [%rd29];
+  cvt.u64.u32 %rd31, %r19;
+  cvt.u64.u32 %rd32, %r25;
+  add.u64 %rd33, %rd31, %rd32;
+  mov.u32 %r34, 2147483647;
+  cvt.u64.u32 %rd35, %r34;
+  setp.ge.u64 %p36, %rd33, %rd35;
+  @%p36 bra cfft_butterfly_kernel_then_37;
+  bra cfft_butterfly_kernel_else_37;
+  cfft_butterfly_kernel_then_37:
+  sub.u64 %rd38, %rd33, %rd35;
+  mov.u64 %rd39, %rd38;
+  bra cfft_butterfly_kernel_end_37;
+  cfft_butterfly_kernel_else_37:
+  mov.u64 %rd39, %rd33;
+  cfft_butterfly_kernel_end_37:
+  cvt.u32.u64 %r40, %rd39;
+  cvt.u64.u32 %rd41, %r19;
+  cvt.u64.u32 %rd42, %r25;
+  mov.u32 %r43, 2147483647;
+  cvt.u64.u32 %rd44, %r43;
+  setp.ge.u64 %p45, %rd41, %rd42;
+  @%p45 bra cfft_butterfly_kernel_then_46;
+  bra cfft_butterfly_kernel_else_46;
+  cfft_butterfly_kernel_then_46:
+  sub.u64 %rd47, %rd41, %rd42;
+  mov.u64 %rd48, %rd47;
+  bra cfft_butterfly_kernel_end_46;
+  cfft_butterfly_kernel_else_46:
+  add.u64 %rd49, %rd41, %rd44;
+  sub.u64 %rd50, %rd49, %rd42;
+  mov.u64 %rd48, %rd50;
+  cfft_butterfly_kernel_end_46:
+  cvt.u32.u64 %r51, %rd48;
+  cvt.u64.u32 %rd52, %r51;
+  cvt.u64.u32 %rd53, %r30;
+  mul.lo.u64 %rd54, %rd52, %rd53;
+  mov.u32 %r55, 2147483647;
+  cvt.u64.u32 %rd56, %r55;
+  rem.u64 %rd57, %rd54, %rd56;
+  cvt.u32.u64 %r58, %rd57;
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd10, %rd59;
+  add.u64 %rd61, %rd0, %rd60;
+  st.global.u32 [%rd61], %r40;
+  add.u64 %rd62, %rd10, %rd4;
+  mov.u64 %rd63, 4;
+  mul.lo.u64 %rd64, %rd62, %rd63;
+  add.u64 %rd65, %rd0, %rd64;
+  st.global.u32 [%rd65], %r58;
+  mov.u32 %r66, 0; // unit
+  mov.u32 %r67, %r66;
   bra cfft_butterfly_kernel_end_12;
   cfft_butterfly_kernel_else_12:
-  mov.u32 %r79, 0; // no else branch
+  mov.u32 %r67, 0; // no else branch
   cfft_butterfly_kernel_end_12:
-  mov.u32 %r80, 0; // unit
+  mov.u32 %r68, 0; // unit
   ret;
 }
 
@@ -131,9 +119,9 @@
     .param .u64 icfft_butterfly_kernel_param_half_n
 )
 {
-    .reg .pred %p12, %p54, %p65;
-    .reg .u32 %r10, %r22, %r30, %r37, %r38, %r39, %r4, %r43, %r46, %r47, %r48, %r52, %r58, %r59, %r6, %r60, %r63, %r7, %r71, %r72, %r73, %r77, %r8, %r80, %r81, %r82, %r86, %r89, %r9, %r97, %r98, %r99;
-    .reg .u64 %rd0, %rd1, %rd11, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd23, %rd24, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd31, %rd32, %rd33, %rd34, %rd35, %rd36, %rd40, %rd41, %rd42, %rd44, %rd45, %rd49, %rd5, %rd50, %rd51, %rd53, %rd56, %rd57, %rd61, %rd62, %rd64, %rd67, %rd68, %rd69, %rd70, %rd74, %rd75, %rd76, %rd78, %rd79, %rd83, %rd84, %rd85, %rd87, %rd88, %rd90, %rd91, %rd92, %rd93, %rd94, %rd95, %rd96;
+    .reg .pred %p12, %p44, %p53;
+    .reg .u32 %r10, %r20, %r26, %r31, %r35, %r38, %r4, %r42, %r48, %r51, %r59, %r6, %r63, %r66, %r7, %r70, %r73, %r8, %r81, %r82, %r83, %r9;
+    .reg .u64 %rd0, %rd1, %rd11, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd21, %rd22, %rd23, %rd24, %rd25, %rd27, %rd28, %rd29, %rd3, %rd30, %rd32, %rd33, %rd34, %rd36, %rd37, %rd39, %rd40, %rd41, %rd43, %rd46, %rd47, %rd49, %rd5, %rd50, %rd52, %rd55, %rd56, %rd57, %rd58, %rd60, %rd61, %rd62, %rd64, %rd65, %rd67, %rd68, %rd69, %rd71, %rd72, %rd74, %rd75, %rd76, %rd77, %rd78, %rd79, %rd80;
 
   ld.param.u64 %rd0, [icfft_butterfly_kernel_param_data_data];
   ld.param.u64 %rd1, [icfft_butterfly_kernel_param_data_len];
@@ -154,108 +142,92 @@
   icfft_butterfly_kernel_then_13:
   mov.u64 %rd14, 0; // unhandled expr
   mov.u64 %rd15, 0; // unhandled expr
-  mov.b64 %rd16, %rd0; // param: arr
-  mov.b64 %rd17, %rd11; // param: idx
-  mov.u64 %rd18, 0; // unhandled expr
-  mov.u64 %rd19, 4;
-  mul.lo.u64 %rd20, %rd17, %rd19;
-  add.u64 %rd21, %rd16, %rd20;
-  ld.global.u32 %r22, [%rd21];
-  add.u64 %rd23, %rd11, %rd5;
-  mov.b64 %rd24, %rd0; // param: arr
-  mov.b64 %rd25, %rd23; // param: idx
-  mov.u64 %rd26, 0; // unhandled expr
-  mov.u64 %rd27, 4;
-  mul.lo.u64 %rd28, %rd25, %rd27;
-  add.u64 %rd29, %rd24, %rd28;
-  ld.global.u32 %r30, [%rd29];
-  mov.b64 %rd31, %rd2; // param: arr
-  mov.b64 %rd32, %rd11; // param: idx
-  mov.u64 %rd33, 0; // unhandled expr
-  mov.u64 %rd34, 4;
-  mul.lo.u64 %rd35, %rd32, %rd34;
-  add.u64 %rd36, %rd31, %rd35;
-  ld.global.u32 %r37, [%rd36];
-  mov.b32 %r38, %r30; // param: a
-  mov.b32 %r39, %r37; // param: b
+  mov.u64 %rd16, 0; // unhandled expr
+  mov.u64 %rd17, 4;
+  mul.lo.u64 %rd18, %rd11, %rd17;
+  add.u64 %rd19, %rd0, %rd18;
+  ld.global.u32 %r20, [%rd19];
+  add.u64 %rd21, %rd11, %rd5;
+  mov.u64 %rd22, 0; // unhandled expr
+  mov.u64 %rd23, 4;
+  mul.lo.u64 %rd24, %rd21, %rd23;
+  add.u64 %rd25, %rd0, %rd24;
+  ld.global.u32 %r26, [%rd25];
+  mov.u64 %rd27, 0; // unhandled expr
+  mov.u64 %rd28, 4;
+  mul.lo.u64 %rd29, %rd11, %rd28;
+  add.u64 %rd30, %rd2, %rd29;
+  ld.global.u32 %r31, [%rd30];
+  cvt.u64.u32 %rd32, %r26;
+  cvt.u64.u32 %rd33, %r31;
+  mul.lo.u64 %rd34, %rd32, %rd33;
+  mov.u32 %r35, 2147483647;
+  cvt.u64.u32 %rd36, %r35;
+  rem.u64 %rd37, %rd34, %rd36;
+  cvt.u32.u64 %r38, %rd37;
+  cvt.u64.u32 %rd39, %r20;
   cvt.u64.u32 %rd40, %r38;
-  cvt.u64.u32 %rd41, %r39;
-  mul.lo.u64 %rd42, %rd40, %rd41;
-  mov.u32 %r43, 2147483647;
-  cvt.u64.u32 %rd44, %r43;
-  rem.u64 %rd45, %rd42, %rd44;
-  cvt.u32.u64 %r46, %rd45;
-  mov.b32 %r47, %r22; // param: a
-  mov.b32 %r48, %r46; // param: b
-  cvt.u64.u32 %rd49, %r47;
-  cvt.u64.u32 %rd50, %r48;
-  add.u64 %rd51, %rd49, %rd50;
-  mov.u32 %r52, 2147483647;
-  cvt.u64.u32 %rd53, %r52;
-  setp.ge.u64 %p54, %rd51, %rd53;
-  @%p54 bra icfft_butterfly_kernel_then_55;
-  bra icfft_butterfly_kernel_else_55;
-  icfft_butterfly_kernel_then_55:
-  sub.u64 %rd56, %rd51, %rd53;
-  mov.u64 %rd57, %rd56;
-  bra icfft_butterfly_kernel_end_55;
-  icfft_butterfly_kernel_else_55:
-  mov.u64 %rd57, %rd51;
-  icfft_butterfly_kernel_end_55:
-  cvt.u32.u64 %r58, %rd57;
-  mov.b32 %r59, %r22; // param: a
-  mov.b32 %r60, %r46; // param: b
-  cvt.u64.u32 %rd61, %r59;
-  cvt.u64.u32 %rd62, %r60;
+  add.u64 %rd41, %rd39, %rd40;
+  mov.u32 %r42, 2147483647;
+  cvt.u64.u32 %rd43, %r42;
+  setp.ge.u64 %p44, %rd41, %rd43;
+  @%p44 bra icfft_butterfly_kernel_then_45;
+  bra icfft_butterfly_kernel_else_45;
+  icfft_butterfly_kernel_then_45:
+  sub.u64 %rd46, %rd41, %rd43;
+  mov.u64 %rd47, %rd46;
+  bra icfft_butterfly_kernel_end_45;
+  icfft_butterfly_kernel_else_45:
+  mov.u64 %rd47, %rd41;
+  icfft_butterfly_kernel_end_45:
+  cvt.u32.u64 %r48, %rd47;
+  cvt.u64.u32 %rd49, %r20;
+  cvt.u64.u32 %rd50, %r38;
+  mov.u32 %r51, 2147483647;
+  cvt.u64.u32 %rd52, %r51;
+  setp.ge.u64 %p53, %rd49, %rd50;
+  @%p53 bra icfft_butterfly_kernel_then_54;
+  bra icfft_butterfly_kernel_else_54;
+  icfft_butterfly_kernel_then_54:
+  sub.u64 %rd55, %rd49, %rd50;
+  mov.u64 %rd56, %rd55;
+  bra icfft_butterfly_kernel_end_54;
+  icfft_butterfly_kernel_else_54:
+  add.u64 %rd57, %rd49, %rd52;
+  sub.u64 %rd58, %rd57, %rd50;
+  mov.u64 %rd56, %rd58;
+  icfft_butterfly_kernel_end_54:
+  cvt.u32.u64 %r59, %rd56;
+  cvt.u64.u32 %rd60, %r48;
+  cvt.u64.u32 %rd61, %r4;
+  mul.lo.u64 %rd62, %rd60, %rd61;
   mov.u32 %r63, 2147483647;
   cvt.u64.u32 %rd64, %r63;
-  setp.ge.u64 %p65, %rd61, %rd62;
-  @%p65 bra icfft_butterfly_kernel_then_66;
-  bra icfft_butterfly_kernel_else_66;
-  icfft_butterfly_kernel_then_66:
-  sub.u64 %rd67, %rd61, %rd62;
-  mov.u64 %rd68, %rd67;
-  bra icfft_butterfly_kernel_end_66;
-  icfft_butterfly_kernel_else_66:
-  add.u64 %rd69, %rd61, %rd64;
-  sub.u64 %rd70, %rd69, %rd62;
-  mov.u64 %rd68, %rd70;
-  icfft_butterfly_kernel_end_66:
-  cvt.u32.u64 %r71, %rd68;
-  mov.b32 %r72, %r58; // param: a
-  mov.b32 %r73, %r4; // param: b
-  cvt.u64.u32 %rd74, %r72;
-  cvt.u64.u32 %rd75, %r73;
-  mul.lo.u64 %rd76, %rd74, %rd75;
-  mov.u32 %r77, 2147483647;
-  cvt.u64.u32 %rd78, %r77;
-  rem.u64 %rd79, %rd76, %rd78;
-  cvt.u32.u64 %r80, %rd79;
-  mov.b32 %r81, %r71; // param: a
-  mov.b32 %r82, %r4; // param: b
-  cvt.u64.u32 %rd83, %r81;
-  cvt.u64.u32 %rd84, %r82;
-  mul.lo.u64 %rd85, %rd83, %rd84;
-  mov.u32 %r86, 2147483647;
-  cvt.u64.u32 %rd87, %r86;
-  rem.u64 %rd88, %rd85, %rd87;
-  cvt.u32.u64 %r89, %rd88;
-  mov.u64 %rd90, 4;
-  mul.lo.u64 %rd91, %rd11, %rd90;
-  add.u64 %rd92, %rd0, %rd91;
-  st.global.u32 [%rd92], %r80;
-  add.u64 %rd93, %rd11, %rd5;
-  mov.u64 %rd94, 4;
-  mul.lo.u64 %rd95, %rd93, %rd94;
-  add.u64 %rd96, %rd0, %rd95;
-  st.global.u32 [%rd96], %r89;
-  mov.u32 %r97, 0; // unit
-  mov.u32 %r98, %r97;
+  rem.u64 %rd65, %rd62, %rd64;
+  cvt.u32.u64 %r66, %rd65;
+  cvt.u64.u32 %rd67, %r59;
+  cvt.u64.u32 %rd68, %r4;
+  mul.lo.u64 %rd69, %rd67, %rd68;
+  mov.u32 %r70, 2147483647;
+  cvt.u64.u32 %rd71, %r70;
+  rem.u64 %rd72, %rd69, %rd71;
+  cvt.u32.u64 %r73, %rd72;
+  mov.u64 %rd74, 4;
+  mul.lo.u64 %rd75, %rd11, %rd74;
+  add.u64 %rd76, %rd0, %rd75;
+  st.global.u32 [%rd76], %r66;
+  add.u64 %rd77, %rd11, %rd5;
+  mov.u64 %rd78, 4;
+  mul.lo.u64 %rd79, %rd77, %rd78;
+  add.u64 %rd80, %rd0, %rd79;
+  st.global.u32 [%rd80], %r73;
+  mov.u32 %r81, 0; // unit
+  mov.u32 %r82, %r81;
   bra icfft_butterfly_kernel_end_13;
   icfft_butterfly_kernel_else_13:
-  mov.u32 %r98, 0; // no else branch
+  mov.u32 %r82, 0; // no else branch
   icfft_butterfly_kernel_end_13:
-  mov.u32 %r99, 0; // unit
+  mov.u32 %r83, 0; // unit
   ret;
 }
 
@@ -268,8 +240,8 @@
 )
 {
     .reg .pred %p11;
-    .reg .u32 %r21, %r28, %r29, %r30, %r34, %r37, %r41, %r42, %r43, %r5, %r6, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd22, %rd23, %rd24, %rd25, %rd26, %rd27, %rd3, %rd31, %rd32, %rd33, %rd35, %rd36, %rd38, %rd39, %rd4, %rd40;
+    .reg .u32 %r19, %r24, %r28, %r31, %r35, %r36, %r37, %r5, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd29, %rd3, %rd30, %rd32, %rd33, %rd34, %rd4;
 
   ld.param.u64 %rd0, [cfft_coset_shift_kernel_param_data_data];
   ld.param.u64 %rd1, [cfft_coset_shift_kernel_param_data_len];
@@ -289,40 +261,34 @@
   cfft_coset_shift_kernel_then_12:
   mov.u64 %rd13, 0; // unhandled expr
   mov.u64 %rd14, 0; // unhandled expr
-  mov.b64 %rd15, %rd0; // param: arr
-  mov.b64 %rd16, %rd10; // param: idx
-  mov.u64 %rd17, 0; // unhandled expr
-  mov.u64 %rd18, 4;
-  mul.lo.u64 %rd19, %rd16, %rd18;
-  add.u64 %rd20, %rd15, %rd19;
-  ld.global.u32 %r21, [%rd20];
-  mov.b64 %rd22, %rd2; // param: arr
-  mov.b64 %rd23, %rd10; // param: idx
-  mov.u64 %rd24, 0; // unhandled expr
-  mov.u64 %rd25, 4;
-  mul.lo.u64 %rd26, %rd23, %rd25;
-  add.u64 %rd27, %rd22, %rd26;
-  ld.global.u32 %r28, [%rd27];
-  mov.b32 %r29, %r21; // param: a
-  mov.b32 %r30, %r28; // param: b
-  cvt.u64.u32 %rd31, %r29;
-  cvt.u64.u32 %rd32, %r30;
-  mul.lo.u64 %rd33, %rd31, %rd32;
-  mov.u32 %r34, 2147483647;
-  cvt.u64.u32 %rd35, %r34;
-  rem.u64 %rd36, %rd33, %rd35;
-  cvt.u32.u64 %r37, %rd36;
-  mov.u64 %rd38, 4;
-  mul.lo.u64 %rd39, %rd10, %rd38;
-  add.u64 %rd40, %rd0, %rd39;
-  st.global.u32 [%rd40], %r37;
-  mov.u32 %r41, 0; // unit
-  mov.u32 %r42, %r41;
+  mov.u64 %rd15, 0; // unhandled expr
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd10, %rd16;
+  add.u64 %rd18, %rd0, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  mov.u64 %rd20, 0; // unhandled expr
+  mov.u64 %rd21, 4;
+  mul.lo.u64 %rd22, %rd10, %rd21;
+  add.u64 %rd23, %rd2, %rd22;
+  ld.global.u32 %r24, [%rd23];
+  cvt.u64.u32 %rd25, %r19;
+  cvt.u64.u32 %rd26, %r24;
+  mul.lo.u64 %rd27, %rd25, %rd26;
+  mov.u32 %r28, 2147483647;
+  cvt.u64.u32 %rd29, %r28;
+  rem.u64 %rd30, %rd27, %rd29;
+  cvt.u32.u64 %r31, %rd30;
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd10, %rd32;
+  add.u64 %rd34, %rd0, %rd33;
+  st.global.u32 [%rd34], %r31;
+  mov.u32 %r35, 0; // unit
+  mov.u32 %r36, %r35;
   bra cfft_coset_shift_kernel_end_12;
   cfft_coset_shift_kernel_else_12:
-  mov.u32 %r42, 0; // no else branch
+  mov.u32 %r36, 0; // no else branch
   cfft_coset_shift_kernel_end_12:
-  mov.u32 %r43, 0; // unit
+  mov.u32 %r37, 0; // unit
   ret;
 }
 
@@ -337,9 +303,9 @@
     .param .u64 cfft_fri_fold_kernel_param_half_n
 )
 {
-    .reg .pred %p14, %p47, %p79;
-    .reg .u32 %r10, %r11, %r12, %r25, %r33, %r40, %r41, %r42, %r45, %r53, %r54, %r55, %r59, %r6, %r62, %r63, %r64, %r68, %r71, %r72, %r73, %r77, %r8, %r83, %r87, %r88, %r89, %r9;
-    .reg .u64 %rd0, %rd1, %rd13, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd34, %rd35, %rd36, %rd37, %rd38, %rd39, %rd4, %rd43, %rd44, %rd46, %rd49, %rd5, %rd50, %rd51, %rd52, %rd56, %rd57, %rd58, %rd60, %rd61, %rd65, %rd66, %rd67, %rd69, %rd7, %rd70, %rd74, %rd75, %rd76, %rd78, %rd81, %rd82, %rd84, %rd85, %rd86;
+    .reg .pred %p14, %p39, %p65;
+    .reg .u32 %r10, %r11, %r12, %r23, %r29, %r34, %r37, %r45, %r49, %r52, %r56, %r59, %r6, %r63, %r69, %r73, %r74, %r75, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd13, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd31, %rd32, %rd33, %rd35, %rd36, %rd38, %rd4, %rd41, %rd42, %rd43, %rd44, %rd46, %rd47, %rd48, %rd5, %rd50, %rd51, %rd53, %rd54, %rd55, %rd57, %rd58, %rd60, %rd61, %rd62, %rd64, %rd67, %rd68, %rd7, %rd70, %rd71, %rd72;
 
   ld.param.u64 %rd0, [cfft_fri_fold_kernel_param_out_data];
   ld.param.u64 %rd1, [cfft_fri_fold_kernel_param_out_len];
@@ -363,94 +329,80 @@
   mov.u64 %rd16, 0; // unhandled expr
   mov.u64 %rd17, 0; // unhandled expr
   mov.u64 %rd18, 0; // unhandled expr
-  mov.b64 %rd19, %rd2; // param: arr
-  mov.b64 %rd20, %rd13; // param: idx
-  mov.u64 %rd21, 0; // unhandled expr
-  mov.u64 %rd22, 4;
-  mul.lo.u64 %rd23, %rd20, %rd22;
-  add.u64 %rd24, %rd19, %rd23;
-  ld.global.u32 %r25, [%rd24];
-  add.u64 %rd26, %rd13, %rd7;
-  mov.b64 %rd27, %rd2; // param: arr
-  mov.b64 %rd28, %rd26; // param: idx
-  mov.u64 %rd29, 0; // unhandled expr
-  mov.u64 %rd30, 4;
-  mul.lo.u64 %rd31, %rd28, %rd30;
-  add.u64 %rd32, %rd27, %rd31;
-  ld.global.u32 %r33, [%rd32];
-  mov.b64 %rd34, %rd4; // param: arr
-  mov.b64 %rd35, %rd13; // param: idx
-  mov.u64 %rd36, 0; // unhandled expr
-  mov.u64 %rd37, 4;
-  mul.lo.u64 %rd38, %rd35, %rd37;
-  add.u64 %rd39, %rd34, %rd38;
-  ld.global.u32 %r40, [%rd39];
-  mov.b32 %r41, %r25; // param: a
-  mov.b32 %r42, %r33; // param: b
-  cvt.u64.u32 %rd43, %r41;
-  cvt.u64.u32 %rd44, %r42;
-  mov.u32 %r45, 2147483647;
-  cvt.u64.u32 %rd46, %r45;
-  setp.ge.u64 %p47, %rd43, %rd44;
-  @%p47 bra cfft_fri_fold_kernel_then_48;
-  bra cfft_fri_fold_kernel_else_48;
-  cfft_fri_fold_kernel_then_48:
-  sub.u64 %rd49, %rd43, %rd44;
-  mov.u64 %rd50, %rd49;
-  bra cfft_fri_fold_kernel_end_48;
-  cfft_fri_fold_kernel_else_48:
-  add.u64 %rd51, %rd43, %rd46;
-  sub.u64 %rd52, %rd51, %rd44;
-  mov.u64 %rd50, %rd52;
-  cfft_fri_fold_kernel_end_48:
-  cvt.u32.u64 %r53, %rd50;
-  mov.b32 %r54, %r40; // param: a
-  mov.b32 %r55, %r53; // param: b
-  cvt.u64.u32 %rd56, %r54;
-  cvt.u64.u32 %rd57, %r55;
-  mul.lo.u64 %rd58, %rd56, %rd57;
-  mov.u32 %r59, 2147483647;
-  cvt.u64.u32 %rd60, %r59;
-  rem.u64 %rd61, %rd58, %rd60;
-  cvt.u32.u64 %r62, %rd61;
-  mov.b32 %r63, %r6; // param: a
-  mov.b32 %r64, %r62; // param: b
-  cvt.u64.u32 %rd65, %r63;
-  cvt.u64.u32 %rd66, %r64;
-  mul.lo.u64 %rd67, %rd65, %rd66;
-  mov.u32 %r68, 2147483647;
-  cvt.u64.u32 %rd69, %r68;
-  rem.u64 %rd70, %rd67, %rd69;
-  cvt.u32.u64 %r71, %rd70;
-  mov.b32 %r72, %r25; // param: a
-  mov.b32 %r73, %r71; // param: b
-  cvt.u64.u32 %rd74, %r72;
-  cvt.u64.u32 %rd75, %r73;
-  add.u64 %rd76, %rd74, %rd75;
-  mov.u32 %r77, 2147483647;
-  cvt.u64.u32 %rd78, %r77;
-  setp.ge.u64 %p79, %rd76, %rd78;
-  @%p79 bra cfft_fri_fold_kernel_then_80;
-  bra cfft_fri_fold_kernel_else_80;
-  cfft_fri_fold_kernel_then_80:
-  sub.u64 %rd81, %rd76, %rd78;
-  mov.u64 %rd82, %rd81;
-  bra cfft_fri_fold_kernel_end_80;
-  cfft_fri_fold_kernel_else_80:
-  mov.u64 %rd82, %rd76;
-  cfft_fri_fold_kernel_end_80:
-  cvt.u32.u64 %r83, %rd82;
-  mov.u64 %rd84, 4;
-  mul.lo.u64 %rd85, %rd13, %rd84;
-  add.u64 %rd86, %rd0, %rd85;
-  st.global.u32 [%rd86], %r83;
-  mov.u32 %r87, 0; // unit
-  mov.u32 %r88, %r87;
+  mov.u64 %rd19, 0; // unhandled expr
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd13, %rd20;
+  add.u64 %rd22, %rd2, %rd21;
+  ld.global.u32 %r23, [%rd22];
+  add.u64 %rd24, %rd13, %rd7;
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd24, %rd26;
+  add.u64 %rd28, %rd2, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  mov.u64 %rd30, 0; // unhandled expr
+  mov.u64 %rd31, 4;
+  mul.lo.u64 %rd32, %rd13, %rd31;
+  add.u64 %rd33, %rd4, %rd32;
+  ld.global.u32 %r34, [%rd33];
+  cvt.u64.u32 %rd35, %r23;
+  cvt.u64.u32 %rd36, %r29;
+  mov.u32 %r37, 2147483647;
+  cvt.u64.u32 %rd38, %r37;
+  setp.ge.u64 %p39, %rd35, %rd36;
+  @%p39 bra cfft_fri_fold_kernel_then_40;
+  bra cfft_fri_fold_kernel_else_40;
+  cfft_fri_fold_kernel_then_40:
+  sub.u64 %rd41, %rd35, %rd36;
+  mov.u64 %rd42, %rd41;
+  bra cfft_fri_fold_kernel_end_40;
+  cfft_fri_fold_kernel_else_40:
+  add.u64 %rd43, %rd35, %rd38;
+  sub.u64 %rd44, %rd43, %rd36;
+  mov.u64 %rd42, %rd44;
+  cfft_fri_fold_kernel_end_40:
+  cvt.u32.u64 %r45, %rd42;
+  cvt.u64.u32 %rd46, %r34;
+  cvt.u64.u32 %rd47, %r45;
+  mul.lo.u64 %rd48, %rd46, %rd47;
+  mov.u32 %r49, 2147483647;
+  cvt.u64.u32 %rd50, %r49;
+  rem.u64 %rd51, %rd48, %rd50;
+  cvt.u32.u64 %r52, %rd51;
+  cvt.u64.u32 %rd53, %r6;
+  cvt.u64.u32 %rd54, %r52;
+  mul.lo.u64 %rd55, %rd53, %rd54;
+  mov.u32 %r56, 2147483647;
+  cvt.u64.u32 %rd57, %r56;
+  rem.u64 %rd58, %rd55, %rd57;
+  cvt.u32.u64 %r59, %rd58;
+  cvt.u64.u32 %rd60, %r23;
+  cvt.u64.u32 %rd61, %r59;
+  add.u64 %rd62, %rd60, %rd61;
+  mov.u32 %r63, 2147483647;
+  cvt.u64.u32 %rd64, %r63;
+  setp.ge.u64 %p65, %rd62, %rd64;
+  @%p65 bra cfft_fri_fold_kernel_then_66;
+  bra cfft_fri_fold_kernel_else_66;
+  cfft_fri_fold_kernel_then_66:
+  sub.u64 %rd67, %rd62, %rd64;
+  mov.u64 %rd68, %rd67;
+  bra cfft_fri_fold_kernel_end_66;
+  cfft_fri_fold_kernel_else_66:
+  mov.u64 %rd68, %rd62;
+  cfft_fri_fold_kernel_end_66:
+  cvt.u32.u64 %r69, %rd68;
+  mov.u64 %rd70, 4;
+  mul.lo.u64 %rd71, %rd13, %rd70;
+  add.u64 %rd72, %rd0, %rd71;
+  st.global.u32 [%rd72], %r69;
+  mov.u32 %r73, 0; // unit
+  mov.u32 %r74, %r73;
   bra cfft_fri_fold_kernel_end_15;
   cfft_fri_fold_kernel_else_15:
-  mov.u32 %r88, 0; // no else branch
+  mov.u32 %r74, 0; // no else branch
   cfft_fri_fold_kernel_end_15:
-  mov.u32 %r89, 0; // unit
+  mov.u32 %r75, 0; // unit
   ret;
 }
 

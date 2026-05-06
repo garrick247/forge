@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MulticastGroup MulticastGroup;
+
 typedef struct MulticastGroup {
   uint64_t members;
   uint64_t max_members;

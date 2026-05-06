@@ -296,12 +296,12 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 4
-   [ASSUME] demos/1144_forge_masked_softmax.fg:40  (< (+ base lane) mask__len)
+   [ASSUME] /home/garrick/forge/demos/1144_forge_masked_softmax.fg:40  (< (+ base lane) mask__len)
              "blockIdx<gridDim + lane<n_cols + gridDim*n_cols<=mask.len"
-   [ASSUME] demos/1144_forge_masked_softmax.fg:43  (< (+ base lane) scores__len)
+   [ASSUME] /home/garrick/forge/demos/1144_forge_masked_softmax.fg:43  (< (+ base lane) scores__len)
              "mirrors mask bounds chain"
-   [ASSUME] demos/1144_forge_masked_softmax.fg:57  (> denom 0)
+   [ASSUME] /home/garrick/forge/demos/1144_forge_masked_softmax.fg:57  (> denom 0)
              "caller guarantees at least one mask bit set per row"
-   [ASSUME] demos/1144_forge_masked_softmax.fg:60  (< (+ base lane) out__len)
+   [ASSUME] /home/garrick/forge/demos/1144_forge_masked_softmax.fg:60  (< (+ base lane) out__len)
              "mirrors mask bounds chain"
    ---- END AUDIT LOG ---- */

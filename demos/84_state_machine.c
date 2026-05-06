@@ -13,6 +13,12 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Idle Idle;
+typedef struct Running Running;
+typedef struct Paused Paused;
+typedef struct Finished Finished;
+
 typedef struct Idle {
   uint64_t id;
 } Idle;

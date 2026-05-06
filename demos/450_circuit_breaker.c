@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct CircuitBreaker CircuitBreaker;
+
 typedef struct CircuitBreaker {
   uint64_t failures;
   uint64_t successes;

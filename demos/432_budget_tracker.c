@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Budget Budget;
+
 typedef struct Budget {
   uint64_t remaining;
   uint64_t spent_food;

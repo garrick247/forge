@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct StreamCursor StreamCursor;
+
 typedef struct StreamCursor {
   uint64_t pos;
   uint64_t mark;

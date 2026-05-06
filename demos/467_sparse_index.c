@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct SparseIndex SparseIndex;
+
 typedef struct SparseIndex {
   uint64_t bucket_a;
   uint64_t bucket_b;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct BloomFilter BloomFilter;
+
 typedef struct BloomFilter {
   uint64_t bit_count;
   uint64_t capacity;

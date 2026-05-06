@@ -13,6 +13,12 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct U64Box U64Box;
+typedef struct U64Pair U64Pair;
+typedef struct Sum2 Sum2;
+typedef struct Sum3 Sum3;
+
 
 typedef struct U64Box {
   uint64_t value;

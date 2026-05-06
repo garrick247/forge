@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Watermark Watermark;
+
 typedef struct Watermark {
   uint64_t mark;
   uint64_t updates;

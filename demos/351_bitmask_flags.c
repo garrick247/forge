@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Flags Flags;
+
 typedef struct Flags {
   uint64_t bits;
   uint64_t changes;

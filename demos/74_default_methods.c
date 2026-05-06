@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Debug Debug;
+typedef struct Release Release;
+
 
 typedef struct Debug {
   uint64_t seed;

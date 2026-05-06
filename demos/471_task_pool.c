@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct TaskPool TaskPool;
+
 typedef struct TaskPool {
   uint64_t high_q;
   uint64_t med_q;

@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MacAddr MacAddr;
+typedef struct EtherType EtherType;
+typedef struct EtherFrame EtherFrame;
+
 typedef struct MacAddr {
   uint64_t hi;
   uint64_t lo;

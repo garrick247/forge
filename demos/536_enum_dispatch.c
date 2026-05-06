@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct BinOp BinOp;
+
 typedef enum {
   BinOp_tag_BAdd = 0,
   BinOp_tag_BSub = 1,

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RetryState RetryState;
+
 typedef struct RetryState {
   uint64_t retries;
   uint64_t delay;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Window Window;
+
 typedef struct Window {
   uint64_t send_base;
   uint64_t next_seq;

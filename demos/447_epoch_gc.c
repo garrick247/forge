@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct EpochGC EpochGC;
+
 typedef struct EpochGC {
   uint64_t epoch;
   uint64_t allocated;

@@ -15,9 +15,9 @@
     .param .u32 vec_compute_clamp_param_n
 )
 {
-    .reg .pred %p12, %p32;
-    .reg .u32 %r10, %r11, %r18, %r23, %r24, %r25, %r26, %r27, %r28, %r29, %r30, %r31, %r34, %r35, %r40, %r41, %r42, %r6, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd14, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd3, %rd36, %rd37, %rd38, %rd39, %rd4, %rd5;
+    .reg .pred %p12, %p30;
+    .reg .u32 %r10, %r11, %r18, %r23, %r24, %r25, %r26, %r27, %r28, %r29, %r32, %r33, %r38, %r39, %r40, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd14, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd3, %rd34, %rd35, %rd36, %rd37, %rd4, %rd5;
 
   ld.param.u64 %rd0, [vec_compute_clamp_param_a_data];
   ld.param.u64 %rd1, [vec_compute_clamp_param_a_len];
@@ -46,36 +46,34 @@
   mul.lo.u64 %rd21, %rd19, %rd20;
   add.u64 %rd22, %rd2, %rd21;
   ld.global.u32 %r23, [%rd22];
-  mov.b32 %r24, %r18; // param: a
-  mov.b32 %r25, %r23; // param: b
-  add.u32 %r26, %r24, %r25;
-  mov.u32 %r27, 3735928559;
-  xor.b32 %r28, %r26, %r27;
-  mov.u32 %r29, 3;
-  mul.lo.u32 %r30, %r28, %r29;
-  mov.u32 %r31, 1024;
-  setp.gt.u32 %p32, %r30, %r31;
-  @%p32 bra vec_compute_clamp_then_33;
-  bra vec_compute_clamp_else_33;
-  vec_compute_clamp_then_33:
-  mov.u32 %r34, 1024;
-  mov.u32 %r35, %r34;
-  bra vec_compute_clamp_end_33;
-  vec_compute_clamp_else_33:
-  mov.u32 %r35, %r30;
-  vec_compute_clamp_end_33:
-  cvt.u64.u32 %rd36, %r11;
-  mov.u64 %rd37, 4;
-  mul.lo.u64 %rd38, %rd36, %rd37;
-  add.u64 %rd39, %rd4, %rd38;
-  st.global.u32 [%rd39], %r35;
-  mov.u32 %r40, 0; // unit
-  mov.u32 %r41, %r40;
+  add.u32 %r24, %r18, %r23;
+  mov.u32 %r25, 3735928559;
+  xor.b32 %r26, %r24, %r25;
+  mov.u32 %r27, 3;
+  mul.lo.u32 %r28, %r26, %r27;
+  mov.u32 %r29, 1024;
+  setp.gt.u32 %p30, %r28, %r29;
+  @%p30 bra vec_compute_clamp_then_31;
+  bra vec_compute_clamp_else_31;
+  vec_compute_clamp_then_31:
+  mov.u32 %r32, 1024;
+  mov.u32 %r33, %r32;
+  bra vec_compute_clamp_end_31;
+  vec_compute_clamp_else_31:
+  mov.u32 %r33, %r28;
+  vec_compute_clamp_end_31:
+  cvt.u64.u32 %rd34, %r11;
+  mov.u64 %rd35, 4;
+  mul.lo.u64 %rd36, %rd34, %rd35;
+  add.u64 %rd37, %rd4, %rd36;
+  st.global.u32 [%rd37], %r33;
+  mov.u32 %r38, 0; // unit
+  mov.u32 %r39, %r38;
   bra vec_compute_clamp_end_13;
   vec_compute_clamp_else_13:
-  mov.u32 %r41, 0; // no else branch
+  mov.u32 %r39, 0; // no else branch
   vec_compute_clamp_end_13:
-  mov.u32 %r42, 0; // unit
+  mov.u32 %r40, 0; // unit
   ret;
 }
 

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct VNode VNode;
+
 typedef struct VNode {
   uint64_t refcount;
   uint64_t dirty;

@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Vec_u64 Vec_u64;
+typedef struct Vec_u8 Vec_u8;
+
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;
 typedef struct { uint8_t* data; uintptr_t len; } forge_span_u8_t;

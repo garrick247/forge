@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RWLock RWLock;
+
 typedef struct RWLock {
   uint64_t readers;
   uint64_t writer;

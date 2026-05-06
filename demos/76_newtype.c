@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Meters Meters;
+typedef struct Seconds Seconds;
+typedef struct Speed Speed;
+
 typedef struct Meters {
   uint64_t val;
 } Meters;

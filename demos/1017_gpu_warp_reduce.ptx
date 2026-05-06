@@ -12,9 +12,9 @@
     .param .u64 reduce_sum_param_result_ptr
 )
 {
-    .reg .pred %p15, %p67;
-    .reg .u32 %r10, %r11, %r12, %r21, %r22, %r25, %r26, %r27, %r28, %r29, %r33, %r34, %r35, %r36, %r37, %r4, %r41, %r42, %r43, %r44, %r45, %r49, %r5, %r50, %r51, %r52, %r53, %r57, %r58, %r59, %r6, %r60, %r61, %r64, %r7, %r70, %r71, %r72, %r8;
-    .reg .u64 %rd0, %rd1, %rd13, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd23, %rd24, %rd3, %rd30, %rd31, %rd32, %rd38, %rd39, %rd40, %rd46, %rd47, %rd48, %rd54, %rd55, %rd56, %rd62, %rd63, %rd65, %rd66, %rd69, %rd9;
+    .reg .pred %p15, %p66;
+    .reg .u32 %r10, %r11, %r12, %r21, %r22, %r24, %r25, %r26, %r27, %r28, %r32, %r33, %r34, %r35, %r36, %r4, %r40, %r41, %r42, %r43, %r44, %r48, %r49, %r5, %r50, %r51, %r52, %r56, %r57, %r58, %r59, %r6, %r60, %r63, %r69, %r7, %r70, %r71, %r8;
+    .reg .u64 %rd0, %rd1, %rd13, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd23, %rd29, %rd3, %rd30, %rd31, %rd37, %rd38, %rd39, %rd45, %rd46, %rd47, %rd53, %rd54, %rd55, %rd61, %rd62, %rd64, %rd65, %rd68, %rd9;
 
   ld.param.u64 %rd0, [reduce_sum_param_data_data];
   ld.param.u64 %rd1, [reduce_sum_param_data_len];
@@ -47,57 +47,56 @@
   reduce_sum_else_16:
   mov.u32 %r22, 0; // no else branch
   reduce_sum_end_16:
-  mov.b64 %rd23, %rd14; // param: val
-  mov.u64 %rd24, 16;
-  cvt.u32.u64 %r25, %rd24;
-  mov.b64 {%r26, %r27}, %rd23;
-  shfl.sync.bfly.b32 %r28, %r26, %r25, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r29, %r27, %r25, 31, 0xffffffff;
-  mov.b64 %rd30, {%r28, %r29};
-  add.u64 %rd31, %rd23, %rd30;
-  mov.u64 %rd32, 8;
-  cvt.u32.u64 %r33, %rd32;
-  mov.b64 {%r34, %r35}, %rd31;
-  shfl.sync.bfly.b32 %r36, %r34, %r33, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r37, %r35, %r33, 31, 0xffffffff;
-  mov.b64 %rd38, {%r36, %r37};
-  add.u64 %rd39, %rd31, %rd38;
-  mov.u64 %rd40, 4;
-  cvt.u32.u64 %r41, %rd40;
-  mov.b64 {%r42, %r43}, %rd39;
-  shfl.sync.bfly.b32 %r44, %r42, %r41, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r45, %r43, %r41, 31, 0xffffffff;
-  mov.b64 %rd46, {%r44, %r45};
-  add.u64 %rd47, %rd39, %rd46;
-  mov.u64 %rd48, 2;
-  cvt.u32.u64 %r49, %rd48;
-  mov.b64 {%r50, %r51}, %rd47;
-  shfl.sync.bfly.b32 %r52, %r50, %r49, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r53, %r51, %r49, 31, 0xffffffff;
-  mov.b64 %rd54, {%r52, %r53};
-  add.u64 %rd55, %rd47, %rd54;
-  mov.u64 %rd56, 1;
-  cvt.u32.u64 %r57, %rd56;
-  mov.b64 {%r58, %r59}, %rd55;
-  shfl.sync.bfly.b32 %r60, %r58, %r57, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r61, %r59, %r57, 31, 0xffffffff;
-  mov.b64 %rd62, {%r60, %r61};
-  add.u64 %rd63, %rd55, %rd62;
-  mov.u32 %r64, %laneid;
-  cvt.u64.u32 %rd65, %r64;
-  mov.u64 %rd66, 0;
-  setp.eq.u64 %p67, %rd65, %rd66;
-  @%p67 bra reduce_sum_then_68;
-  bra reduce_sum_else_68;
-  reduce_sum_then_68:
-  atom.global.add.u64 %rd69, [%rd3], %rd63;
-  mov.u32 %r70, 0; // unit
-  mov.u32 %r71, %r70;
-  bra reduce_sum_end_68;
-  reduce_sum_else_68:
-  mov.u32 %r71, 0; // no else branch
-  reduce_sum_end_68:
-  mov.u32 %r72, 0; // unit
+  mov.u64 %rd23, 16;
+  cvt.u32.u64 %r24, %rd23;
+  mov.b64 {%r25, %r26}, %rd14;
+  shfl.sync.bfly.b32 %r27, %r25, %r24, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r28, %r26, %r24, 31, 0xffffffff;
+  mov.b64 %rd29, {%r27, %r28};
+  add.u64 %rd30, %rd14, %rd29;
+  mov.u64 %rd31, 8;
+  cvt.u32.u64 %r32, %rd31;
+  mov.b64 {%r33, %r34}, %rd30;
+  shfl.sync.bfly.b32 %r35, %r33, %r32, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r36, %r34, %r32, 31, 0xffffffff;
+  mov.b64 %rd37, {%r35, %r36};
+  add.u64 %rd38, %rd30, %rd37;
+  mov.u64 %rd39, 4;
+  cvt.u32.u64 %r40, %rd39;
+  mov.b64 {%r41, %r42}, %rd38;
+  shfl.sync.bfly.b32 %r43, %r41, %r40, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r44, %r42, %r40, 31, 0xffffffff;
+  mov.b64 %rd45, {%r43, %r44};
+  add.u64 %rd46, %rd38, %rd45;
+  mov.u64 %rd47, 2;
+  cvt.u32.u64 %r48, %rd47;
+  mov.b64 {%r49, %r50}, %rd46;
+  shfl.sync.bfly.b32 %r51, %r49, %r48, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r52, %r50, %r48, 31, 0xffffffff;
+  mov.b64 %rd53, {%r51, %r52};
+  add.u64 %rd54, %rd46, %rd53;
+  mov.u64 %rd55, 1;
+  cvt.u32.u64 %r56, %rd55;
+  mov.b64 {%r57, %r58}, %rd54;
+  shfl.sync.bfly.b32 %r59, %r57, %r56, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r60, %r58, %r56, 31, 0xffffffff;
+  mov.b64 %rd61, {%r59, %r60};
+  add.u64 %rd62, %rd54, %rd61;
+  mov.u32 %r63, %laneid;
+  cvt.u64.u32 %rd64, %r63;
+  mov.u64 %rd65, 0;
+  setp.eq.u64 %p66, %rd64, %rd65;
+  @%p66 bra reduce_sum_then_67;
+  bra reduce_sum_else_67;
+  reduce_sum_then_67:
+  atom.global.add.u64 %rd68, [%rd3], %rd62;
+  mov.u32 %r69, 0; // unit
+  mov.u32 %r70, %r69;
+  bra reduce_sum_end_67;
+  reduce_sum_else_67:
+  mov.u32 %r70, 0; // no else branch
+  reduce_sum_end_67:
+  mov.u32 %r71, 0; // unit
   ret;
 }
 
@@ -108,9 +107,9 @@
     .param .u64 reduce_max_param_result_ptr
 )
 {
-    .reg .pred %p11, %p27, %p38, %p49, %p60, %p71, %p78;
-    .reg .u32 %r17, %r18, %r21, %r22, %r23, %r24, %r25, %r29, %r30, %r32, %r33, %r34, %r35, %r36, %r4, %r40, %r41, %r43, %r44, %r45, %r46, %r47, %r5, %r51, %r52, %r54, %r55, %r56, %r57, %r58, %r6, %r62, %r63, %r65, %r66, %r67, %r68, %r69, %r7, %r73, %r74, %r75, %r8, %r81, %r82, %r83;
-    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd19, %rd2, %rd20, %rd26, %rd3, %rd31, %rd37, %rd42, %rd48, %rd53, %rd59, %rd64, %rd70, %rd76, %rd77, %rd80, %rd9;
+    .reg .pred %p11, %p26, %p37, %p48, %p59, %p70, %p77;
+    .reg .u32 %r17, %r18, %r20, %r21, %r22, %r23, %r24, %r28, %r29, %r31, %r32, %r33, %r34, %r35, %r39, %r4, %r40, %r42, %r43, %r44, %r45, %r46, %r5, %r50, %r51, %r53, %r54, %r55, %r56, %r57, %r6, %r61, %r62, %r64, %r65, %r66, %r67, %r68, %r7, %r72, %r73, %r74, %r8, %r80, %r81, %r82;
+    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd19, %rd2, %rd25, %rd3, %rd30, %rd36, %rd41, %rd47, %rd52, %rd58, %rd63, %rd69, %rd75, %rd76, %rd79, %rd9;
 
   ld.param.u64 %rd0, [reduce_max_param_data_data];
   ld.param.u64 %rd1, [reduce_max_param_data_len];
@@ -139,107 +138,106 @@
   reduce_max_else_12:
   mov.u32 %r18, 0; // no else branch
   reduce_max_end_12:
-  mov.b64 %rd19, %rd10; // param: val
-  mov.u64 %rd20, 16;
-  cvt.u32.u64 %r21, %rd20;
-  mov.b64 {%r22, %r23}, %rd19;
-  shfl.sync.bfly.b32 %r24, %r22, %r21, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r25, %r23, %r21, 31, 0xffffffff;
-  mov.b64 %rd26, {%r24, %r25};
-  setp.gt.u64 %p27, %rd26, %rd19;
-  @%p27 bra reduce_max_then_28;
-  bra reduce_max_else_28;
-  reduce_max_then_28:
-  mov.u32 %r29, 0; // unit
-  mov.u32 %r30, %r29;
-  mov.u64 %rd19, %rd26; // if wb: v
-  bra reduce_max_end_28;
-  reduce_max_else_28:
-  mov.u32 %r30, 0; // no else branch
-  reduce_max_end_28:
-  mov.u64 %rd31, 8;
-  cvt.u32.u64 %r32, %rd31;
-  mov.b64 {%r33, %r34}, %rd19;
-  shfl.sync.bfly.b32 %r35, %r33, %r32, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r36, %r34, %r32, 31, 0xffffffff;
-  mov.b64 %rd37, {%r35, %r36};
-  setp.gt.u64 %p38, %rd37, %rd19;
-  @%p38 bra reduce_max_then_39;
-  bra reduce_max_else_39;
-  reduce_max_then_39:
-  mov.u32 %r40, 0; // unit
-  mov.u32 %r41, %r40;
-  mov.u64 %rd19, %rd37; // if wb: v
-  bra reduce_max_end_39;
-  reduce_max_else_39:
-  mov.u32 %r41, 0; // no else branch
-  reduce_max_end_39:
-  mov.u64 %rd42, 4;
-  cvt.u32.u64 %r43, %rd42;
-  mov.b64 {%r44, %r45}, %rd19;
-  shfl.sync.bfly.b32 %r46, %r44, %r43, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r47, %r45, %r43, 31, 0xffffffff;
-  mov.b64 %rd48, {%r46, %r47};
-  setp.gt.u64 %p49, %rd48, %rd19;
-  @%p49 bra reduce_max_then_50;
-  bra reduce_max_else_50;
-  reduce_max_then_50:
-  mov.u32 %r51, 0; // unit
-  mov.u32 %r52, %r51;
-  mov.u64 %rd19, %rd48; // if wb: v
-  bra reduce_max_end_50;
-  reduce_max_else_50:
-  mov.u32 %r52, 0; // no else branch
-  reduce_max_end_50:
-  mov.u64 %rd53, 2;
-  cvt.u32.u64 %r54, %rd53;
-  mov.b64 {%r55, %r56}, %rd19;
-  shfl.sync.bfly.b32 %r57, %r55, %r54, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r58, %r56, %r54, 31, 0xffffffff;
-  mov.b64 %rd59, {%r57, %r58};
-  setp.gt.u64 %p60, %rd59, %rd19;
-  @%p60 bra reduce_max_then_61;
-  bra reduce_max_else_61;
-  reduce_max_then_61:
-  mov.u32 %r62, 0; // unit
-  mov.u32 %r63, %r62;
-  mov.u64 %rd19, %rd59; // if wb: v
-  bra reduce_max_end_61;
-  reduce_max_else_61:
-  mov.u32 %r63, 0; // no else branch
-  reduce_max_end_61:
-  mov.u64 %rd64, 1;
-  cvt.u32.u64 %r65, %rd64;
-  mov.b64 {%r66, %r67}, %rd19;
-  shfl.sync.bfly.b32 %r68, %r66, %r65, 31, 0xffffffff;
-  shfl.sync.bfly.b32 %r69, %r67, %r65, 31, 0xffffffff;
-  mov.b64 %rd70, {%r68, %r69};
-  setp.gt.u64 %p71, %rd70, %rd19;
-  @%p71 bra reduce_max_then_72;
-  bra reduce_max_else_72;
-  reduce_max_then_72:
-  mov.u32 %r73, 0; // unit
-  mov.u32 %r74, %r73;
-  mov.u64 %rd19, %rd70; // if wb: v
-  bra reduce_max_end_72;
-  reduce_max_else_72:
-  mov.u32 %r74, 0; // no else branch
-  reduce_max_end_72:
-  mov.u32 %r75, %laneid;
-  cvt.u64.u32 %rd76, %r75;
-  mov.u64 %rd77, 0;
-  setp.eq.u64 %p78, %rd76, %rd77;
-  @%p78 bra reduce_max_then_79;
-  bra reduce_max_else_79;
-  reduce_max_then_79:
-  atom.global.max.u64 %rd80, [%rd3], %rd19;
-  mov.u32 %r81, 0; // unit
-  mov.u32 %r82, %r81;
-  bra reduce_max_end_79;
-  reduce_max_else_79:
-  mov.u32 %r82, 0; // no else branch
-  reduce_max_end_79:
-  mov.u32 %r83, 0; // unit
+  mov.u64 %rd19, 16;
+  cvt.u32.u64 %r20, %rd19;
+  mov.b64 {%r21, %r22}, %rd10;
+  shfl.sync.bfly.b32 %r23, %r21, %r20, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r24, %r22, %r20, 31, 0xffffffff;
+  mov.b64 %rd25, {%r23, %r24};
+  setp.gt.u64 %p26, %rd25, %rd10;
+  @%p26 bra reduce_max_then_27;
+  bra reduce_max_else_27;
+  reduce_max_then_27:
+  mov.u32 %r28, 0; // unit
+  mov.u32 %r29, %r28;
+  mov.u64 %rd10, %rd25; // if wb: v
+  bra reduce_max_end_27;
+  reduce_max_else_27:
+  mov.u32 %r29, 0; // no else branch
+  reduce_max_end_27:
+  mov.u64 %rd30, 8;
+  cvt.u32.u64 %r31, %rd30;
+  mov.b64 {%r32, %r33}, %rd10;
+  shfl.sync.bfly.b32 %r34, %r32, %r31, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r35, %r33, %r31, 31, 0xffffffff;
+  mov.b64 %rd36, {%r34, %r35};
+  setp.gt.u64 %p37, %rd36, %rd10;
+  @%p37 bra reduce_max_then_38;
+  bra reduce_max_else_38;
+  reduce_max_then_38:
+  mov.u32 %r39, 0; // unit
+  mov.u32 %r40, %r39;
+  mov.u64 %rd10, %rd36; // if wb: v
+  bra reduce_max_end_38;
+  reduce_max_else_38:
+  mov.u32 %r40, 0; // no else branch
+  reduce_max_end_38:
+  mov.u64 %rd41, 4;
+  cvt.u32.u64 %r42, %rd41;
+  mov.b64 {%r43, %r44}, %rd10;
+  shfl.sync.bfly.b32 %r45, %r43, %r42, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r46, %r44, %r42, 31, 0xffffffff;
+  mov.b64 %rd47, {%r45, %r46};
+  setp.gt.u64 %p48, %rd47, %rd10;
+  @%p48 bra reduce_max_then_49;
+  bra reduce_max_else_49;
+  reduce_max_then_49:
+  mov.u32 %r50, 0; // unit
+  mov.u32 %r51, %r50;
+  mov.u64 %rd10, %rd47; // if wb: v
+  bra reduce_max_end_49;
+  reduce_max_else_49:
+  mov.u32 %r51, 0; // no else branch
+  reduce_max_end_49:
+  mov.u64 %rd52, 2;
+  cvt.u32.u64 %r53, %rd52;
+  mov.b64 {%r54, %r55}, %rd10;
+  shfl.sync.bfly.b32 %r56, %r54, %r53, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r57, %r55, %r53, 31, 0xffffffff;
+  mov.b64 %rd58, {%r56, %r57};
+  setp.gt.u64 %p59, %rd58, %rd10;
+  @%p59 bra reduce_max_then_60;
+  bra reduce_max_else_60;
+  reduce_max_then_60:
+  mov.u32 %r61, 0; // unit
+  mov.u32 %r62, %r61;
+  mov.u64 %rd10, %rd58; // if wb: v
+  bra reduce_max_end_60;
+  reduce_max_else_60:
+  mov.u32 %r62, 0; // no else branch
+  reduce_max_end_60:
+  mov.u64 %rd63, 1;
+  cvt.u32.u64 %r64, %rd63;
+  mov.b64 {%r65, %r66}, %rd10;
+  shfl.sync.bfly.b32 %r67, %r65, %r64, 31, 0xffffffff;
+  shfl.sync.bfly.b32 %r68, %r66, %r64, 31, 0xffffffff;
+  mov.b64 %rd69, {%r67, %r68};
+  setp.gt.u64 %p70, %rd69, %rd10;
+  @%p70 bra reduce_max_then_71;
+  bra reduce_max_else_71;
+  reduce_max_then_71:
+  mov.u32 %r72, 0; // unit
+  mov.u32 %r73, %r72;
+  mov.u64 %rd10, %rd69; // if wb: v
+  bra reduce_max_end_71;
+  reduce_max_else_71:
+  mov.u32 %r73, 0; // no else branch
+  reduce_max_end_71:
+  mov.u32 %r74, %laneid;
+  cvt.u64.u32 %rd75, %r74;
+  mov.u64 %rd76, 0;
+  setp.eq.u64 %p77, %rd75, %rd76;
+  @%p77 bra reduce_max_then_78;
+  bra reduce_max_else_78;
+  reduce_max_then_78:
+  atom.global.max.u64 %rd79, [%rd3], %rd10;
+  mov.u32 %r80, 0; // unit
+  mov.u32 %r81, %r80;
+  bra reduce_max_end_78;
+  reduce_max_else_78:
+  mov.u32 %r81, 0; // no else branch
+  reduce_max_end_78:
+  mov.u32 %r82, 0; // unit
   ret;
 }
 

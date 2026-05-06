@@ -357,6 +357,6 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 1
-   [ASSUME] demos/1123_forge_tiled_attention.fg:99  (> denom 0)
+   [ASSUME] /home/garrick/forge/demos/1123_forge_tiled_attention.fg:99  (> denom 0)
              "denom >= exp(0) = 1 at the argmax"
    ---- END AUDIT LOG ---- */

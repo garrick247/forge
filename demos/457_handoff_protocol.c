@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Handoff Handoff;
+
 typedef struct Handoff {
   uint64_t produced;
   uint64_t handoff_pending;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct EventLog EventLog;
+
 typedef struct EventLog {
   uint64_t count;
   uint64_t cap;

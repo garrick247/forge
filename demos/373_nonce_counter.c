@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Nonce Nonce;
+
 typedef struct Nonce {
   uint64_t current;
   uint64_t last;

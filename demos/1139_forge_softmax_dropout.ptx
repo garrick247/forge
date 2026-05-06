@@ -16,10 +16,10 @@
     .param .f32 softmax_dropout_param_keep_scale
 )
 {
-    .reg .pred %p101, %p15, %p29, %p36, %p43, %p50, %p57, %p62, %p91;
-    .reg .f32 %f103, %f104, %f105, %f13, %f14, %f22, %f25, %f28, %f35, %f42, %f49, %f56, %f61, %f64, %f65, %f66, %f69, %f7, %f72, %f73, %f76, %f77, %f80, %f81, %f84, %f85, %f88, %f89, %f99;
-    .reg .u32 %r10, %r100, %r106, %r111, %r112, %r113, %r17, %r23, %r24, %r27, %r31, %r32, %r34, %r38, %r39, %r41, %r45, %r46, %r48, %r52, %r53, %r55, %r59, %r60, %r67, %r68, %r71, %r75, %r79, %r8, %r83, %r87, %r90, %r93, %r98;
-    .reg .u64 %rd0, %rd1, %rd107, %rd108, %rd109, %rd11, %rd110, %rd12, %rd18, %rd19, %rd2, %rd20, %rd21, %rd26, %rd3, %rd33, %rd4, %rd40, %rd47, %rd5, %rd54, %rd6, %rd70, %rd74, %rd78, %rd82, %rd86, %rd9, %rd94, %rd95, %rd96, %rd97;
+    .reg .pred %p15, %p28, %p35, %p42, %p49, %p56, %p61, %p89, %p99;
+    .reg .f32 %f101, %f102, %f103, %f13, %f14, %f22, %f27, %f34, %f41, %f48, %f55, %f60, %f63, %f64, %f65, %f7, %f70, %f71, %f74, %f75, %f78, %f79, %f82, %f83, %f86, %f87, %f97;
+    .reg .u32 %r10, %r104, %r109, %r110, %r111, %r17, %r23, %r24, %r26, %r30, %r31, %r33, %r37, %r38, %r40, %r44, %r45, %r47, %r51, %r52, %r54, %r58, %r59, %r66, %r67, %r69, %r73, %r77, %r8, %r81, %r85, %r88, %r91, %r96, %r98;
+    .reg .u64 %rd0, %rd1, %rd105, %rd106, %rd107, %rd108, %rd11, %rd12, %rd18, %rd19, %rd2, %rd20, %rd21, %rd25, %rd3, %rd32, %rd39, %rd4, %rd46, %rd5, %rd53, %rd6, %rd68, %rd72, %rd76, %rd80, %rd84, %rd9, %rd92, %rd93, %rd94, %rd95;
 
   ld.param.u64 %rd0, [softmax_dropout_param_inp_data];
   ld.param.u64 %rd1, [softmax_dropout_param_inp_len];
@@ -54,150 +54,148 @@
   softmax_dropout_else_16:
   mov.u32 %r24, 0; // no else branch
   softmax_dropout_end_16:
-  mov.b32 %f25, %f14; // param: val
-  mov.u64 %rd26, 16;
-  cvt.u32.u64 %r27, %rd26;
-  shfl.sync.bfly.b32 %f28, %f25, %r27, 31, 0xffffffff;
-  setp.gt.f32 %p29, %f28, %f25;
-  @%p29 bra softmax_dropout_then_30;
-  bra softmax_dropout_else_30;
-  softmax_dropout_then_30:
-  mov.u32 %r31, 0; // unit
-  mov.u32 %r32, %r31;
-  mov.f32 %f25, %f28; // if wb: v
-  bra softmax_dropout_end_30;
-  softmax_dropout_else_30:
-  mov.u32 %r32, 0; // no else branch
-  softmax_dropout_end_30:
-  mov.u64 %rd33, 8;
-  cvt.u32.u64 %r34, %rd33;
-  shfl.sync.bfly.b32 %f35, %f25, %r34, 31, 0xffffffff;
-  setp.gt.f32 %p36, %f35, %f25;
-  @%p36 bra softmax_dropout_then_37;
-  bra softmax_dropout_else_37;
-  softmax_dropout_then_37:
-  mov.u32 %r38, 0; // unit
-  mov.u32 %r39, %r38;
-  mov.f32 %f25, %f35; // if wb: v
-  bra softmax_dropout_end_37;
-  softmax_dropout_else_37:
-  mov.u32 %r39, 0; // no else branch
-  softmax_dropout_end_37:
-  mov.u64 %rd40, 4;
-  cvt.u32.u64 %r41, %rd40;
-  shfl.sync.bfly.b32 %f42, %f25, %r41, 31, 0xffffffff;
-  setp.gt.f32 %p43, %f42, %f25;
-  @%p43 bra softmax_dropout_then_44;
-  bra softmax_dropout_else_44;
-  softmax_dropout_then_44:
-  mov.u32 %r45, 0; // unit
-  mov.u32 %r46, %r45;
-  mov.f32 %f25, %f42; // if wb: v
-  bra softmax_dropout_end_44;
-  softmax_dropout_else_44:
-  mov.u32 %r46, 0; // no else branch
-  softmax_dropout_end_44:
-  mov.u64 %rd47, 2;
-  cvt.u32.u64 %r48, %rd47;
-  shfl.sync.bfly.b32 %f49, %f25, %r48, 31, 0xffffffff;
-  setp.gt.f32 %p50, %f49, %f25;
-  @%p50 bra softmax_dropout_then_51;
-  bra softmax_dropout_else_51;
-  softmax_dropout_then_51:
-  mov.u32 %r52, 0; // unit
-  mov.u32 %r53, %r52;
-  mov.f32 %f25, %f49; // if wb: v
-  bra softmax_dropout_end_51;
-  softmax_dropout_else_51:
-  mov.u32 %r53, 0; // no else branch
-  softmax_dropout_end_51:
-  mov.u64 %rd54, 1;
-  cvt.u32.u64 %r55, %rd54;
-  shfl.sync.bfly.b32 %f56, %f25, %r55, 31, 0xffffffff;
-  setp.gt.f32 %p57, %f56, %f25;
-  @%p57 bra softmax_dropout_then_58;
-  bra softmax_dropout_else_58;
-  softmax_dropout_then_58:
-  mov.u32 %r59, 0; // unit
-  mov.u32 %r60, %r59;
-  mov.f32 %f25, %f56; // if wb: v
-  bra softmax_dropout_end_58;
-  softmax_dropout_else_58:
-  mov.u32 %r60, 0; // no else branch
-  softmax_dropout_end_58:
-  mov.f32 %f61, 0f00000000; // 0
-  setp.lt.u64 %p62, %rd9, %rd6;
-  @%p62 bra softmax_dropout_then_63;
-  bra softmax_dropout_else_63;
-  softmax_dropout_then_63:
-  sub.f32 %f64, %f14, %f25;
-  mul.rn.f32 %f65, %f64, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f66, %f65;
-  mov.u32 %r67, 0; // unit
-  mov.u32 %r68, %r67;
-  mov.f32 %f61, %f66; // if wb: ex
-  bra softmax_dropout_end_63;
-  softmax_dropout_else_63:
-  mov.u32 %r68, 0; // no else branch
-  softmax_dropout_end_63:
-  mov.b32 %f69, %f61; // param: val
-  mov.u64 %rd70, 16;
-  cvt.u32.u64 %r71, %rd70;
-  shfl.sync.bfly.b32 %f72, %f69, %r71, 31, 0xffffffff;
-  add.f32 %f73, %f69, %f72;
-  mov.u64 %rd74, 8;
-  cvt.u32.u64 %r75, %rd74;
-  shfl.sync.bfly.b32 %f76, %f73, %r75, 31, 0xffffffff;
-  add.f32 %f77, %f73, %f76;
-  mov.u64 %rd78, 4;
-  cvt.u32.u64 %r79, %rd78;
-  shfl.sync.bfly.b32 %f80, %f77, %r79, 31, 0xffffffff;
-  add.f32 %f81, %f77, %f80;
-  mov.u64 %rd82, 2;
-  cvt.u32.u64 %r83, %rd82;
-  shfl.sync.bfly.b32 %f84, %f81, %r83, 31, 0xffffffff;
-  add.f32 %f85, %f81, %f84;
-  mov.u64 %rd86, 1;
-  cvt.u32.u64 %r87, %rd86;
-  shfl.sync.bfly.b32 %f88, %f85, %r87, 31, 0xffffffff;
-  add.f32 %f89, %f85, %f88;
-  mov.u32 %r90, 0; // proof/assume erased
-  setp.lt.u64 %p91, %rd9, %rd6;
-  @%p91 bra softmax_dropout_then_92;
-  bra softmax_dropout_else_92;
-  softmax_dropout_then_92:
-  mov.u32 %r93, 0; // proof/assume erased
-  add.u64 %rd94, %rd12, %rd9;
-  mov.u64 %rd95, 4;
-  mul.lo.u64 %rd96, %rd94, %rd95;
-  add.u64 %rd97, %rd2, %rd96;
-  ld.global.u32 %r98, [%rd97];
-  div.rn.f32 %f99, %f61, %f89;
-  mov.u32 %r100, 0;
-  setp.eq.u32 %p101, %r98, %r100;
-  @%p101 bra softmax_dropout_then_102;
-  bra softmax_dropout_else_102;
-  softmax_dropout_then_102:
-  mov.f32 %f103, 0f00000000; // 0
-  mov.f32 %f104, %f103;
-  bra softmax_dropout_end_102;
-  softmax_dropout_else_102:
-  mul.f32 %f105, %f99, %f7;
-  mov.f32 %f104, %f105;
-  softmax_dropout_end_102:
-  mov.u32 %r106, 0; // proof/assume erased
-  add.u64 %rd107, %rd12, %rd9;
-  mov.u64 %rd108, 4;
-  mul.lo.u64 %rd109, %rd107, %rd108;
-  add.u64 %rd110, %rd4, %rd109;
-  st.global.f32 [%rd110], %f104;
+  mov.u64 %rd25, 16;
+  cvt.u32.u64 %r26, %rd25;
+  shfl.sync.bfly.b32 %f27, %f14, %r26, 31, 0xffffffff;
+  setp.gt.f32 %p28, %f27, %f14;
+  @%p28 bra softmax_dropout_then_29;
+  bra softmax_dropout_else_29;
+  softmax_dropout_then_29:
+  mov.u32 %r30, 0; // unit
+  mov.u32 %r31, %r30;
+  mov.f32 %f14, %f27; // if wb: v
+  bra softmax_dropout_end_29;
+  softmax_dropout_else_29:
+  mov.u32 %r31, 0; // no else branch
+  softmax_dropout_end_29:
+  mov.u64 %rd32, 8;
+  cvt.u32.u64 %r33, %rd32;
+  shfl.sync.bfly.b32 %f34, %f14, %r33, 31, 0xffffffff;
+  setp.gt.f32 %p35, %f34, %f14;
+  @%p35 bra softmax_dropout_then_36;
+  bra softmax_dropout_else_36;
+  softmax_dropout_then_36:
+  mov.u32 %r37, 0; // unit
+  mov.u32 %r38, %r37;
+  mov.f32 %f14, %f34; // if wb: v
+  bra softmax_dropout_end_36;
+  softmax_dropout_else_36:
+  mov.u32 %r38, 0; // no else branch
+  softmax_dropout_end_36:
+  mov.u64 %rd39, 4;
+  cvt.u32.u64 %r40, %rd39;
+  shfl.sync.bfly.b32 %f41, %f14, %r40, 31, 0xffffffff;
+  setp.gt.f32 %p42, %f41, %f14;
+  @%p42 bra softmax_dropout_then_43;
+  bra softmax_dropout_else_43;
+  softmax_dropout_then_43:
+  mov.u32 %r44, 0; // unit
+  mov.u32 %r45, %r44;
+  mov.f32 %f14, %f41; // if wb: v
+  bra softmax_dropout_end_43;
+  softmax_dropout_else_43:
+  mov.u32 %r45, 0; // no else branch
+  softmax_dropout_end_43:
+  mov.u64 %rd46, 2;
+  cvt.u32.u64 %r47, %rd46;
+  shfl.sync.bfly.b32 %f48, %f14, %r47, 31, 0xffffffff;
+  setp.gt.f32 %p49, %f48, %f14;
+  @%p49 bra softmax_dropout_then_50;
+  bra softmax_dropout_else_50;
+  softmax_dropout_then_50:
+  mov.u32 %r51, 0; // unit
+  mov.u32 %r52, %r51;
+  mov.f32 %f14, %f48; // if wb: v
+  bra softmax_dropout_end_50;
+  softmax_dropout_else_50:
+  mov.u32 %r52, 0; // no else branch
+  softmax_dropout_end_50:
+  mov.u64 %rd53, 1;
+  cvt.u32.u64 %r54, %rd53;
+  shfl.sync.bfly.b32 %f55, %f14, %r54, 31, 0xffffffff;
+  setp.gt.f32 %p56, %f55, %f14;
+  @%p56 bra softmax_dropout_then_57;
+  bra softmax_dropout_else_57;
+  softmax_dropout_then_57:
+  mov.u32 %r58, 0; // unit
+  mov.u32 %r59, %r58;
+  mov.f32 %f14, %f55; // if wb: v
+  bra softmax_dropout_end_57;
+  softmax_dropout_else_57:
+  mov.u32 %r59, 0; // no else branch
+  softmax_dropout_end_57:
+  mov.f32 %f60, 0f00000000; // 0
+  setp.lt.u64 %p61, %rd9, %rd6;
+  @%p61 bra softmax_dropout_then_62;
+  bra softmax_dropout_else_62;
+  softmax_dropout_then_62:
+  sub.f32 %f63, %f14, %f14;
+  mul.rn.f32 %f64, %f63, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f65, %f64;
+  mov.u32 %r66, 0; // unit
+  mov.u32 %r67, %r66;
+  mov.f32 %f60, %f65; // if wb: ex
+  bra softmax_dropout_end_62;
+  softmax_dropout_else_62:
+  mov.u32 %r67, 0; // no else branch
+  softmax_dropout_end_62:
+  mov.u64 %rd68, 16;
+  cvt.u32.u64 %r69, %rd68;
+  shfl.sync.bfly.b32 %f70, %f60, %r69, 31, 0xffffffff;
+  add.f32 %f71, %f60, %f70;
+  mov.u64 %rd72, 8;
+  cvt.u32.u64 %r73, %rd72;
+  shfl.sync.bfly.b32 %f74, %f71, %r73, 31, 0xffffffff;
+  add.f32 %f75, %f71, %f74;
+  mov.u64 %rd76, 4;
+  cvt.u32.u64 %r77, %rd76;
+  shfl.sync.bfly.b32 %f78, %f75, %r77, 31, 0xffffffff;
+  add.f32 %f79, %f75, %f78;
+  mov.u64 %rd80, 2;
+  cvt.u32.u64 %r81, %rd80;
+  shfl.sync.bfly.b32 %f82, %f79, %r81, 31, 0xffffffff;
+  add.f32 %f83, %f79, %f82;
+  mov.u64 %rd84, 1;
+  cvt.u32.u64 %r85, %rd84;
+  shfl.sync.bfly.b32 %f86, %f83, %r85, 31, 0xffffffff;
+  add.f32 %f87, %f83, %f86;
+  mov.u32 %r88, 0; // proof/assume erased
+  setp.lt.u64 %p89, %rd9, %rd6;
+  @%p89 bra softmax_dropout_then_90;
+  bra softmax_dropout_else_90;
+  softmax_dropout_then_90:
+  mov.u32 %r91, 0; // proof/assume erased
+  add.u64 %rd92, %rd12, %rd9;
+  mov.u64 %rd93, 4;
+  mul.lo.u64 %rd94, %rd92, %rd93;
+  add.u64 %rd95, %rd2, %rd94;
+  ld.global.u32 %r96, [%rd95];
+  div.rn.f32 %f97, %f60, %f87;
+  mov.u32 %r98, 0;
+  setp.eq.u32 %p99, %r96, %r98;
+  @%p99 bra softmax_dropout_then_100;
+  bra softmax_dropout_else_100;
+  softmax_dropout_then_100:
+  mov.f32 %f101, 0f00000000; // 0
+  mov.f32 %f102, %f101;
+  bra softmax_dropout_end_100;
+  softmax_dropout_else_100:
+  mul.f32 %f103, %f97, %f7;
+  mov.f32 %f102, %f103;
+  softmax_dropout_end_100:
+  mov.u32 %r104, 0; // proof/assume erased
+  add.u64 %rd105, %rd12, %rd9;
+  mov.u64 %rd106, 4;
+  mul.lo.u64 %rd107, %rd105, %rd106;
+  add.u64 %rd108, %rd4, %rd107;
+  st.global.f32 [%rd108], %f102;
+  mov.u32 %r109, 0; // unit
+  mov.u32 %r110, %r109;
+  bra softmax_dropout_end_90;
+  softmax_dropout_else_90:
+  mov.u32 %r110, 0; // no else branch
+  softmax_dropout_end_90:
   mov.u32 %r111, 0; // unit
-  mov.u32 %r112, %r111;
-  bra softmax_dropout_end_92;
-  softmax_dropout_else_92:
-  mov.u32 %r112, 0; // no else branch
-  softmax_dropout_end_92:
-  mov.u32 %r113, 0; // unit
   ret;
 }
 
