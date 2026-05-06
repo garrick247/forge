@@ -100,6 +100,37 @@ Open questions resolved by user's "everything" instruction:
 
 ## Tier 5 — Followups
 
+- [ ] **VortexSTARK forge-ntt-batch host-side overhead amortization**.
+      `cuda_circle_ntt_batch_layer_forge` (in
+      `cuda/circle_ntt_batch_forge.cu`) does `cudaMalloc + cudaMemcpy +
+      cudaFree` for the span-of-spans descriptor on EVERY layer launch.
+      For log_n=18 (18 layers) that is ~54 extra CUDA API calls and
+      adds ~100ms host-side overhead, which is essentially the entire
+      gap between FORGE-on (~487ms) and FORGE-off (~362ms) at this
+      size. The `_evaluate_batch_forge` and `_interpolate_batch_forge`
+      entry points already amortize this across all layers; the fix
+      is to switch the `LAUNCH_NTT_BATCH_LAYER` macro dispatch in
+      `cuda/circle_ntt.cu` to call the aggregate entry points instead
+      of looping itself. Expected outcome: forge_bench ratio at log_n=18
+      drops from 1.35x to ~1.05x (matches the steady-state ratio at
+      log_n>=22). (Surfaced 2026-05-06 by end-to-end FORGE-vs-baseline
+      sweep.)
+
+- [ ] **VortexSTARK log_n>=25 VRAM ceiling**. At log_n=25 the prover
+      panics on a 537MB cudaMalloc despite plenty of free VRAM at
+      startup — peak demand actually exceeds 32GB on the Cairo
+      prove path. Switching forge_bench to `init_memory_pool_greedy`
+      (no release threshold) gives ~6% steady-state improvement at
+      log_n=24 but does NOT move the log_n=25 ceiling — confirming the
+      wall is real peak demand, not fragmentation. Workloads with
+      smaller per-element footprint (Poseidon at 5.7M hash/s) push
+      past log_n=24 successfully via full_benchmark. Per the README
+      the design needs ~28GB at log_n>=27, so log_n=25 is just inside
+      the regime where allocation patterns matter. (Surfaced
+      2026-05-06.)
+
+
+
 - [x] ~~**VortexSTARK test_stwo_fri_verifier_e2e**~~: dead fork
       *did* carry a single-line patch widening LOG_MIN_BLOWUP_FACTOR
       from 1 to 0. Reapplied on garrick247/stwo-fork at commit
@@ -133,6 +164,7 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 VortexSTARK end-to-end campaign — 396 lib tests, 34 integration, sustained_bench 490 proofs/61s 100% verified, full_benchmark Cairo log_n=24 + Poseidon log_n=28, 5 stwo cross-validate tests green, FORGE-vs-baseline ratio quantified (1.06x at log_n>=22, ~1.35x at small sizes due to upload_col_spans overhead)
 - ✅ 2026-05-06 stwo-fork patched (LOG_MIN_BLOWUP_FACTOR 1→0); VortexSTARK CI fully green at 396/0/3 (VortexSTARK#4)
 - ✅ 2026-05-06 stwo-fork rebuilt from upstream (garrick247/stwo-fork at v2.2.0); VortexSTARK 395/396 tests pass (VortexSTARK#3)
 - ✅ 2026-05-06 cuda-toolkit-13-2 installed on linux runner box (nvcc + ptxas)
