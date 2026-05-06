@@ -92,21 +92,45 @@ let parse_file path =
 (* Tracks canonical paths already loaded; prevents cycles *)
 let loaded_files : string list ref = ref []
 
+(* Walk up from `dir` looking for a directory containing `dune-project`
+   (i.e., the repo root). Returns Some root_dir or None.                *)
+let rec find_repo_root dir =
+  if Sys.file_exists (Filename.concat dir "dune-project") then Some dir
+  else
+    let parent = Filename.dirname dir in
+    if parent = dir then None
+    else find_repo_root parent
+
 (* Load a .fg file and recursively resolve its uses.
    base_dir: directory of the file that contains the 'use' directive.
-   path_parts: the ident list from 'use foo::bar' — becomes "foo/bar.fg". *)
+   path_parts: the ident list from 'use foo::bar' becomes "foo/bar.fg".
+   Resolution: try <base_dir>/<rel> first, then fall back to
+   <repo-root>/demos/<rel> so files outside demos/ (e.g. analysis/...)
+   can use std modules without a hand-made symlink. *)
 let rec load_module base_dir (path_parts : Ast.ident list) =
   let rel = (String.concat "/" (List.map (fun id -> id.Ast.name) path_parts)) ^ ".fg" in
-  let canonical =
+  let local =
     if Filename.is_relative rel then Filename.concat base_dir rel
     else rel
   in
+  let canonical =
+    if Sys.file_exists local then local
+    else
+      match find_repo_root base_dir with
+      | Some root ->
+          let fallback =
+            Filename.concat (Filename.concat root "demos") rel
+          in
+          if Sys.file_exists fallback then fallback else local
+      | None -> local
+  in
   if List.mem canonical !loaded_files then begin
-    []   (* already loaded — skip to break cycles *)
+    []
   end else begin
     loaded_files := canonical :: !loaded_files;
     if not (Sys.file_exists canonical) then begin
-      Printf.eprintf "[forge] use: file not found: %s\n" canonical;
+      Printf.eprintf "[forge] use: file not found: %s
+" canonical;
       exit 1
     end;
     let prog = parse_file canonical in

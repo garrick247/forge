@@ -1,0 +1,21 @@
+// expected: PROOF FAIL
+// Demo bad/10: bitfield assignment without proof of fit
+//
+// Assigns to a 4-bit field with only `requires v < 100u32` — values
+// 16..99 violate the bitfield's 4-bit limit. Forge should reject the
+// OBitfieldWidth obligation because v < 16 cannot be derived from
+// v < 100.
+
+struct Tiny {
+    nibble: u32 : 4,
+}
+
+fn write_nibble(t: Tiny, v: u32) -> u32
+    requires v < 100u32
+{
+    let mut x: Tiny = t;
+    x.nibble = v;
+    x.nibble
+}
+
+fn main() -> u64 { 0u64 }

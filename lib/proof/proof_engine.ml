@@ -15,13 +15,14 @@ open Ast
 (* ------------------------------------------------------------------ *)
 
 type obligation_kind =
-  | OPrecondition  of string   (* function name *)
-  | OPostcondition of string
-  | OBoundsCheck   of string   (* array name *)
-  | ONoOverflow    of string   (* operation *)
-  | OTermination   of string   (* loop/function name *)
-  | OLinear        of string   (* linear value usage *)
-  | OInvariant     of string   (* struct/loop invariant *)
+  | OPrecondition   of string   (* function name *)
+  | OPostcondition  of string
+  | OBoundsCheck    of string   (* array name *)
+  | ONoOverflow     of string   (* operation *)
+  | OTermination    of string   (* loop/function name *)
+  | OLinear         of string   (* linear value usage *)
+  | OInvariant      of string   (* struct/loop invariant *)
+  | OBitfieldWidth  of string   (* "<struct>.<field>:<width>" *)
 
 type tier = Tier1_SMT | Tier2_Guided | Tier3_Manual
 
@@ -1036,6 +1037,7 @@ let try_smt ctx ob : proof_status =
     | OLinear v        -> "linear usage: " ^ v
     | OInvariant "assert" -> "assert"
     | OInvariant i     -> "invariant: " ^ i
+    | OBitfieldWidth f -> "bitfield width: " ^ f
   in
   match Z3Bridge.check_valid ctx ob.ob_pred with
   | Z3Bridge.Unsat -> Discharged Tier1_SMT
@@ -1134,6 +1136,11 @@ let suggest_hint ob : tier2_hint =
       HintAssume (Printf.sprintf
         "linear value '%s' not consumed exactly once\n\
          \x20 need: %s" v goal)
+  | OBitfieldWidth f ->
+      HintAssume (Printf.sprintf
+        "cannot prove value fits in bitfield '%s'\n\
+         \x20 need: %s\n\
+         \x20 try: add 'requires v < (1 << w)' guard or mask the value before assignment" f goal)
 
 (* ------------------------------------------------------------------ *)
 (* Main discharge function                                             *)

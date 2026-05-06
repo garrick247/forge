@@ -1435,6 +1435,16 @@ let check_bounds arr_expr idx_expr loc ctx =
   let pred = PBinop (Lt, idx_pred, len_pred) in
   add_obligation pred (OBoundsCheck "array") loc ctx
 
+(* Generate bitfield width obligation. For an n-bit unsigned bitfield
+   we require rhs < 2^n. The struct.field:width tag goes in the kind so
+   error messages identify which field overflowed.                         *)
+let check_bitfield_width tag width rhs_expr loc ctx =
+  if width >= 1 && width <= 62 then
+    let rhs_pred = expr_to_pred_simple rhs_expr in
+    let bound = Int64.shift_left 1L width in
+    let pred = PBinop (Lt, rhs_pred, PInt bound) in
+    add_obligation pred (OBitfieldWidth tag) loc ctx
+
 (* Check preconditions at a call site *)
 let check_preconditions fn_name reqs args params loc ctx =
   let subst = List.combine
@@ -1536,6 +1546,7 @@ let format_obligation_kind = function
   | OLinear v        -> "linear: " ^ v
   | OInvariant "assert" -> "assert"
   | OInvariant i     -> "invariant: " ^ i
+  | OBitfieldWidth f -> "bitfield width: " ^ f
 
 (* ------------------------------------------------------------------ *)
 (* Type checking expressions                                            *)
@@ -2167,6 +2178,34 @@ and infer_expr env expr : ty =
       let rt = check_expr env rhs in
       if not (ty_eq (base_ty lt) (base_ty rt)) then
         fail expr.expr_loc "assignment type mismatch";
+      (* Bitfield write: when LHS is `var.field` and the struct declares a
+         bitwidth for that field, generate an obligation that rhs fits in it.
+         We only handle the common case (LHS rooted at a local var); writes
+         through more complex LHS expressions skip the check rather than
+         risk emitting duplicate obligations from re-typechecking obj.   *)
+      (match lhs.expr_desc with
+       | EField ({ expr_desc = EVar id; _ }, field) ->
+           (match env_lookup_var env id.name with
+            | Some vi ->
+                let inner = match strip_qual vi.vi_ty with
+                  | TRef t | TRefMut t | TOwn t -> strip_qual t
+                  | t -> t
+                in
+                (match inner with
+                 | TNamed (sname, _) ->
+                     (match List.assoc_opt sname.name env.structs with
+                      | Some sd ->
+                          (match List.assoc_opt field.name sd.sd_bitwidths with
+                           | Some width ->
+                               let tag = Printf.sprintf "%s.%s:%d"
+                                           sd.sd_name.name field.name width in
+                               check_bitfield_width tag width rhs
+                                 expr.expr_loc env
+                           | None -> ())
+                      | None -> ())
+                 | _ -> ())
+            | None -> ())
+       | _ -> ());
       TPrim TUnit
 
   (* References *)
