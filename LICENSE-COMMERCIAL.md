@@ -42,7 +42,7 @@ is production use and requires a commercial license.
 
 For commercial licensing inquiries:
 
-- GitHub Issues: https://github.com/garrick99/forge/issues
+- GitHub Issues: https://github.com/garrick247/forge/issues
 - Email: [contact information to be added]
 
 ## FAQ

@@ -20,10 +20,10 @@ Forge (.fg)  ──►  CUDA C / PTX  ──►  [OpenCUDA]  ──►  [OpenPTX
 ```
 
 - **Forge** (this repo) — language + Z3 proof discharge + codegen
-- **[OpenCUDA](https://github.com/garrick99/opencuda)** — pure-Python CUDA C → PTX compiler
-- **[OpenPTXas](https://github.com/garrick99/openptxas)** — pure-Python PTX → SM_120 cubin assembler
-- **[forge-workbench](https://github.com/garrick99/forge-workbench)** — cross-stack CLI cockpit (run / compare / benchmark / classify)
-- **[VortexSTARK](https://github.com/garrick99/VortexSTARK)** — production user: GPU-native Circle STARK prover, 9 forge-emitted kernels default-on
+- **[OpenCUDA](https://github.com/garrick247/opencuda)** — pure-Python CUDA C → PTX compiler
+- **[OpenPTXas](https://github.com/garrick247/openptxas)** — pure-Python PTX → SM_120 cubin assembler
+- **[forge-workbench](https://github.com/garrick247/forge-workbench)** — cross-stack CLI cockpit (run / compare / benchmark / classify)
+- **[VortexSTARK](https://github.com/garrick247/VortexSTARK)** — production user: GPU-native Circle STARK prover, 9 forge-emitted kernels default-on
 
 No NVIDIA compiler is invoked at any stage of the toolchain.
 
@@ -99,7 +99,7 @@ opam install dune    # build system
 apt install z3       # SMT solver (or: brew install z3)
 
 # Build
-git clone https://github.com/garrick99/forge.git
+git clone https://github.com/garrick247/forge.git
 cd forge && dune build
 
 # Verify your first program
