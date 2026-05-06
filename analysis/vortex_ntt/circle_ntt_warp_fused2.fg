@@ -1,0 +1,131 @@
+// VortexSTARK Circle NTT — 2-layer fused warp-shuffle kernel.
+//
+// Fuses two consecutive inner butterfly layers in registers. Saves one
+// global-memory round-trip per fused pair. For inner layers where stride
+// stays within a warp (stride <= 16 for both layers, i.e. layer_idx <= 3),
+// no shared memory is needed.
+//
+// A full 8-layer fusion (per ANALYSIS.md) requires shared-memory + sync
+// modeling that is not yet wired through Forge proofs; this 2-layer
+// variant is the provable starting point. Extending to 4-layer (still
+// warp-only) is a mechanical repeat once we are happy with this.
+//
+// Forge proof note: an `if`-expression assigned to a let-binding does not
+// thread the postconditions of its branches' final calls (e.g. m31_add's
+// `ensures result < M31_P`) into the binding's environment. We pipe the
+// intermediate result through reduce_word, which restates the invariant
+// at near-zero runtime cost (one masked add, optional subtract) and lets
+// Layer B's m31_* calls discharge their preconditions on v1.
+
+use std::gpu;
+use std::m31;
+
+#[device]
+fn reduce_word(v: u32) -> u32
+    ensures result < M31_P
+{
+    let lo: u32 = v & M31_P;
+    let hi: u32 = v >> 31u32;
+    let r: u32 = lo + hi;
+    if r >= M31_P { r - M31_P } else { r }
+}
+
+#[kernel]
+fn circle_ntt_warp_fused2_forward(
+    data: span<u32>,
+    twiddles_a: span<u32>,
+    twiddles_b: span<u32>,
+    layer_idx: u32
+)
+    requires layer_idx < 4u32   // both strides <= 16, fit in warp
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    let stride_a: u64 = 1u64 << (layer_idx as u64);
+    let stride_b: u64 = 1u64 << ((layer_idx + 1u32) as u64);
+    let h_a: u64 = tid >> ((layer_idx + 1u32) as u64);
+    let h_b: u64 = tid >> ((layer_idx + 2u32) as u64);
+
+    if tid < data.len {
+        if h_a < twiddles_a.len {
+            if h_b < twiddles_b.len {
+                let v0: u32 = reduce_word(data[tid]);
+                let t_a: u32 = reduce_word(twiddles_a[h_a]);
+                let t_b: u32 = reduce_word(twiddles_b[h_b]);
+
+                // Layer A — within-warp shuffle, butterfly in registers.
+                let pa_u64: u64 = shfl_xor_sync(v0 as u64, stride_a, 32u64);
+                let pa: u32 = reduce_word(pa_u64 as u32);
+                let v1_raw: u32 = if (tid & stride_a) == 0u64 {
+                    let prod: u32 = m31_mul(pa, t_a);
+                    m31_add(v0, prod)
+                } else {
+                    let prod: u32 = m31_mul(v0, t_a);
+                    m31_sub(pa, prod)
+                };
+                let v1: u32 = reduce_word(v1_raw);
+
+                // Layer B — operates on v1 (still in register), no global IO.
+                let pb_u64: u64 = shfl_xor_sync(v1 as u64, stride_b, 32u64);
+                let pb: u32 = reduce_word(pb_u64 as u32);
+                let v2: u32 = if (tid & stride_b) == 0u64 {
+                    let prod: u32 = m31_mul(pb, t_b);
+                    m31_add(v1, prod)
+                } else {
+                    let prod: u32 = m31_mul(v1, t_b);
+                    m31_sub(pb, prod)
+                };
+
+                data[tid] = v2;
+            };
+        };
+    };
+}
+
+#[kernel]
+fn circle_ntt_warp_fused2_inverse(
+    data: span<u32>,
+    twiddles_a: span<u32>,
+    twiddles_b: span<u32>,
+    layer_idx: u32
+)
+    requires layer_idx < 4u32
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    let stride_a: u64 = 1u64 << (layer_idx as u64);
+    let stride_b: u64 = 1u64 << ((layer_idx + 1u32) as u64);
+    let h_a: u64 = tid >> ((layer_idx + 1u32) as u64);
+    let h_b: u64 = tid >> ((layer_idx + 2u32) as u64);
+
+    if tid < data.len {
+        if h_a < twiddles_a.len {
+            if h_b < twiddles_b.len {
+                let v0: u32 = reduce_word(data[tid]);
+                let t_a: u32 = reduce_word(twiddles_a[h_a]);
+                let t_b: u32 = reduce_word(twiddles_b[h_b]);
+
+                let pa_u64: u64 = shfl_xor_sync(v0 as u64, stride_a, 32u64);
+                let pa: u32 = reduce_word(pa_u64 as u32);
+                let v1_raw: u32 = if (tid & stride_a) == 0u64 {
+                    m31_add(v0, pa)
+                } else {
+                    let diff: u32 = m31_sub(pa, v0);
+                    m31_mul(diff, t_a)
+                };
+                let v1: u32 = reduce_word(v1_raw);
+
+                let pb_u64: u64 = shfl_xor_sync(v1 as u64, stride_b, 32u64);
+                let pb: u32 = reduce_word(pb_u64 as u32);
+                let v2: u32 = if (tid & stride_b) == 0u64 {
+                    m31_add(v1, pb)
+                } else {
+                    let diff: u32 = m31_sub(pb, v1);
+                    m31_mul(diff, t_b)
+                };
+
+                data[tid] = v2;
+            };
+        };
+    };
+}
+
+fn main() -> u64 { 0u64 }
