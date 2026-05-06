@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MonotoneClock MonotoneClock;
+
 typedef struct MonotoneClock {
   uint64_t time;
   uint64_t ticks;

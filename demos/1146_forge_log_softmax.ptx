@@ -13,10 +13,10 @@
     .param .u64 log_softmax_param_n_cols
 )
 {
-    .reg .pred %p12, %p26, %p33, %p40, %p47, %p54, %p59, %p90;
-    .reg .f32 %f10, %f11, %f19, %f22, %f25, %f32, %f39, %f46, %f53, %f58, %f61, %f62, %f63, %f66, %f69, %f70, %f73, %f74, %f77, %f78, %f81, %f82, %f85, %f86, %f88, %f89, %f93, %f94;
-    .reg .u32 %r100, %r101, %r14, %r20, %r21, %r24, %r28, %r29, %r31, %r35, %r36, %r38, %r42, %r43, %r45, %r49, %r5, %r50, %r52, %r56, %r57, %r64, %r65, %r68, %r7, %r72, %r76, %r80, %r84, %r87, %r92, %r99;
-    .reg .u64 %rd0, %rd1, %rd15, %rd16, %rd17, %rd18, %rd2, %rd23, %rd3, %rd30, %rd37, %rd4, %rd44, %rd51, %rd6, %rd67, %rd71, %rd75, %rd79, %rd8, %rd83, %rd9, %rd95, %rd96, %rd97, %rd98;
+    .reg .pred %p12, %p25, %p32, %p39, %p46, %p53, %p58, %p88;
+    .reg .f32 %f10, %f11, %f19, %f24, %f31, %f38, %f45, %f52, %f57, %f60, %f61, %f62, %f67, %f68, %f71, %f72, %f75, %f76, %f79, %f80, %f83, %f84, %f86, %f87, %f91, %f92;
+    .reg .u32 %r14, %r20, %r21, %r23, %r27, %r28, %r30, %r34, %r35, %r37, %r41, %r42, %r44, %r48, %r49, %r5, %r51, %r55, %r56, %r63, %r64, %r66, %r7, %r70, %r74, %r78, %r82, %r85, %r90, %r97, %r98, %r99;
+    .reg .u64 %rd0, %rd1, %rd15, %rd16, %rd17, %rd18, %rd2, %rd22, %rd29, %rd3, %rd36, %rd4, %rd43, %rd50, %rd6, %rd65, %rd69, %rd73, %rd77, %rd8, %rd81, %rd9, %rd93, %rd94, %rd95, %rd96;
 
   ld.param.u64 %rd0, [log_softmax_param_inp_data];
   ld.param.u64 %rd1, [log_softmax_param_inp_len];
@@ -48,135 +48,133 @@
   log_softmax_else_13:
   mov.u32 %r21, 0; // no else branch
   log_softmax_end_13:
-  mov.b32 %f22, %f11; // param: val
-  mov.u64 %rd23, 16;
-  cvt.u32.u64 %r24, %rd23;
-  shfl.sync.bfly.b32 %f25, %f22, %r24, 31, 0xffffffff;
-  setp.gt.f32 %p26, %f25, %f22;
-  @%p26 bra log_softmax_then_27;
-  bra log_softmax_else_27;
-  log_softmax_then_27:
-  mov.u32 %r28, 0; // unit
-  mov.u32 %r29, %r28;
-  mov.f32 %f22, %f25; // if wb: v
-  bra log_softmax_end_27;
-  log_softmax_else_27:
-  mov.u32 %r29, 0; // no else branch
-  log_softmax_end_27:
-  mov.u64 %rd30, 8;
-  cvt.u32.u64 %r31, %rd30;
-  shfl.sync.bfly.b32 %f32, %f22, %r31, 31, 0xffffffff;
-  setp.gt.f32 %p33, %f32, %f22;
-  @%p33 bra log_softmax_then_34;
-  bra log_softmax_else_34;
-  log_softmax_then_34:
-  mov.u32 %r35, 0; // unit
-  mov.u32 %r36, %r35;
-  mov.f32 %f22, %f32; // if wb: v
-  bra log_softmax_end_34;
-  log_softmax_else_34:
-  mov.u32 %r36, 0; // no else branch
-  log_softmax_end_34:
-  mov.u64 %rd37, 4;
-  cvt.u32.u64 %r38, %rd37;
-  shfl.sync.bfly.b32 %f39, %f22, %r38, 31, 0xffffffff;
-  setp.gt.f32 %p40, %f39, %f22;
-  @%p40 bra log_softmax_then_41;
-  bra log_softmax_else_41;
-  log_softmax_then_41:
-  mov.u32 %r42, 0; // unit
-  mov.u32 %r43, %r42;
-  mov.f32 %f22, %f39; // if wb: v
-  bra log_softmax_end_41;
-  log_softmax_else_41:
-  mov.u32 %r43, 0; // no else branch
-  log_softmax_end_41:
-  mov.u64 %rd44, 2;
-  cvt.u32.u64 %r45, %rd44;
-  shfl.sync.bfly.b32 %f46, %f22, %r45, 31, 0xffffffff;
-  setp.gt.f32 %p47, %f46, %f22;
-  @%p47 bra log_softmax_then_48;
-  bra log_softmax_else_48;
-  log_softmax_then_48:
-  mov.u32 %r49, 0; // unit
-  mov.u32 %r50, %r49;
-  mov.f32 %f22, %f46; // if wb: v
-  bra log_softmax_end_48;
-  log_softmax_else_48:
-  mov.u32 %r50, 0; // no else branch
-  log_softmax_end_48:
-  mov.u64 %rd51, 1;
-  cvt.u32.u64 %r52, %rd51;
-  shfl.sync.bfly.b32 %f53, %f22, %r52, 31, 0xffffffff;
-  setp.gt.f32 %p54, %f53, %f22;
-  @%p54 bra log_softmax_then_55;
-  bra log_softmax_else_55;
-  log_softmax_then_55:
-  mov.u32 %r56, 0; // unit
-  mov.u32 %r57, %r56;
-  mov.f32 %f22, %f53; // if wb: v
-  bra log_softmax_end_55;
-  log_softmax_else_55:
-  mov.u32 %r57, 0; // no else branch
-  log_softmax_end_55:
-  mov.f32 %f58, 0f00000000; // 0
-  setp.lt.u64 %p59, %rd6, %rd4;
-  @%p59 bra log_softmax_then_60;
-  bra log_softmax_else_60;
-  log_softmax_then_60:
-  sub.f32 %f61, %f11, %f22;
-  mul.rn.f32 %f62, %f61, 0f3FB8AA3B; // log2(e)
-  ex2.approx.f32 %f63, %f62;
-  mov.u32 %r64, 0; // unit
-  mov.u32 %r65, %r64;
-  mov.f32 %f58, %f63; // if wb: ex
-  bra log_softmax_end_60;
-  log_softmax_else_60:
-  mov.u32 %r65, 0; // no else branch
-  log_softmax_end_60:
-  mov.b32 %f66, %f58; // param: val
-  mov.u64 %rd67, 16;
-  cvt.u32.u64 %r68, %rd67;
-  shfl.sync.bfly.b32 %f69, %f66, %r68, 31, 0xffffffff;
-  add.f32 %f70, %f66, %f69;
-  mov.u64 %rd71, 8;
-  cvt.u32.u64 %r72, %rd71;
-  shfl.sync.bfly.b32 %f73, %f70, %r72, 31, 0xffffffff;
-  add.f32 %f74, %f70, %f73;
-  mov.u64 %rd75, 4;
-  cvt.u32.u64 %r76, %rd75;
-  shfl.sync.bfly.b32 %f77, %f74, %r76, 31, 0xffffffff;
-  add.f32 %f78, %f74, %f77;
-  mov.u64 %rd79, 2;
-  cvt.u32.u64 %r80, %rd79;
-  shfl.sync.bfly.b32 %f81, %f78, %r80, 31, 0xffffffff;
-  add.f32 %f82, %f78, %f81;
-  mov.u64 %rd83, 1;
-  cvt.u32.u64 %r84, %rd83;
-  shfl.sync.bfly.b32 %f85, %f82, %r84, 31, 0xffffffff;
-  add.f32 %f86, %f82, %f85;
-  mov.u32 %r87, 0; // proof/assume erased
-  lg2.approx.f32 %f88, %f86;
-  mul.rn.f32 %f89, %f88, 0f3F317218; // ln(2)
-  setp.lt.u64 %p90, %rd6, %rd4;
-  @%p90 bra log_softmax_then_91;
-  bra log_softmax_else_91;
-  log_softmax_then_91:
-  mov.u32 %r92, 0; // proof/assume erased
-  sub.f32 %f93, %f11, %f22;
-  sub.f32 %f94, %f93, %f89;
-  add.u64 %rd95, %rd9, %rd6;
-  mov.u64 %rd96, 4;
-  mul.lo.u64 %rd97, %rd95, %rd96;
-  add.u64 %rd98, %rd2, %rd97;
-  st.global.f32 [%rd98], %f94;
+  mov.u64 %rd22, 16;
+  cvt.u32.u64 %r23, %rd22;
+  shfl.sync.bfly.b32 %f24, %f11, %r23, 31, 0xffffffff;
+  setp.gt.f32 %p25, %f24, %f11;
+  @%p25 bra log_softmax_then_26;
+  bra log_softmax_else_26;
+  log_softmax_then_26:
+  mov.u32 %r27, 0; // unit
+  mov.u32 %r28, %r27;
+  mov.f32 %f11, %f24; // if wb: v
+  bra log_softmax_end_26;
+  log_softmax_else_26:
+  mov.u32 %r28, 0; // no else branch
+  log_softmax_end_26:
+  mov.u64 %rd29, 8;
+  cvt.u32.u64 %r30, %rd29;
+  shfl.sync.bfly.b32 %f31, %f11, %r30, 31, 0xffffffff;
+  setp.gt.f32 %p32, %f31, %f11;
+  @%p32 bra log_softmax_then_33;
+  bra log_softmax_else_33;
+  log_softmax_then_33:
+  mov.u32 %r34, 0; // unit
+  mov.u32 %r35, %r34;
+  mov.f32 %f11, %f31; // if wb: v
+  bra log_softmax_end_33;
+  log_softmax_else_33:
+  mov.u32 %r35, 0; // no else branch
+  log_softmax_end_33:
+  mov.u64 %rd36, 4;
+  cvt.u32.u64 %r37, %rd36;
+  shfl.sync.bfly.b32 %f38, %f11, %r37, 31, 0xffffffff;
+  setp.gt.f32 %p39, %f38, %f11;
+  @%p39 bra log_softmax_then_40;
+  bra log_softmax_else_40;
+  log_softmax_then_40:
+  mov.u32 %r41, 0; // unit
+  mov.u32 %r42, %r41;
+  mov.f32 %f11, %f38; // if wb: v
+  bra log_softmax_end_40;
+  log_softmax_else_40:
+  mov.u32 %r42, 0; // no else branch
+  log_softmax_end_40:
+  mov.u64 %rd43, 2;
+  cvt.u32.u64 %r44, %rd43;
+  shfl.sync.bfly.b32 %f45, %f11, %r44, 31, 0xffffffff;
+  setp.gt.f32 %p46, %f45, %f11;
+  @%p46 bra log_softmax_then_47;
+  bra log_softmax_else_47;
+  log_softmax_then_47:
+  mov.u32 %r48, 0; // unit
+  mov.u32 %r49, %r48;
+  mov.f32 %f11, %f45; // if wb: v
+  bra log_softmax_end_47;
+  log_softmax_else_47:
+  mov.u32 %r49, 0; // no else branch
+  log_softmax_end_47:
+  mov.u64 %rd50, 1;
+  cvt.u32.u64 %r51, %rd50;
+  shfl.sync.bfly.b32 %f52, %f11, %r51, 31, 0xffffffff;
+  setp.gt.f32 %p53, %f52, %f11;
+  @%p53 bra log_softmax_then_54;
+  bra log_softmax_else_54;
+  log_softmax_then_54:
+  mov.u32 %r55, 0; // unit
+  mov.u32 %r56, %r55;
+  mov.f32 %f11, %f52; // if wb: v
+  bra log_softmax_end_54;
+  log_softmax_else_54:
+  mov.u32 %r56, 0; // no else branch
+  log_softmax_end_54:
+  mov.f32 %f57, 0f00000000; // 0
+  setp.lt.u64 %p58, %rd6, %rd4;
+  @%p58 bra log_softmax_then_59;
+  bra log_softmax_else_59;
+  log_softmax_then_59:
+  sub.f32 %f60, %f11, %f11;
+  mul.rn.f32 %f61, %f60, 0f3FB8AA3B; // log2(e)
+  ex2.approx.f32 %f62, %f61;
+  mov.u32 %r63, 0; // unit
+  mov.u32 %r64, %r63;
+  mov.f32 %f57, %f62; // if wb: ex
+  bra log_softmax_end_59;
+  log_softmax_else_59:
+  mov.u32 %r64, 0; // no else branch
+  log_softmax_end_59:
+  mov.u64 %rd65, 16;
+  cvt.u32.u64 %r66, %rd65;
+  shfl.sync.bfly.b32 %f67, %f57, %r66, 31, 0xffffffff;
+  add.f32 %f68, %f57, %f67;
+  mov.u64 %rd69, 8;
+  cvt.u32.u64 %r70, %rd69;
+  shfl.sync.bfly.b32 %f71, %f68, %r70, 31, 0xffffffff;
+  add.f32 %f72, %f68, %f71;
+  mov.u64 %rd73, 4;
+  cvt.u32.u64 %r74, %rd73;
+  shfl.sync.bfly.b32 %f75, %f72, %r74, 31, 0xffffffff;
+  add.f32 %f76, %f72, %f75;
+  mov.u64 %rd77, 2;
+  cvt.u32.u64 %r78, %rd77;
+  shfl.sync.bfly.b32 %f79, %f76, %r78, 31, 0xffffffff;
+  add.f32 %f80, %f76, %f79;
+  mov.u64 %rd81, 1;
+  cvt.u32.u64 %r82, %rd81;
+  shfl.sync.bfly.b32 %f83, %f80, %r82, 31, 0xffffffff;
+  add.f32 %f84, %f80, %f83;
+  mov.u32 %r85, 0; // proof/assume erased
+  lg2.approx.f32 %f86, %f84;
+  mul.rn.f32 %f87, %f86, 0f3F317218; // ln(2)
+  setp.lt.u64 %p88, %rd6, %rd4;
+  @%p88 bra log_softmax_then_89;
+  bra log_softmax_else_89;
+  log_softmax_then_89:
+  mov.u32 %r90, 0; // proof/assume erased
+  sub.f32 %f91, %f11, %f11;
+  sub.f32 %f92, %f91, %f87;
+  add.u64 %rd93, %rd9, %rd6;
+  mov.u64 %rd94, 4;
+  mul.lo.u64 %rd95, %rd93, %rd94;
+  add.u64 %rd96, %rd2, %rd95;
+  st.global.f32 [%rd96], %f92;
+  mov.u32 %r97, 0; // unit
+  mov.u32 %r98, %r97;
+  bra log_softmax_end_89;
+  log_softmax_else_89:
+  mov.u32 %r98, 0; // no else branch
+  log_softmax_end_89:
   mov.u32 %r99, 0; // unit
-  mov.u32 %r100, %r99;
-  bra log_softmax_end_91;
-  log_softmax_else_91:
-  mov.u32 %r100, 0; // no else branch
-  log_softmax_end_91:
-  mov.u32 %r101, 0; // unit
   ret;
 }
 

@@ -19,7 +19,7 @@ JOBS=${JOBS:-$(nproc)}
 # called-object-not-a-function, etc.) — these are forge codegen issues to
 # fix; until then we skip Phase 2/3 for the affected outputs to keep CI
 # accurate. See `tracking issues` in CLAUDE.md or the project tracker.
-KNOWN_CODEGEN_BUG_RE='^(1044_float_smt|58_modules|62_for_in_iter|64_std_iter|68_enum_methods|71_builder_pattern|77_match_guards|78_nested_match)\.c$'
+KNOWN_CODEGEN_BUG_RE='^(1044_float_smt)\.c$'
 
 LOG_DIR=$(mktemp -d -t forge-tests-XXXXXX)
 trap 'rm -rf "$LOG_DIR"' EXIT

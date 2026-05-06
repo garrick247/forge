@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MathError MathError;
+typedef struct Result_u64 Result_u64;
+
 typedef enum {
   MathError_tag_DivByZero = 0,
   MathError_tag_Overflow = 1,

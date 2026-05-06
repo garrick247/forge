@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct TcpHdr TcpHdr;
+
 typedef struct TcpHdr {
   uint64_t src_port;
   uint64_t dst_port;

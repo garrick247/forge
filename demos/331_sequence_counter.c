@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct SeqState SeqState;
+
 typedef struct SeqState {
   uint64_t next_seq;
   uint64_t sent;

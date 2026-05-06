@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RunState RunState;
+
 typedef struct RunState {
   uint64_t current_symbol;
   uint64_t current_run_len;

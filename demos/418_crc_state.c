@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct CRCState CRCState;
+
 typedef struct CRCState {
   uint64_t crc;
   uint64_t bytes_seen;

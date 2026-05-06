@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Throttle Throttle;
+
 typedef struct Throttle {
   uint64_t tokens;
   uint64_t cap;

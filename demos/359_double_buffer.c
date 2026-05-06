@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct DoubleBuffer DoubleBuffer;
+
 typedef struct DoubleBuffer {
   uint64_t front_ver;
   uint64_t back_ver;

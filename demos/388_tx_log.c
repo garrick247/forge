@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct TxLog TxLog;
+
 typedef struct TxLog {
   uint64_t open;
   uint64_t committed;

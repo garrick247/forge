@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RaftLog RaftLog;
+
 typedef struct RaftLog {
   uint64_t current_term;
   uint64_t last_log_index;

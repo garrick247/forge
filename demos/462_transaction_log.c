@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct WAL WAL;
+
 typedef struct WAL {
   uint64_t write_lsn;
   uint64_t commit_lsn;

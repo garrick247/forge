@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Flow Flow;
+
 typedef struct Flow {
   uint64_t sent;
   uint64_t received;

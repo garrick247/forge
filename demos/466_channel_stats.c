@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ChannelStats ChannelStats;
+
 typedef struct ChannelStats {
   uint64_t sent_bytes;
   uint64_t received_bytes;

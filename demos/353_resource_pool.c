@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Pool Pool;
+
 typedef struct Pool {
   uint64_t free;
   uint64_t used;

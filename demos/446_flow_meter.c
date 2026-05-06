@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FlowMeter FlowMeter;
+
 typedef struct FlowMeter {
   uint64_t bytes_accumulated;
   uint64_t sample_interval;

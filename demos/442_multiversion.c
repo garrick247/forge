@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MVCC MVCC;
+
 typedef struct MVCC {
   uint64_t current_version;
   uint64_t snapshot_version;

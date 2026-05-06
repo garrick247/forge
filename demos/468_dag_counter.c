@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct DAGCounter DAGCounter;
+
 typedef struct DAGCounter {
   uint64_t total_nodes;
   uint64_t total_ready;

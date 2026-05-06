@@ -15,9 +15,9 @@
     .param .u32 vec_diff_branch_param_n
 )
 {
-    .reg .pred %p12, %p26;
-    .reg .u32 %r10, %r11, %r18, %r23, %r24, %r25, %r28, %r29, %r30, %r31, %r32, %r33, %r34, %r39, %r40, %r41, %r6, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd14, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd3, %rd35, %rd36, %rd37, %rd38, %rd4, %rd5;
+    .reg .pred %p12, %p24;
+    .reg .u32 %r10, %r11, %r18, %r23, %r26, %r27, %r28, %r29, %r30, %r31, %r32, %r37, %r38, %r39, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd14, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd22, %rd3, %rd33, %rd34, %rd35, %rd36, %rd4, %rd5;
 
   ld.param.u64 %rd0, [vec_diff_branch_param_a_data];
   ld.param.u64 %rd1, [vec_diff_branch_param_a_len];
@@ -46,35 +46,33 @@
   mul.lo.u64 %rd21, %rd19, %rd20;
   add.u64 %rd22, %rd2, %rd21;
   ld.global.u32 %r23, [%rd22];
-  mov.b32 %r24, %r18; // param: a
-  mov.b32 %r25, %r23; // param: b
-  setp.gt.u32 %p26, %r24, %r25;
-  @%p26 bra vec_diff_branch_then_27;
-  bra vec_diff_branch_else_27;
-  vec_diff_branch_then_27:
-  sub.u32 %r28, %r24, %r25;
-  mov.u32 %r29, 2;
-  mul.lo.u32 %r30, %r28, %r29;
-  mov.u32 %r31, %r30;
-  bra vec_diff_branch_end_27;
-  vec_diff_branch_else_27:
-  sub.u32 %r32, %r25, %r24;
-  mov.u32 %r33, 3;
-  mul.lo.u32 %r34, %r32, %r33;
-  mov.u32 %r31, %r34;
-  vec_diff_branch_end_27:
-  cvt.u64.u32 %rd35, %r11;
-  mov.u64 %rd36, 4;
-  mul.lo.u64 %rd37, %rd35, %rd36;
-  add.u64 %rd38, %rd4, %rd37;
-  st.global.u32 [%rd38], %r31;
-  mov.u32 %r39, 0; // unit
-  mov.u32 %r40, %r39;
+  setp.gt.u32 %p24, %r18, %r23;
+  @%p24 bra vec_diff_branch_then_25;
+  bra vec_diff_branch_else_25;
+  vec_diff_branch_then_25:
+  sub.u32 %r26, %r18, %r23;
+  mov.u32 %r27, 2;
+  mul.lo.u32 %r28, %r26, %r27;
+  mov.u32 %r29, %r28;
+  bra vec_diff_branch_end_25;
+  vec_diff_branch_else_25:
+  sub.u32 %r30, %r23, %r18;
+  mov.u32 %r31, 3;
+  mul.lo.u32 %r32, %r30, %r31;
+  mov.u32 %r29, %r32;
+  vec_diff_branch_end_25:
+  cvt.u64.u32 %rd33, %r11;
+  mov.u64 %rd34, 4;
+  mul.lo.u64 %rd35, %rd33, %rd34;
+  add.u64 %rd36, %rd4, %rd35;
+  st.global.u32 [%rd36], %r29;
+  mov.u32 %r37, 0; // unit
+  mov.u32 %r38, %r37;
   bra vec_diff_branch_end_13;
   vec_diff_branch_else_13:
-  mov.u32 %r40, 0; // no else branch
+  mov.u32 %r38, 0; // no else branch
   vec_diff_branch_end_13:
-  mov.u32 %r41, 0; // unit
+  mov.u32 %r39, 0; // unit
   ret;
 }
 

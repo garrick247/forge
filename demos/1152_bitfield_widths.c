@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PixelFlags PixelFlags;
+
 typedef struct PixelFlags {
   uint32_t visible : 1;
   uint32_t layer : 4;

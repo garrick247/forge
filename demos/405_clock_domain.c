@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ClockDomain ClockDomain;
+
 typedef struct ClockDomain {
   uint64_t a_written;
   uint64_t b_visible;

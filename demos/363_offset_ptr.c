@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct OffsetPtr OffsetPtr;
+
 typedef struct OffsetPtr {
   uint64_t offset;
   uint64_t size;

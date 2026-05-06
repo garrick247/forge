@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PipelineBuffer PipelineBuffer;
+
 typedef struct PipelineBuffer {
   uint64_t pushed;
   uint64_t popped;

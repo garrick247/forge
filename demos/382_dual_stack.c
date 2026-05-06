@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct DualStack DualStack;
+
 typedef struct DualStack {
   uint64_t size_a;
   uint64_t size_b;

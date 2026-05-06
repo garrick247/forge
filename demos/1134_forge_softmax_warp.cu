@@ -283,6 +283,6 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 1
-   [ASSUME] demos/1134_forge_softmax_warp.fg:42  (> denom 0)
+   [ASSUME] /home/garrick/forge/demos/1134_forge_softmax_warp.fg:42  (> denom 0)
              "denom >= exp(0) = 1 at the argmax lane"
    ---- END AUDIT LOG ---- */

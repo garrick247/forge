@@ -13,6 +13,10 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Day Day;
+typedef struct Token Token;
+
 typedef enum {
   Day_tag_Mon = 0,
   Day_tag_Tue = 1,

@@ -125,8 +125,8 @@
 )
 {
     .reg .pred %p13;
-    .reg .u32 %r10, %r11, %r31, %r33, %r34, %r35, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd32, %rd4, %rd5, %rd6;
+    .reg .u32 %r10, %r11, %r29, %r31, %r32, %r33, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [fri_layer_verify_kernel_param_out_data];
   ld.param.u64 %rd1, [fri_layer_verify_kernel_param_out_len];
@@ -156,21 +156,19 @@
   div.u64 %rd22, %rd19, %rd21;
   mov.u64 %rd23, 0; // unhandled expr
   mov.u64 %rd24, 0; // unhandled expr
-  mov.b64 %rd25, %rd0; // param: arr
-  mov.b64 %rd26, %rd22; // param: idx
-  mov.u64 %rd27, 0; // unhandled expr
-  mov.u64 %rd28, 4;
-  mul.lo.u64 %rd29, %rd26, %rd28;
-  add.u64 %rd30, %rd25, %rd29;
-  ld.global.u32 %r31, [%rd30];
-  mov.u64 %rd32, 0; // unhandled expr
-  mov.u32 %r33, 0; // unit
-  mov.u32 %r34, %r33;
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd22, %rd26;
+  add.u64 %rd28, %rd0, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  mov.u64 %rd30, 0; // unhandled expr
+  mov.u32 %r31, 0; // unit
+  mov.u32 %r32, %r31;
   bra fri_layer_verify_kernel_end_14;
   fri_layer_verify_kernel_else_14:
-  mov.u32 %r34, 0; // no else branch
+  mov.u32 %r32, 0; // no else branch
   fri_layer_verify_kernel_end_14:
-  mov.u32 %r35, 0; // unit
+  mov.u32 %r33, 0; // unit
   ret;
 }
 

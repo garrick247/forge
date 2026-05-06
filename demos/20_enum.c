@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Result Result;
+typedef struct Option Option;
+typedef struct Shape Shape;
+
 typedef enum {
   Result_tag_Ok = 0,
   Result_tag_Err = 1,

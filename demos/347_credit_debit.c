@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Ledger Ledger;
+
 typedef struct Ledger {
   uint64_t credits;
   uint64_t debits;

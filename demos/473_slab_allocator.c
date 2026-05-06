@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct SlabAllocator SlabAllocator;
+
 typedef struct SlabAllocator {
   uint64_t total_objects;
   uint64_t free_count;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PowerBudget PowerBudget;
+
 typedef struct PowerBudget {
   uint64_t budget;
   uint64_t cpu_draw;

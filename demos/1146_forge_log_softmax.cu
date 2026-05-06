@@ -287,10 +287,10 @@ int main() {
 
 /* ---- FORGE ASSUMPTION AUDIT LOG ----
    Total assumptions: 3
-   [ASSUME] demos/1146_forge_log_softmax.fg:33  (< (+ base lane) inp__len)
+   [ASSUME] /home/garrick/forge/demos/1146_forge_log_softmax.fg:33  (< (+ base lane) inp__len)
              "blockIdx<gridDim + lane<n_cols + gridDim*n_cols<=inp.len"
-   [ASSUME] demos/1146_forge_log_softmax.fg:43  (> denom 0)
+   [ASSUME] /home/garrick/forge/demos/1146_forge_log_softmax.fg:43  (> denom 0)
              "argmax lane contributes p=exp(0)=1, sum >= 1"
-   [ASSUME] demos/1146_forge_log_softmax.fg:47  (< (+ base lane) out__len)
+   [ASSUME] /home/garrick/forge/demos/1146_forge_log_softmax.fg:47  (< (+ base lane) out__len)
              "mirrors inp bounds chain"
    ---- END AUDIT LOG ---- */

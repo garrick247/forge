@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct BoundedU8 BoundedU8;
+typedef struct Fraction Fraction;
+typedef struct SortedPair SortedPair;
+
 typedef struct BoundedU8 {
   uint64_t val;
 } BoundedU8;

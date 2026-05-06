@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Lease Lease;
+
 typedef struct Lease {
   uint64_t acquired;
   uint64_t released;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct StockLedger StockLedger;
+
 typedef struct StockLedger {
   uint64_t shares;
   uint64_t cost;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Device Device;
+
 typedef struct Device {
   uint64_t powered;
   uint64_t initialized;

@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Debounce Debounce;
+
 typedef struct Debounce {
   uint64_t stable_count;
   uint64_t threshold;

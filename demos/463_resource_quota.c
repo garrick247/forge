@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ResourceQuota ResourceQuota;
+
 typedef struct ResourceQuota {
   uint64_t used;
   uint64_t soft_limit;

@@ -16,6 +16,9 @@
 #include <stdio.h>
 #include <math.h>
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Str Str;
+
 /* span<T> typedefs — fat pointers with proven bounds */
 typedef struct { uint8_t* data; uintptr_t len; } forge_span_u8_t;
 typedef struct { uint64_t* data; uintptr_t len; } forge_span_u64_t;

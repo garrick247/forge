@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Gauge Gauge;
+
 typedef struct Gauge {
   uint64_t fill_level;
   uint64_t capacity;

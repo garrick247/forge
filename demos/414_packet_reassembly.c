@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ReassemblyBuf ReassemblyBuf;
+
 typedef struct ReassemblyBuf {
   uint64_t fragments_received;
   uint64_t fragments_expected;

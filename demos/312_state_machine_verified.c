@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Connection Connection;
+
 typedef struct Connection {
   uint64_t state;
   uint64_t port;

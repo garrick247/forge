@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct PacketWindow PacketWindow;
+
 typedef struct PacketWindow {
   uint64_t next_seq;
   uint64_t acked_upto;

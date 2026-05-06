@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct SupplyChain SupplyChain;
+
 typedef struct SupplyChain {
   uint64_t raw;
   uint64_t in_process;

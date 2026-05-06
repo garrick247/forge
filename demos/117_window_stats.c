@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Win4 Win4;
+
 typedef struct Win4 {
   uint64_t a;
   uint64_t b;

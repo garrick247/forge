@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ConnPool ConnPool;
+
 typedef struct ConnPool {
   uint64_t idle;
   uint64_t active;

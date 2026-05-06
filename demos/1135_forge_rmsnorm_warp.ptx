@@ -13,10 +13,10 @@
     .param .u64 rmsnorm_warp_param_n_cols
 )
 {
-    .reg .pred %p13, %p46, %p53;
-    .reg .f32 %f10, %f11, %f12, %f20, %f23, %f24, %f27, %f28, %f31, %f32, %f35, %f36, %f39, %f40, %f43, %f44, %f45, %f48, %f49, %f50, %f51, %f52, %f55;
-    .reg .u32 %r15, %r21, %r22, %r26, %r30, %r34, %r38, %r42, %r5, %r60, %r61, %r62, %r7;
-    .reg .u64 %rd0, %rd1, %rd16, %rd17, %rd18, %rd19, %rd2, %rd25, %rd29, %rd3, %rd33, %rd37, %rd4, %rd41, %rd56, %rd57, %rd58, %rd59, %rd6, %rd8, %rd9;
+    .reg .pred %p13, %p45, %p52;
+    .reg .f32 %f10, %f11, %f12, %f20, %f23, %f26, %f27, %f30, %f31, %f34, %f35, %f38, %f39, %f42, %f43, %f44, %f47, %f48, %f49, %f50, %f51, %f54;
+    .reg .u32 %r15, %r21, %r22, %r25, %r29, %r33, %r37, %r41, %r5, %r59, %r60, %r61, %r7;
+    .reg .u64 %rd0, %rd1, %rd16, %rd17, %rd18, %rd19, %rd2, %rd24, %rd28, %rd3, %rd32, %rd36, %rd4, %rd40, %rd55, %rd56, %rd57, %rd58, %rd6, %rd8, %rd9;
 
   ld.param.u64 %rd0, [rmsnorm_warp_param_inp_data];
   ld.param.u64 %rd1, [rmsnorm_warp_param_inp_len];
@@ -50,58 +50,57 @@
   mov.u32 %r22, 0; // no else branch
   rmsnorm_warp_end_14:
   mul.f32 %f23, %f12, %f12;
-  mov.b32 %f24, %f23; // param: val
-  mov.u64 %rd25, 16;
-  cvt.u32.u64 %r26, %rd25;
-  shfl.sync.bfly.b32 %f27, %f24, %r26, 31, 0xffffffff;
-  add.f32 %f28, %f24, %f27;
-  mov.u64 %rd29, 8;
-  cvt.u32.u64 %r30, %rd29;
-  shfl.sync.bfly.b32 %f31, %f28, %r30, 31, 0xffffffff;
-  add.f32 %f32, %f28, %f31;
-  mov.u64 %rd33, 4;
-  cvt.u32.u64 %r34, %rd33;
-  shfl.sync.bfly.b32 %f35, %f32, %r34, 31, 0xffffffff;
-  add.f32 %f36, %f32, %f35;
-  mov.u64 %rd37, 2;
-  cvt.u32.u64 %r38, %rd37;
-  shfl.sync.bfly.b32 %f39, %f36, %r38, 31, 0xffffffff;
-  add.f32 %f40, %f36, %f39;
-  mov.u64 %rd41, 1;
-  cvt.u32.u64 %r42, %rd41;
-  shfl.sync.bfly.b32 %f43, %f40, %r42, 31, 0xffffffff;
-  add.f32 %f44, %f40, %f43;
-  mov.f32 %f45, 0f00000000; // 0
-  setp.eq.f32 %p46, %f10, %f45;
-  @%p46 bra rmsnorm_warp_then_47;
-  bra rmsnorm_warp_else_47;
-  rmsnorm_warp_then_47:
-  mov.f32 %f48, 0f3F800000; // 1
-  mov.f32 %f49, %f48;
-  bra rmsnorm_warp_end_47;
-  rmsnorm_warp_else_47:
-  mov.f32 %f49, %f10;
-  rmsnorm_warp_end_47:
-  div.rn.f32 %f50, %f44, %f49;
-  add.f32 %f51, %f50, %f11;
-  rsqrt.approx.f32 %f52, %f51;
-  setp.lt.u64 %p53, %rd6, %rd4;
-  @%p53 bra rmsnorm_warp_then_54;
-  bra rmsnorm_warp_else_54;
-  rmsnorm_warp_then_54:
-  mul.f32 %f55, %f12, %f52;
-  add.u64 %rd56, %rd9, %rd6;
-  mov.u64 %rd57, 4;
-  mul.lo.u64 %rd58, %rd56, %rd57;
-  add.u64 %rd59, %rd2, %rd58;
-  st.global.f32 [%rd59], %f55;
-  mov.u32 %r60, 0; // unit
-  mov.u32 %r61, %r60;
-  bra rmsnorm_warp_end_54;
-  rmsnorm_warp_else_54:
-  mov.u32 %r61, 0; // no else branch
-  rmsnorm_warp_end_54:
-  mov.u32 %r62, 0; // unit
+  mov.u64 %rd24, 16;
+  cvt.u32.u64 %r25, %rd24;
+  shfl.sync.bfly.b32 %f26, %f23, %r25, 31, 0xffffffff;
+  add.f32 %f27, %f23, %f26;
+  mov.u64 %rd28, 8;
+  cvt.u32.u64 %r29, %rd28;
+  shfl.sync.bfly.b32 %f30, %f27, %r29, 31, 0xffffffff;
+  add.f32 %f31, %f27, %f30;
+  mov.u64 %rd32, 4;
+  cvt.u32.u64 %r33, %rd32;
+  shfl.sync.bfly.b32 %f34, %f31, %r33, 31, 0xffffffff;
+  add.f32 %f35, %f31, %f34;
+  mov.u64 %rd36, 2;
+  cvt.u32.u64 %r37, %rd36;
+  shfl.sync.bfly.b32 %f38, %f35, %r37, 31, 0xffffffff;
+  add.f32 %f39, %f35, %f38;
+  mov.u64 %rd40, 1;
+  cvt.u32.u64 %r41, %rd40;
+  shfl.sync.bfly.b32 %f42, %f39, %r41, 31, 0xffffffff;
+  add.f32 %f43, %f39, %f42;
+  mov.f32 %f44, 0f00000000; // 0
+  setp.eq.f32 %p45, %f10, %f44;
+  @%p45 bra rmsnorm_warp_then_46;
+  bra rmsnorm_warp_else_46;
+  rmsnorm_warp_then_46:
+  mov.f32 %f47, 0f3F800000; // 1
+  mov.f32 %f48, %f47;
+  bra rmsnorm_warp_end_46;
+  rmsnorm_warp_else_46:
+  mov.f32 %f48, %f10;
+  rmsnorm_warp_end_46:
+  div.rn.f32 %f49, %f43, %f48;
+  add.f32 %f50, %f49, %f11;
+  rsqrt.approx.f32 %f51, %f50;
+  setp.lt.u64 %p52, %rd6, %rd4;
+  @%p52 bra rmsnorm_warp_then_53;
+  bra rmsnorm_warp_else_53;
+  rmsnorm_warp_then_53:
+  mul.f32 %f54, %f12, %f51;
+  add.u64 %rd55, %rd9, %rd6;
+  mov.u64 %rd56, 4;
+  mul.lo.u64 %rd57, %rd55, %rd56;
+  add.u64 %rd58, %rd2, %rd57;
+  st.global.f32 [%rd58], %f54;
+  mov.u32 %r59, 0; // unit
+  mov.u32 %r60, %r59;
+  bra rmsnorm_warp_end_53;
+  rmsnorm_warp_else_53:
+  mov.u32 %r60, 0; // no else branch
+  rmsnorm_warp_end_53:
+  mov.u32 %r61, 0; // unit
   ret;
 }
 

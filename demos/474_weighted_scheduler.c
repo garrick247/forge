@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct WeightedScheduler WeightedScheduler;
+
 typedef struct WeightedScheduler {
   uint64_t high_dispatched;
   uint64_t low_dispatched;

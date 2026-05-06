@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Strategy Strategy;
+typedef struct Reducer Reducer;
+typedef struct ScoreMode ScoreMode;
+
 typedef enum {
   Strategy_tag_Fast = 0,
   Strategy_tag_Precise = 1,

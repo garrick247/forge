@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RingBuf4 RingBuf4;
+
 typedef struct RingBuf4 {
   uint64_t d0;
   uint64_t d1;

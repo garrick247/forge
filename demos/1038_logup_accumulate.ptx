@@ -25,9 +25,9 @@
     .param .u64 logup_trace_term_kernel_param_n
 )
 {
-    .reg .pred %p111, %p126, %p141, %p23, %p96;
-    .reg .u32 %r100, %r104, %r105, %r109, %r115, %r119, %r120, %r124, %r130, %r134, %r135, %r139, %r145, %r149, %r150, %r151, %r17, %r18, %r19, %r20, %r21, %r39, %r46, %r53, %r60, %r67, %r74, %r81, %r88, %r89, %r90, %r94;
-    .reg .u64 %rd0, %rd1, %rd10, %rd101, %rd102, %rd103, %rd106, %rd107, %rd108, %rd11, %rd110, %rd113, %rd114, %rd116, %rd117, %rd118, %rd12, %rd121, %rd122, %rd123, %rd125, %rd128, %rd129, %rd13, %rd131, %rd132, %rd133, %rd136, %rd137, %rd138, %rd14, %rd140, %rd143, %rd144, %rd146, %rd147, %rd148, %rd15, %rd16, %rd2, %rd22, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd33, %rd34, %rd35, %rd36, %rd37, %rd38, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd45, %rd47, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd54, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd71, %rd72, %rd73, %rd75, %rd76, %rd77, %rd78, %rd79, %rd8, %rd80, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd9, %rd91, %rd92, %rd93, %rd95, %rd98, %rd99;
+    .reg .pred %p104, %p117, %p23, %p78, %p91;
+    .reg .u32 %r102, %r108, %r115, %r121, %r125, %r126, %r127, %r17, %r18, %r19, %r20, %r21, %r37, %r42, %r47, %r52, %r57, %r62, %r67, %r72, %r76, %r82, %r89, %r95;
+    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd103, %rd106, %rd107, %rd109, %rd11, %rd110, %rd111, %rd112, %rd113, %rd114, %rd116, %rd119, %rd12, %rd120, %rd122, %rd123, %rd124, %rd13, %rd14, %rd15, %rd16, %rd2, %rd22, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd33, %rd34, %rd35, %rd36, %rd38, %rd39, %rd4, %rd40, %rd41, %rd43, %rd44, %rd45, %rd46, %rd48, %rd49, %rd5, %rd50, %rd51, %rd53, %rd54, %rd55, %rd56, %rd58, %rd59, %rd6, %rd60, %rd61, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd71, %rd73, %rd74, %rd75, %rd77, %rd8, %rd80, %rd81, %rd83, %rd84, %rd85, %rd86, %rd87, %rd88, %rd9, %rd90, %rd93, %rd94, %rd96, %rd97, %rd98, %rd99;
 
   ld.param.u64 %rd0, [logup_trace_term_kernel_param_acc_rr_data];
   ld.param.u64 %rd1, [logup_trace_term_kernel_param_acc_rr_len];
@@ -65,157 +65,133 @@
   mov.u64 %rd30, 0; // unhandled expr
   mov.u64 %rd31, 0; // unhandled expr
   mov.u64 %rd32, 0; // unhandled expr
-  mov.b64 %rd33, %rd8; // param: arr
-  mov.b64 %rd34, %rd22; // param: idx
-  mov.u64 %rd35, 0; // unhandled expr
-  mov.u64 %rd36, 4;
-  mul.lo.u64 %rd37, %rd34, %rd36;
-  add.u64 %rd38, %rd33, %rd37;
-  ld.global.u32 %r39, [%rd38];
-  mov.b64 %rd40, %rd10; // param: arr
-  mov.b64 %rd41, %rd22; // param: idx
-  mov.u64 %rd42, 0; // unhandled expr
-  mov.u64 %rd43, 4;
-  mul.lo.u64 %rd44, %rd41, %rd43;
-  add.u64 %rd45, %rd40, %rd44;
-  ld.global.u32 %r46, [%rd45];
-  mov.b64 %rd47, %rd12; // param: arr
-  mov.b64 %rd48, %rd22; // param: idx
-  mov.u64 %rd49, 0; // unhandled expr
-  mov.u64 %rd50, 4;
-  mul.lo.u64 %rd51, %rd48, %rd50;
-  add.u64 %rd52, %rd47, %rd51;
-  ld.global.u32 %r53, [%rd52];
-  mov.b64 %rd54, %rd14; // param: arr
-  mov.b64 %rd55, %rd22; // param: idx
-  mov.u64 %rd56, 0; // unhandled expr
-  mov.u64 %rd57, 4;
-  mul.lo.u64 %rd58, %rd55, %rd57;
-  add.u64 %rd59, %rd54, %rd58;
-  ld.global.u32 %r60, [%rd59];
-  mov.b64 %rd61, %rd0; // param: arr
-  mov.b64 %rd62, %rd22; // param: idx
+  mov.u64 %rd33, 0; // unhandled expr
+  mov.u64 %rd34, 4;
+  mul.lo.u64 %rd35, %rd22, %rd34;
+  add.u64 %rd36, %rd8, %rd35;
+  ld.global.u32 %r37, [%rd36];
+  mov.u64 %rd38, 0; // unhandled expr
+  mov.u64 %rd39, 4;
+  mul.lo.u64 %rd40, %rd22, %rd39;
+  add.u64 %rd41, %rd10, %rd40;
+  ld.global.u32 %r42, [%rd41];
+  mov.u64 %rd43, 0; // unhandled expr
+  mov.u64 %rd44, 4;
+  mul.lo.u64 %rd45, %rd22, %rd44;
+  add.u64 %rd46, %rd12, %rd45;
+  ld.global.u32 %r47, [%rd46];
+  mov.u64 %rd48, 0; // unhandled expr
+  mov.u64 %rd49, 4;
+  mul.lo.u64 %rd50, %rd22, %rd49;
+  add.u64 %rd51, %rd14, %rd50;
+  ld.global.u32 %r52, [%rd51];
+  mov.u64 %rd53, 0; // unhandled expr
+  mov.u64 %rd54, 4;
+  mul.lo.u64 %rd55, %rd22, %rd54;
+  add.u64 %rd56, %rd0, %rd55;
+  ld.global.u32 %r57, [%rd56];
+  mov.u64 %rd58, 0; // unhandled expr
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd22, %rd59;
+  add.u64 %rd61, %rd2, %rd60;
+  ld.global.u32 %r62, [%rd61];
   mov.u64 %rd63, 0; // unhandled expr
   mov.u64 %rd64, 4;
-  mul.lo.u64 %rd65, %rd62, %rd64;
-  add.u64 %rd66, %rd61, %rd65;
+  mul.lo.u64 %rd65, %rd22, %rd64;
+  add.u64 %rd66, %rd4, %rd65;
   ld.global.u32 %r67, [%rd66];
-  mov.b64 %rd68, %rd2; // param: arr
-  mov.b64 %rd69, %rd22; // param: idx
-  mov.u64 %rd70, 0; // unhandled expr
-  mov.u64 %rd71, 4;
-  mul.lo.u64 %rd72, %rd69, %rd71;
-  add.u64 %rd73, %rd68, %rd72;
-  ld.global.u32 %r74, [%rd73];
-  mov.b64 %rd75, %rd4; // param: arr
-  mov.b64 %rd76, %rd22; // param: idx
-  mov.u64 %rd77, 0; // unhandled expr
-  mov.u64 %rd78, 4;
-  mul.lo.u64 %rd79, %rd76, %rd78;
-  add.u64 %rd80, %rd75, %rd79;
-  ld.global.u32 %r81, [%rd80];
-  mov.b64 %rd82, %rd6; // param: arr
-  mov.b64 %rd83, %rd22; // param: idx
-  mov.u64 %rd84, 0; // unhandled expr
-  mov.u64 %rd85, 4;
-  mul.lo.u64 %rd86, %rd83, %rd85;
-  add.u64 %rd87, %rd82, %rd86;
-  ld.global.u32 %r88, [%rd87];
-  mov.b32 %r89, %r67; // param: a
-  mov.b32 %r90, %r39; // param: b
-  cvt.u64.u32 %rd91, %r89;
-  cvt.u64.u32 %rd92, %r90;
-  add.u64 %rd93, %rd91, %rd92;
-  mov.u32 %r94, 2147483647;
-  cvt.u64.u32 %rd95, %r94;
-  setp.ge.u64 %p96, %rd93, %rd95;
-  @%p96 bra logup_trace_term_kernel_then_97;
-  bra logup_trace_term_kernel_else_97;
-  logup_trace_term_kernel_then_97:
-  sub.u64 %rd98, %rd93, %rd95;
-  mov.u64 %rd99, %rd98;
-  bra logup_trace_term_kernel_end_97;
-  logup_trace_term_kernel_else_97:
-  mov.u64 %rd99, %rd93;
-  logup_trace_term_kernel_end_97:
-  cvt.u32.u64 %r100, %rd99;
-  mov.u64 %rd101, 4;
-  mul.lo.u64 %rd102, %rd22, %rd101;
-  add.u64 %rd103, %rd0, %rd102;
-  st.global.u32 [%rd103], %r100;
-  mov.b32 %r104, %r74; // param: a
-  mov.b32 %r105, %r46; // param: b
-  cvt.u64.u32 %rd106, %r104;
-  cvt.u64.u32 %rd107, %r105;
-  add.u64 %rd108, %rd106, %rd107;
-  mov.u32 %r109, 2147483647;
-  cvt.u64.u32 %rd110, %r109;
-  setp.ge.u64 %p111, %rd108, %rd110;
-  @%p111 bra logup_trace_term_kernel_then_112;
-  bra logup_trace_term_kernel_else_112;
-  logup_trace_term_kernel_then_112:
-  sub.u64 %rd113, %rd108, %rd110;
-  mov.u64 %rd114, %rd113;
-  bra logup_trace_term_kernel_end_112;
-  logup_trace_term_kernel_else_112:
-  mov.u64 %rd114, %rd108;
-  logup_trace_term_kernel_end_112:
-  cvt.u32.u64 %r115, %rd114;
-  mov.u64 %rd116, 4;
-  mul.lo.u64 %rd117, %rd22, %rd116;
-  add.u64 %rd118, %rd2, %rd117;
-  st.global.u32 [%rd118], %r115;
-  mov.b32 %r119, %r81; // param: a
-  mov.b32 %r120, %r53; // param: b
-  cvt.u64.u32 %rd121, %r119;
-  cvt.u64.u32 %rd122, %r120;
-  add.u64 %rd123, %rd121, %rd122;
-  mov.u32 %r124, 2147483647;
-  cvt.u64.u32 %rd125, %r124;
-  setp.ge.u64 %p126, %rd123, %rd125;
-  @%p126 bra logup_trace_term_kernel_then_127;
-  bra logup_trace_term_kernel_else_127;
-  logup_trace_term_kernel_then_127:
-  sub.u64 %rd128, %rd123, %rd125;
-  mov.u64 %rd129, %rd128;
-  bra logup_trace_term_kernel_end_127;
-  logup_trace_term_kernel_else_127:
-  mov.u64 %rd129, %rd123;
-  logup_trace_term_kernel_end_127:
-  cvt.u32.u64 %r130, %rd129;
-  mov.u64 %rd131, 4;
-  mul.lo.u64 %rd132, %rd22, %rd131;
-  add.u64 %rd133, %rd4, %rd132;
-  st.global.u32 [%rd133], %r130;
-  mov.b32 %r134, %r88; // param: a
-  mov.b32 %r135, %r60; // param: b
-  cvt.u64.u32 %rd136, %r134;
-  cvt.u64.u32 %rd137, %r135;
-  add.u64 %rd138, %rd136, %rd137;
-  mov.u32 %r139, 2147483647;
-  cvt.u64.u32 %rd140, %r139;
-  setp.ge.u64 %p141, %rd138, %rd140;
-  @%p141 bra logup_trace_term_kernel_then_142;
-  bra logup_trace_term_kernel_else_142;
-  logup_trace_term_kernel_then_142:
-  sub.u64 %rd143, %rd138, %rd140;
-  mov.u64 %rd144, %rd143;
-  bra logup_trace_term_kernel_end_142;
-  logup_trace_term_kernel_else_142:
-  mov.u64 %rd144, %rd138;
-  logup_trace_term_kernel_end_142:
-  cvt.u32.u64 %r145, %rd144;
-  mov.u64 %rd146, 4;
-  mul.lo.u64 %rd147, %rd22, %rd146;
-  add.u64 %rd148, %rd6, %rd147;
-  st.global.u32 [%rd148], %r145;
-  mov.u32 %r149, 0; // unit
-  mov.u32 %r150, %r149;
+  mov.u64 %rd68, 0; // unhandled expr
+  mov.u64 %rd69, 4;
+  mul.lo.u64 %rd70, %rd22, %rd69;
+  add.u64 %rd71, %rd6, %rd70;
+  ld.global.u32 %r72, [%rd71];
+  cvt.u64.u32 %rd73, %r57;
+  cvt.u64.u32 %rd74, %r37;
+  add.u64 %rd75, %rd73, %rd74;
+  mov.u32 %r76, 2147483647;
+  cvt.u64.u32 %rd77, %r76;
+  setp.ge.u64 %p78, %rd75, %rd77;
+  @%p78 bra logup_trace_term_kernel_then_79;
+  bra logup_trace_term_kernel_else_79;
+  logup_trace_term_kernel_then_79:
+  sub.u64 %rd80, %rd75, %rd77;
+  mov.u64 %rd81, %rd80;
+  bra logup_trace_term_kernel_end_79;
+  logup_trace_term_kernel_else_79:
+  mov.u64 %rd81, %rd75;
+  logup_trace_term_kernel_end_79:
+  cvt.u32.u64 %r82, %rd81;
+  mov.u64 %rd83, 4;
+  mul.lo.u64 %rd84, %rd22, %rd83;
+  add.u64 %rd85, %rd0, %rd84;
+  st.global.u32 [%rd85], %r82;
+  cvt.u64.u32 %rd86, %r62;
+  cvt.u64.u32 %rd87, %r42;
+  add.u64 %rd88, %rd86, %rd87;
+  mov.u32 %r89, 2147483647;
+  cvt.u64.u32 %rd90, %r89;
+  setp.ge.u64 %p91, %rd88, %rd90;
+  @%p91 bra logup_trace_term_kernel_then_92;
+  bra logup_trace_term_kernel_else_92;
+  logup_trace_term_kernel_then_92:
+  sub.u64 %rd93, %rd88, %rd90;
+  mov.u64 %rd94, %rd93;
+  bra logup_trace_term_kernel_end_92;
+  logup_trace_term_kernel_else_92:
+  mov.u64 %rd94, %rd88;
+  logup_trace_term_kernel_end_92:
+  cvt.u32.u64 %r95, %rd94;
+  mov.u64 %rd96, 4;
+  mul.lo.u64 %rd97, %rd22, %rd96;
+  add.u64 %rd98, %rd2, %rd97;
+  st.global.u32 [%rd98], %r95;
+  cvt.u64.u32 %rd99, %r67;
+  cvt.u64.u32 %rd100, %r47;
+  add.u64 %rd101, %rd99, %rd100;
+  mov.u32 %r102, 2147483647;
+  cvt.u64.u32 %rd103, %r102;
+  setp.ge.u64 %p104, %rd101, %rd103;
+  @%p104 bra logup_trace_term_kernel_then_105;
+  bra logup_trace_term_kernel_else_105;
+  logup_trace_term_kernel_then_105:
+  sub.u64 %rd106, %rd101, %rd103;
+  mov.u64 %rd107, %rd106;
+  bra logup_trace_term_kernel_end_105;
+  logup_trace_term_kernel_else_105:
+  mov.u64 %rd107, %rd101;
+  logup_trace_term_kernel_end_105:
+  cvt.u32.u64 %r108, %rd107;
+  mov.u64 %rd109, 4;
+  mul.lo.u64 %rd110, %rd22, %rd109;
+  add.u64 %rd111, %rd4, %rd110;
+  st.global.u32 [%rd111], %r108;
+  cvt.u64.u32 %rd112, %r72;
+  cvt.u64.u32 %rd113, %r52;
+  add.u64 %rd114, %rd112, %rd113;
+  mov.u32 %r115, 2147483647;
+  cvt.u64.u32 %rd116, %r115;
+  setp.ge.u64 %p117, %rd114, %rd116;
+  @%p117 bra logup_trace_term_kernel_then_118;
+  bra logup_trace_term_kernel_else_118;
+  logup_trace_term_kernel_then_118:
+  sub.u64 %rd119, %rd114, %rd116;
+  mov.u64 %rd120, %rd119;
+  bra logup_trace_term_kernel_end_118;
+  logup_trace_term_kernel_else_118:
+  mov.u64 %rd120, %rd114;
+  logup_trace_term_kernel_end_118:
+  cvt.u32.u64 %r121, %rd120;
+  mov.u64 %rd122, 4;
+  mul.lo.u64 %rd123, %rd22, %rd122;
+  add.u64 %rd124, %rd6, %rd123;
+  st.global.u32 [%rd124], %r121;
+  mov.u32 %r125, 0; // unit
+  mov.u32 %r126, %r125;
   bra logup_trace_term_kernel_end_24;
   logup_trace_term_kernel_else_24:
-  mov.u32 %r150, 0; // no else branch
+  mov.u32 %r126, 0; // no else branch
   logup_trace_term_kernel_end_24:
-  mov.u32 %r151, 0; // unit
+  mov.u32 %r127, 0; // unit
   ret;
 }
 
@@ -241,9 +217,9 @@
     .param .u64 logup_table_subtract_kernel_param_n
 )
 {
-    .reg .pred %p135, %p151, %p167, %p183, %p25;
-    .reg .u32 %r101, %r102, %r103, %r107, %r110, %r111, %r112, %r116, %r119, %r120, %r121, %r125, %r128, %r129, %r130, %r133, %r141, %r145, %r146, %r149, %r157, %r161, %r162, %r165, %r173, %r177, %r178, %r181, %r189, %r19, %r193, %r194, %r195, %r20, %r21, %r22, %r23, %r36, %r43, %r50, %r57, %r64, %r71, %r78, %r85, %r92, %r93, %r94, %r98;
-    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd104, %rd105, %rd106, %rd108, %rd109, %rd11, %rd113, %rd114, %rd115, %rd117, %rd118, %rd12, %rd122, %rd123, %rd124, %rd126, %rd127, %rd13, %rd131, %rd132, %rd134, %rd137, %rd138, %rd139, %rd14, %rd140, %rd142, %rd143, %rd144, %rd147, %rd148, %rd15, %rd150, %rd153, %rd154, %rd155, %rd156, %rd158, %rd159, %rd16, %rd160, %rd163, %rd164, %rd166, %rd169, %rd17, %rd170, %rd171, %rd172, %rd174, %rd175, %rd176, %rd179, %rd18, %rd180, %rd182, %rd185, %rd186, %rd187, %rd188, %rd190, %rd191, %rd192, %rd2, %rd24, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd33, %rd34, %rd35, %rd37, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd44, %rd45, %rd46, %rd47, %rd48, %rd49, %rd5, %rd51, %rd52, %rd53, %rd54, %rd55, %rd56, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd65, %rd66, %rd67, %rd68, %rd69, %rd7, %rd70, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77, %rd79, %rd8, %rd80, %rd81, %rd82, %rd83, %rd84, %rd86, %rd87, %rd88, %rd89, %rd9, %rd90, %rd91, %rd95, %rd96, %rd97, %rd99;
+    .reg .pred %p107, %p121, %p135, %p149, %p25;
+    .reg .u32 %r102, %r105, %r113, %r119, %r127, %r133, %r141, %r147, %r155, %r159, %r160, %r161, %r19, %r20, %r21, %r22, %r23, %r34, %r39, %r44, %r49, %r54, %r59, %r64, %r69, %r74, %r78, %r81, %r85, %r88, %r92, %r95, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd103, %rd104, %rd106, %rd109, %rd11, %rd110, %rd111, %rd112, %rd114, %rd115, %rd116, %rd117, %rd118, %rd12, %rd120, %rd123, %rd124, %rd125, %rd126, %rd128, %rd129, %rd13, %rd130, %rd131, %rd132, %rd134, %rd137, %rd138, %rd139, %rd14, %rd140, %rd142, %rd143, %rd144, %rd145, %rd146, %rd148, %rd15, %rd151, %rd152, %rd153, %rd154, %rd156, %rd157, %rd158, %rd16, %rd17, %rd18, %rd2, %rd24, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd33, %rd35, %rd36, %rd37, %rd38, %rd4, %rd40, %rd41, %rd42, %rd43, %rd45, %rd46, %rd47, %rd48, %rd5, %rd50, %rd51, %rd52, %rd53, %rd55, %rd56, %rd57, %rd58, %rd6, %rd60, %rd61, %rd62, %rd63, %rd65, %rd66, %rd67, %rd68, %rd7, %rd70, %rd71, %rd72, %rd73, %rd75, %rd76, %rd77, %rd79, %rd8, %rd80, %rd82, %rd83, %rd84, %rd86, %rd87, %rd89, %rd9, %rd90, %rd91, %rd93, %rd94, %rd96, %rd97, %rd98;
 
   ld.param.u64 %rd0, [logup_table_subtract_kernel_param_acc_rr_data];
   ld.param.u64 %rd1, [logup_table_subtract_kernel_param_acc_rr_len];
@@ -278,109 +254,123 @@
   mov.u64 %rd27, 0; // unhandled expr
   mov.u64 %rd28, 0; // unhandled expr
   mov.u64 %rd29, 0; // unhandled expr
-  mov.b64 %rd30, %rd16; // param: arr
-  mov.b64 %rd31, %rd24; // param: idx
-  mov.u64 %rd32, 0; // unhandled expr
-  mov.u64 %rd33, 4;
-  mul.lo.u64 %rd34, %rd31, %rd33;
-  add.u64 %rd35, %rd30, %rd34;
-  ld.global.u32 %r36, [%rd35];
-  mov.b64 %rd37, %rd8; // param: arr
-  mov.b64 %rd38, %rd24; // param: idx
-  mov.u64 %rd39, 0; // unhandled expr
-  mov.u64 %rd40, 4;
-  mul.lo.u64 %rd41, %rd38, %rd40;
-  add.u64 %rd42, %rd37, %rd41;
-  ld.global.u32 %r43, [%rd42];
-  mov.b64 %rd44, %rd10; // param: arr
-  mov.b64 %rd45, %rd24; // param: idx
-  mov.u64 %rd46, 0; // unhandled expr
-  mov.u64 %rd47, 4;
-  mul.lo.u64 %rd48, %rd45, %rd47;
-  add.u64 %rd49, %rd44, %rd48;
-  ld.global.u32 %r50, [%rd49];
-  mov.b64 %rd51, %rd12; // param: arr
-  mov.b64 %rd52, %rd24; // param: idx
-  mov.u64 %rd53, 0; // unhandled expr
-  mov.u64 %rd54, 4;
-  mul.lo.u64 %rd55, %rd52, %rd54;
-  add.u64 %rd56, %rd51, %rd55;
-  ld.global.u32 %r57, [%rd56];
-  mov.b64 %rd58, %rd14; // param: arr
-  mov.b64 %rd59, %rd24; // param: idx
+  mov.u64 %rd30, 0; // unhandled expr
+  mov.u64 %rd31, 4;
+  mul.lo.u64 %rd32, %rd24, %rd31;
+  add.u64 %rd33, %rd16, %rd32;
+  ld.global.u32 %r34, [%rd33];
+  mov.u64 %rd35, 0; // unhandled expr
+  mov.u64 %rd36, 4;
+  mul.lo.u64 %rd37, %rd24, %rd36;
+  add.u64 %rd38, %rd8, %rd37;
+  ld.global.u32 %r39, [%rd38];
+  mov.u64 %rd40, 0; // unhandled expr
+  mov.u64 %rd41, 4;
+  mul.lo.u64 %rd42, %rd24, %rd41;
+  add.u64 %rd43, %rd10, %rd42;
+  ld.global.u32 %r44, [%rd43];
+  mov.u64 %rd45, 0; // unhandled expr
+  mov.u64 %rd46, 4;
+  mul.lo.u64 %rd47, %rd24, %rd46;
+  add.u64 %rd48, %rd12, %rd47;
+  ld.global.u32 %r49, [%rd48];
+  mov.u64 %rd50, 0; // unhandled expr
+  mov.u64 %rd51, 4;
+  mul.lo.u64 %rd52, %rd24, %rd51;
+  add.u64 %rd53, %rd14, %rd52;
+  ld.global.u32 %r54, [%rd53];
+  mov.u64 %rd55, 0; // unhandled expr
+  mov.u64 %rd56, 4;
+  mul.lo.u64 %rd57, %rd24, %rd56;
+  add.u64 %rd58, %rd0, %rd57;
+  ld.global.u32 %r59, [%rd58];
   mov.u64 %rd60, 0; // unhandled expr
   mov.u64 %rd61, 4;
-  mul.lo.u64 %rd62, %rd59, %rd61;
-  add.u64 %rd63, %rd58, %rd62;
+  mul.lo.u64 %rd62, %rd24, %rd61;
+  add.u64 %rd63, %rd2, %rd62;
   ld.global.u32 %r64, [%rd63];
-  mov.b64 %rd65, %rd0; // param: arr
-  mov.b64 %rd66, %rd24; // param: idx
-  mov.u64 %rd67, 0; // unhandled expr
-  mov.u64 %rd68, 4;
-  mul.lo.u64 %rd69, %rd66, %rd68;
-  add.u64 %rd70, %rd65, %rd69;
-  ld.global.u32 %r71, [%rd70];
-  mov.b64 %rd72, %rd2; // param: arr
-  mov.b64 %rd73, %rd24; // param: idx
-  mov.u64 %rd74, 0; // unhandled expr
-  mov.u64 %rd75, 4;
-  mul.lo.u64 %rd76, %rd73, %rd75;
-  add.u64 %rd77, %rd72, %rd76;
-  ld.global.u32 %r78, [%rd77];
-  mov.b64 %rd79, %rd4; // param: arr
-  mov.b64 %rd80, %rd24; // param: idx
-  mov.u64 %rd81, 0; // unhandled expr
-  mov.u64 %rd82, 4;
-  mul.lo.u64 %rd83, %rd80, %rd82;
-  add.u64 %rd84, %rd79, %rd83;
-  ld.global.u32 %r85, [%rd84];
-  mov.b64 %rd86, %rd6; // param: arr
-  mov.b64 %rd87, %rd24; // param: idx
-  mov.u64 %rd88, 0; // unhandled expr
-  mov.u64 %rd89, 4;
-  mul.lo.u64 %rd90, %rd87, %rd89;
-  add.u64 %rd91, %rd86, %rd90;
-  ld.global.u32 %r92, [%rd91];
-  mov.b32 %r93, %r36; // param: a
-  mov.b32 %r94, %r43; // param: b
-  cvt.u64.u32 %rd95, %r93;
-  cvt.u64.u32 %rd96, %r94;
-  mul.lo.u64 %rd97, %rd95, %rd96;
-  mov.u32 %r98, 2147483647;
-  cvt.u64.u32 %rd99, %r98;
-  rem.u64 %rd100, %rd97, %rd99;
-  cvt.u32.u64 %r101, %rd100;
-  mov.b32 %r102, %r36; // param: a
-  mov.b32 %r103, %r50; // param: b
-  cvt.u64.u32 %rd104, %r102;
-  cvt.u64.u32 %rd105, %r103;
-  mul.lo.u64 %rd106, %rd104, %rd105;
-  mov.u32 %r107, 2147483647;
-  cvt.u64.u32 %rd108, %r107;
-  rem.u64 %rd109, %rd106, %rd108;
-  cvt.u32.u64 %r110, %rd109;
-  mov.b32 %r111, %r36; // param: a
-  mov.b32 %r112, %r57; // param: b
-  cvt.u64.u32 %rd113, %r111;
-  cvt.u64.u32 %rd114, %r112;
-  mul.lo.u64 %rd115, %rd113, %rd114;
-  mov.u32 %r116, 2147483647;
-  cvt.u64.u32 %rd117, %r116;
-  rem.u64 %rd118, %rd115, %rd117;
-  cvt.u32.u64 %r119, %rd118;
-  mov.b32 %r120, %r36; // param: a
-  mov.b32 %r121, %r64; // param: b
-  cvt.u64.u32 %rd122, %r120;
-  cvt.u64.u32 %rd123, %r121;
-  mul.lo.u64 %rd124, %rd122, %rd123;
-  mov.u32 %r125, 2147483647;
-  cvt.u64.u32 %rd126, %r125;
-  rem.u64 %rd127, %rd124, %rd126;
-  cvt.u32.u64 %r128, %rd127;
-  mov.b32 %r129, %r71; // param: a
-  mov.b32 %r130, %r101; // param: b
-  cvt.u64.u32 %rd131, %r129;
-  cvt.u64.u32 %rd132, %r130;
+  mov.u64 %rd65, 0; // unhandled expr
+  mov.u64 %rd66, 4;
+  mul.lo.u64 %rd67, %rd24, %rd66;
+  add.u64 %rd68, %rd4, %rd67;
+  ld.global.u32 %r69, [%rd68];
+  mov.u64 %rd70, 0; // unhandled expr
+  mov.u64 %rd71, 4;
+  mul.lo.u64 %rd72, %rd24, %rd71;
+  add.u64 %rd73, %rd6, %rd72;
+  ld.global.u32 %r74, [%rd73];
+  cvt.u64.u32 %rd75, %r34;
+  cvt.u64.u32 %rd76, %r39;
+  mul.lo.u64 %rd77, %rd75, %rd76;
+  mov.u32 %r78, 2147483647;
+  cvt.u64.u32 %rd79, %r78;
+  rem.u64 %rd80, %rd77, %rd79;
+  cvt.u32.u64 %r81, %rd80;
+  cvt.u64.u32 %rd82, %r34;
+  cvt.u64.u32 %rd83, %r44;
+  mul.lo.u64 %rd84, %rd82, %rd83;
+  mov.u32 %r85, 2147483647;
+  cvt.u64.u32 %rd86, %r85;
+  rem.u64 %rd87, %rd84, %rd86;
+  cvt.u32.u64 %r88, %rd87;
+  cvt.u64.u32 %rd89, %r34;
+  cvt.u64.u32 %rd90, %r49;
+  mul.lo.u64 %rd91, %rd89, %rd90;
+  mov.u32 %r92, 2147483647;
+  cvt.u64.u32 %rd93, %r92;
+  rem.u64 %rd94, %rd91, %rd93;
+  cvt.u32.u64 %r95, %rd94;
+  cvt.u64.u32 %rd96, %r34;
+  cvt.u64.u32 %rd97, %r54;
+  mul.lo.u64 %rd98, %rd96, %rd97;
+  mov.u32 %r99, 2147483647;
+  cvt.u64.u32 %rd100, %r99;
+  rem.u64 %rd101, %rd98, %rd100;
+  cvt.u32.u64 %r102, %rd101;
+  cvt.u64.u32 %rd103, %r59;
+  cvt.u64.u32 %rd104, %r81;
+  mov.u32 %r105, 2147483647;
+  cvt.u64.u32 %rd106, %r105;
+  setp.ge.u64 %p107, %rd103, %rd104;
+  @%p107 bra logup_table_subtract_kernel_then_108;
+  bra logup_table_subtract_kernel_else_108;
+  logup_table_subtract_kernel_then_108:
+  sub.u64 %rd109, %rd103, %rd104;
+  mov.u64 %rd110, %rd109;
+  bra logup_table_subtract_kernel_end_108;
+  logup_table_subtract_kernel_else_108:
+  add.u64 %rd111, %rd103, %rd106;
+  sub.u64 %rd112, %rd111, %rd104;
+  mov.u64 %rd110, %rd112;
+  logup_table_subtract_kernel_end_108:
+  cvt.u32.u64 %r113, %rd110;
+  mov.u64 %rd114, 4;
+  mul.lo.u64 %rd115, %rd24, %rd114;
+  add.u64 %rd116, %rd0, %rd115;
+  st.global.u32 [%rd116], %r113;
+  cvt.u64.u32 %rd117, %r64;
+  cvt.u64.u32 %rd118, %r88;
+  mov.u32 %r119, 2147483647;
+  cvt.u64.u32 %rd120, %r119;
+  setp.ge.u64 %p121, %rd117, %rd118;
+  @%p121 bra logup_table_subtract_kernel_then_122;
+  bra logup_table_subtract_kernel_else_122;
+  logup_table_subtract_kernel_then_122:
+  sub.u64 %rd123, %rd117, %rd118;
+  mov.u64 %rd124, %rd123;
+  bra logup_table_subtract_kernel_end_122;
+  logup_table_subtract_kernel_else_122:
+  add.u64 %rd125, %rd117, %rd120;
+  sub.u64 %rd126, %rd125, %rd118;
+  mov.u64 %rd124, %rd126;
+  logup_table_subtract_kernel_end_122:
+  cvt.u32.u64 %r127, %rd124;
+  mov.u64 %rd128, 4;
+  mul.lo.u64 %rd129, %rd24, %rd128;
+  add.u64 %rd130, %rd2, %rd129;
+  st.global.u32 [%rd130], %r127;
+  cvt.u64.u32 %rd131, %r69;
+  cvt.u64.u32 %rd132, %r95;
   mov.u32 %r133, 2147483647;
   cvt.u64.u32 %rd134, %r133;
   setp.ge.u64 %p135, %rd131, %rd132;
@@ -398,84 +388,36 @@
   cvt.u32.u64 %r141, %rd138;
   mov.u64 %rd142, 4;
   mul.lo.u64 %rd143, %rd24, %rd142;
-  add.u64 %rd144, %rd0, %rd143;
+  add.u64 %rd144, %rd4, %rd143;
   st.global.u32 [%rd144], %r141;
-  mov.b32 %r145, %r78; // param: a
-  mov.b32 %r146, %r110; // param: b
-  cvt.u64.u32 %rd147, %r145;
-  cvt.u64.u32 %rd148, %r146;
-  mov.u32 %r149, 2147483647;
-  cvt.u64.u32 %rd150, %r149;
-  setp.ge.u64 %p151, %rd147, %rd148;
-  @%p151 bra logup_table_subtract_kernel_then_152;
-  bra logup_table_subtract_kernel_else_152;
-  logup_table_subtract_kernel_then_152:
-  sub.u64 %rd153, %rd147, %rd148;
-  mov.u64 %rd154, %rd153;
-  bra logup_table_subtract_kernel_end_152;
-  logup_table_subtract_kernel_else_152:
-  add.u64 %rd155, %rd147, %rd150;
-  sub.u64 %rd156, %rd155, %rd148;
-  mov.u64 %rd154, %rd156;
-  logup_table_subtract_kernel_end_152:
-  cvt.u32.u64 %r157, %rd154;
-  mov.u64 %rd158, 4;
-  mul.lo.u64 %rd159, %rd24, %rd158;
-  add.u64 %rd160, %rd2, %rd159;
-  st.global.u32 [%rd160], %r157;
-  mov.b32 %r161, %r85; // param: a
-  mov.b32 %r162, %r119; // param: b
-  cvt.u64.u32 %rd163, %r161;
-  cvt.u64.u32 %rd164, %r162;
-  mov.u32 %r165, 2147483647;
-  cvt.u64.u32 %rd166, %r165;
-  setp.ge.u64 %p167, %rd163, %rd164;
-  @%p167 bra logup_table_subtract_kernel_then_168;
-  bra logup_table_subtract_kernel_else_168;
-  logup_table_subtract_kernel_then_168:
-  sub.u64 %rd169, %rd163, %rd164;
-  mov.u64 %rd170, %rd169;
-  bra logup_table_subtract_kernel_end_168;
-  logup_table_subtract_kernel_else_168:
-  add.u64 %rd171, %rd163, %rd166;
-  sub.u64 %rd172, %rd171, %rd164;
-  mov.u64 %rd170, %rd172;
-  logup_table_subtract_kernel_end_168:
-  cvt.u32.u64 %r173, %rd170;
-  mov.u64 %rd174, 4;
-  mul.lo.u64 %rd175, %rd24, %rd174;
-  add.u64 %rd176, %rd4, %rd175;
-  st.global.u32 [%rd176], %r173;
-  mov.b32 %r177, %r92; // param: a
-  mov.b32 %r178, %r128; // param: b
-  cvt.u64.u32 %rd179, %r177;
-  cvt.u64.u32 %rd180, %r178;
-  mov.u32 %r181, 2147483647;
-  cvt.u64.u32 %rd182, %r181;
-  setp.ge.u64 %p183, %rd179, %rd180;
-  @%p183 bra logup_table_subtract_kernel_then_184;
-  bra logup_table_subtract_kernel_else_184;
-  logup_table_subtract_kernel_then_184:
-  sub.u64 %rd185, %rd179, %rd180;
-  mov.u64 %rd186, %rd185;
-  bra logup_table_subtract_kernel_end_184;
-  logup_table_subtract_kernel_else_184:
-  add.u64 %rd187, %rd179, %rd182;
-  sub.u64 %rd188, %rd187, %rd180;
-  mov.u64 %rd186, %rd188;
-  logup_table_subtract_kernel_end_184:
-  cvt.u32.u64 %r189, %rd186;
-  mov.u64 %rd190, 4;
-  mul.lo.u64 %rd191, %rd24, %rd190;
-  add.u64 %rd192, %rd6, %rd191;
-  st.global.u32 [%rd192], %r189;
-  mov.u32 %r193, 0; // unit
-  mov.u32 %r194, %r193;
+  cvt.u64.u32 %rd145, %r74;
+  cvt.u64.u32 %rd146, %r102;
+  mov.u32 %r147, 2147483647;
+  cvt.u64.u32 %rd148, %r147;
+  setp.ge.u64 %p149, %rd145, %rd146;
+  @%p149 bra logup_table_subtract_kernel_then_150;
+  bra logup_table_subtract_kernel_else_150;
+  logup_table_subtract_kernel_then_150:
+  sub.u64 %rd151, %rd145, %rd146;
+  mov.u64 %rd152, %rd151;
+  bra logup_table_subtract_kernel_end_150;
+  logup_table_subtract_kernel_else_150:
+  add.u64 %rd153, %rd145, %rd148;
+  sub.u64 %rd154, %rd153, %rd146;
+  mov.u64 %rd152, %rd154;
+  logup_table_subtract_kernel_end_150:
+  cvt.u32.u64 %r155, %rd152;
+  mov.u64 %rd156, 4;
+  mul.lo.u64 %rd157, %rd24, %rd156;
+  add.u64 %rd158, %rd6, %rd157;
+  st.global.u32 [%rd158], %r155;
+  mov.u32 %r159, 0; // unit
+  mov.u32 %r160, %r159;
   bra logup_table_subtract_kernel_end_26;
   logup_table_subtract_kernel_else_26:
-  mov.u32 %r194, 0; // no else branch
+  mov.u32 %r160, 0; // no else branch
   logup_table_subtract_kernel_end_26:
-  mov.u32 %r195, 0; // unit
+  mov.u32 %r161, 0; // unit
   ret;
 }
 
@@ -491,9 +433,9 @@
     .param .u64 logup_reduce_kernel_param_half
 )
 {
-    .reg .pred %p101, %p116, %p131, %p15, %p86;
-    .reg .u32 %r10, %r105, %r109, %r11, %r110, %r114, %r12, %r120, %r124, %r125, %r129, %r13, %r135, %r139, %r140, %r141, %r25, %r33, %r40, %r48, %r55, %r63, %r70, %r78, %r79, %r80, %r84, %r9, %r90, %r94, %r95, %r99;
-    .reg .u64 %rd0, %rd1, %rd100, %rd103, %rd104, %rd106, %rd107, %rd108, %rd111, %rd112, %rd113, %rd115, %rd118, %rd119, %rd121, %rd122, %rd123, %rd126, %rd127, %rd128, %rd130, %rd133, %rd134, %rd136, %rd137, %rd138, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd34, %rd35, %rd36, %rd37, %rd38, %rd39, %rd4, %rd41, %rd42, %rd43, %rd44, %rd45, %rd46, %rd47, %rd49, %rd5, %rd50, %rd51, %rd52, %rd53, %rd54, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd64, %rd65, %rd66, %rd67, %rd68, %rd69, %rd7, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77, %rd8, %rd81, %rd82, %rd83, %rd85, %rd88, %rd89, %rd91, %rd92, %rd93, %rd96, %rd97, %rd98;
+    .reg .pred %p107, %p15, %p68, %p81, %p94;
+    .reg .u32 %r10, %r105, %r11, %r111, %r115, %r116, %r117, %r12, %r13, %r23, %r29, %r34, %r40, %r45, %r51, %r56, %r62, %r66, %r72, %r79, %r85, %r9, %r92, %r98;
+    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd103, %rd104, %rd106, %rd109, %rd110, %rd112, %rd113, %rd114, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd31, %rd32, %rd33, %rd35, %rd36, %rd37, %rd38, %rd39, %rd4, %rd41, %rd42, %rd43, %rd44, %rd46, %rd47, %rd48, %rd49, %rd5, %rd50, %rd52, %rd53, %rd54, %rd55, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd63, %rd64, %rd65, %rd67, %rd7, %rd70, %rd71, %rd73, %rd74, %rd75, %rd76, %rd77, %rd78, %rd8, %rd80, %rd83, %rd84, %rd86, %rd87, %rd88, %rd89, %rd90, %rd91, %rd93, %rd96, %rd97, %rd99;
 
   ld.param.u64 %rd0, [logup_reduce_kernel_param_acc_rr_data];
   ld.param.u64 %rd1, [logup_reduce_kernel_param_acc_rr_len];
@@ -517,161 +459,137 @@
   logup_reduce_kernel_then_16:
   mov.u64 %rd17, 0; // unhandled expr
   mov.u64 %rd18, 0; // unhandled expr
-  mov.b64 %rd19, %rd0; // param: arr
-  mov.b64 %rd20, %rd14; // param: idx
-  mov.u64 %rd21, 0; // unhandled expr
-  mov.u64 %rd22, 4;
-  mul.lo.u64 %rd23, %rd20, %rd22;
-  add.u64 %rd24, %rd19, %rd23;
-  ld.global.u32 %r25, [%rd24];
-  add.u64 %rd26, %rd14, %rd8;
-  mov.b64 %rd27, %rd0; // param: arr
-  mov.b64 %rd28, %rd26; // param: idx
-  mov.u64 %rd29, 0; // unhandled expr
-  mov.u64 %rd30, 4;
-  mul.lo.u64 %rd31, %rd28, %rd30;
-  add.u64 %rd32, %rd27, %rd31;
-  ld.global.u32 %r33, [%rd32];
-  mov.b64 %rd34, %rd2; // param: arr
-  mov.b64 %rd35, %rd14; // param: idx
+  mov.u64 %rd19, 0; // unhandled expr
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd14, %rd20;
+  add.u64 %rd22, %rd0, %rd21;
+  ld.global.u32 %r23, [%rd22];
+  add.u64 %rd24, %rd14, %rd8;
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd24, %rd26;
+  add.u64 %rd28, %rd0, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  mov.u64 %rd30, 0; // unhandled expr
+  mov.u64 %rd31, 4;
+  mul.lo.u64 %rd32, %rd14, %rd31;
+  add.u64 %rd33, %rd2, %rd32;
+  ld.global.u32 %r34, [%rd33];
+  add.u64 %rd35, %rd14, %rd8;
   mov.u64 %rd36, 0; // unhandled expr
   mov.u64 %rd37, 4;
   mul.lo.u64 %rd38, %rd35, %rd37;
-  add.u64 %rd39, %rd34, %rd38;
+  add.u64 %rd39, %rd2, %rd38;
   ld.global.u32 %r40, [%rd39];
-  add.u64 %rd41, %rd14, %rd8;
-  mov.b64 %rd42, %rd2; // param: arr
-  mov.b64 %rd43, %rd41; // param: idx
-  mov.u64 %rd44, 0; // unhandled expr
-  mov.u64 %rd45, 4;
-  mul.lo.u64 %rd46, %rd43, %rd45;
-  add.u64 %rd47, %rd42, %rd46;
-  ld.global.u32 %r48, [%rd47];
-  mov.b64 %rd49, %rd4; // param: arr
-  mov.b64 %rd50, %rd14; // param: idx
-  mov.u64 %rd51, 0; // unhandled expr
-  mov.u64 %rd52, 4;
-  mul.lo.u64 %rd53, %rd50, %rd52;
-  add.u64 %rd54, %rd49, %rd53;
-  ld.global.u32 %r55, [%rd54];
-  add.u64 %rd56, %rd14, %rd8;
-  mov.b64 %rd57, %rd4; // param: arr
-  mov.b64 %rd58, %rd56; // param: idx
-  mov.u64 %rd59, 0; // unhandled expr
-  mov.u64 %rd60, 4;
-  mul.lo.u64 %rd61, %rd58, %rd60;
-  add.u64 %rd62, %rd57, %rd61;
-  ld.global.u32 %r63, [%rd62];
-  mov.b64 %rd64, %rd6; // param: arr
-  mov.b64 %rd65, %rd14; // param: idx
-  mov.u64 %rd66, 0; // unhandled expr
-  mov.u64 %rd67, 4;
-  mul.lo.u64 %rd68, %rd65, %rd67;
-  add.u64 %rd69, %rd64, %rd68;
-  ld.global.u32 %r70, [%rd69];
-  add.u64 %rd71, %rd14, %rd8;
-  mov.b64 %rd72, %rd6; // param: arr
-  mov.b64 %rd73, %rd71; // param: idx
-  mov.u64 %rd74, 0; // unhandled expr
-  mov.u64 %rd75, 4;
-  mul.lo.u64 %rd76, %rd73, %rd75;
-  add.u64 %rd77, %rd72, %rd76;
-  ld.global.u32 %r78, [%rd77];
-  mov.b32 %r79, %r25; // param: a
-  mov.b32 %r80, %r33; // param: b
-  cvt.u64.u32 %rd81, %r79;
-  cvt.u64.u32 %rd82, %r80;
-  add.u64 %rd83, %rd81, %rd82;
-  mov.u32 %r84, 2147483647;
-  cvt.u64.u32 %rd85, %r84;
-  setp.ge.u64 %p86, %rd83, %rd85;
-  @%p86 bra logup_reduce_kernel_then_87;
-  bra logup_reduce_kernel_else_87;
-  logup_reduce_kernel_then_87:
-  sub.u64 %rd88, %rd83, %rd85;
-  mov.u64 %rd89, %rd88;
-  bra logup_reduce_kernel_end_87;
-  logup_reduce_kernel_else_87:
-  mov.u64 %rd89, %rd83;
-  logup_reduce_kernel_end_87:
-  cvt.u32.u64 %r90, %rd89;
-  mov.u64 %rd91, 4;
-  mul.lo.u64 %rd92, %rd14, %rd91;
-  add.u64 %rd93, %rd0, %rd92;
-  st.global.u32 [%rd93], %r90;
-  mov.b32 %r94, %r40; // param: a
-  mov.b32 %r95, %r48; // param: b
-  cvt.u64.u32 %rd96, %r94;
-  cvt.u64.u32 %rd97, %r95;
-  add.u64 %rd98, %rd96, %rd97;
-  mov.u32 %r99, 2147483647;
-  cvt.u64.u32 %rd100, %r99;
-  setp.ge.u64 %p101, %rd98, %rd100;
-  @%p101 bra logup_reduce_kernel_then_102;
-  bra logup_reduce_kernel_else_102;
-  logup_reduce_kernel_then_102:
-  sub.u64 %rd103, %rd98, %rd100;
-  mov.u64 %rd104, %rd103;
-  bra logup_reduce_kernel_end_102;
-  logup_reduce_kernel_else_102:
-  mov.u64 %rd104, %rd98;
-  logup_reduce_kernel_end_102:
-  cvt.u32.u64 %r105, %rd104;
-  mov.u64 %rd106, 4;
-  mul.lo.u64 %rd107, %rd14, %rd106;
-  add.u64 %rd108, %rd2, %rd107;
-  st.global.u32 [%rd108], %r105;
-  mov.b32 %r109, %r55; // param: a
-  mov.b32 %r110, %r63; // param: b
-  cvt.u64.u32 %rd111, %r109;
-  cvt.u64.u32 %rd112, %r110;
-  add.u64 %rd113, %rd111, %rd112;
-  mov.u32 %r114, 2147483647;
-  cvt.u64.u32 %rd115, %r114;
-  setp.ge.u64 %p116, %rd113, %rd115;
-  @%p116 bra logup_reduce_kernel_then_117;
-  bra logup_reduce_kernel_else_117;
-  logup_reduce_kernel_then_117:
-  sub.u64 %rd118, %rd113, %rd115;
-  mov.u64 %rd119, %rd118;
-  bra logup_reduce_kernel_end_117;
-  logup_reduce_kernel_else_117:
-  mov.u64 %rd119, %rd113;
-  logup_reduce_kernel_end_117:
-  cvt.u32.u64 %r120, %rd119;
-  mov.u64 %rd121, 4;
-  mul.lo.u64 %rd122, %rd14, %rd121;
-  add.u64 %rd123, %rd4, %rd122;
-  st.global.u32 [%rd123], %r120;
-  mov.b32 %r124, %r70; // param: a
-  mov.b32 %r125, %r78; // param: b
-  cvt.u64.u32 %rd126, %r124;
-  cvt.u64.u32 %rd127, %r125;
-  add.u64 %rd128, %rd126, %rd127;
-  mov.u32 %r129, 2147483647;
-  cvt.u64.u32 %rd130, %r129;
-  setp.ge.u64 %p131, %rd128, %rd130;
-  @%p131 bra logup_reduce_kernel_then_132;
-  bra logup_reduce_kernel_else_132;
-  logup_reduce_kernel_then_132:
-  sub.u64 %rd133, %rd128, %rd130;
-  mov.u64 %rd134, %rd133;
-  bra logup_reduce_kernel_end_132;
-  logup_reduce_kernel_else_132:
-  mov.u64 %rd134, %rd128;
-  logup_reduce_kernel_end_132:
-  cvt.u32.u64 %r135, %rd134;
-  mov.u64 %rd136, 4;
-  mul.lo.u64 %rd137, %rd14, %rd136;
-  add.u64 %rd138, %rd6, %rd137;
-  st.global.u32 [%rd138], %r135;
-  mov.u32 %r139, 0; // unit
-  mov.u32 %r140, %r139;
+  mov.u64 %rd41, 0; // unhandled expr
+  mov.u64 %rd42, 4;
+  mul.lo.u64 %rd43, %rd14, %rd42;
+  add.u64 %rd44, %rd4, %rd43;
+  ld.global.u32 %r45, [%rd44];
+  add.u64 %rd46, %rd14, %rd8;
+  mov.u64 %rd47, 0; // unhandled expr
+  mov.u64 %rd48, 4;
+  mul.lo.u64 %rd49, %rd46, %rd48;
+  add.u64 %rd50, %rd4, %rd49;
+  ld.global.u32 %r51, [%rd50];
+  mov.u64 %rd52, 0; // unhandled expr
+  mov.u64 %rd53, 4;
+  mul.lo.u64 %rd54, %rd14, %rd53;
+  add.u64 %rd55, %rd6, %rd54;
+  ld.global.u32 %r56, [%rd55];
+  add.u64 %rd57, %rd14, %rd8;
+  mov.u64 %rd58, 0; // unhandled expr
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd57, %rd59;
+  add.u64 %rd61, %rd6, %rd60;
+  ld.global.u32 %r62, [%rd61];
+  cvt.u64.u32 %rd63, %r23;
+  cvt.u64.u32 %rd64, %r29;
+  add.u64 %rd65, %rd63, %rd64;
+  mov.u32 %r66, 2147483647;
+  cvt.u64.u32 %rd67, %r66;
+  setp.ge.u64 %p68, %rd65, %rd67;
+  @%p68 bra logup_reduce_kernel_then_69;
+  bra logup_reduce_kernel_else_69;
+  logup_reduce_kernel_then_69:
+  sub.u64 %rd70, %rd65, %rd67;
+  mov.u64 %rd71, %rd70;
+  bra logup_reduce_kernel_end_69;
+  logup_reduce_kernel_else_69:
+  mov.u64 %rd71, %rd65;
+  logup_reduce_kernel_end_69:
+  cvt.u32.u64 %r72, %rd71;
+  mov.u64 %rd73, 4;
+  mul.lo.u64 %rd74, %rd14, %rd73;
+  add.u64 %rd75, %rd0, %rd74;
+  st.global.u32 [%rd75], %r72;
+  cvt.u64.u32 %rd76, %r34;
+  cvt.u64.u32 %rd77, %r40;
+  add.u64 %rd78, %rd76, %rd77;
+  mov.u32 %r79, 2147483647;
+  cvt.u64.u32 %rd80, %r79;
+  setp.ge.u64 %p81, %rd78, %rd80;
+  @%p81 bra logup_reduce_kernel_then_82;
+  bra logup_reduce_kernel_else_82;
+  logup_reduce_kernel_then_82:
+  sub.u64 %rd83, %rd78, %rd80;
+  mov.u64 %rd84, %rd83;
+  bra logup_reduce_kernel_end_82;
+  logup_reduce_kernel_else_82:
+  mov.u64 %rd84, %rd78;
+  logup_reduce_kernel_end_82:
+  cvt.u32.u64 %r85, %rd84;
+  mov.u64 %rd86, 4;
+  mul.lo.u64 %rd87, %rd14, %rd86;
+  add.u64 %rd88, %rd2, %rd87;
+  st.global.u32 [%rd88], %r85;
+  cvt.u64.u32 %rd89, %r45;
+  cvt.u64.u32 %rd90, %r51;
+  add.u64 %rd91, %rd89, %rd90;
+  mov.u32 %r92, 2147483647;
+  cvt.u64.u32 %rd93, %r92;
+  setp.ge.u64 %p94, %rd91, %rd93;
+  @%p94 bra logup_reduce_kernel_then_95;
+  bra logup_reduce_kernel_else_95;
+  logup_reduce_kernel_then_95:
+  sub.u64 %rd96, %rd91, %rd93;
+  mov.u64 %rd97, %rd96;
+  bra logup_reduce_kernel_end_95;
+  logup_reduce_kernel_else_95:
+  mov.u64 %rd97, %rd91;
+  logup_reduce_kernel_end_95:
+  cvt.u32.u64 %r98, %rd97;
+  mov.u64 %rd99, 4;
+  mul.lo.u64 %rd100, %rd14, %rd99;
+  add.u64 %rd101, %rd4, %rd100;
+  st.global.u32 [%rd101], %r98;
+  cvt.u64.u32 %rd102, %r56;
+  cvt.u64.u32 %rd103, %r62;
+  add.u64 %rd104, %rd102, %rd103;
+  mov.u32 %r105, 2147483647;
+  cvt.u64.u32 %rd106, %r105;
+  setp.ge.u64 %p107, %rd104, %rd106;
+  @%p107 bra logup_reduce_kernel_then_108;
+  bra logup_reduce_kernel_else_108;
+  logup_reduce_kernel_then_108:
+  sub.u64 %rd109, %rd104, %rd106;
+  mov.u64 %rd110, %rd109;
+  bra logup_reduce_kernel_end_108;
+  logup_reduce_kernel_else_108:
+  mov.u64 %rd110, %rd104;
+  logup_reduce_kernel_end_108:
+  cvt.u32.u64 %r111, %rd110;
+  mov.u64 %rd112, 4;
+  mul.lo.u64 %rd113, %rd14, %rd112;
+  add.u64 %rd114, %rd6, %rd113;
+  st.global.u32 [%rd114], %r111;
+  mov.u32 %r115, 0; // unit
+  mov.u32 %r116, %r115;
   bra logup_reduce_kernel_end_16;
   logup_reduce_kernel_else_16:
-  mov.u32 %r140, 0; // no else branch
+  mov.u32 %r116, 0; // no else branch
   logup_reduce_kernel_end_16:
-  mov.u32 %r141, 0; // unit
+  mov.u32 %r117, 0; // unit
   ret;
 }
 

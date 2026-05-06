@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ScatterGather ScatterGather;
+
 typedef struct ScatterGather {
   uint64_t scatter_ops;
   uint64_t gather_ops;

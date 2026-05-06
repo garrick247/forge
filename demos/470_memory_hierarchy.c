@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MemoryHierarchy MemoryHierarchy;
+
 typedef struct MemoryHierarchy {
   uint64_t l1_hits;
   uint64_t l2_hits;

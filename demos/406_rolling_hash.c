@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RollingHash RollingHash;
+
 typedef struct RollingHash {
   uint64_t hash_value;
   uint64_t symbol_count;

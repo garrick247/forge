@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct WeightedAvg WeightedAvg;
+
 typedef struct WeightedAvg {
   uint64_t numerator;
   uint64_t denominator;

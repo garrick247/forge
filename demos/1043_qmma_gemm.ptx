@@ -22,9 +22,9 @@
     .param .u64 qmma_gemm_param_K_tiles
 )
 {
-    .reg .pred %p21, %p34, %p38, %p71;
-    .reg .u32 %r14, %r16, %r18, %r28, %r29, %r30, %r64, %r65, %r66, %r78, %r79;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd17, %rd19, %rd2, %rd20, %rd23, %rd24, %rd25, %rd26, %rd27, %rd3, %rd31, %rd32, %rd35, %rd36, %rd37, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd45, %rd46, %rd47, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd53, %rd54, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd67, %rd68, %rd69, %rd7, %rd70, %rd73, %rd74, %rd75, %rd76, %rd77, %rd8, %rd9;
+    .reg .pred %p21, %p32, %p36, %p54;
+    .reg .u32 %r14, %r16, %r18, %r26, %r27, %r28, %r48, %r49, %r50, %r61, %r62;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd17, %rd19, %rd2, %rd20, %rd23, %rd24, %rd25, %rd29, %rd3, %rd30, %rd33, %rd34, %rd35, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd45, %rd46, %rd47, %rd5, %rd51, %rd52, %rd53, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd7, %rd8, %rd9;
 
   ld.param.u64 %rd0, [qmma_gemm_param_desc_a];
   ld.param.u64 %rd1, [qmma_gemm_param_desc_as];
@@ -53,85 +53,68 @@
   bra qmma_gemm_else_22;
   qmma_gemm_then_22:
   mov.u64 %rd23, 1;
-  mov.b64 %rd24, %rd4; // param: bar
-  mov.b64 %rd25, %rd23; // param: expect
-  mov.u64 %rd26, 0; // FG-2.6: UNRESOLVED device fn mbarrier_init (stub)
-  mov.u64 %rd27, 0; // FG-2.6: UNRESOLVED device fn fence_proxy_async (stub)
-  mov.u32 %r28, 0; // unit
-  mov.u32 %r29, %r28;
+  mov.u64 %rd24, 0; // FG-2.6: UNRESOLVED device fn mbarrier_init (stub)
+  mov.u64 %rd25, 0; // FG-2.6: UNRESOLVED device fn fence_proxy_async (stub)
+  mov.u32 %r26, 0; // unit
+  mov.u32 %r27, %r26;
   bra qmma_gemm_end_22;
   qmma_gemm_else_22:
-  mov.u32 %r29, 0; // no else branch
+  mov.u32 %r27, 0; // no else branch
   qmma_gemm_end_22:
   bar.sync 0;
-  mov.u32 %r30, 0; // unit
-  mov.u64 %rd31, 0;
-  mov.u64 %rd32, 0;
-  qmma_gemm_loop_33:
-  setp.lt.u64 %p34, %rd31, %rd13;
-  @!%p34 bra qmma_gemm_loop_end_33;
-  mov.u64 %rd35, 32;
-  mul.lo.u64 %rd36, %rd31, %rd35;
-  mov.u64 %rd37, 0;
-  setp.eq.u64 %p38, %rd15, %rd37;
-  @%p38 bra qmma_gemm_then_39;
-  bra qmma_gemm_else_39;
-  qmma_gemm_then_39:
-  mov.u64 %rd40, 64;
-  mul.lo.u64 %rd41, %rd17, %rd40;
-  mov.u64 %rd42, 1024;
-  mov.b64 %rd43, %rd5; // param: smem_dst
-  mov.b64 %rd44, %rd0; // param: tma_desc
-  mov.b64 %rd45, %rd4; // param: bar
-  mov.b64 %rd46, %rd36; // param: c0
-  mov.b64 %rd47, %rd41; // param: c1
-  mov.b64 %rd48, %rd9; // param: smem_cap
-  mov.b64 %rd49, %rd42; // param: tile_bytes
-  mov.u64 %rd50, 0; // FG-2.6: UNRESOLVED device fn mbarrier_arrive_tx (stub)
-  mov.u64 %rd51, 0; // FG-2.6: UNRESOLVED device fn tma_load_2d (stub)
-  mov.u64 %rd52, 128;
-  mul.lo.u64 %rd53, %rd19, %rd52;
-  mov.u64 %rd54, 2048;
-  mov.b64 %rd55, %rd7; // param: smem_dst
-  mov.b64 %rd56, %rd2; // param: tma_desc
-  mov.b64 %rd57, %rd4; // param: bar
-  mov.b64 %rd58, %rd36; // param: c0
-  mov.b64 %rd59, %rd53; // param: c1
-  mov.b64 %rd60, %rd10; // param: smem_cap
-  mov.b64 %rd61, %rd54; // param: tile_bytes
-  mov.u64 %rd62, 0; // FG-2.6: UNRESOLVED device fn mbarrier_arrive_tx (stub)
-  mov.u64 %rd63, 0; // FG-2.6: UNRESOLVED device fn tma_load_2d (stub)
-  mov.u32 %r64, 0; // unit
-  mov.u32 %r65, %r64;
-  bra qmma_gemm_end_39;
-  qmma_gemm_else_39:
-  mov.u32 %r65, 0; // no else branch
-  qmma_gemm_end_39:
+  mov.u32 %r28, 0; // unit
+  mov.u64 %rd29, 0;
+  mov.u64 %rd30, 0;
+  qmma_gemm_loop_31:
+  setp.lt.u64 %p32, %rd29, %rd13;
+  @!%p32 bra qmma_gemm_loop_end_31;
+  mov.u64 %rd33, 32;
+  mul.lo.u64 %rd34, %rd29, %rd33;
+  mov.u64 %rd35, 0;
+  setp.eq.u64 %p36, %rd15, %rd35;
+  @%p36 bra qmma_gemm_then_37;
+  bra qmma_gemm_else_37;
+  qmma_gemm_then_37:
+  mov.u64 %rd38, 64;
+  mul.lo.u64 %rd39, %rd17, %rd38;
+  mov.u64 %rd40, 1024;
+  mov.u64 %rd41, 0; // FG-2.6: UNRESOLVED device fn mbarrier_arrive_tx (stub)
+  mov.u64 %rd42, 0; // FG-2.6: UNRESOLVED device fn tma_load_2d (stub)
+  mov.u64 %rd43, 128;
+  mul.lo.u64 %rd44, %rd19, %rd43;
+  mov.u64 %rd45, 2048;
+  mov.u64 %rd46, 0; // FG-2.6: UNRESOLVED device fn mbarrier_arrive_tx (stub)
+  mov.u64 %rd47, 0; // FG-2.6: UNRESOLVED device fn tma_load_2d (stub)
+  mov.u32 %r48, 0; // unit
+  mov.u32 %r49, %r48;
+  bra qmma_gemm_end_37;
+  qmma_gemm_else_37:
+  mov.u32 %r49, 0; // no else branch
+  qmma_gemm_end_37:
   bar.sync 0;
-  mov.u32 %r66, 0; // unit
-  mov.u64 %rd67, 0; // FG-2.6: UNRESOLVED device fn wait_mbar (stub)
-  mov.u64 %rd68, 0; // FG-2.6: UNRESOLVED device fn qmma_f4f4bf16 (stub)
-  mov.b64 %rd69, %rd32; // param: phase
-  mov.u64 %rd70, 0;
-  setp.eq.u64 %p71, %rd69, %rd70;
-  @%p71 bra qmma_gemm_then_72;
-  bra qmma_gemm_else_72;
-  qmma_gemm_then_72:
-  mov.u64 %rd73, 1;
-  mov.u64 %rd74, %rd73;
-  bra qmma_gemm_end_72;
-  qmma_gemm_else_72:
-  mov.u64 %rd75, 0;
-  mov.u64 %rd74, %rd75;
-  qmma_gemm_end_72:
-  mov.u64 %rd76, 1;
-  add.u64 %rd77, %rd31, %rd76;
-  mov.u64 %rd31, %rd77; // loop wb: k_tile
-  mov.u64 %rd32, %rd74; // loop wb: phase
-  bra qmma_gemm_loop_33;
-  qmma_gemm_loop_end_33:
-  mov.u32 %r78, 0; // unit
-  mov.u32 %r79, 0; // unit
+  mov.u32 %r50, 0; // unit
+  mov.u64 %rd51, 0; // FG-2.6: UNRESOLVED device fn wait_mbar (stub)
+  mov.u64 %rd52, 0; // FG-2.6: UNRESOLVED device fn qmma_f4f4bf16 (stub)
+  mov.u64 %rd53, 0;
+  setp.eq.u64 %p54, %rd30, %rd53;
+  @%p54 bra qmma_gemm_then_55;
+  bra qmma_gemm_else_55;
+  qmma_gemm_then_55:
+  mov.u64 %rd56, 1;
+  mov.u64 %rd57, %rd56;
+  bra qmma_gemm_end_55;
+  qmma_gemm_else_55:
+  mov.u64 %rd58, 0;
+  mov.u64 %rd57, %rd58;
+  qmma_gemm_end_55:
+  mov.u64 %rd59, 1;
+  add.u64 %rd60, %rd29, %rd59;
+  mov.u64 %rd29, %rd60; // loop wb: k_tile
+  mov.u64 %rd30, %rd57; // loop wb: phase
+  bra qmma_gemm_loop_31;
+  qmma_gemm_loop_end_31:
+  mov.u32 %r61, 0; // unit
+  mov.u32 %r62, 0; // unit
   ret;
 }
 

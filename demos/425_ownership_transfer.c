@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Owned Owned;
+
 typedef struct Owned {
   uint64_t owner_id;
   uint64_t transfer_count;

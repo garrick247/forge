@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct AdmissionCtrl AdmissionCtrl;
+
 typedef struct AdmissionCtrl {
   uint64_t active;
   uint64_t max_concurrent;

@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct RegKind RegKind;
+typedef struct Operand Operand;
+typedef struct Insn Insn;
+
 typedef enum {
   RegKind_tag_GPR = 0,
   RegKind_tag_UReg = 1,

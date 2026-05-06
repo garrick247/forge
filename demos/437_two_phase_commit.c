@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct TwoPhaseCommit TwoPhaseCommit;
+
 typedef struct TwoPhaseCommit {
   uint64_t participants;
   uint64_t yes_votes;

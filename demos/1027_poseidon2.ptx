@@ -12,8 +12,8 @@
 )
 {
     .reg .pred %p9;
-    .reg .u32 %r103, %r112, %r121, %r130, %r139, %r148, %r157, %r158, %r159, %r160, %r164, %r167, %r168, %r169, %r173, %r176, %r177, %r178, %r182, %r185, %r186, %r187, %r188, %r192, %r195, %r196, %r197, %r201, %r204, %r205, %r206, %r210, %r213, %r214, %r215, %r216, %r22, %r220, %r223, %r224, %r225, %r229, %r232, %r233, %r234, %r238, %r241, %r242, %r243, %r244, %r248, %r251, %r252, %r253, %r257, %r260, %r261, %r262, %r266, %r269, %r270, %r271, %r272, %r276, %r279, %r280, %r281, %r285, %r288, %r289, %r290, %r294, %r297, %r298, %r299, %r3, %r300, %r304, %r307, %r308, %r309, %r31, %r313, %r316, %r317, %r318, %r322, %r325, %r326, %r327, %r328, %r332, %r335, %r336, %r337, %r341, %r344, %r345, %r346, %r350, %r353, %r354, %r355, %r356, %r360, %r363, %r364, %r365, %r369, %r372, %r373, %r374, %r378, %r381, %r382, %r383, %r384, %r388, %r391, %r392, %r393, %r397, %r4, %r40, %r400, %r401, %r402, %r406, %r409, %r410, %r411, %r412, %r416, %r419, %r420, %r421, %r425, %r428, %r429, %r430, %r434, %r437, %r438, %r439, %r440, %r444, %r447, %r448, %r449, %r453, %r456, %r457, %r458, %r462, %r465, %r466, %r467, %r468, %r472, %r475, %r476, %r477, %r481, %r484, %r485, %r486, %r49, %r490, %r493, %r494, %r495, %r496, %r5, %r500, %r503, %r504, %r505, %r509, %r512, %r513, %r514, %r518, %r521, %r522, %r523, %r524, %r528, %r531, %r532, %r533, %r537, %r540, %r541, %r542, %r546, %r549, %r550, %r551, %r552, %r556, %r559, %r560, %r561, %r565, %r568, %r569, %r570, %r574, %r577, %r578, %r579, %r58, %r580, %r584, %r587, %r588, %r589, %r593, %r596, %r597, %r598, %r6, %r602, %r605, %r67, %r686, %r687, %r688, %r7, %r76, %r85, %r94;
-    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd104, %rd105, %rd106, %rd107, %rd108, %rd109, %rd11, %rd110, %rd111, %rd113, %rd114, %rd115, %rd116, %rd117, %rd118, %rd119, %rd12, %rd120, %rd122, %rd123, %rd124, %rd125, %rd126, %rd127, %rd128, %rd129, %rd13, %rd131, %rd132, %rd133, %rd134, %rd135, %rd136, %rd137, %rd138, %rd14, %rd140, %rd141, %rd142, %rd143, %rd144, %rd145, %rd146, %rd147, %rd149, %rd15, %rd150, %rd151, %rd152, %rd153, %rd154, %rd155, %rd156, %rd16, %rd161, %rd162, %rd163, %rd165, %rd166, %rd17, %rd170, %rd171, %rd172, %rd174, %rd175, %rd179, %rd18, %rd180, %rd181, %rd183, %rd184, %rd189, %rd19, %rd190, %rd191, %rd193, %rd194, %rd198, %rd199, %rd2, %rd20, %rd200, %rd202, %rd203, %rd207, %rd208, %rd209, %rd21, %rd211, %rd212, %rd217, %rd218, %rd219, %rd221, %rd222, %rd226, %rd227, %rd228, %rd23, %rd230, %rd231, %rd235, %rd236, %rd237, %rd239, %rd24, %rd240, %rd245, %rd246, %rd247, %rd249, %rd25, %rd250, %rd254, %rd255, %rd256, %rd258, %rd259, %rd26, %rd263, %rd264, %rd265, %rd267, %rd268, %rd27, %rd273, %rd274, %rd275, %rd277, %rd278, %rd28, %rd282, %rd283, %rd284, %rd286, %rd287, %rd29, %rd291, %rd292, %rd293, %rd295, %rd296, %rd30, %rd301, %rd302, %rd303, %rd305, %rd306, %rd310, %rd311, %rd312, %rd314, %rd315, %rd319, %rd32, %rd320, %rd321, %rd323, %rd324, %rd329, %rd33, %rd330, %rd331, %rd333, %rd334, %rd338, %rd339, %rd34, %rd340, %rd342, %rd343, %rd347, %rd348, %rd349, %rd35, %rd351, %rd352, %rd357, %rd358, %rd359, %rd36, %rd361, %rd362, %rd366, %rd367, %rd368, %rd37, %rd370, %rd371, %rd375, %rd376, %rd377, %rd379, %rd38, %rd380, %rd385, %rd386, %rd387, %rd389, %rd39, %rd390, %rd394, %rd395, %rd396, %rd398, %rd399, %rd403, %rd404, %rd405, %rd407, %rd408, %rd41, %rd413, %rd414, %rd415, %rd417, %rd418, %rd42, %rd422, %rd423, %rd424, %rd426, %rd427, %rd43, %rd431, %rd432, %rd433, %rd435, %rd436, %rd44, %rd441, %rd442, %rd443, %rd445, %rd446, %rd45, %rd450, %rd451, %rd452, %rd454, %rd455, %rd459, %rd46, %rd460, %rd461, %rd463, %rd464, %rd469, %rd47, %rd470, %rd471, %rd473, %rd474, %rd478, %rd479, %rd48, %rd480, %rd482, %rd483, %rd487, %rd488, %rd489, %rd491, %rd492, %rd497, %rd498, %rd499, %rd50, %rd501, %rd502, %rd506, %rd507, %rd508, %rd51, %rd510, %rd511, %rd515, %rd516, %rd517, %rd519, %rd52, %rd520, %rd525, %rd526, %rd527, %rd529, %rd53, %rd530, %rd534, %rd535, %rd536, %rd538, %rd539, %rd54, %rd543, %rd544, %rd545, %rd547, %rd548, %rd55, %rd553, %rd554, %rd555, %rd557, %rd558, %rd56, %rd562, %rd563, %rd564, %rd566, %rd567, %rd57, %rd571, %rd572, %rd573, %rd575, %rd576, %rd581, %rd582, %rd583, %rd585, %rd586, %rd59, %rd590, %rd591, %rd592, %rd594, %rd595, %rd599, %rd60, %rd600, %rd601, %rd603, %rd604, %rd606, %rd607, %rd608, %rd609, %rd61, %rd610, %rd611, %rd612, %rd613, %rd614, %rd615, %rd616, %rd617, %rd618, %rd619, %rd62, %rd620, %rd621, %rd622, %rd623, %rd624, %rd625, %rd626, %rd627, %rd628, %rd629, %rd63, %rd630, %rd631, %rd632, %rd633, %rd634, %rd635, %rd636, %rd637, %rd638, %rd639, %rd64, %rd640, %rd641, %rd642, %rd643, %rd644, %rd645, %rd646, %rd647, %rd648, %rd649, %rd65, %rd650, %rd651, %rd652, %rd653, %rd654, %rd655, %rd656, %rd657, %rd658, %rd659, %rd66, %rd660, %rd661, %rd662, %rd663, %rd664, %rd665, %rd666, %rd667, %rd668, %rd669, %rd670, %rd671, %rd672, %rd673, %rd674, %rd675, %rd676, %rd677, %rd678, %rd679, %rd68, %rd680, %rd681, %rd682, %rd683, %rd684, %rd685, %rd69, %rd70, %rd71, %rd72, %rd73, %rd74, %rd75, %rd77, %rd78, %rd79, %rd8, %rd80, %rd81, %rd82, %rd83, %rd84, %rd86, %rd87, %rd88, %rd89, %rd90, %rd91, %rd92, %rd93, %rd95, %rd96, %rd97, %rd98, %rd99;
+    .reg .u32 %r104, %r111, %r118, %r125, %r129, %r132, %r136, %r139, %r143, %r146, %r150, %r153, %r157, %r160, %r164, %r167, %r171, %r174, %r178, %r181, %r185, %r188, %r192, %r195, %r199, %r20, %r202, %r206, %r209, %r213, %r216, %r220, %r223, %r227, %r230, %r234, %r237, %r241, %r244, %r248, %r251, %r255, %r258, %r262, %r265, %r269, %r27, %r272, %r276, %r279, %r283, %r286, %r290, %r293, %r297, %r3, %r300, %r304, %r307, %r311, %r314, %r318, %r321, %r325, %r328, %r332, %r335, %r339, %r34, %r342, %r346, %r349, %r353, %r356, %r360, %r363, %r367, %r370, %r374, %r377, %r381, %r384, %r388, %r391, %r395, %r398, %r4, %r402, %r405, %r409, %r41, %r412, %r416, %r419, %r423, %r426, %r430, %r433, %r437, %r440, %r444, %r447, %r451, %r454, %r458, %r461, %r48, %r5, %r542, %r543, %r544, %r55, %r6, %r62, %r69, %r7, %r76, %r83, %r90, %r97;
+    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd103, %rd105, %rd106, %rd107, %rd108, %rd109, %rd11, %rd110, %rd112, %rd113, %rd114, %rd115, %rd116, %rd117, %rd119, %rd12, %rd120, %rd121, %rd122, %rd123, %rd124, %rd126, %rd127, %rd128, %rd13, %rd130, %rd131, %rd133, %rd134, %rd135, %rd137, %rd138, %rd14, %rd140, %rd141, %rd142, %rd144, %rd145, %rd147, %rd148, %rd149, %rd15, %rd151, %rd152, %rd154, %rd155, %rd156, %rd158, %rd159, %rd16, %rd161, %rd162, %rd163, %rd165, %rd166, %rd168, %rd169, %rd17, %rd170, %rd172, %rd173, %rd175, %rd176, %rd177, %rd179, %rd18, %rd180, %rd182, %rd183, %rd184, %rd186, %rd187, %rd189, %rd19, %rd190, %rd191, %rd193, %rd194, %rd196, %rd197, %rd198, %rd2, %rd200, %rd201, %rd203, %rd204, %rd205, %rd207, %rd208, %rd21, %rd210, %rd211, %rd212, %rd214, %rd215, %rd217, %rd218, %rd219, %rd22, %rd221, %rd222, %rd224, %rd225, %rd226, %rd228, %rd229, %rd23, %rd231, %rd232, %rd233, %rd235, %rd236, %rd238, %rd239, %rd24, %rd240, %rd242, %rd243, %rd245, %rd246, %rd247, %rd249, %rd25, %rd250, %rd252, %rd253, %rd254, %rd256, %rd257, %rd259, %rd26, %rd260, %rd261, %rd263, %rd264, %rd266, %rd267, %rd268, %rd270, %rd271, %rd273, %rd274, %rd275, %rd277, %rd278, %rd28, %rd280, %rd281, %rd282, %rd284, %rd285, %rd287, %rd288, %rd289, %rd29, %rd291, %rd292, %rd294, %rd295, %rd296, %rd298, %rd299, %rd30, %rd301, %rd302, %rd303, %rd305, %rd306, %rd308, %rd309, %rd31, %rd310, %rd312, %rd313, %rd315, %rd316, %rd317, %rd319, %rd32, %rd320, %rd322, %rd323, %rd324, %rd326, %rd327, %rd329, %rd33, %rd330, %rd331, %rd333, %rd334, %rd336, %rd337, %rd338, %rd340, %rd341, %rd343, %rd344, %rd345, %rd347, %rd348, %rd35, %rd350, %rd351, %rd352, %rd354, %rd355, %rd357, %rd358, %rd359, %rd36, %rd361, %rd362, %rd364, %rd365, %rd366, %rd368, %rd369, %rd37, %rd371, %rd372, %rd373, %rd375, %rd376, %rd378, %rd379, %rd38, %rd380, %rd382, %rd383, %rd385, %rd386, %rd387, %rd389, %rd39, %rd390, %rd392, %rd393, %rd394, %rd396, %rd397, %rd399, %rd40, %rd400, %rd401, %rd403, %rd404, %rd406, %rd407, %rd408, %rd410, %rd411, %rd413, %rd414, %rd415, %rd417, %rd418, %rd42, %rd420, %rd421, %rd422, %rd424, %rd425, %rd427, %rd428, %rd429, %rd43, %rd431, %rd432, %rd434, %rd435, %rd436, %rd438, %rd439, %rd44, %rd441, %rd442, %rd443, %rd445, %rd446, %rd448, %rd449, %rd45, %rd450, %rd452, %rd453, %rd455, %rd456, %rd457, %rd459, %rd46, %rd460, %rd462, %rd463, %rd464, %rd465, %rd466, %rd467, %rd468, %rd469, %rd47, %rd470, %rd471, %rd472, %rd473, %rd474, %rd475, %rd476, %rd477, %rd478, %rd479, %rd480, %rd481, %rd482, %rd483, %rd484, %rd485, %rd486, %rd487, %rd488, %rd489, %rd49, %rd490, %rd491, %rd492, %rd493, %rd494, %rd495, %rd496, %rd497, %rd498, %rd499, %rd50, %rd500, %rd501, %rd502, %rd503, %rd504, %rd505, %rd506, %rd507, %rd508, %rd509, %rd51, %rd510, %rd511, %rd512, %rd513, %rd514, %rd515, %rd516, %rd517, %rd518, %rd519, %rd52, %rd520, %rd521, %rd522, %rd523, %rd524, %rd525, %rd526, %rd527, %rd528, %rd529, %rd53, %rd530, %rd531, %rd532, %rd533, %rd534, %rd535, %rd536, %rd537, %rd538, %rd539, %rd54, %rd540, %rd541, %rd56, %rd57, %rd58, %rd59, %rd60, %rd61, %rd63, %rd64, %rd65, %rd66, %rd67, %rd68, %rd70, %rd71, %rd72, %rd73, %rd74, %rd75, %rd77, %rd78, %rd79, %rd8, %rd80, %rd81, %rd82, %rd84, %rd85, %rd86, %rd87, %rd88, %rd89, %rd91, %rd92, %rd93, %rd94, %rd95, %rd96, %rd98, %rd99;
 
   ld.param.u64 %rd0, [poseidon2_sbox_kernel_param_state_data];
   ld.param.u64 %rd1, [poseidon2_sbox_kernel_param_state_len];
@@ -34,699 +34,555 @@
   mov.u64 %rd13, 0; // unhandled expr
   mov.u64 %rd14, 0;
   add.u64 %rd15, %rd12, %rd14;
-  mov.b64 %rd16, %rd0; // param: arr
-  mov.b64 %rd17, %rd15; // param: idx
-  mov.u64 %rd18, 0; // unhandled expr
-  mov.u64 %rd19, 4;
-  mul.lo.u64 %rd20, %rd17, %rd19;
-  add.u64 %rd21, %rd16, %rd20;
-  ld.global.u32 %r22, [%rd21];
-  mov.u64 %rd23, 1;
-  add.u64 %rd24, %rd12, %rd23;
-  mov.b64 %rd25, %rd0; // param: arr
-  mov.b64 %rd26, %rd24; // param: idx
-  mov.u64 %rd27, 0; // unhandled expr
-  mov.u64 %rd28, 4;
-  mul.lo.u64 %rd29, %rd26, %rd28;
-  add.u64 %rd30, %rd25, %rd29;
-  ld.global.u32 %r31, [%rd30];
-  mov.u64 %rd32, 2;
-  add.u64 %rd33, %rd12, %rd32;
-  mov.b64 %rd34, %rd0; // param: arr
-  mov.b64 %rd35, %rd33; // param: idx
-  mov.u64 %rd36, 0; // unhandled expr
-  mov.u64 %rd37, 4;
-  mul.lo.u64 %rd38, %rd35, %rd37;
-  add.u64 %rd39, %rd34, %rd38;
-  ld.global.u32 %r40, [%rd39];
-  mov.u64 %rd41, 3;
-  add.u64 %rd42, %rd12, %rd41;
-  mov.b64 %rd43, %rd0; // param: arr
-  mov.b64 %rd44, %rd42; // param: idx
-  mov.u64 %rd45, 0; // unhandled expr
-  mov.u64 %rd46, 4;
-  mul.lo.u64 %rd47, %rd44, %rd46;
-  add.u64 %rd48, %rd43, %rd47;
-  ld.global.u32 %r49, [%rd48];
-  mov.u64 %rd50, 4;
-  add.u64 %rd51, %rd12, %rd50;
-  mov.b64 %rd52, %rd0; // param: arr
-  mov.b64 %rd53, %rd51; // param: idx
-  mov.u64 %rd54, 0; // unhandled expr
-  mov.u64 %rd55, 4;
-  mul.lo.u64 %rd56, %rd53, %rd55;
-  add.u64 %rd57, %rd52, %rd56;
-  ld.global.u32 %r58, [%rd57];
-  mov.u64 %rd59, 5;
-  add.u64 %rd60, %rd12, %rd59;
-  mov.b64 %rd61, %rd0; // param: arr
-  mov.b64 %rd62, %rd60; // param: idx
-  mov.u64 %rd63, 0; // unhandled expr
-  mov.u64 %rd64, 4;
-  mul.lo.u64 %rd65, %rd62, %rd64;
-  add.u64 %rd66, %rd61, %rd65;
-  ld.global.u32 %r67, [%rd66];
-  mov.u64 %rd68, 6;
-  add.u64 %rd69, %rd12, %rd68;
-  mov.b64 %rd70, %rd0; // param: arr
-  mov.b64 %rd71, %rd69; // param: idx
+  mov.u64 %rd16, 0; // unhandled expr
+  mov.u64 %rd17, 4;
+  mul.lo.u64 %rd18, %rd15, %rd17;
+  add.u64 %rd19, %rd0, %rd18;
+  ld.global.u32 %r20, [%rd19];
+  mov.u64 %rd21, 1;
+  add.u64 %rd22, %rd12, %rd21;
+  mov.u64 %rd23, 0; // unhandled expr
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd22, %rd24;
+  add.u64 %rd26, %rd0, %rd25;
+  ld.global.u32 %r27, [%rd26];
+  mov.u64 %rd28, 2;
+  add.u64 %rd29, %rd12, %rd28;
+  mov.u64 %rd30, 0; // unhandled expr
+  mov.u64 %rd31, 4;
+  mul.lo.u64 %rd32, %rd29, %rd31;
+  add.u64 %rd33, %rd0, %rd32;
+  ld.global.u32 %r34, [%rd33];
+  mov.u64 %rd35, 3;
+  add.u64 %rd36, %rd12, %rd35;
+  mov.u64 %rd37, 0; // unhandled expr
+  mov.u64 %rd38, 4;
+  mul.lo.u64 %rd39, %rd36, %rd38;
+  add.u64 %rd40, %rd0, %rd39;
+  ld.global.u32 %r41, [%rd40];
+  mov.u64 %rd42, 4;
+  add.u64 %rd43, %rd12, %rd42;
+  mov.u64 %rd44, 0; // unhandled expr
+  mov.u64 %rd45, 4;
+  mul.lo.u64 %rd46, %rd43, %rd45;
+  add.u64 %rd47, %rd0, %rd46;
+  ld.global.u32 %r48, [%rd47];
+  mov.u64 %rd49, 5;
+  add.u64 %rd50, %rd12, %rd49;
+  mov.u64 %rd51, 0; // unhandled expr
+  mov.u64 %rd52, 4;
+  mul.lo.u64 %rd53, %rd50, %rd52;
+  add.u64 %rd54, %rd0, %rd53;
+  ld.global.u32 %r55, [%rd54];
+  mov.u64 %rd56, 6;
+  add.u64 %rd57, %rd12, %rd56;
+  mov.u64 %rd58, 0; // unhandled expr
+  mov.u64 %rd59, 4;
+  mul.lo.u64 %rd60, %rd57, %rd59;
+  add.u64 %rd61, %rd0, %rd60;
+  ld.global.u32 %r62, [%rd61];
+  mov.u64 %rd63, 7;
+  add.u64 %rd64, %rd12, %rd63;
+  mov.u64 %rd65, 0; // unhandled expr
+  mov.u64 %rd66, 4;
+  mul.lo.u64 %rd67, %rd64, %rd66;
+  add.u64 %rd68, %rd0, %rd67;
+  ld.global.u32 %r69, [%rd68];
+  mov.u64 %rd70, 8;
+  add.u64 %rd71, %rd12, %rd70;
   mov.u64 %rd72, 0; // unhandled expr
   mov.u64 %rd73, 4;
   mul.lo.u64 %rd74, %rd71, %rd73;
-  add.u64 %rd75, %rd70, %rd74;
+  add.u64 %rd75, %rd0, %rd74;
   ld.global.u32 %r76, [%rd75];
-  mov.u64 %rd77, 7;
+  mov.u64 %rd77, 9;
   add.u64 %rd78, %rd12, %rd77;
-  mov.b64 %rd79, %rd0; // param: arr
-  mov.b64 %rd80, %rd78; // param: idx
-  mov.u64 %rd81, 0; // unhandled expr
-  mov.u64 %rd82, 4;
-  mul.lo.u64 %rd83, %rd80, %rd82;
-  add.u64 %rd84, %rd79, %rd83;
-  ld.global.u32 %r85, [%rd84];
-  mov.u64 %rd86, 8;
-  add.u64 %rd87, %rd12, %rd86;
-  mov.b64 %rd88, %rd0; // param: arr
-  mov.b64 %rd89, %rd87; // param: idx
-  mov.u64 %rd90, 0; // unhandled expr
-  mov.u64 %rd91, 4;
-  mul.lo.u64 %rd92, %rd89, %rd91;
-  add.u64 %rd93, %rd88, %rd92;
-  ld.global.u32 %r94, [%rd93];
-  mov.u64 %rd95, 9;
-  add.u64 %rd96, %rd12, %rd95;
-  mov.b64 %rd97, %rd0; // param: arr
-  mov.b64 %rd98, %rd96; // param: idx
-  mov.u64 %rd99, 0; // unhandled expr
-  mov.u64 %rd100, 4;
-  mul.lo.u64 %rd101, %rd98, %rd100;
-  add.u64 %rd102, %rd97, %rd101;
-  ld.global.u32 %r103, [%rd102];
-  mov.u64 %rd104, 10;
-  add.u64 %rd105, %rd12, %rd104;
-  mov.b64 %rd106, %rd0; // param: arr
-  mov.b64 %rd107, %rd105; // param: idx
-  mov.u64 %rd108, 0; // unhandled expr
-  mov.u64 %rd109, 4;
-  mul.lo.u64 %rd110, %rd107, %rd109;
-  add.u64 %rd111, %rd106, %rd110;
-  ld.global.u32 %r112, [%rd111];
-  mov.u64 %rd113, 11;
-  add.u64 %rd114, %rd12, %rd113;
-  mov.b64 %rd115, %rd0; // param: arr
-  mov.b64 %rd116, %rd114; // param: idx
-  mov.u64 %rd117, 0; // unhandled expr
-  mov.u64 %rd118, 4;
-  mul.lo.u64 %rd119, %rd116, %rd118;
-  add.u64 %rd120, %rd115, %rd119;
-  ld.global.u32 %r121, [%rd120];
-  mov.u64 %rd122, 12;
-  add.u64 %rd123, %rd12, %rd122;
-  mov.b64 %rd124, %rd0; // param: arr
-  mov.b64 %rd125, %rd123; // param: idx
-  mov.u64 %rd126, 0; // unhandled expr
-  mov.u64 %rd127, 4;
-  mul.lo.u64 %rd128, %rd125, %rd127;
-  add.u64 %rd129, %rd124, %rd128;
-  ld.global.u32 %r130, [%rd129];
-  mov.u64 %rd131, 13;
-  add.u64 %rd132, %rd12, %rd131;
-  mov.b64 %rd133, %rd0; // param: arr
-  mov.b64 %rd134, %rd132; // param: idx
-  mov.u64 %rd135, 0; // unhandled expr
-  mov.u64 %rd136, 4;
-  mul.lo.u64 %rd137, %rd134, %rd136;
-  add.u64 %rd138, %rd133, %rd137;
-  ld.global.u32 %r139, [%rd138];
-  mov.u64 %rd140, 14;
-  add.u64 %rd141, %rd12, %rd140;
-  mov.b64 %rd142, %rd0; // param: arr
-  mov.b64 %rd143, %rd141; // param: idx
-  mov.u64 %rd144, 0; // unhandled expr
-  mov.u64 %rd145, 4;
-  mul.lo.u64 %rd146, %rd143, %rd145;
-  add.u64 %rd147, %rd142, %rd146;
-  ld.global.u32 %r148, [%rd147];
-  mov.u64 %rd149, 15;
-  add.u64 %rd150, %rd12, %rd149;
-  mov.b64 %rd151, %rd0; // param: arr
-  mov.b64 %rd152, %rd150; // param: idx
-  mov.u64 %rd153, 0; // unhandled expr
-  mov.u64 %rd154, 4;
-  mul.lo.u64 %rd155, %rd152, %rd154;
-  add.u64 %rd156, %rd151, %rd155;
-  ld.global.u32 %r157, [%rd156];
-  mov.b32 %r158, %r22; // param: x
-  mov.b32 %r159, %r158; // param: a
-  mov.b32 %r160, %r158; // param: b
-  cvt.u64.u32 %rd161, %r159;
-  cvt.u64.u32 %rd162, %r160;
+  mov.u64 %rd79, 0; // unhandled expr
+  mov.u64 %rd80, 4;
+  mul.lo.u64 %rd81, %rd78, %rd80;
+  add.u64 %rd82, %rd0, %rd81;
+  ld.global.u32 %r83, [%rd82];
+  mov.u64 %rd84, 10;
+  add.u64 %rd85, %rd12, %rd84;
+  mov.u64 %rd86, 0; // unhandled expr
+  mov.u64 %rd87, 4;
+  mul.lo.u64 %rd88, %rd85, %rd87;
+  add.u64 %rd89, %rd0, %rd88;
+  ld.global.u32 %r90, [%rd89];
+  mov.u64 %rd91, 11;
+  add.u64 %rd92, %rd12, %rd91;
+  mov.u64 %rd93, 0; // unhandled expr
+  mov.u64 %rd94, 4;
+  mul.lo.u64 %rd95, %rd92, %rd94;
+  add.u64 %rd96, %rd0, %rd95;
+  ld.global.u32 %r97, [%rd96];
+  mov.u64 %rd98, 12;
+  add.u64 %rd99, %rd12, %rd98;
+  mov.u64 %rd100, 0; // unhandled expr
+  mov.u64 %rd101, 4;
+  mul.lo.u64 %rd102, %rd99, %rd101;
+  add.u64 %rd103, %rd0, %rd102;
+  ld.global.u32 %r104, [%rd103];
+  mov.u64 %rd105, 13;
+  add.u64 %rd106, %rd12, %rd105;
+  mov.u64 %rd107, 0; // unhandled expr
+  mov.u64 %rd108, 4;
+  mul.lo.u64 %rd109, %rd106, %rd108;
+  add.u64 %rd110, %rd0, %rd109;
+  ld.global.u32 %r111, [%rd110];
+  mov.u64 %rd112, 14;
+  add.u64 %rd113, %rd12, %rd112;
+  mov.u64 %rd114, 0; // unhandled expr
+  mov.u64 %rd115, 4;
+  mul.lo.u64 %rd116, %rd113, %rd115;
+  add.u64 %rd117, %rd0, %rd116;
+  ld.global.u32 %r118, [%rd117];
+  mov.u64 %rd119, 15;
+  add.u64 %rd120, %rd12, %rd119;
+  mov.u64 %rd121, 0; // unhandled expr
+  mov.u64 %rd122, 4;
+  mul.lo.u64 %rd123, %rd120, %rd122;
+  add.u64 %rd124, %rd0, %rd123;
+  ld.global.u32 %r125, [%rd124];
+  cvt.u64.u32 %rd126, %r20;
+  cvt.u64.u32 %rd127, %r20;
+  mul.lo.u64 %rd128, %rd126, %rd127;
+  mov.u32 %r129, 2147483647;
+  cvt.u64.u32 %rd130, %r129;
+  rem.u64 %rd131, %rd128, %rd130;
+  cvt.u32.u64 %r132, %rd131;
+  cvt.u64.u32 %rd133, %r132;
+  cvt.u64.u32 %rd134, %r132;
+  mul.lo.u64 %rd135, %rd133, %rd134;
+  mov.u32 %r136, 2147483647;
+  cvt.u64.u32 %rd137, %r136;
+  rem.u64 %rd138, %rd135, %rd137;
+  cvt.u32.u64 %r139, %rd138;
+  cvt.u64.u32 %rd140, %r139;
+  cvt.u64.u32 %rd141, %r20;
+  mul.lo.u64 %rd142, %rd140, %rd141;
+  mov.u32 %r143, 2147483647;
+  cvt.u64.u32 %rd144, %r143;
+  rem.u64 %rd145, %rd142, %rd144;
+  cvt.u32.u64 %r146, %rd145;
+  cvt.u64.u32 %rd147, %r27;
+  cvt.u64.u32 %rd148, %r27;
+  mul.lo.u64 %rd149, %rd147, %rd148;
+  mov.u32 %r150, 2147483647;
+  cvt.u64.u32 %rd151, %r150;
+  rem.u64 %rd152, %rd149, %rd151;
+  cvt.u32.u64 %r153, %rd152;
+  cvt.u64.u32 %rd154, %r153;
+  cvt.u64.u32 %rd155, %r153;
+  mul.lo.u64 %rd156, %rd154, %rd155;
+  mov.u32 %r157, 2147483647;
+  cvt.u64.u32 %rd158, %r157;
+  rem.u64 %rd159, %rd156, %rd158;
+  cvt.u32.u64 %r160, %rd159;
+  cvt.u64.u32 %rd161, %r160;
+  cvt.u64.u32 %rd162, %r27;
   mul.lo.u64 %rd163, %rd161, %rd162;
   mov.u32 %r164, 2147483647;
   cvt.u64.u32 %rd165, %r164;
   rem.u64 %rd166, %rd163, %rd165;
   cvt.u32.u64 %r167, %rd166;
-  mov.b32 %r168, %r167; // param: a
-  mov.b32 %r169, %r167; // param: b
-  cvt.u64.u32 %rd170, %r168;
-  cvt.u64.u32 %rd171, %r169;
-  mul.lo.u64 %rd172, %rd170, %rd171;
-  mov.u32 %r173, 2147483647;
-  cvt.u64.u32 %rd174, %r173;
-  rem.u64 %rd175, %rd172, %rd174;
-  cvt.u32.u64 %r176, %rd175;
-  mov.b32 %r177, %r176; // param: a
-  mov.b32 %r178, %r158; // param: b
-  cvt.u64.u32 %rd179, %r177;
-  cvt.u64.u32 %rd180, %r178;
-  mul.lo.u64 %rd181, %rd179, %rd180;
-  mov.u32 %r182, 2147483647;
-  cvt.u64.u32 %rd183, %r182;
-  rem.u64 %rd184, %rd181, %rd183;
-  cvt.u32.u64 %r185, %rd184;
-  mov.b32 %r186, %r31; // param: x
-  mov.b32 %r187, %r186; // param: a
-  mov.b32 %r188, %r186; // param: b
-  cvt.u64.u32 %rd189, %r187;
-  cvt.u64.u32 %rd190, %r188;
+  cvt.u64.u32 %rd168, %r34;
+  cvt.u64.u32 %rd169, %r34;
+  mul.lo.u64 %rd170, %rd168, %rd169;
+  mov.u32 %r171, 2147483647;
+  cvt.u64.u32 %rd172, %r171;
+  rem.u64 %rd173, %rd170, %rd172;
+  cvt.u32.u64 %r174, %rd173;
+  cvt.u64.u32 %rd175, %r174;
+  cvt.u64.u32 %rd176, %r174;
+  mul.lo.u64 %rd177, %rd175, %rd176;
+  mov.u32 %r178, 2147483647;
+  cvt.u64.u32 %rd179, %r178;
+  rem.u64 %rd180, %rd177, %rd179;
+  cvt.u32.u64 %r181, %rd180;
+  cvt.u64.u32 %rd182, %r181;
+  cvt.u64.u32 %rd183, %r34;
+  mul.lo.u64 %rd184, %rd182, %rd183;
+  mov.u32 %r185, 2147483647;
+  cvt.u64.u32 %rd186, %r185;
+  rem.u64 %rd187, %rd184, %rd186;
+  cvt.u32.u64 %r188, %rd187;
+  cvt.u64.u32 %rd189, %r41;
+  cvt.u64.u32 %rd190, %r41;
   mul.lo.u64 %rd191, %rd189, %rd190;
   mov.u32 %r192, 2147483647;
   cvt.u64.u32 %rd193, %r192;
   rem.u64 %rd194, %rd191, %rd193;
   cvt.u32.u64 %r195, %rd194;
-  mov.b32 %r196, %r195; // param: a
-  mov.b32 %r197, %r195; // param: b
-  cvt.u64.u32 %rd198, %r196;
-  cvt.u64.u32 %rd199, %r197;
-  mul.lo.u64 %rd200, %rd198, %rd199;
-  mov.u32 %r201, 2147483647;
-  cvt.u64.u32 %rd202, %r201;
-  rem.u64 %rd203, %rd200, %rd202;
-  cvt.u32.u64 %r204, %rd203;
-  mov.b32 %r205, %r204; // param: a
-  mov.b32 %r206, %r186; // param: b
-  cvt.u64.u32 %rd207, %r205;
-  cvt.u64.u32 %rd208, %r206;
-  mul.lo.u64 %rd209, %rd207, %rd208;
-  mov.u32 %r210, 2147483647;
-  cvt.u64.u32 %rd211, %r210;
-  rem.u64 %rd212, %rd209, %rd211;
-  cvt.u32.u64 %r213, %rd212;
-  mov.b32 %r214, %r40; // param: x
-  mov.b32 %r215, %r214; // param: a
-  mov.b32 %r216, %r214; // param: b
-  cvt.u64.u32 %rd217, %r215;
+  cvt.u64.u32 %rd196, %r195;
+  cvt.u64.u32 %rd197, %r195;
+  mul.lo.u64 %rd198, %rd196, %rd197;
+  mov.u32 %r199, 2147483647;
+  cvt.u64.u32 %rd200, %r199;
+  rem.u64 %rd201, %rd198, %rd200;
+  cvt.u32.u64 %r202, %rd201;
+  cvt.u64.u32 %rd203, %r202;
+  cvt.u64.u32 %rd204, %r41;
+  mul.lo.u64 %rd205, %rd203, %rd204;
+  mov.u32 %r206, 2147483647;
+  cvt.u64.u32 %rd207, %r206;
+  rem.u64 %rd208, %rd205, %rd207;
+  cvt.u32.u64 %r209, %rd208;
+  cvt.u64.u32 %rd210, %r48;
+  cvt.u64.u32 %rd211, %r48;
+  mul.lo.u64 %rd212, %rd210, %rd211;
+  mov.u32 %r213, 2147483647;
+  cvt.u64.u32 %rd214, %r213;
+  rem.u64 %rd215, %rd212, %rd214;
+  cvt.u32.u64 %r216, %rd215;
+  cvt.u64.u32 %rd217, %r216;
   cvt.u64.u32 %rd218, %r216;
   mul.lo.u64 %rd219, %rd217, %rd218;
   mov.u32 %r220, 2147483647;
   cvt.u64.u32 %rd221, %r220;
   rem.u64 %rd222, %rd219, %rd221;
   cvt.u32.u64 %r223, %rd222;
-  mov.b32 %r224, %r223; // param: a
-  mov.b32 %r225, %r223; // param: b
-  cvt.u64.u32 %rd226, %r224;
-  cvt.u64.u32 %rd227, %r225;
-  mul.lo.u64 %rd228, %rd226, %rd227;
-  mov.u32 %r229, 2147483647;
-  cvt.u64.u32 %rd230, %r229;
-  rem.u64 %rd231, %rd228, %rd230;
-  cvt.u32.u64 %r232, %rd231;
-  mov.b32 %r233, %r232; // param: a
-  mov.b32 %r234, %r214; // param: b
-  cvt.u64.u32 %rd235, %r233;
-  cvt.u64.u32 %rd236, %r234;
-  mul.lo.u64 %rd237, %rd235, %rd236;
-  mov.u32 %r238, 2147483647;
-  cvt.u64.u32 %rd239, %r238;
-  rem.u64 %rd240, %rd237, %rd239;
-  cvt.u32.u64 %r241, %rd240;
-  mov.b32 %r242, %r49; // param: x
-  mov.b32 %r243, %r242; // param: a
-  mov.b32 %r244, %r242; // param: b
-  cvt.u64.u32 %rd245, %r243;
-  cvt.u64.u32 %rd246, %r244;
+  cvt.u64.u32 %rd224, %r223;
+  cvt.u64.u32 %rd225, %r48;
+  mul.lo.u64 %rd226, %rd224, %rd225;
+  mov.u32 %r227, 2147483647;
+  cvt.u64.u32 %rd228, %r227;
+  rem.u64 %rd229, %rd226, %rd228;
+  cvt.u32.u64 %r230, %rd229;
+  cvt.u64.u32 %rd231, %r55;
+  cvt.u64.u32 %rd232, %r55;
+  mul.lo.u64 %rd233, %rd231, %rd232;
+  mov.u32 %r234, 2147483647;
+  cvt.u64.u32 %rd235, %r234;
+  rem.u64 %rd236, %rd233, %rd235;
+  cvt.u32.u64 %r237, %rd236;
+  cvt.u64.u32 %rd238, %r237;
+  cvt.u64.u32 %rd239, %r237;
+  mul.lo.u64 %rd240, %rd238, %rd239;
+  mov.u32 %r241, 2147483647;
+  cvt.u64.u32 %rd242, %r241;
+  rem.u64 %rd243, %rd240, %rd242;
+  cvt.u32.u64 %r244, %rd243;
+  cvt.u64.u32 %rd245, %r244;
+  cvt.u64.u32 %rd246, %r55;
   mul.lo.u64 %rd247, %rd245, %rd246;
   mov.u32 %r248, 2147483647;
   cvt.u64.u32 %rd249, %r248;
   rem.u64 %rd250, %rd247, %rd249;
   cvt.u32.u64 %r251, %rd250;
-  mov.b32 %r252, %r251; // param: a
-  mov.b32 %r253, %r251; // param: b
-  cvt.u64.u32 %rd254, %r252;
-  cvt.u64.u32 %rd255, %r253;
-  mul.lo.u64 %rd256, %rd254, %rd255;
-  mov.u32 %r257, 2147483647;
-  cvt.u64.u32 %rd258, %r257;
-  rem.u64 %rd259, %rd256, %rd258;
-  cvt.u32.u64 %r260, %rd259;
-  mov.b32 %r261, %r260; // param: a
-  mov.b32 %r262, %r242; // param: b
-  cvt.u64.u32 %rd263, %r261;
-  cvt.u64.u32 %rd264, %r262;
-  mul.lo.u64 %rd265, %rd263, %rd264;
-  mov.u32 %r266, 2147483647;
-  cvt.u64.u32 %rd267, %r266;
-  rem.u64 %rd268, %rd265, %rd267;
-  cvt.u32.u64 %r269, %rd268;
-  mov.b32 %r270, %r58; // param: x
-  mov.b32 %r271, %r270; // param: a
-  mov.b32 %r272, %r270; // param: b
-  cvt.u64.u32 %rd273, %r271;
-  cvt.u64.u32 %rd274, %r272;
+  cvt.u64.u32 %rd252, %r62;
+  cvt.u64.u32 %rd253, %r62;
+  mul.lo.u64 %rd254, %rd252, %rd253;
+  mov.u32 %r255, 2147483647;
+  cvt.u64.u32 %rd256, %r255;
+  rem.u64 %rd257, %rd254, %rd256;
+  cvt.u32.u64 %r258, %rd257;
+  cvt.u64.u32 %rd259, %r258;
+  cvt.u64.u32 %rd260, %r258;
+  mul.lo.u64 %rd261, %rd259, %rd260;
+  mov.u32 %r262, 2147483647;
+  cvt.u64.u32 %rd263, %r262;
+  rem.u64 %rd264, %rd261, %rd263;
+  cvt.u32.u64 %r265, %rd264;
+  cvt.u64.u32 %rd266, %r265;
+  cvt.u64.u32 %rd267, %r62;
+  mul.lo.u64 %rd268, %rd266, %rd267;
+  mov.u32 %r269, 2147483647;
+  cvt.u64.u32 %rd270, %r269;
+  rem.u64 %rd271, %rd268, %rd270;
+  cvt.u32.u64 %r272, %rd271;
+  cvt.u64.u32 %rd273, %r69;
+  cvt.u64.u32 %rd274, %r69;
   mul.lo.u64 %rd275, %rd273, %rd274;
   mov.u32 %r276, 2147483647;
   cvt.u64.u32 %rd277, %r276;
   rem.u64 %rd278, %rd275, %rd277;
   cvt.u32.u64 %r279, %rd278;
-  mov.b32 %r280, %r279; // param: a
-  mov.b32 %r281, %r279; // param: b
-  cvt.u64.u32 %rd282, %r280;
-  cvt.u64.u32 %rd283, %r281;
-  mul.lo.u64 %rd284, %rd282, %rd283;
-  mov.u32 %r285, 2147483647;
-  cvt.u64.u32 %rd286, %r285;
-  rem.u64 %rd287, %rd284, %rd286;
-  cvt.u32.u64 %r288, %rd287;
-  mov.b32 %r289, %r288; // param: a
-  mov.b32 %r290, %r270; // param: b
-  cvt.u64.u32 %rd291, %r289;
-  cvt.u64.u32 %rd292, %r290;
-  mul.lo.u64 %rd293, %rd291, %rd292;
-  mov.u32 %r294, 2147483647;
-  cvt.u64.u32 %rd295, %r294;
-  rem.u64 %rd296, %rd293, %rd295;
-  cvt.u32.u64 %r297, %rd296;
-  mov.b32 %r298, %r67; // param: x
-  mov.b32 %r299, %r298; // param: a
-  mov.b32 %r300, %r298; // param: b
-  cvt.u64.u32 %rd301, %r299;
+  cvt.u64.u32 %rd280, %r279;
+  cvt.u64.u32 %rd281, %r279;
+  mul.lo.u64 %rd282, %rd280, %rd281;
+  mov.u32 %r283, 2147483647;
+  cvt.u64.u32 %rd284, %r283;
+  rem.u64 %rd285, %rd282, %rd284;
+  cvt.u32.u64 %r286, %rd285;
+  cvt.u64.u32 %rd287, %r286;
+  cvt.u64.u32 %rd288, %r69;
+  mul.lo.u64 %rd289, %rd287, %rd288;
+  mov.u32 %r290, 2147483647;
+  cvt.u64.u32 %rd291, %r290;
+  rem.u64 %rd292, %rd289, %rd291;
+  cvt.u32.u64 %r293, %rd292;
+  cvt.u64.u32 %rd294, %r76;
+  cvt.u64.u32 %rd295, %r76;
+  mul.lo.u64 %rd296, %rd294, %rd295;
+  mov.u32 %r297, 2147483647;
+  cvt.u64.u32 %rd298, %r297;
+  rem.u64 %rd299, %rd296, %rd298;
+  cvt.u32.u64 %r300, %rd299;
+  cvt.u64.u32 %rd301, %r300;
   cvt.u64.u32 %rd302, %r300;
   mul.lo.u64 %rd303, %rd301, %rd302;
   mov.u32 %r304, 2147483647;
   cvt.u64.u32 %rd305, %r304;
   rem.u64 %rd306, %rd303, %rd305;
   cvt.u32.u64 %r307, %rd306;
-  mov.b32 %r308, %r307; // param: a
-  mov.b32 %r309, %r307; // param: b
-  cvt.u64.u32 %rd310, %r308;
-  cvt.u64.u32 %rd311, %r309;
-  mul.lo.u64 %rd312, %rd310, %rd311;
-  mov.u32 %r313, 2147483647;
-  cvt.u64.u32 %rd314, %r313;
-  rem.u64 %rd315, %rd312, %rd314;
-  cvt.u32.u64 %r316, %rd315;
-  mov.b32 %r317, %r316; // param: a
-  mov.b32 %r318, %r298; // param: b
-  cvt.u64.u32 %rd319, %r317;
-  cvt.u64.u32 %rd320, %r318;
-  mul.lo.u64 %rd321, %rd319, %rd320;
-  mov.u32 %r322, 2147483647;
-  cvt.u64.u32 %rd323, %r322;
-  rem.u64 %rd324, %rd321, %rd323;
-  cvt.u32.u64 %r325, %rd324;
-  mov.b32 %r326, %r76; // param: x
-  mov.b32 %r327, %r326; // param: a
-  mov.b32 %r328, %r326; // param: b
-  cvt.u64.u32 %rd329, %r327;
-  cvt.u64.u32 %rd330, %r328;
+  cvt.u64.u32 %rd308, %r307;
+  cvt.u64.u32 %rd309, %r76;
+  mul.lo.u64 %rd310, %rd308, %rd309;
+  mov.u32 %r311, 2147483647;
+  cvt.u64.u32 %rd312, %r311;
+  rem.u64 %rd313, %rd310, %rd312;
+  cvt.u32.u64 %r314, %rd313;
+  cvt.u64.u32 %rd315, %r83;
+  cvt.u64.u32 %rd316, %r83;
+  mul.lo.u64 %rd317, %rd315, %rd316;
+  mov.u32 %r318, 2147483647;
+  cvt.u64.u32 %rd319, %r318;
+  rem.u64 %rd320, %rd317, %rd319;
+  cvt.u32.u64 %r321, %rd320;
+  cvt.u64.u32 %rd322, %r321;
+  cvt.u64.u32 %rd323, %r321;
+  mul.lo.u64 %rd324, %rd322, %rd323;
+  mov.u32 %r325, 2147483647;
+  cvt.u64.u32 %rd326, %r325;
+  rem.u64 %rd327, %rd324, %rd326;
+  cvt.u32.u64 %r328, %rd327;
+  cvt.u64.u32 %rd329, %r328;
+  cvt.u64.u32 %rd330, %r83;
   mul.lo.u64 %rd331, %rd329, %rd330;
   mov.u32 %r332, 2147483647;
   cvt.u64.u32 %rd333, %r332;
   rem.u64 %rd334, %rd331, %rd333;
   cvt.u32.u64 %r335, %rd334;
-  mov.b32 %r336, %r335; // param: a
-  mov.b32 %r337, %r335; // param: b
-  cvt.u64.u32 %rd338, %r336;
-  cvt.u64.u32 %rd339, %r337;
-  mul.lo.u64 %rd340, %rd338, %rd339;
-  mov.u32 %r341, 2147483647;
-  cvt.u64.u32 %rd342, %r341;
-  rem.u64 %rd343, %rd340, %rd342;
-  cvt.u32.u64 %r344, %rd343;
-  mov.b32 %r345, %r344; // param: a
-  mov.b32 %r346, %r326; // param: b
-  cvt.u64.u32 %rd347, %r345;
-  cvt.u64.u32 %rd348, %r346;
-  mul.lo.u64 %rd349, %rd347, %rd348;
-  mov.u32 %r350, 2147483647;
-  cvt.u64.u32 %rd351, %r350;
-  rem.u64 %rd352, %rd349, %rd351;
-  cvt.u32.u64 %r353, %rd352;
-  mov.b32 %r354, %r85; // param: x
-  mov.b32 %r355, %r354; // param: a
-  mov.b32 %r356, %r354; // param: b
-  cvt.u64.u32 %rd357, %r355;
-  cvt.u64.u32 %rd358, %r356;
+  cvt.u64.u32 %rd336, %r90;
+  cvt.u64.u32 %rd337, %r90;
+  mul.lo.u64 %rd338, %rd336, %rd337;
+  mov.u32 %r339, 2147483647;
+  cvt.u64.u32 %rd340, %r339;
+  rem.u64 %rd341, %rd338, %rd340;
+  cvt.u32.u64 %r342, %rd341;
+  cvt.u64.u32 %rd343, %r342;
+  cvt.u64.u32 %rd344, %r342;
+  mul.lo.u64 %rd345, %rd343, %rd344;
+  mov.u32 %r346, 2147483647;
+  cvt.u64.u32 %rd347, %r346;
+  rem.u64 %rd348, %rd345, %rd347;
+  cvt.u32.u64 %r349, %rd348;
+  cvt.u64.u32 %rd350, %r349;
+  cvt.u64.u32 %rd351, %r90;
+  mul.lo.u64 %rd352, %rd350, %rd351;
+  mov.u32 %r353, 2147483647;
+  cvt.u64.u32 %rd354, %r353;
+  rem.u64 %rd355, %rd352, %rd354;
+  cvt.u32.u64 %r356, %rd355;
+  cvt.u64.u32 %rd357, %r97;
+  cvt.u64.u32 %rd358, %r97;
   mul.lo.u64 %rd359, %rd357, %rd358;
   mov.u32 %r360, 2147483647;
   cvt.u64.u32 %rd361, %r360;
   rem.u64 %rd362, %rd359, %rd361;
   cvt.u32.u64 %r363, %rd362;
-  mov.b32 %r364, %r363; // param: a
-  mov.b32 %r365, %r363; // param: b
-  cvt.u64.u32 %rd366, %r364;
-  cvt.u64.u32 %rd367, %r365;
-  mul.lo.u64 %rd368, %rd366, %rd367;
-  mov.u32 %r369, 2147483647;
-  cvt.u64.u32 %rd370, %r369;
-  rem.u64 %rd371, %rd368, %rd370;
-  cvt.u32.u64 %r372, %rd371;
-  mov.b32 %r373, %r372; // param: a
-  mov.b32 %r374, %r354; // param: b
-  cvt.u64.u32 %rd375, %r373;
-  cvt.u64.u32 %rd376, %r374;
-  mul.lo.u64 %rd377, %rd375, %rd376;
-  mov.u32 %r378, 2147483647;
-  cvt.u64.u32 %rd379, %r378;
-  rem.u64 %rd380, %rd377, %rd379;
-  cvt.u32.u64 %r381, %rd380;
-  mov.b32 %r382, %r94; // param: x
-  mov.b32 %r383, %r382; // param: a
-  mov.b32 %r384, %r382; // param: b
-  cvt.u64.u32 %rd385, %r383;
+  cvt.u64.u32 %rd364, %r363;
+  cvt.u64.u32 %rd365, %r363;
+  mul.lo.u64 %rd366, %rd364, %rd365;
+  mov.u32 %r367, 2147483647;
+  cvt.u64.u32 %rd368, %r367;
+  rem.u64 %rd369, %rd366, %rd368;
+  cvt.u32.u64 %r370, %rd369;
+  cvt.u64.u32 %rd371, %r370;
+  cvt.u64.u32 %rd372, %r97;
+  mul.lo.u64 %rd373, %rd371, %rd372;
+  mov.u32 %r374, 2147483647;
+  cvt.u64.u32 %rd375, %r374;
+  rem.u64 %rd376, %rd373, %rd375;
+  cvt.u32.u64 %r377, %rd376;
+  cvt.u64.u32 %rd378, %r104;
+  cvt.u64.u32 %rd379, %r104;
+  mul.lo.u64 %rd380, %rd378, %rd379;
+  mov.u32 %r381, 2147483647;
+  cvt.u64.u32 %rd382, %r381;
+  rem.u64 %rd383, %rd380, %rd382;
+  cvt.u32.u64 %r384, %rd383;
+  cvt.u64.u32 %rd385, %r384;
   cvt.u64.u32 %rd386, %r384;
   mul.lo.u64 %rd387, %rd385, %rd386;
   mov.u32 %r388, 2147483647;
   cvt.u64.u32 %rd389, %r388;
   rem.u64 %rd390, %rd387, %rd389;
   cvt.u32.u64 %r391, %rd390;
-  mov.b32 %r392, %r391; // param: a
-  mov.b32 %r393, %r391; // param: b
-  cvt.u64.u32 %rd394, %r392;
-  cvt.u64.u32 %rd395, %r393;
-  mul.lo.u64 %rd396, %rd394, %rd395;
-  mov.u32 %r397, 2147483647;
-  cvt.u64.u32 %rd398, %r397;
-  rem.u64 %rd399, %rd396, %rd398;
-  cvt.u32.u64 %r400, %rd399;
-  mov.b32 %r401, %r400; // param: a
-  mov.b32 %r402, %r382; // param: b
-  cvt.u64.u32 %rd403, %r401;
-  cvt.u64.u32 %rd404, %r402;
-  mul.lo.u64 %rd405, %rd403, %rd404;
-  mov.u32 %r406, 2147483647;
-  cvt.u64.u32 %rd407, %r406;
-  rem.u64 %rd408, %rd405, %rd407;
-  cvt.u32.u64 %r409, %rd408;
-  mov.b32 %r410, %r103; // param: x
-  mov.b32 %r411, %r410; // param: a
-  mov.b32 %r412, %r410; // param: b
-  cvt.u64.u32 %rd413, %r411;
-  cvt.u64.u32 %rd414, %r412;
+  cvt.u64.u32 %rd392, %r391;
+  cvt.u64.u32 %rd393, %r104;
+  mul.lo.u64 %rd394, %rd392, %rd393;
+  mov.u32 %r395, 2147483647;
+  cvt.u64.u32 %rd396, %r395;
+  rem.u64 %rd397, %rd394, %rd396;
+  cvt.u32.u64 %r398, %rd397;
+  cvt.u64.u32 %rd399, %r111;
+  cvt.u64.u32 %rd400, %r111;
+  mul.lo.u64 %rd401, %rd399, %rd400;
+  mov.u32 %r402, 2147483647;
+  cvt.u64.u32 %rd403, %r402;
+  rem.u64 %rd404, %rd401, %rd403;
+  cvt.u32.u64 %r405, %rd404;
+  cvt.u64.u32 %rd406, %r405;
+  cvt.u64.u32 %rd407, %r405;
+  mul.lo.u64 %rd408, %rd406, %rd407;
+  mov.u32 %r409, 2147483647;
+  cvt.u64.u32 %rd410, %r409;
+  rem.u64 %rd411, %rd408, %rd410;
+  cvt.u32.u64 %r412, %rd411;
+  cvt.u64.u32 %rd413, %r412;
+  cvt.u64.u32 %rd414, %r111;
   mul.lo.u64 %rd415, %rd413, %rd414;
   mov.u32 %r416, 2147483647;
   cvt.u64.u32 %rd417, %r416;
   rem.u64 %rd418, %rd415, %rd417;
   cvt.u32.u64 %r419, %rd418;
-  mov.b32 %r420, %r419; // param: a
-  mov.b32 %r421, %r419; // param: b
-  cvt.u64.u32 %rd422, %r420;
-  cvt.u64.u32 %rd423, %r421;
-  mul.lo.u64 %rd424, %rd422, %rd423;
-  mov.u32 %r425, 2147483647;
-  cvt.u64.u32 %rd426, %r425;
-  rem.u64 %rd427, %rd424, %rd426;
-  cvt.u32.u64 %r428, %rd427;
-  mov.b32 %r429, %r428; // param: a
-  mov.b32 %r430, %r410; // param: b
-  cvt.u64.u32 %rd431, %r429;
-  cvt.u64.u32 %rd432, %r430;
-  mul.lo.u64 %rd433, %rd431, %rd432;
-  mov.u32 %r434, 2147483647;
-  cvt.u64.u32 %rd435, %r434;
-  rem.u64 %rd436, %rd433, %rd435;
-  cvt.u32.u64 %r437, %rd436;
-  mov.b32 %r438, %r112; // param: x
-  mov.b32 %r439, %r438; // param: a
-  mov.b32 %r440, %r438; // param: b
-  cvt.u64.u32 %rd441, %r439;
-  cvt.u64.u32 %rd442, %r440;
+  cvt.u64.u32 %rd420, %r118;
+  cvt.u64.u32 %rd421, %r118;
+  mul.lo.u64 %rd422, %rd420, %rd421;
+  mov.u32 %r423, 2147483647;
+  cvt.u64.u32 %rd424, %r423;
+  rem.u64 %rd425, %rd422, %rd424;
+  cvt.u32.u64 %r426, %rd425;
+  cvt.u64.u32 %rd427, %r426;
+  cvt.u64.u32 %rd428, %r426;
+  mul.lo.u64 %rd429, %rd427, %rd428;
+  mov.u32 %r430, 2147483647;
+  cvt.u64.u32 %rd431, %r430;
+  rem.u64 %rd432, %rd429, %rd431;
+  cvt.u32.u64 %r433, %rd432;
+  cvt.u64.u32 %rd434, %r433;
+  cvt.u64.u32 %rd435, %r118;
+  mul.lo.u64 %rd436, %rd434, %rd435;
+  mov.u32 %r437, 2147483647;
+  cvt.u64.u32 %rd438, %r437;
+  rem.u64 %rd439, %rd436, %rd438;
+  cvt.u32.u64 %r440, %rd439;
+  cvt.u64.u32 %rd441, %r125;
+  cvt.u64.u32 %rd442, %r125;
   mul.lo.u64 %rd443, %rd441, %rd442;
   mov.u32 %r444, 2147483647;
   cvt.u64.u32 %rd445, %r444;
   rem.u64 %rd446, %rd443, %rd445;
   cvt.u32.u64 %r447, %rd446;
-  mov.b32 %r448, %r447; // param: a
-  mov.b32 %r449, %r447; // param: b
-  cvt.u64.u32 %rd450, %r448;
-  cvt.u64.u32 %rd451, %r449;
-  mul.lo.u64 %rd452, %rd450, %rd451;
-  mov.u32 %r453, 2147483647;
-  cvt.u64.u32 %rd454, %r453;
-  rem.u64 %rd455, %rd452, %rd454;
-  cvt.u32.u64 %r456, %rd455;
-  mov.b32 %r457, %r456; // param: a
-  mov.b32 %r458, %r438; // param: b
-  cvt.u64.u32 %rd459, %r457;
-  cvt.u64.u32 %rd460, %r458;
-  mul.lo.u64 %rd461, %rd459, %rd460;
-  mov.u32 %r462, 2147483647;
-  cvt.u64.u32 %rd463, %r462;
-  rem.u64 %rd464, %rd461, %rd463;
-  cvt.u32.u64 %r465, %rd464;
-  mov.b32 %r466, %r121; // param: x
-  mov.b32 %r467, %r466; // param: a
-  mov.b32 %r468, %r466; // param: b
-  cvt.u64.u32 %rd469, %r467;
-  cvt.u64.u32 %rd470, %r468;
-  mul.lo.u64 %rd471, %rd469, %rd470;
-  mov.u32 %r472, 2147483647;
-  cvt.u64.u32 %rd473, %r472;
-  rem.u64 %rd474, %rd471, %rd473;
-  cvt.u32.u64 %r475, %rd474;
-  mov.b32 %r476, %r475; // param: a
-  mov.b32 %r477, %r475; // param: b
-  cvt.u64.u32 %rd478, %r476;
-  cvt.u64.u32 %rd479, %r477;
+  cvt.u64.u32 %rd448, %r447;
+  cvt.u64.u32 %rd449, %r447;
+  mul.lo.u64 %rd450, %rd448, %rd449;
+  mov.u32 %r451, 2147483647;
+  cvt.u64.u32 %rd452, %r451;
+  rem.u64 %rd453, %rd450, %rd452;
+  cvt.u32.u64 %r454, %rd453;
+  cvt.u64.u32 %rd455, %r454;
+  cvt.u64.u32 %rd456, %r125;
+  mul.lo.u64 %rd457, %rd455, %rd456;
+  mov.u32 %r458, 2147483647;
+  cvt.u64.u32 %rd459, %r458;
+  rem.u64 %rd460, %rd457, %rd459;
+  cvt.u32.u64 %r461, %rd460;
+  mov.u64 %rd462, 0;
+  add.u64 %rd463, %rd12, %rd462;
+  mov.u64 %rd464, 4;
+  mul.lo.u64 %rd465, %rd463, %rd464;
+  add.u64 %rd466, %rd0, %rd465;
+  st.global.u32 [%rd466], %r146;
+  mov.u64 %rd467, 1;
+  add.u64 %rd468, %rd12, %rd467;
+  mov.u64 %rd469, 4;
+  mul.lo.u64 %rd470, %rd468, %rd469;
+  add.u64 %rd471, %rd0, %rd470;
+  st.global.u32 [%rd471], %r167;
+  mov.u64 %rd472, 2;
+  add.u64 %rd473, %rd12, %rd472;
+  mov.u64 %rd474, 4;
+  mul.lo.u64 %rd475, %rd473, %rd474;
+  add.u64 %rd476, %rd0, %rd475;
+  st.global.u32 [%rd476], %r188;
+  mov.u64 %rd477, 3;
+  add.u64 %rd478, %rd12, %rd477;
+  mov.u64 %rd479, 4;
   mul.lo.u64 %rd480, %rd478, %rd479;
-  mov.u32 %r481, 2147483647;
-  cvt.u64.u32 %rd482, %r481;
-  rem.u64 %rd483, %rd480, %rd482;
-  cvt.u32.u64 %r484, %rd483;
-  mov.b32 %r485, %r484; // param: a
-  mov.b32 %r486, %r466; // param: b
-  cvt.u64.u32 %rd487, %r485;
-  cvt.u64.u32 %rd488, %r486;
-  mul.lo.u64 %rd489, %rd487, %rd488;
-  mov.u32 %r490, 2147483647;
-  cvt.u64.u32 %rd491, %r490;
-  rem.u64 %rd492, %rd489, %rd491;
-  cvt.u32.u64 %r493, %rd492;
-  mov.b32 %r494, %r130; // param: x
-  mov.b32 %r495, %r494; // param: a
-  mov.b32 %r496, %r494; // param: b
-  cvt.u64.u32 %rd497, %r495;
-  cvt.u64.u32 %rd498, %r496;
-  mul.lo.u64 %rd499, %rd497, %rd498;
-  mov.u32 %r500, 2147483647;
-  cvt.u64.u32 %rd501, %r500;
-  rem.u64 %rd502, %rd499, %rd501;
-  cvt.u32.u64 %r503, %rd502;
-  mov.b32 %r504, %r503; // param: a
-  mov.b32 %r505, %r503; // param: b
-  cvt.u64.u32 %rd506, %r504;
-  cvt.u64.u32 %rd507, %r505;
-  mul.lo.u64 %rd508, %rd506, %rd507;
-  mov.u32 %r509, 2147483647;
-  cvt.u64.u32 %rd510, %r509;
-  rem.u64 %rd511, %rd508, %rd510;
-  cvt.u32.u64 %r512, %rd511;
-  mov.b32 %r513, %r512; // param: a
-  mov.b32 %r514, %r494; // param: b
-  cvt.u64.u32 %rd515, %r513;
-  cvt.u64.u32 %rd516, %r514;
-  mul.lo.u64 %rd517, %rd515, %rd516;
-  mov.u32 %r518, 2147483647;
-  cvt.u64.u32 %rd519, %r518;
-  rem.u64 %rd520, %rd517, %rd519;
-  cvt.u32.u64 %r521, %rd520;
-  mov.b32 %r522, %r139; // param: x
-  mov.b32 %r523, %r522; // param: a
-  mov.b32 %r524, %r522; // param: b
-  cvt.u64.u32 %rd525, %r523;
-  cvt.u64.u32 %rd526, %r524;
-  mul.lo.u64 %rd527, %rd525, %rd526;
-  mov.u32 %r528, 2147483647;
-  cvt.u64.u32 %rd529, %r528;
-  rem.u64 %rd530, %rd527, %rd529;
-  cvt.u32.u64 %r531, %rd530;
-  mov.b32 %r532, %r531; // param: a
-  mov.b32 %r533, %r531; // param: b
-  cvt.u64.u32 %rd534, %r532;
-  cvt.u64.u32 %rd535, %r533;
-  mul.lo.u64 %rd536, %rd534, %rd535;
-  mov.u32 %r537, 2147483647;
-  cvt.u64.u32 %rd538, %r537;
-  rem.u64 %rd539, %rd536, %rd538;
-  cvt.u32.u64 %r540, %rd539;
-  mov.b32 %r541, %r540; // param: a
-  mov.b32 %r542, %r522; // param: b
-  cvt.u64.u32 %rd543, %r541;
-  cvt.u64.u32 %rd544, %r542;
-  mul.lo.u64 %rd545, %rd543, %rd544;
-  mov.u32 %r546, 2147483647;
-  cvt.u64.u32 %rd547, %r546;
-  rem.u64 %rd548, %rd545, %rd547;
-  cvt.u32.u64 %r549, %rd548;
-  mov.b32 %r550, %r148; // param: x
-  mov.b32 %r551, %r550; // param: a
-  mov.b32 %r552, %r550; // param: b
-  cvt.u64.u32 %rd553, %r551;
-  cvt.u64.u32 %rd554, %r552;
-  mul.lo.u64 %rd555, %rd553, %rd554;
-  mov.u32 %r556, 2147483647;
-  cvt.u64.u32 %rd557, %r556;
-  rem.u64 %rd558, %rd555, %rd557;
-  cvt.u32.u64 %r559, %rd558;
-  mov.b32 %r560, %r559; // param: a
-  mov.b32 %r561, %r559; // param: b
-  cvt.u64.u32 %rd562, %r560;
-  cvt.u64.u32 %rd563, %r561;
-  mul.lo.u64 %rd564, %rd562, %rd563;
-  mov.u32 %r565, 2147483647;
-  cvt.u64.u32 %rd566, %r565;
-  rem.u64 %rd567, %rd564, %rd566;
-  cvt.u32.u64 %r568, %rd567;
-  mov.b32 %r569, %r568; // param: a
-  mov.b32 %r570, %r550; // param: b
-  cvt.u64.u32 %rd571, %r569;
-  cvt.u64.u32 %rd572, %r570;
-  mul.lo.u64 %rd573, %rd571, %rd572;
-  mov.u32 %r574, 2147483647;
-  cvt.u64.u32 %rd575, %r574;
-  rem.u64 %rd576, %rd573, %rd575;
-  cvt.u32.u64 %r577, %rd576;
-  mov.b32 %r578, %r157; // param: x
-  mov.b32 %r579, %r578; // param: a
-  mov.b32 %r580, %r578; // param: b
-  cvt.u64.u32 %rd581, %r579;
-  cvt.u64.u32 %rd582, %r580;
-  mul.lo.u64 %rd583, %rd581, %rd582;
-  mov.u32 %r584, 2147483647;
-  cvt.u64.u32 %rd585, %r584;
-  rem.u64 %rd586, %rd583, %rd585;
-  cvt.u32.u64 %r587, %rd586;
-  mov.b32 %r588, %r587; // param: a
-  mov.b32 %r589, %r587; // param: b
-  cvt.u64.u32 %rd590, %r588;
-  cvt.u64.u32 %rd591, %r589;
-  mul.lo.u64 %rd592, %rd590, %rd591;
-  mov.u32 %r593, 2147483647;
-  cvt.u64.u32 %rd594, %r593;
-  rem.u64 %rd595, %rd592, %rd594;
-  cvt.u32.u64 %r596, %rd595;
-  mov.b32 %r597, %r596; // param: a
-  mov.b32 %r598, %r578; // param: b
-  cvt.u64.u32 %rd599, %r597;
-  cvt.u64.u32 %rd600, %r598;
-  mul.lo.u64 %rd601, %rd599, %rd600;
-  mov.u32 %r602, 2147483647;
-  cvt.u64.u32 %rd603, %r602;
-  rem.u64 %rd604, %rd601, %rd603;
-  cvt.u32.u64 %r605, %rd604;
-  mov.u64 %rd606, 0;
-  add.u64 %rd607, %rd12, %rd606;
-  mov.u64 %rd608, 4;
-  mul.lo.u64 %rd609, %rd607, %rd608;
-  add.u64 %rd610, %rd0, %rd609;
-  st.global.u32 [%rd610], %r185;
-  mov.u64 %rd611, 1;
-  add.u64 %rd612, %rd12, %rd611;
-  mov.u64 %rd613, 4;
-  mul.lo.u64 %rd614, %rd612, %rd613;
-  add.u64 %rd615, %rd0, %rd614;
-  st.global.u32 [%rd615], %r213;
-  mov.u64 %rd616, 2;
-  add.u64 %rd617, %rd12, %rd616;
-  mov.u64 %rd618, 4;
-  mul.lo.u64 %rd619, %rd617, %rd618;
-  add.u64 %rd620, %rd0, %rd619;
-  st.global.u32 [%rd620], %r241;
-  mov.u64 %rd621, 3;
-  add.u64 %rd622, %rd12, %rd621;
-  mov.u64 %rd623, 4;
-  mul.lo.u64 %rd624, %rd622, %rd623;
-  add.u64 %rd625, %rd0, %rd624;
-  st.global.u32 [%rd625], %r269;
-  mov.u64 %rd626, 4;
-  add.u64 %rd627, %rd12, %rd626;
-  mov.u64 %rd628, 4;
-  mul.lo.u64 %rd629, %rd627, %rd628;
-  add.u64 %rd630, %rd0, %rd629;
-  st.global.u32 [%rd630], %r297;
-  mov.u64 %rd631, 5;
-  add.u64 %rd632, %rd12, %rd631;
-  mov.u64 %rd633, 4;
-  mul.lo.u64 %rd634, %rd632, %rd633;
-  add.u64 %rd635, %rd0, %rd634;
-  st.global.u32 [%rd635], %r325;
-  mov.u64 %rd636, 6;
-  add.u64 %rd637, %rd12, %rd636;
-  mov.u64 %rd638, 4;
-  mul.lo.u64 %rd639, %rd637, %rd638;
-  add.u64 %rd640, %rd0, %rd639;
-  st.global.u32 [%rd640], %r353;
-  mov.u64 %rd641, 7;
-  add.u64 %rd642, %rd12, %rd641;
-  mov.u64 %rd643, 4;
-  mul.lo.u64 %rd644, %rd642, %rd643;
-  add.u64 %rd645, %rd0, %rd644;
-  st.global.u32 [%rd645], %r381;
-  mov.u64 %rd646, 8;
-  add.u64 %rd647, %rd12, %rd646;
-  mov.u64 %rd648, 4;
-  mul.lo.u64 %rd649, %rd647, %rd648;
-  add.u64 %rd650, %rd0, %rd649;
-  st.global.u32 [%rd650], %r409;
-  mov.u64 %rd651, 9;
-  add.u64 %rd652, %rd12, %rd651;
-  mov.u64 %rd653, 4;
-  mul.lo.u64 %rd654, %rd652, %rd653;
-  add.u64 %rd655, %rd0, %rd654;
-  st.global.u32 [%rd655], %r437;
-  mov.u64 %rd656, 10;
-  add.u64 %rd657, %rd12, %rd656;
-  mov.u64 %rd658, 4;
-  mul.lo.u64 %rd659, %rd657, %rd658;
-  add.u64 %rd660, %rd0, %rd659;
-  st.global.u32 [%rd660], %r465;
-  mov.u64 %rd661, 11;
-  add.u64 %rd662, %rd12, %rd661;
-  mov.u64 %rd663, 4;
-  mul.lo.u64 %rd664, %rd662, %rd663;
-  add.u64 %rd665, %rd0, %rd664;
-  st.global.u32 [%rd665], %r493;
-  mov.u64 %rd666, 12;
-  add.u64 %rd667, %rd12, %rd666;
-  mov.u64 %rd668, 4;
-  mul.lo.u64 %rd669, %rd667, %rd668;
-  add.u64 %rd670, %rd0, %rd669;
-  st.global.u32 [%rd670], %r521;
-  mov.u64 %rd671, 13;
-  add.u64 %rd672, %rd12, %rd671;
-  mov.u64 %rd673, 4;
-  mul.lo.u64 %rd674, %rd672, %rd673;
-  add.u64 %rd675, %rd0, %rd674;
-  st.global.u32 [%rd675], %r549;
-  mov.u64 %rd676, 14;
-  add.u64 %rd677, %rd12, %rd676;
-  mov.u64 %rd678, 4;
-  mul.lo.u64 %rd679, %rd677, %rd678;
-  add.u64 %rd680, %rd0, %rd679;
-  st.global.u32 [%rd680], %r577;
-  mov.u64 %rd681, 15;
-  add.u64 %rd682, %rd12, %rd681;
-  mov.u64 %rd683, 4;
-  mul.lo.u64 %rd684, %rd682, %rd683;
-  add.u64 %rd685, %rd0, %rd684;
-  st.global.u32 [%rd685], %r605;
-  mov.u32 %r686, 0; // unit
-  mov.u32 %r687, %r686;
+  add.u64 %rd481, %rd0, %rd480;
+  st.global.u32 [%rd481], %r209;
+  mov.u64 %rd482, 4;
+  add.u64 %rd483, %rd12, %rd482;
+  mov.u64 %rd484, 4;
+  mul.lo.u64 %rd485, %rd483, %rd484;
+  add.u64 %rd486, %rd0, %rd485;
+  st.global.u32 [%rd486], %r230;
+  mov.u64 %rd487, 5;
+  add.u64 %rd488, %rd12, %rd487;
+  mov.u64 %rd489, 4;
+  mul.lo.u64 %rd490, %rd488, %rd489;
+  add.u64 %rd491, %rd0, %rd490;
+  st.global.u32 [%rd491], %r251;
+  mov.u64 %rd492, 6;
+  add.u64 %rd493, %rd12, %rd492;
+  mov.u64 %rd494, 4;
+  mul.lo.u64 %rd495, %rd493, %rd494;
+  add.u64 %rd496, %rd0, %rd495;
+  st.global.u32 [%rd496], %r272;
+  mov.u64 %rd497, 7;
+  add.u64 %rd498, %rd12, %rd497;
+  mov.u64 %rd499, 4;
+  mul.lo.u64 %rd500, %rd498, %rd499;
+  add.u64 %rd501, %rd0, %rd500;
+  st.global.u32 [%rd501], %r293;
+  mov.u64 %rd502, 8;
+  add.u64 %rd503, %rd12, %rd502;
+  mov.u64 %rd504, 4;
+  mul.lo.u64 %rd505, %rd503, %rd504;
+  add.u64 %rd506, %rd0, %rd505;
+  st.global.u32 [%rd506], %r314;
+  mov.u64 %rd507, 9;
+  add.u64 %rd508, %rd12, %rd507;
+  mov.u64 %rd509, 4;
+  mul.lo.u64 %rd510, %rd508, %rd509;
+  add.u64 %rd511, %rd0, %rd510;
+  st.global.u32 [%rd511], %r335;
+  mov.u64 %rd512, 10;
+  add.u64 %rd513, %rd12, %rd512;
+  mov.u64 %rd514, 4;
+  mul.lo.u64 %rd515, %rd513, %rd514;
+  add.u64 %rd516, %rd0, %rd515;
+  st.global.u32 [%rd516], %r356;
+  mov.u64 %rd517, 11;
+  add.u64 %rd518, %rd12, %rd517;
+  mov.u64 %rd519, 4;
+  mul.lo.u64 %rd520, %rd518, %rd519;
+  add.u64 %rd521, %rd0, %rd520;
+  st.global.u32 [%rd521], %r377;
+  mov.u64 %rd522, 12;
+  add.u64 %rd523, %rd12, %rd522;
+  mov.u64 %rd524, 4;
+  mul.lo.u64 %rd525, %rd523, %rd524;
+  add.u64 %rd526, %rd0, %rd525;
+  st.global.u32 [%rd526], %r398;
+  mov.u64 %rd527, 13;
+  add.u64 %rd528, %rd12, %rd527;
+  mov.u64 %rd529, 4;
+  mul.lo.u64 %rd530, %rd528, %rd529;
+  add.u64 %rd531, %rd0, %rd530;
+  st.global.u32 [%rd531], %r419;
+  mov.u64 %rd532, 14;
+  add.u64 %rd533, %rd12, %rd532;
+  mov.u64 %rd534, 4;
+  mul.lo.u64 %rd535, %rd533, %rd534;
+  add.u64 %rd536, %rd0, %rd535;
+  st.global.u32 [%rd536], %r440;
+  mov.u64 %rd537, 15;
+  add.u64 %rd538, %rd12, %rd537;
+  mov.u64 %rd539, 4;
+  mul.lo.u64 %rd540, %rd538, %rd539;
+  add.u64 %rd541, %rd0, %rd540;
+  st.global.u32 [%rd541], %r461;
+  mov.u32 %r542, 0; // unit
+  mov.u32 %r543, %r542;
   bra poseidon2_sbox_kernel_end_10;
   poseidon2_sbox_kernel_else_10:
-  mov.u32 %r687, 0; // no else branch
+  mov.u32 %r543, 0; // no else branch
   poseidon2_sbox_kernel_end_10:
-  mov.u32 %r688, 0; // unit
+  mov.u32 %r544, 0; // unit
   ret;
 }
 
@@ -738,9 +594,9 @@
     .param .u64 poseidon2_add_rc_kernel_param_n
 )
 {
-    .reg .pred %p11, %p295, %p312, %p329, %p346, %p363, %p380, %p397, %p414, %p431, %p448, %p465, %p482, %p499, %p516, %p533, %p550;
-    .reg .u32 %r105, %r114, %r123, %r132, %r141, %r150, %r159, %r167, %r175, %r183, %r191, %r199, %r207, %r215, %r223, %r231, %r239, %r24, %r247, %r255, %r263, %r271, %r279, %r287, %r288, %r289, %r293, %r299, %r305, %r306, %r310, %r316, %r322, %r323, %r327, %r33, %r333, %r339, %r340, %r344, %r350, %r356, %r357, %r361, %r367, %r373, %r374, %r378, %r384, %r390, %r391, %r395, %r401, %r407, %r408, %r412, %r418, %r42, %r424, %r425, %r429, %r435, %r441, %r442, %r446, %r452, %r458, %r459, %r463, %r469, %r475, %r476, %r480, %r486, %r492, %r493, %r497, %r5, %r503, %r509, %r51, %r510, %r514, %r520, %r526, %r527, %r531, %r537, %r543, %r544, %r548, %r554, %r560, %r561, %r562, %r6, %r60, %r69, %r7, %r78, %r8, %r87, %r9, %r96;
-    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd102, %rd103, %rd104, %rd106, %rd107, %rd108, %rd109, %rd110, %rd111, %rd112, %rd113, %rd115, %rd116, %rd117, %rd118, %rd119, %rd120, %rd121, %rd122, %rd124, %rd125, %rd126, %rd127, %rd128, %rd129, %rd13, %rd130, %rd131, %rd133, %rd134, %rd135, %rd136, %rd137, %rd138, %rd139, %rd14, %rd140, %rd142, %rd143, %rd144, %rd145, %rd146, %rd147, %rd148, %rd149, %rd15, %rd151, %rd152, %rd153, %rd154, %rd155, %rd156, %rd157, %rd158, %rd16, %rd160, %rd161, %rd162, %rd163, %rd164, %rd165, %rd166, %rd168, %rd169, %rd17, %rd170, %rd171, %rd172, %rd173, %rd174, %rd176, %rd177, %rd178, %rd179, %rd18, %rd180, %rd181, %rd182, %rd184, %rd185, %rd186, %rd187, %rd188, %rd189, %rd19, %rd190, %rd192, %rd193, %rd194, %rd195, %rd196, %rd197, %rd198, %rd2, %rd20, %rd200, %rd201, %rd202, %rd203, %rd204, %rd205, %rd206, %rd208, %rd209, %rd21, %rd210, %rd211, %rd212, %rd213, %rd214, %rd216, %rd217, %rd218, %rd219, %rd22, %rd220, %rd221, %rd222, %rd224, %rd225, %rd226, %rd227, %rd228, %rd229, %rd23, %rd230, %rd232, %rd233, %rd234, %rd235, %rd236, %rd237, %rd238, %rd240, %rd241, %rd242, %rd243, %rd244, %rd245, %rd246, %rd248, %rd249, %rd25, %rd250, %rd251, %rd252, %rd253, %rd254, %rd256, %rd257, %rd258, %rd259, %rd26, %rd260, %rd261, %rd262, %rd264, %rd265, %rd266, %rd267, %rd268, %rd269, %rd27, %rd270, %rd272, %rd273, %rd274, %rd275, %rd276, %rd277, %rd278, %rd28, %rd280, %rd281, %rd282, %rd283, %rd284, %rd285, %rd286, %rd29, %rd290, %rd291, %rd292, %rd294, %rd297, %rd298, %rd3, %rd30, %rd300, %rd301, %rd302, %rd303, %rd304, %rd307, %rd308, %rd309, %rd31, %rd311, %rd314, %rd315, %rd317, %rd318, %rd319, %rd32, %rd320, %rd321, %rd324, %rd325, %rd326, %rd328, %rd331, %rd332, %rd334, %rd335, %rd336, %rd337, %rd338, %rd34, %rd341, %rd342, %rd343, %rd345, %rd348, %rd349, %rd35, %rd351, %rd352, %rd353, %rd354, %rd355, %rd358, %rd359, %rd36, %rd360, %rd362, %rd365, %rd366, %rd368, %rd369, %rd37, %rd370, %rd371, %rd372, %rd375, %rd376, %rd377, %rd379, %rd38, %rd382, %rd383, %rd385, %rd386, %rd387, %rd388, %rd389, %rd39, %rd392, %rd393, %rd394, %rd396, %rd399, %rd4, %rd40, %rd400, %rd402, %rd403, %rd404, %rd405, %rd406, %rd409, %rd41, %rd410, %rd411, %rd413, %rd416, %rd417, %rd419, %rd420, %rd421, %rd422, %rd423, %rd426, %rd427, %rd428, %rd43, %rd430, %rd433, %rd434, %rd436, %rd437, %rd438, %rd439, %rd44, %rd440, %rd443, %rd444, %rd445, %rd447, %rd45, %rd450, %rd451, %rd453, %rd454, %rd455, %rd456, %rd457, %rd46, %rd460, %rd461, %rd462, %rd464, %rd467, %rd468, %rd47, %rd470, %rd471, %rd472, %rd473, %rd474, %rd477, %rd478, %rd479, %rd48, %rd481, %rd484, %rd485, %rd487, %rd488, %rd489, %rd49, %rd490, %rd491, %rd494, %rd495, %rd496, %rd498, %rd50, %rd501, %rd502, %rd504, %rd505, %rd506, %rd507, %rd508, %rd511, %rd512, %rd513, %rd515, %rd518, %rd519, %rd52, %rd521, %rd522, %rd523, %rd524, %rd525, %rd528, %rd529, %rd53, %rd530, %rd532, %rd535, %rd536, %rd538, %rd539, %rd54, %rd540, %rd541, %rd542, %rd545, %rd546, %rd547, %rd549, %rd55, %rd552, %rd553, %rd555, %rd556, %rd557, %rd558, %rd559, %rd56, %rd57, %rd58, %rd59, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd67, %rd68, %rd70, %rd71, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77, %rd79, %rd80, %rd81, %rd82, %rd83, %rd84, %rd85, %rd86, %rd88, %rd89, %rd90, %rd91, %rd92, %rd93, %rd94, %rd95, %rd97, %rd98, %rd99;
+    .reg .pred %p11, %p229, %p244, %p259, %p274, %p289, %p304, %p319, %p334, %p349, %p364, %p379, %p394, %p409, %p424, %p439, %p454;
+    .reg .u32 %r106, %r113, %r120, %r127, %r133, %r139, %r145, %r151, %r157, %r163, %r169, %r175, %r181, %r187, %r193, %r199, %r205, %r211, %r217, %r22, %r223, %r227, %r233, %r242, %r248, %r257, %r263, %r272, %r278, %r287, %r29, %r293, %r302, %r308, %r317, %r323, %r332, %r338, %r347, %r353, %r36, %r362, %r368, %r377, %r383, %r392, %r398, %r407, %r413, %r422, %r428, %r43, %r437, %r443, %r452, %r458, %r464, %r465, %r466, %r5, %r50, %r57, %r6, %r64, %r7, %r71, %r78, %r8, %r85, %r9, %r92, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd102, %rd103, %rd104, %rd105, %rd107, %rd108, %rd109, %rd110, %rd111, %rd112, %rd114, %rd115, %rd116, %rd117, %rd118, %rd119, %rd121, %rd122, %rd123, %rd124, %rd125, %rd126, %rd128, %rd129, %rd13, %rd130, %rd131, %rd132, %rd134, %rd135, %rd136, %rd137, %rd138, %rd14, %rd140, %rd141, %rd142, %rd143, %rd144, %rd146, %rd147, %rd148, %rd149, %rd15, %rd150, %rd152, %rd153, %rd154, %rd155, %rd156, %rd158, %rd159, %rd16, %rd160, %rd161, %rd162, %rd164, %rd165, %rd166, %rd167, %rd168, %rd17, %rd170, %rd171, %rd172, %rd173, %rd174, %rd176, %rd177, %rd178, %rd179, %rd18, %rd180, %rd182, %rd183, %rd184, %rd185, %rd186, %rd188, %rd189, %rd19, %rd190, %rd191, %rd192, %rd194, %rd195, %rd196, %rd197, %rd198, %rd2, %rd20, %rd200, %rd201, %rd202, %rd203, %rd204, %rd206, %rd207, %rd208, %rd209, %rd21, %rd210, %rd212, %rd213, %rd214, %rd215, %rd216, %rd218, %rd219, %rd220, %rd221, %rd222, %rd224, %rd225, %rd226, %rd228, %rd23, %rd231, %rd232, %rd234, %rd235, %rd236, %rd237, %rd238, %rd239, %rd24, %rd240, %rd241, %rd243, %rd246, %rd247, %rd249, %rd25, %rd250, %rd251, %rd252, %rd253, %rd254, %rd255, %rd256, %rd258, %rd26, %rd261, %rd262, %rd264, %rd265, %rd266, %rd267, %rd268, %rd269, %rd27, %rd270, %rd271, %rd273, %rd276, %rd277, %rd279, %rd28, %rd280, %rd281, %rd282, %rd283, %rd284, %rd285, %rd286, %rd288, %rd291, %rd292, %rd294, %rd295, %rd296, %rd297, %rd298, %rd299, %rd3, %rd30, %rd300, %rd301, %rd303, %rd306, %rd307, %rd309, %rd31, %rd310, %rd311, %rd312, %rd313, %rd314, %rd315, %rd316, %rd318, %rd32, %rd321, %rd322, %rd324, %rd325, %rd326, %rd327, %rd328, %rd329, %rd33, %rd330, %rd331, %rd333, %rd336, %rd337, %rd339, %rd34, %rd340, %rd341, %rd342, %rd343, %rd344, %rd345, %rd346, %rd348, %rd35, %rd351, %rd352, %rd354, %rd355, %rd356, %rd357, %rd358, %rd359, %rd360, %rd361, %rd363, %rd366, %rd367, %rd369, %rd37, %rd370, %rd371, %rd372, %rd373, %rd374, %rd375, %rd376, %rd378, %rd38, %rd381, %rd382, %rd384, %rd385, %rd386, %rd387, %rd388, %rd389, %rd39, %rd390, %rd391, %rd393, %rd396, %rd397, %rd399, %rd4, %rd40, %rd400, %rd401, %rd402, %rd403, %rd404, %rd405, %rd406, %rd408, %rd41, %rd411, %rd412, %rd414, %rd415, %rd416, %rd417, %rd418, %rd419, %rd42, %rd420, %rd421, %rd423, %rd426, %rd427, %rd429, %rd430, %rd431, %rd432, %rd433, %rd434, %rd435, %rd436, %rd438, %rd44, %rd441, %rd442, %rd444, %rd445, %rd446, %rd447, %rd448, %rd449, %rd45, %rd450, %rd451, %rd453, %rd456, %rd457, %rd459, %rd46, %rd460, %rd461, %rd462, %rd463, %rd47, %rd48, %rd49, %rd51, %rd52, %rd53, %rd54, %rd55, %rd56, %rd58, %rd59, %rd60, %rd61, %rd62, %rd63, %rd65, %rd66, %rd67, %rd68, %rd69, %rd70, %rd72, %rd73, %rd74, %rd75, %rd76, %rd77, %rd79, %rd80, %rd81, %rd82, %rd83, %rd84, %rd86, %rd87, %rd88, %rd89, %rd90, %rd91, %rd93, %rd94, %rd95, %rd96, %rd97, %rd98;
 
   ld.param.u64 %rd0, [poseidon2_add_rc_kernel_param_state_data];
   ld.param.u64 %rd1, [poseidon2_add_rc_kernel_param_state_len];
@@ -763,667 +619,571 @@
   mov.u64 %rd15, 0; // unhandled expr
   mov.u64 %rd16, 0;
   add.u64 %rd17, %rd14, %rd16;
-  mov.b64 %rd18, %rd0; // param: arr
-  mov.b64 %rd19, %rd17; // param: idx
-  mov.u64 %rd20, 0; // unhandled expr
-  mov.u64 %rd21, 4;
-  mul.lo.u64 %rd22, %rd19, %rd21;
-  add.u64 %rd23, %rd18, %rd22;
-  ld.global.u32 %r24, [%rd23];
-  mov.u64 %rd25, 1;
-  add.u64 %rd26, %rd14, %rd25;
-  mov.b64 %rd27, %rd0; // param: arr
-  mov.b64 %rd28, %rd26; // param: idx
-  mov.u64 %rd29, 0; // unhandled expr
-  mov.u64 %rd30, 4;
-  mul.lo.u64 %rd31, %rd28, %rd30;
-  add.u64 %rd32, %rd27, %rd31;
-  ld.global.u32 %r33, [%rd32];
-  mov.u64 %rd34, 2;
-  add.u64 %rd35, %rd14, %rd34;
-  mov.b64 %rd36, %rd0; // param: arr
-  mov.b64 %rd37, %rd35; // param: idx
-  mov.u64 %rd38, 0; // unhandled expr
-  mov.u64 %rd39, 4;
-  mul.lo.u64 %rd40, %rd37, %rd39;
-  add.u64 %rd41, %rd36, %rd40;
-  ld.global.u32 %r42, [%rd41];
-  mov.u64 %rd43, 3;
-  add.u64 %rd44, %rd14, %rd43;
-  mov.b64 %rd45, %rd0; // param: arr
-  mov.b64 %rd46, %rd44; // param: idx
-  mov.u64 %rd47, 0; // unhandled expr
-  mov.u64 %rd48, 4;
-  mul.lo.u64 %rd49, %rd46, %rd48;
-  add.u64 %rd50, %rd45, %rd49;
-  ld.global.u32 %r51, [%rd50];
-  mov.u64 %rd52, 4;
-  add.u64 %rd53, %rd14, %rd52;
-  mov.b64 %rd54, %rd0; // param: arr
-  mov.b64 %rd55, %rd53; // param: idx
-  mov.u64 %rd56, 0; // unhandled expr
-  mov.u64 %rd57, 4;
-  mul.lo.u64 %rd58, %rd55, %rd57;
-  add.u64 %rd59, %rd54, %rd58;
-  ld.global.u32 %r60, [%rd59];
-  mov.u64 %rd61, 5;
-  add.u64 %rd62, %rd14, %rd61;
-  mov.b64 %rd63, %rd0; // param: arr
-  mov.b64 %rd64, %rd62; // param: idx
-  mov.u64 %rd65, 0; // unhandled expr
-  mov.u64 %rd66, 4;
-  mul.lo.u64 %rd67, %rd64, %rd66;
-  add.u64 %rd68, %rd63, %rd67;
-  ld.global.u32 %r69, [%rd68];
-  mov.u64 %rd70, 6;
-  add.u64 %rd71, %rd14, %rd70;
-  mov.b64 %rd72, %rd0; // param: arr
-  mov.b64 %rd73, %rd71; // param: idx
+  mov.u64 %rd18, 0; // unhandled expr
+  mov.u64 %rd19, 4;
+  mul.lo.u64 %rd20, %rd17, %rd19;
+  add.u64 %rd21, %rd0, %rd20;
+  ld.global.u32 %r22, [%rd21];
+  mov.u64 %rd23, 1;
+  add.u64 %rd24, %rd14, %rd23;
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd24, %rd26;
+  add.u64 %rd28, %rd0, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  mov.u64 %rd30, 2;
+  add.u64 %rd31, %rd14, %rd30;
+  mov.u64 %rd32, 0; // unhandled expr
+  mov.u64 %rd33, 4;
+  mul.lo.u64 %rd34, %rd31, %rd33;
+  add.u64 %rd35, %rd0, %rd34;
+  ld.global.u32 %r36, [%rd35];
+  mov.u64 %rd37, 3;
+  add.u64 %rd38, %rd14, %rd37;
+  mov.u64 %rd39, 0; // unhandled expr
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd38, %rd40;
+  add.u64 %rd42, %rd0, %rd41;
+  ld.global.u32 %r43, [%rd42];
+  mov.u64 %rd44, 4;
+  add.u64 %rd45, %rd14, %rd44;
+  mov.u64 %rd46, 0; // unhandled expr
+  mov.u64 %rd47, 4;
+  mul.lo.u64 %rd48, %rd45, %rd47;
+  add.u64 %rd49, %rd0, %rd48;
+  ld.global.u32 %r50, [%rd49];
+  mov.u64 %rd51, 5;
+  add.u64 %rd52, %rd14, %rd51;
+  mov.u64 %rd53, 0; // unhandled expr
+  mov.u64 %rd54, 4;
+  mul.lo.u64 %rd55, %rd52, %rd54;
+  add.u64 %rd56, %rd0, %rd55;
+  ld.global.u32 %r57, [%rd56];
+  mov.u64 %rd58, 6;
+  add.u64 %rd59, %rd14, %rd58;
+  mov.u64 %rd60, 0; // unhandled expr
+  mov.u64 %rd61, 4;
+  mul.lo.u64 %rd62, %rd59, %rd61;
+  add.u64 %rd63, %rd0, %rd62;
+  ld.global.u32 %r64, [%rd63];
+  mov.u64 %rd65, 7;
+  add.u64 %rd66, %rd14, %rd65;
+  mov.u64 %rd67, 0; // unhandled expr
+  mov.u64 %rd68, 4;
+  mul.lo.u64 %rd69, %rd66, %rd68;
+  add.u64 %rd70, %rd0, %rd69;
+  ld.global.u32 %r71, [%rd70];
+  mov.u64 %rd72, 8;
+  add.u64 %rd73, %rd14, %rd72;
   mov.u64 %rd74, 0; // unhandled expr
   mov.u64 %rd75, 4;
   mul.lo.u64 %rd76, %rd73, %rd75;
-  add.u64 %rd77, %rd72, %rd76;
+  add.u64 %rd77, %rd0, %rd76;
   ld.global.u32 %r78, [%rd77];
-  mov.u64 %rd79, 7;
+  mov.u64 %rd79, 9;
   add.u64 %rd80, %rd14, %rd79;
-  mov.b64 %rd81, %rd0; // param: arr
-  mov.b64 %rd82, %rd80; // param: idx
-  mov.u64 %rd83, 0; // unhandled expr
-  mov.u64 %rd84, 4;
-  mul.lo.u64 %rd85, %rd82, %rd84;
-  add.u64 %rd86, %rd81, %rd85;
-  ld.global.u32 %r87, [%rd86];
-  mov.u64 %rd88, 8;
-  add.u64 %rd89, %rd14, %rd88;
-  mov.b64 %rd90, %rd0; // param: arr
-  mov.b64 %rd91, %rd89; // param: idx
-  mov.u64 %rd92, 0; // unhandled expr
-  mov.u64 %rd93, 4;
-  mul.lo.u64 %rd94, %rd91, %rd93;
-  add.u64 %rd95, %rd90, %rd94;
-  ld.global.u32 %r96, [%rd95];
-  mov.u64 %rd97, 9;
-  add.u64 %rd98, %rd14, %rd97;
-  mov.b64 %rd99, %rd0; // param: arr
-  mov.b64 %rd100, %rd98; // param: idx
-  mov.u64 %rd101, 0; // unhandled expr
-  mov.u64 %rd102, 4;
-  mul.lo.u64 %rd103, %rd100, %rd102;
-  add.u64 %rd104, %rd99, %rd103;
-  ld.global.u32 %r105, [%rd104];
-  mov.u64 %rd106, 10;
-  add.u64 %rd107, %rd14, %rd106;
-  mov.b64 %rd108, %rd0; // param: arr
-  mov.b64 %rd109, %rd107; // param: idx
-  mov.u64 %rd110, 0; // unhandled expr
-  mov.u64 %rd111, 4;
-  mul.lo.u64 %rd112, %rd109, %rd111;
-  add.u64 %rd113, %rd108, %rd112;
-  ld.global.u32 %r114, [%rd113];
-  mov.u64 %rd115, 11;
-  add.u64 %rd116, %rd14, %rd115;
-  mov.b64 %rd117, %rd0; // param: arr
-  mov.b64 %rd118, %rd116; // param: idx
-  mov.u64 %rd119, 0; // unhandled expr
-  mov.u64 %rd120, 4;
-  mul.lo.u64 %rd121, %rd118, %rd120;
-  add.u64 %rd122, %rd117, %rd121;
-  ld.global.u32 %r123, [%rd122];
-  mov.u64 %rd124, 12;
-  add.u64 %rd125, %rd14, %rd124;
-  mov.b64 %rd126, %rd0; // param: arr
-  mov.b64 %rd127, %rd125; // param: idx
-  mov.u64 %rd128, 0; // unhandled expr
-  mov.u64 %rd129, 4;
-  mul.lo.u64 %rd130, %rd127, %rd129;
-  add.u64 %rd131, %rd126, %rd130;
-  ld.global.u32 %r132, [%rd131];
-  mov.u64 %rd133, 13;
-  add.u64 %rd134, %rd14, %rd133;
-  mov.b64 %rd135, %rd0; // param: arr
-  mov.b64 %rd136, %rd134; // param: idx
-  mov.u64 %rd137, 0; // unhandled expr
-  mov.u64 %rd138, 4;
-  mul.lo.u64 %rd139, %rd136, %rd138;
-  add.u64 %rd140, %rd135, %rd139;
-  ld.global.u32 %r141, [%rd140];
-  mov.u64 %rd142, 14;
-  add.u64 %rd143, %rd14, %rd142;
-  mov.b64 %rd144, %rd0; // param: arr
-  mov.b64 %rd145, %rd143; // param: idx
-  mov.u64 %rd146, 0; // unhandled expr
-  mov.u64 %rd147, 4;
-  mul.lo.u64 %rd148, %rd145, %rd147;
-  add.u64 %rd149, %rd144, %rd148;
-  ld.global.u32 %r150, [%rd149];
-  mov.u64 %rd151, 15;
-  add.u64 %rd152, %rd14, %rd151;
-  mov.b64 %rd153, %rd0; // param: arr
-  mov.b64 %rd154, %rd152; // param: idx
-  mov.u64 %rd155, 0; // unhandled expr
-  mov.u64 %rd156, 4;
-  mul.lo.u64 %rd157, %rd154, %rd156;
-  add.u64 %rd158, %rd153, %rd157;
-  ld.global.u32 %r159, [%rd158];
-  mov.u64 %rd160, 0;
-  mov.b64 %rd161, %rd2; // param: arr
-  mov.b64 %rd162, %rd160; // param: idx
-  mov.u64 %rd163, 0; // unhandled expr
-  mov.u64 %rd164, 4;
-  mul.lo.u64 %rd165, %rd162, %rd164;
-  add.u64 %rd166, %rd161, %rd165;
-  ld.global.u32 %r167, [%rd166];
-  mov.u64 %rd168, 1;
-  mov.b64 %rd169, %rd2; // param: arr
-  mov.b64 %rd170, %rd168; // param: idx
+  mov.u64 %rd81, 0; // unhandled expr
+  mov.u64 %rd82, 4;
+  mul.lo.u64 %rd83, %rd80, %rd82;
+  add.u64 %rd84, %rd0, %rd83;
+  ld.global.u32 %r85, [%rd84];
+  mov.u64 %rd86, 10;
+  add.u64 %rd87, %rd14, %rd86;
+  mov.u64 %rd88, 0; // unhandled expr
+  mov.u64 %rd89, 4;
+  mul.lo.u64 %rd90, %rd87, %rd89;
+  add.u64 %rd91, %rd0, %rd90;
+  ld.global.u32 %r92, [%rd91];
+  mov.u64 %rd93, 11;
+  add.u64 %rd94, %rd14, %rd93;
+  mov.u64 %rd95, 0; // unhandled expr
+  mov.u64 %rd96, 4;
+  mul.lo.u64 %rd97, %rd94, %rd96;
+  add.u64 %rd98, %rd0, %rd97;
+  ld.global.u32 %r99, [%rd98];
+  mov.u64 %rd100, 12;
+  add.u64 %rd101, %rd14, %rd100;
+  mov.u64 %rd102, 0; // unhandled expr
+  mov.u64 %rd103, 4;
+  mul.lo.u64 %rd104, %rd101, %rd103;
+  add.u64 %rd105, %rd0, %rd104;
+  ld.global.u32 %r106, [%rd105];
+  mov.u64 %rd107, 13;
+  add.u64 %rd108, %rd14, %rd107;
+  mov.u64 %rd109, 0; // unhandled expr
+  mov.u64 %rd110, 4;
+  mul.lo.u64 %rd111, %rd108, %rd110;
+  add.u64 %rd112, %rd0, %rd111;
+  ld.global.u32 %r113, [%rd112];
+  mov.u64 %rd114, 14;
+  add.u64 %rd115, %rd14, %rd114;
+  mov.u64 %rd116, 0; // unhandled expr
+  mov.u64 %rd117, 4;
+  mul.lo.u64 %rd118, %rd115, %rd117;
+  add.u64 %rd119, %rd0, %rd118;
+  ld.global.u32 %r120, [%rd119];
+  mov.u64 %rd121, 15;
+  add.u64 %rd122, %rd14, %rd121;
+  mov.u64 %rd123, 0; // unhandled expr
+  mov.u64 %rd124, 4;
+  mul.lo.u64 %rd125, %rd122, %rd124;
+  add.u64 %rd126, %rd0, %rd125;
+  ld.global.u32 %r127, [%rd126];
+  mov.u64 %rd128, 0;
+  mov.u64 %rd129, 0; // unhandled expr
+  mov.u64 %rd130, 4;
+  mul.lo.u64 %rd131, %rd128, %rd130;
+  add.u64 %rd132, %rd2, %rd131;
+  ld.global.u32 %r133, [%rd132];
+  mov.u64 %rd134, 1;
+  mov.u64 %rd135, 0; // unhandled expr
+  mov.u64 %rd136, 4;
+  mul.lo.u64 %rd137, %rd134, %rd136;
+  add.u64 %rd138, %rd2, %rd137;
+  ld.global.u32 %r139, [%rd138];
+  mov.u64 %rd140, 2;
+  mov.u64 %rd141, 0; // unhandled expr
+  mov.u64 %rd142, 4;
+  mul.lo.u64 %rd143, %rd140, %rd142;
+  add.u64 %rd144, %rd2, %rd143;
+  ld.global.u32 %r145, [%rd144];
+  mov.u64 %rd146, 3;
+  mov.u64 %rd147, 0; // unhandled expr
+  mov.u64 %rd148, 4;
+  mul.lo.u64 %rd149, %rd146, %rd148;
+  add.u64 %rd150, %rd2, %rd149;
+  ld.global.u32 %r151, [%rd150];
+  mov.u64 %rd152, 4;
+  mov.u64 %rd153, 0; // unhandled expr
+  mov.u64 %rd154, 4;
+  mul.lo.u64 %rd155, %rd152, %rd154;
+  add.u64 %rd156, %rd2, %rd155;
+  ld.global.u32 %r157, [%rd156];
+  mov.u64 %rd158, 5;
+  mov.u64 %rd159, 0; // unhandled expr
+  mov.u64 %rd160, 4;
+  mul.lo.u64 %rd161, %rd158, %rd160;
+  add.u64 %rd162, %rd2, %rd161;
+  ld.global.u32 %r163, [%rd162];
+  mov.u64 %rd164, 6;
+  mov.u64 %rd165, 0; // unhandled expr
+  mov.u64 %rd166, 4;
+  mul.lo.u64 %rd167, %rd164, %rd166;
+  add.u64 %rd168, %rd2, %rd167;
+  ld.global.u32 %r169, [%rd168];
+  mov.u64 %rd170, 7;
   mov.u64 %rd171, 0; // unhandled expr
   mov.u64 %rd172, 4;
   mul.lo.u64 %rd173, %rd170, %rd172;
-  add.u64 %rd174, %rd169, %rd173;
+  add.u64 %rd174, %rd2, %rd173;
   ld.global.u32 %r175, [%rd174];
-  mov.u64 %rd176, 2;
-  mov.b64 %rd177, %rd2; // param: arr
-  mov.b64 %rd178, %rd176; // param: idx
-  mov.u64 %rd179, 0; // unhandled expr
-  mov.u64 %rd180, 4;
-  mul.lo.u64 %rd181, %rd178, %rd180;
-  add.u64 %rd182, %rd177, %rd181;
-  ld.global.u32 %r183, [%rd182];
-  mov.u64 %rd184, 3;
-  mov.b64 %rd185, %rd2; // param: arr
-  mov.b64 %rd186, %rd184; // param: idx
-  mov.u64 %rd187, 0; // unhandled expr
-  mov.u64 %rd188, 4;
-  mul.lo.u64 %rd189, %rd186, %rd188;
-  add.u64 %rd190, %rd185, %rd189;
-  ld.global.u32 %r191, [%rd190];
-  mov.u64 %rd192, 4;
-  mov.b64 %rd193, %rd2; // param: arr
-  mov.b64 %rd194, %rd192; // param: idx
+  mov.u64 %rd176, 8;
+  mov.u64 %rd177, 0; // unhandled expr
+  mov.u64 %rd178, 4;
+  mul.lo.u64 %rd179, %rd176, %rd178;
+  add.u64 %rd180, %rd2, %rd179;
+  ld.global.u32 %r181, [%rd180];
+  mov.u64 %rd182, 9;
+  mov.u64 %rd183, 0; // unhandled expr
+  mov.u64 %rd184, 4;
+  mul.lo.u64 %rd185, %rd182, %rd184;
+  add.u64 %rd186, %rd2, %rd185;
+  ld.global.u32 %r187, [%rd186];
+  mov.u64 %rd188, 10;
+  mov.u64 %rd189, 0; // unhandled expr
+  mov.u64 %rd190, 4;
+  mul.lo.u64 %rd191, %rd188, %rd190;
+  add.u64 %rd192, %rd2, %rd191;
+  ld.global.u32 %r193, [%rd192];
+  mov.u64 %rd194, 11;
   mov.u64 %rd195, 0; // unhandled expr
   mov.u64 %rd196, 4;
   mul.lo.u64 %rd197, %rd194, %rd196;
-  add.u64 %rd198, %rd193, %rd197;
+  add.u64 %rd198, %rd2, %rd197;
   ld.global.u32 %r199, [%rd198];
-  mov.u64 %rd200, 5;
-  mov.b64 %rd201, %rd2; // param: arr
-  mov.b64 %rd202, %rd200; // param: idx
-  mov.u64 %rd203, 0; // unhandled expr
-  mov.u64 %rd204, 4;
-  mul.lo.u64 %rd205, %rd202, %rd204;
-  add.u64 %rd206, %rd201, %rd205;
-  ld.global.u32 %r207, [%rd206];
-  mov.u64 %rd208, 6;
-  mov.b64 %rd209, %rd2; // param: arr
-  mov.b64 %rd210, %rd208; // param: idx
-  mov.u64 %rd211, 0; // unhandled expr
-  mov.u64 %rd212, 4;
-  mul.lo.u64 %rd213, %rd210, %rd212;
-  add.u64 %rd214, %rd209, %rd213;
-  ld.global.u32 %r215, [%rd214];
-  mov.u64 %rd216, 7;
-  mov.b64 %rd217, %rd2; // param: arr
-  mov.b64 %rd218, %rd216; // param: idx
+  mov.u64 %rd200, 12;
+  mov.u64 %rd201, 0; // unhandled expr
+  mov.u64 %rd202, 4;
+  mul.lo.u64 %rd203, %rd200, %rd202;
+  add.u64 %rd204, %rd2, %rd203;
+  ld.global.u32 %r205, [%rd204];
+  mov.u64 %rd206, 13;
+  mov.u64 %rd207, 0; // unhandled expr
+  mov.u64 %rd208, 4;
+  mul.lo.u64 %rd209, %rd206, %rd208;
+  add.u64 %rd210, %rd2, %rd209;
+  ld.global.u32 %r211, [%rd210];
+  mov.u64 %rd212, 14;
+  mov.u64 %rd213, 0; // unhandled expr
+  mov.u64 %rd214, 4;
+  mul.lo.u64 %rd215, %rd212, %rd214;
+  add.u64 %rd216, %rd2, %rd215;
+  ld.global.u32 %r217, [%rd216];
+  mov.u64 %rd218, 15;
   mov.u64 %rd219, 0; // unhandled expr
   mov.u64 %rd220, 4;
   mul.lo.u64 %rd221, %rd218, %rd220;
-  add.u64 %rd222, %rd217, %rd221;
+  add.u64 %rd222, %rd2, %rd221;
   ld.global.u32 %r223, [%rd222];
-  mov.u64 %rd224, 8;
-  mov.b64 %rd225, %rd2; // param: arr
-  mov.b64 %rd226, %rd224; // param: idx
-  mov.u64 %rd227, 0; // unhandled expr
-  mov.u64 %rd228, 4;
-  mul.lo.u64 %rd229, %rd226, %rd228;
-  add.u64 %rd230, %rd225, %rd229;
-  ld.global.u32 %r231, [%rd230];
-  mov.u64 %rd232, 9;
-  mov.b64 %rd233, %rd2; // param: arr
-  mov.b64 %rd234, %rd232; // param: idx
-  mov.u64 %rd235, 0; // unhandled expr
+  cvt.u64.u32 %rd224, %r22;
+  cvt.u64.u32 %rd225, %r133;
+  add.u64 %rd226, %rd224, %rd225;
+  mov.u32 %r227, 2147483647;
+  cvt.u64.u32 %rd228, %r227;
+  setp.ge.u64 %p229, %rd226, %rd228;
+  @%p229 bra poseidon2_add_rc_kernel_then_230;
+  bra poseidon2_add_rc_kernel_else_230;
+  poseidon2_add_rc_kernel_then_230:
+  sub.u64 %rd231, %rd226, %rd228;
+  mov.u64 %rd232, %rd231;
+  bra poseidon2_add_rc_kernel_end_230;
+  poseidon2_add_rc_kernel_else_230:
+  mov.u64 %rd232, %rd226;
+  poseidon2_add_rc_kernel_end_230:
+  cvt.u32.u64 %r233, %rd232;
+  mov.u64 %rd234, 0;
+  add.u64 %rd235, %rd14, %rd234;
   mov.u64 %rd236, 4;
-  mul.lo.u64 %rd237, %rd234, %rd236;
-  add.u64 %rd238, %rd233, %rd237;
-  ld.global.u32 %r239, [%rd238];
-  mov.u64 %rd240, 10;
-  mov.b64 %rd241, %rd2; // param: arr
-  mov.b64 %rd242, %rd240; // param: idx
-  mov.u64 %rd243, 0; // unhandled expr
-  mov.u64 %rd244, 4;
-  mul.lo.u64 %rd245, %rd242, %rd244;
-  add.u64 %rd246, %rd241, %rd245;
-  ld.global.u32 %r247, [%rd246];
-  mov.u64 %rd248, 11;
-  mov.b64 %rd249, %rd2; // param: arr
-  mov.b64 %rd250, %rd248; // param: idx
-  mov.u64 %rd251, 0; // unhandled expr
-  mov.u64 %rd252, 4;
-  mul.lo.u64 %rd253, %rd250, %rd252;
-  add.u64 %rd254, %rd249, %rd253;
-  ld.global.u32 %r255, [%rd254];
-  mov.u64 %rd256, 12;
-  mov.b64 %rd257, %rd2; // param: arr
-  mov.b64 %rd258, %rd256; // param: idx
-  mov.u64 %rd259, 0; // unhandled expr
-  mov.u64 %rd260, 4;
-  mul.lo.u64 %rd261, %rd258, %rd260;
-  add.u64 %rd262, %rd257, %rd261;
-  ld.global.u32 %r263, [%rd262];
-  mov.u64 %rd264, 13;
-  mov.b64 %rd265, %rd2; // param: arr
-  mov.b64 %rd266, %rd264; // param: idx
-  mov.u64 %rd267, 0; // unhandled expr
-  mov.u64 %rd268, 4;
-  mul.lo.u64 %rd269, %rd266, %rd268;
-  add.u64 %rd270, %rd265, %rd269;
-  ld.global.u32 %r271, [%rd270];
-  mov.u64 %rd272, 14;
-  mov.b64 %rd273, %rd2; // param: arr
-  mov.b64 %rd274, %rd272; // param: idx
-  mov.u64 %rd275, 0; // unhandled expr
-  mov.u64 %rd276, 4;
-  mul.lo.u64 %rd277, %rd274, %rd276;
-  add.u64 %rd278, %rd273, %rd277;
-  ld.global.u32 %r279, [%rd278];
-  mov.u64 %rd280, 15;
-  mov.b64 %rd281, %rd2; // param: arr
-  mov.b64 %rd282, %rd280; // param: idx
-  mov.u64 %rd283, 0; // unhandled expr
-  mov.u64 %rd284, 4;
-  mul.lo.u64 %rd285, %rd282, %rd284;
-  add.u64 %rd286, %rd281, %rd285;
-  ld.global.u32 %r287, [%rd286];
-  mov.b32 %r288, %r24; // param: a
-  mov.b32 %r289, %r167; // param: b
-  cvt.u64.u32 %rd290, %r288;
-  cvt.u64.u32 %rd291, %r289;
-  add.u64 %rd292, %rd290, %rd291;
-  mov.u32 %r293, 2147483647;
-  cvt.u64.u32 %rd294, %r293;
-  setp.ge.u64 %p295, %rd292, %rd294;
-  @%p295 bra poseidon2_add_rc_kernel_then_296;
-  bra poseidon2_add_rc_kernel_else_296;
-  poseidon2_add_rc_kernel_then_296:
-  sub.u64 %rd297, %rd292, %rd294;
-  mov.u64 %rd298, %rd297;
-  bra poseidon2_add_rc_kernel_end_296;
-  poseidon2_add_rc_kernel_else_296:
-  mov.u64 %rd298, %rd292;
-  poseidon2_add_rc_kernel_end_296:
-  cvt.u32.u64 %r299, %rd298;
-  mov.u64 %rd300, 0;
-  add.u64 %rd301, %rd14, %rd300;
-  mov.u64 %rd302, 4;
-  mul.lo.u64 %rd303, %rd301, %rd302;
-  add.u64 %rd304, %rd0, %rd303;
-  st.global.u32 [%rd304], %r299;
-  mov.b32 %r305, %r33; // param: a
-  mov.b32 %r306, %r175; // param: b
-  cvt.u64.u32 %rd307, %r305;
-  cvt.u64.u32 %rd308, %r306;
-  add.u64 %rd309, %rd307, %rd308;
-  mov.u32 %r310, 2147483647;
-  cvt.u64.u32 %rd311, %r310;
-  setp.ge.u64 %p312, %rd309, %rd311;
-  @%p312 bra poseidon2_add_rc_kernel_then_313;
-  bra poseidon2_add_rc_kernel_else_313;
-  poseidon2_add_rc_kernel_then_313:
-  sub.u64 %rd314, %rd309, %rd311;
-  mov.u64 %rd315, %rd314;
-  bra poseidon2_add_rc_kernel_end_313;
-  poseidon2_add_rc_kernel_else_313:
-  mov.u64 %rd315, %rd309;
-  poseidon2_add_rc_kernel_end_313:
-  cvt.u32.u64 %r316, %rd315;
-  mov.u64 %rd317, 1;
-  add.u64 %rd318, %rd14, %rd317;
-  mov.u64 %rd319, 4;
-  mul.lo.u64 %rd320, %rd318, %rd319;
-  add.u64 %rd321, %rd0, %rd320;
-  st.global.u32 [%rd321], %r316;
-  mov.b32 %r322, %r42; // param: a
-  mov.b32 %r323, %r183; // param: b
-  cvt.u64.u32 %rd324, %r322;
-  cvt.u64.u32 %rd325, %r323;
-  add.u64 %rd326, %rd324, %rd325;
-  mov.u32 %r327, 2147483647;
-  cvt.u64.u32 %rd328, %r327;
-  setp.ge.u64 %p329, %rd326, %rd328;
-  @%p329 bra poseidon2_add_rc_kernel_then_330;
-  bra poseidon2_add_rc_kernel_else_330;
-  poseidon2_add_rc_kernel_then_330:
-  sub.u64 %rd331, %rd326, %rd328;
-  mov.u64 %rd332, %rd331;
-  bra poseidon2_add_rc_kernel_end_330;
-  poseidon2_add_rc_kernel_else_330:
-  mov.u64 %rd332, %rd326;
-  poseidon2_add_rc_kernel_end_330:
-  cvt.u32.u64 %r333, %rd332;
-  mov.u64 %rd334, 2;
-  add.u64 %rd335, %rd14, %rd334;
-  mov.u64 %rd336, 4;
-  mul.lo.u64 %rd337, %rd335, %rd336;
-  add.u64 %rd338, %rd0, %rd337;
-  st.global.u32 [%rd338], %r333;
-  mov.b32 %r339, %r51; // param: a
-  mov.b32 %r340, %r191; // param: b
-  cvt.u64.u32 %rd341, %r339;
-  cvt.u64.u32 %rd342, %r340;
-  add.u64 %rd343, %rd341, %rd342;
-  mov.u32 %r344, 2147483647;
-  cvt.u64.u32 %rd345, %r344;
-  setp.ge.u64 %p346, %rd343, %rd345;
-  @%p346 bra poseidon2_add_rc_kernel_then_347;
-  bra poseidon2_add_rc_kernel_else_347;
-  poseidon2_add_rc_kernel_then_347:
-  sub.u64 %rd348, %rd343, %rd345;
-  mov.u64 %rd349, %rd348;
-  bra poseidon2_add_rc_kernel_end_347;
-  poseidon2_add_rc_kernel_else_347:
-  mov.u64 %rd349, %rd343;
-  poseidon2_add_rc_kernel_end_347:
-  cvt.u32.u64 %r350, %rd349;
-  mov.u64 %rd351, 3;
-  add.u64 %rd352, %rd14, %rd351;
-  mov.u64 %rd353, 4;
-  mul.lo.u64 %rd354, %rd352, %rd353;
-  add.u64 %rd355, %rd0, %rd354;
-  st.global.u32 [%rd355], %r350;
-  mov.b32 %r356, %r60; // param: a
-  mov.b32 %r357, %r199; // param: b
-  cvt.u64.u32 %rd358, %r356;
-  cvt.u64.u32 %rd359, %r357;
-  add.u64 %rd360, %rd358, %rd359;
-  mov.u32 %r361, 2147483647;
-  cvt.u64.u32 %rd362, %r361;
-  setp.ge.u64 %p363, %rd360, %rd362;
-  @%p363 bra poseidon2_add_rc_kernel_then_364;
-  bra poseidon2_add_rc_kernel_else_364;
-  poseidon2_add_rc_kernel_then_364:
-  sub.u64 %rd365, %rd360, %rd362;
-  mov.u64 %rd366, %rd365;
-  bra poseidon2_add_rc_kernel_end_364;
-  poseidon2_add_rc_kernel_else_364:
-  mov.u64 %rd366, %rd360;
-  poseidon2_add_rc_kernel_end_364:
-  cvt.u32.u64 %r367, %rd366;
-  mov.u64 %rd368, 4;
-  add.u64 %rd369, %rd14, %rd368;
-  mov.u64 %rd370, 4;
-  mul.lo.u64 %rd371, %rd369, %rd370;
-  add.u64 %rd372, %rd0, %rd371;
-  st.global.u32 [%rd372], %r367;
-  mov.b32 %r373, %r69; // param: a
-  mov.b32 %r374, %r207; // param: b
-  cvt.u64.u32 %rd375, %r373;
-  cvt.u64.u32 %rd376, %r374;
-  add.u64 %rd377, %rd375, %rd376;
-  mov.u32 %r378, 2147483647;
-  cvt.u64.u32 %rd379, %r378;
-  setp.ge.u64 %p380, %rd377, %rd379;
-  @%p380 bra poseidon2_add_rc_kernel_then_381;
-  bra poseidon2_add_rc_kernel_else_381;
-  poseidon2_add_rc_kernel_then_381:
-  sub.u64 %rd382, %rd377, %rd379;
-  mov.u64 %rd383, %rd382;
-  bra poseidon2_add_rc_kernel_end_381;
-  poseidon2_add_rc_kernel_else_381:
-  mov.u64 %rd383, %rd377;
-  poseidon2_add_rc_kernel_end_381:
-  cvt.u32.u64 %r384, %rd383;
-  mov.u64 %rd385, 5;
-  add.u64 %rd386, %rd14, %rd385;
-  mov.u64 %rd387, 4;
-  mul.lo.u64 %rd388, %rd386, %rd387;
-  add.u64 %rd389, %rd0, %rd388;
-  st.global.u32 [%rd389], %r384;
-  mov.b32 %r390, %r78; // param: a
-  mov.b32 %r391, %r215; // param: b
-  cvt.u64.u32 %rd392, %r390;
-  cvt.u64.u32 %rd393, %r391;
-  add.u64 %rd394, %rd392, %rd393;
-  mov.u32 %r395, 2147483647;
-  cvt.u64.u32 %rd396, %r395;
-  setp.ge.u64 %p397, %rd394, %rd396;
-  @%p397 bra poseidon2_add_rc_kernel_then_398;
-  bra poseidon2_add_rc_kernel_else_398;
-  poseidon2_add_rc_kernel_then_398:
-  sub.u64 %rd399, %rd394, %rd396;
-  mov.u64 %rd400, %rd399;
-  bra poseidon2_add_rc_kernel_end_398;
-  poseidon2_add_rc_kernel_else_398:
-  mov.u64 %rd400, %rd394;
-  poseidon2_add_rc_kernel_end_398:
-  cvt.u32.u64 %r401, %rd400;
-  mov.u64 %rd402, 6;
-  add.u64 %rd403, %rd14, %rd402;
-  mov.u64 %rd404, 4;
-  mul.lo.u64 %rd405, %rd403, %rd404;
-  add.u64 %rd406, %rd0, %rd405;
-  st.global.u32 [%rd406], %r401;
-  mov.b32 %r407, %r87; // param: a
-  mov.b32 %r408, %r223; // param: b
-  cvt.u64.u32 %rd409, %r407;
-  cvt.u64.u32 %rd410, %r408;
-  add.u64 %rd411, %rd409, %rd410;
-  mov.u32 %r412, 2147483647;
-  cvt.u64.u32 %rd413, %r412;
-  setp.ge.u64 %p414, %rd411, %rd413;
-  @%p414 bra poseidon2_add_rc_kernel_then_415;
-  bra poseidon2_add_rc_kernel_else_415;
-  poseidon2_add_rc_kernel_then_415:
-  sub.u64 %rd416, %rd411, %rd413;
-  mov.u64 %rd417, %rd416;
-  bra poseidon2_add_rc_kernel_end_415;
-  poseidon2_add_rc_kernel_else_415:
-  mov.u64 %rd417, %rd411;
-  poseidon2_add_rc_kernel_end_415:
-  cvt.u32.u64 %r418, %rd417;
-  mov.u64 %rd419, 7;
-  add.u64 %rd420, %rd14, %rd419;
-  mov.u64 %rd421, 4;
-  mul.lo.u64 %rd422, %rd420, %rd421;
-  add.u64 %rd423, %rd0, %rd422;
-  st.global.u32 [%rd423], %r418;
-  mov.b32 %r424, %r96; // param: a
-  mov.b32 %r425, %r231; // param: b
-  cvt.u64.u32 %rd426, %r424;
-  cvt.u64.u32 %rd427, %r425;
-  add.u64 %rd428, %rd426, %rd427;
-  mov.u32 %r429, 2147483647;
-  cvt.u64.u32 %rd430, %r429;
-  setp.ge.u64 %p431, %rd428, %rd430;
-  @%p431 bra poseidon2_add_rc_kernel_then_432;
-  bra poseidon2_add_rc_kernel_else_432;
-  poseidon2_add_rc_kernel_then_432:
-  sub.u64 %rd433, %rd428, %rd430;
-  mov.u64 %rd434, %rd433;
-  bra poseidon2_add_rc_kernel_end_432;
-  poseidon2_add_rc_kernel_else_432:
-  mov.u64 %rd434, %rd428;
-  poseidon2_add_rc_kernel_end_432:
-  cvt.u32.u64 %r435, %rd434;
-  mov.u64 %rd436, 8;
-  add.u64 %rd437, %rd14, %rd436;
-  mov.u64 %rd438, 4;
-  mul.lo.u64 %rd439, %rd437, %rd438;
-  add.u64 %rd440, %rd0, %rd439;
-  st.global.u32 [%rd440], %r435;
-  mov.b32 %r441, %r105; // param: a
-  mov.b32 %r442, %r239; // param: b
-  cvt.u64.u32 %rd443, %r441;
-  cvt.u64.u32 %rd444, %r442;
-  add.u64 %rd445, %rd443, %rd444;
-  mov.u32 %r446, 2147483647;
-  cvt.u64.u32 %rd447, %r446;
-  setp.ge.u64 %p448, %rd445, %rd447;
-  @%p448 bra poseidon2_add_rc_kernel_then_449;
-  bra poseidon2_add_rc_kernel_else_449;
-  poseidon2_add_rc_kernel_then_449:
-  sub.u64 %rd450, %rd445, %rd447;
-  mov.u64 %rd451, %rd450;
-  bra poseidon2_add_rc_kernel_end_449;
-  poseidon2_add_rc_kernel_else_449:
-  mov.u64 %rd451, %rd445;
-  poseidon2_add_rc_kernel_end_449:
-  cvt.u32.u64 %r452, %rd451;
-  mov.u64 %rd453, 9;
-  add.u64 %rd454, %rd14, %rd453;
-  mov.u64 %rd455, 4;
-  mul.lo.u64 %rd456, %rd454, %rd455;
-  add.u64 %rd457, %rd0, %rd456;
-  st.global.u32 [%rd457], %r452;
-  mov.b32 %r458, %r114; // param: a
-  mov.b32 %r459, %r247; // param: b
-  cvt.u64.u32 %rd460, %r458;
-  cvt.u64.u32 %rd461, %r459;
-  add.u64 %rd462, %rd460, %rd461;
-  mov.u32 %r463, 2147483647;
-  cvt.u64.u32 %rd464, %r463;
-  setp.ge.u64 %p465, %rd462, %rd464;
-  @%p465 bra poseidon2_add_rc_kernel_then_466;
-  bra poseidon2_add_rc_kernel_else_466;
-  poseidon2_add_rc_kernel_then_466:
-  sub.u64 %rd467, %rd462, %rd464;
-  mov.u64 %rd468, %rd467;
-  bra poseidon2_add_rc_kernel_end_466;
-  poseidon2_add_rc_kernel_else_466:
-  mov.u64 %rd468, %rd462;
-  poseidon2_add_rc_kernel_end_466:
-  cvt.u32.u64 %r469, %rd468;
-  mov.u64 %rd470, 10;
-  add.u64 %rd471, %rd14, %rd470;
-  mov.u64 %rd472, 4;
-  mul.lo.u64 %rd473, %rd471, %rd472;
-  add.u64 %rd474, %rd0, %rd473;
-  st.global.u32 [%rd474], %r469;
-  mov.b32 %r475, %r123; // param: a
-  mov.b32 %r476, %r255; // param: b
-  cvt.u64.u32 %rd477, %r475;
-  cvt.u64.u32 %rd478, %r476;
-  add.u64 %rd479, %rd477, %rd478;
-  mov.u32 %r480, 2147483647;
-  cvt.u64.u32 %rd481, %r480;
-  setp.ge.u64 %p482, %rd479, %rd481;
-  @%p482 bra poseidon2_add_rc_kernel_then_483;
-  bra poseidon2_add_rc_kernel_else_483;
-  poseidon2_add_rc_kernel_then_483:
-  sub.u64 %rd484, %rd479, %rd481;
-  mov.u64 %rd485, %rd484;
-  bra poseidon2_add_rc_kernel_end_483;
-  poseidon2_add_rc_kernel_else_483:
-  mov.u64 %rd485, %rd479;
-  poseidon2_add_rc_kernel_end_483:
-  cvt.u32.u64 %r486, %rd485;
-  mov.u64 %rd487, 11;
-  add.u64 %rd488, %rd14, %rd487;
-  mov.u64 %rd489, 4;
-  mul.lo.u64 %rd490, %rd488, %rd489;
-  add.u64 %rd491, %rd0, %rd490;
-  st.global.u32 [%rd491], %r486;
-  mov.b32 %r492, %r132; // param: a
-  mov.b32 %r493, %r263; // param: b
-  cvt.u64.u32 %rd494, %r492;
-  cvt.u64.u32 %rd495, %r493;
-  add.u64 %rd496, %rd494, %rd495;
-  mov.u32 %r497, 2147483647;
-  cvt.u64.u32 %rd498, %r497;
-  setp.ge.u64 %p499, %rd496, %rd498;
-  @%p499 bra poseidon2_add_rc_kernel_then_500;
-  bra poseidon2_add_rc_kernel_else_500;
-  poseidon2_add_rc_kernel_then_500:
-  sub.u64 %rd501, %rd496, %rd498;
-  mov.u64 %rd502, %rd501;
-  bra poseidon2_add_rc_kernel_end_500;
-  poseidon2_add_rc_kernel_else_500:
-  mov.u64 %rd502, %rd496;
-  poseidon2_add_rc_kernel_end_500:
-  cvt.u32.u64 %r503, %rd502;
-  mov.u64 %rd504, 12;
-  add.u64 %rd505, %rd14, %rd504;
-  mov.u64 %rd506, 4;
-  mul.lo.u64 %rd507, %rd505, %rd506;
-  add.u64 %rd508, %rd0, %rd507;
-  st.global.u32 [%rd508], %r503;
-  mov.b32 %r509, %r141; // param: a
-  mov.b32 %r510, %r271; // param: b
-  cvt.u64.u32 %rd511, %r509;
-  cvt.u64.u32 %rd512, %r510;
-  add.u64 %rd513, %rd511, %rd512;
-  mov.u32 %r514, 2147483647;
-  cvt.u64.u32 %rd515, %r514;
-  setp.ge.u64 %p516, %rd513, %rd515;
-  @%p516 bra poseidon2_add_rc_kernel_then_517;
-  bra poseidon2_add_rc_kernel_else_517;
-  poseidon2_add_rc_kernel_then_517:
-  sub.u64 %rd518, %rd513, %rd515;
-  mov.u64 %rd519, %rd518;
-  bra poseidon2_add_rc_kernel_end_517;
-  poseidon2_add_rc_kernel_else_517:
-  mov.u64 %rd519, %rd513;
-  poseidon2_add_rc_kernel_end_517:
-  cvt.u32.u64 %r520, %rd519;
-  mov.u64 %rd521, 13;
-  add.u64 %rd522, %rd14, %rd521;
-  mov.u64 %rd523, 4;
-  mul.lo.u64 %rd524, %rd522, %rd523;
-  add.u64 %rd525, %rd0, %rd524;
-  st.global.u32 [%rd525], %r520;
-  mov.b32 %r526, %r150; // param: a
-  mov.b32 %r527, %r279; // param: b
-  cvt.u64.u32 %rd528, %r526;
-  cvt.u64.u32 %rd529, %r527;
-  add.u64 %rd530, %rd528, %rd529;
-  mov.u32 %r531, 2147483647;
-  cvt.u64.u32 %rd532, %r531;
-  setp.ge.u64 %p533, %rd530, %rd532;
-  @%p533 bra poseidon2_add_rc_kernel_then_534;
-  bra poseidon2_add_rc_kernel_else_534;
-  poseidon2_add_rc_kernel_then_534:
-  sub.u64 %rd535, %rd530, %rd532;
-  mov.u64 %rd536, %rd535;
-  bra poseidon2_add_rc_kernel_end_534;
-  poseidon2_add_rc_kernel_else_534:
-  mov.u64 %rd536, %rd530;
-  poseidon2_add_rc_kernel_end_534:
-  cvt.u32.u64 %r537, %rd536;
-  mov.u64 %rd538, 14;
-  add.u64 %rd539, %rd14, %rd538;
-  mov.u64 %rd540, 4;
-  mul.lo.u64 %rd541, %rd539, %rd540;
-  add.u64 %rd542, %rd0, %rd541;
-  st.global.u32 [%rd542], %r537;
-  mov.b32 %r543, %r159; // param: a
-  mov.b32 %r544, %r287; // param: b
-  cvt.u64.u32 %rd545, %r543;
-  cvt.u64.u32 %rd546, %r544;
-  add.u64 %rd547, %rd545, %rd546;
-  mov.u32 %r548, 2147483647;
-  cvt.u64.u32 %rd549, %r548;
-  setp.ge.u64 %p550, %rd547, %rd549;
-  @%p550 bra poseidon2_add_rc_kernel_then_551;
-  bra poseidon2_add_rc_kernel_else_551;
-  poseidon2_add_rc_kernel_then_551:
-  sub.u64 %rd552, %rd547, %rd549;
-  mov.u64 %rd553, %rd552;
-  bra poseidon2_add_rc_kernel_end_551;
-  poseidon2_add_rc_kernel_else_551:
-  mov.u64 %rd553, %rd547;
-  poseidon2_add_rc_kernel_end_551:
-  cvt.u32.u64 %r554, %rd553;
-  mov.u64 %rd555, 15;
-  add.u64 %rd556, %rd14, %rd555;
-  mov.u64 %rd557, 4;
-  mul.lo.u64 %rd558, %rd556, %rd557;
-  add.u64 %rd559, %rd0, %rd558;
-  st.global.u32 [%rd559], %r554;
-  mov.u32 %r560, 0; // unit
-  mov.u32 %r561, %r560;
+  mul.lo.u64 %rd237, %rd235, %rd236;
+  add.u64 %rd238, %rd0, %rd237;
+  st.global.u32 [%rd238], %r233;
+  cvt.u64.u32 %rd239, %r29;
+  cvt.u64.u32 %rd240, %r139;
+  add.u64 %rd241, %rd239, %rd240;
+  mov.u32 %r242, 2147483647;
+  cvt.u64.u32 %rd243, %r242;
+  setp.ge.u64 %p244, %rd241, %rd243;
+  @%p244 bra poseidon2_add_rc_kernel_then_245;
+  bra poseidon2_add_rc_kernel_else_245;
+  poseidon2_add_rc_kernel_then_245:
+  sub.u64 %rd246, %rd241, %rd243;
+  mov.u64 %rd247, %rd246;
+  bra poseidon2_add_rc_kernel_end_245;
+  poseidon2_add_rc_kernel_else_245:
+  mov.u64 %rd247, %rd241;
+  poseidon2_add_rc_kernel_end_245:
+  cvt.u32.u64 %r248, %rd247;
+  mov.u64 %rd249, 1;
+  add.u64 %rd250, %rd14, %rd249;
+  mov.u64 %rd251, 4;
+  mul.lo.u64 %rd252, %rd250, %rd251;
+  add.u64 %rd253, %rd0, %rd252;
+  st.global.u32 [%rd253], %r248;
+  cvt.u64.u32 %rd254, %r36;
+  cvt.u64.u32 %rd255, %r145;
+  add.u64 %rd256, %rd254, %rd255;
+  mov.u32 %r257, 2147483647;
+  cvt.u64.u32 %rd258, %r257;
+  setp.ge.u64 %p259, %rd256, %rd258;
+  @%p259 bra poseidon2_add_rc_kernel_then_260;
+  bra poseidon2_add_rc_kernel_else_260;
+  poseidon2_add_rc_kernel_then_260:
+  sub.u64 %rd261, %rd256, %rd258;
+  mov.u64 %rd262, %rd261;
+  bra poseidon2_add_rc_kernel_end_260;
+  poseidon2_add_rc_kernel_else_260:
+  mov.u64 %rd262, %rd256;
+  poseidon2_add_rc_kernel_end_260:
+  cvt.u32.u64 %r263, %rd262;
+  mov.u64 %rd264, 2;
+  add.u64 %rd265, %rd14, %rd264;
+  mov.u64 %rd266, 4;
+  mul.lo.u64 %rd267, %rd265, %rd266;
+  add.u64 %rd268, %rd0, %rd267;
+  st.global.u32 [%rd268], %r263;
+  cvt.u64.u32 %rd269, %r43;
+  cvt.u64.u32 %rd270, %r151;
+  add.u64 %rd271, %rd269, %rd270;
+  mov.u32 %r272, 2147483647;
+  cvt.u64.u32 %rd273, %r272;
+  setp.ge.u64 %p274, %rd271, %rd273;
+  @%p274 bra poseidon2_add_rc_kernel_then_275;
+  bra poseidon2_add_rc_kernel_else_275;
+  poseidon2_add_rc_kernel_then_275:
+  sub.u64 %rd276, %rd271, %rd273;
+  mov.u64 %rd277, %rd276;
+  bra poseidon2_add_rc_kernel_end_275;
+  poseidon2_add_rc_kernel_else_275:
+  mov.u64 %rd277, %rd271;
+  poseidon2_add_rc_kernel_end_275:
+  cvt.u32.u64 %r278, %rd277;
+  mov.u64 %rd279, 3;
+  add.u64 %rd280, %rd14, %rd279;
+  mov.u64 %rd281, 4;
+  mul.lo.u64 %rd282, %rd280, %rd281;
+  add.u64 %rd283, %rd0, %rd282;
+  st.global.u32 [%rd283], %r278;
+  cvt.u64.u32 %rd284, %r50;
+  cvt.u64.u32 %rd285, %r157;
+  add.u64 %rd286, %rd284, %rd285;
+  mov.u32 %r287, 2147483647;
+  cvt.u64.u32 %rd288, %r287;
+  setp.ge.u64 %p289, %rd286, %rd288;
+  @%p289 bra poseidon2_add_rc_kernel_then_290;
+  bra poseidon2_add_rc_kernel_else_290;
+  poseidon2_add_rc_kernel_then_290:
+  sub.u64 %rd291, %rd286, %rd288;
+  mov.u64 %rd292, %rd291;
+  bra poseidon2_add_rc_kernel_end_290;
+  poseidon2_add_rc_kernel_else_290:
+  mov.u64 %rd292, %rd286;
+  poseidon2_add_rc_kernel_end_290:
+  cvt.u32.u64 %r293, %rd292;
+  mov.u64 %rd294, 4;
+  add.u64 %rd295, %rd14, %rd294;
+  mov.u64 %rd296, 4;
+  mul.lo.u64 %rd297, %rd295, %rd296;
+  add.u64 %rd298, %rd0, %rd297;
+  st.global.u32 [%rd298], %r293;
+  cvt.u64.u32 %rd299, %r57;
+  cvt.u64.u32 %rd300, %r163;
+  add.u64 %rd301, %rd299, %rd300;
+  mov.u32 %r302, 2147483647;
+  cvt.u64.u32 %rd303, %r302;
+  setp.ge.u64 %p304, %rd301, %rd303;
+  @%p304 bra poseidon2_add_rc_kernel_then_305;
+  bra poseidon2_add_rc_kernel_else_305;
+  poseidon2_add_rc_kernel_then_305:
+  sub.u64 %rd306, %rd301, %rd303;
+  mov.u64 %rd307, %rd306;
+  bra poseidon2_add_rc_kernel_end_305;
+  poseidon2_add_rc_kernel_else_305:
+  mov.u64 %rd307, %rd301;
+  poseidon2_add_rc_kernel_end_305:
+  cvt.u32.u64 %r308, %rd307;
+  mov.u64 %rd309, 5;
+  add.u64 %rd310, %rd14, %rd309;
+  mov.u64 %rd311, 4;
+  mul.lo.u64 %rd312, %rd310, %rd311;
+  add.u64 %rd313, %rd0, %rd312;
+  st.global.u32 [%rd313], %r308;
+  cvt.u64.u32 %rd314, %r64;
+  cvt.u64.u32 %rd315, %r169;
+  add.u64 %rd316, %rd314, %rd315;
+  mov.u32 %r317, 2147483647;
+  cvt.u64.u32 %rd318, %r317;
+  setp.ge.u64 %p319, %rd316, %rd318;
+  @%p319 bra poseidon2_add_rc_kernel_then_320;
+  bra poseidon2_add_rc_kernel_else_320;
+  poseidon2_add_rc_kernel_then_320:
+  sub.u64 %rd321, %rd316, %rd318;
+  mov.u64 %rd322, %rd321;
+  bra poseidon2_add_rc_kernel_end_320;
+  poseidon2_add_rc_kernel_else_320:
+  mov.u64 %rd322, %rd316;
+  poseidon2_add_rc_kernel_end_320:
+  cvt.u32.u64 %r323, %rd322;
+  mov.u64 %rd324, 6;
+  add.u64 %rd325, %rd14, %rd324;
+  mov.u64 %rd326, 4;
+  mul.lo.u64 %rd327, %rd325, %rd326;
+  add.u64 %rd328, %rd0, %rd327;
+  st.global.u32 [%rd328], %r323;
+  cvt.u64.u32 %rd329, %r71;
+  cvt.u64.u32 %rd330, %r175;
+  add.u64 %rd331, %rd329, %rd330;
+  mov.u32 %r332, 2147483647;
+  cvt.u64.u32 %rd333, %r332;
+  setp.ge.u64 %p334, %rd331, %rd333;
+  @%p334 bra poseidon2_add_rc_kernel_then_335;
+  bra poseidon2_add_rc_kernel_else_335;
+  poseidon2_add_rc_kernel_then_335:
+  sub.u64 %rd336, %rd331, %rd333;
+  mov.u64 %rd337, %rd336;
+  bra poseidon2_add_rc_kernel_end_335;
+  poseidon2_add_rc_kernel_else_335:
+  mov.u64 %rd337, %rd331;
+  poseidon2_add_rc_kernel_end_335:
+  cvt.u32.u64 %r338, %rd337;
+  mov.u64 %rd339, 7;
+  add.u64 %rd340, %rd14, %rd339;
+  mov.u64 %rd341, 4;
+  mul.lo.u64 %rd342, %rd340, %rd341;
+  add.u64 %rd343, %rd0, %rd342;
+  st.global.u32 [%rd343], %r338;
+  cvt.u64.u32 %rd344, %r78;
+  cvt.u64.u32 %rd345, %r181;
+  add.u64 %rd346, %rd344, %rd345;
+  mov.u32 %r347, 2147483647;
+  cvt.u64.u32 %rd348, %r347;
+  setp.ge.u64 %p349, %rd346, %rd348;
+  @%p349 bra poseidon2_add_rc_kernel_then_350;
+  bra poseidon2_add_rc_kernel_else_350;
+  poseidon2_add_rc_kernel_then_350:
+  sub.u64 %rd351, %rd346, %rd348;
+  mov.u64 %rd352, %rd351;
+  bra poseidon2_add_rc_kernel_end_350;
+  poseidon2_add_rc_kernel_else_350:
+  mov.u64 %rd352, %rd346;
+  poseidon2_add_rc_kernel_end_350:
+  cvt.u32.u64 %r353, %rd352;
+  mov.u64 %rd354, 8;
+  add.u64 %rd355, %rd14, %rd354;
+  mov.u64 %rd356, 4;
+  mul.lo.u64 %rd357, %rd355, %rd356;
+  add.u64 %rd358, %rd0, %rd357;
+  st.global.u32 [%rd358], %r353;
+  cvt.u64.u32 %rd359, %r85;
+  cvt.u64.u32 %rd360, %r187;
+  add.u64 %rd361, %rd359, %rd360;
+  mov.u32 %r362, 2147483647;
+  cvt.u64.u32 %rd363, %r362;
+  setp.ge.u64 %p364, %rd361, %rd363;
+  @%p364 bra poseidon2_add_rc_kernel_then_365;
+  bra poseidon2_add_rc_kernel_else_365;
+  poseidon2_add_rc_kernel_then_365:
+  sub.u64 %rd366, %rd361, %rd363;
+  mov.u64 %rd367, %rd366;
+  bra poseidon2_add_rc_kernel_end_365;
+  poseidon2_add_rc_kernel_else_365:
+  mov.u64 %rd367, %rd361;
+  poseidon2_add_rc_kernel_end_365:
+  cvt.u32.u64 %r368, %rd367;
+  mov.u64 %rd369, 9;
+  add.u64 %rd370, %rd14, %rd369;
+  mov.u64 %rd371, 4;
+  mul.lo.u64 %rd372, %rd370, %rd371;
+  add.u64 %rd373, %rd0, %rd372;
+  st.global.u32 [%rd373], %r368;
+  cvt.u64.u32 %rd374, %r92;
+  cvt.u64.u32 %rd375, %r193;
+  add.u64 %rd376, %rd374, %rd375;
+  mov.u32 %r377, 2147483647;
+  cvt.u64.u32 %rd378, %r377;
+  setp.ge.u64 %p379, %rd376, %rd378;
+  @%p379 bra poseidon2_add_rc_kernel_then_380;
+  bra poseidon2_add_rc_kernel_else_380;
+  poseidon2_add_rc_kernel_then_380:
+  sub.u64 %rd381, %rd376, %rd378;
+  mov.u64 %rd382, %rd381;
+  bra poseidon2_add_rc_kernel_end_380;
+  poseidon2_add_rc_kernel_else_380:
+  mov.u64 %rd382, %rd376;
+  poseidon2_add_rc_kernel_end_380:
+  cvt.u32.u64 %r383, %rd382;
+  mov.u64 %rd384, 10;
+  add.u64 %rd385, %rd14, %rd384;
+  mov.u64 %rd386, 4;
+  mul.lo.u64 %rd387, %rd385, %rd386;
+  add.u64 %rd388, %rd0, %rd387;
+  st.global.u32 [%rd388], %r383;
+  cvt.u64.u32 %rd389, %r99;
+  cvt.u64.u32 %rd390, %r199;
+  add.u64 %rd391, %rd389, %rd390;
+  mov.u32 %r392, 2147483647;
+  cvt.u64.u32 %rd393, %r392;
+  setp.ge.u64 %p394, %rd391, %rd393;
+  @%p394 bra poseidon2_add_rc_kernel_then_395;
+  bra poseidon2_add_rc_kernel_else_395;
+  poseidon2_add_rc_kernel_then_395:
+  sub.u64 %rd396, %rd391, %rd393;
+  mov.u64 %rd397, %rd396;
+  bra poseidon2_add_rc_kernel_end_395;
+  poseidon2_add_rc_kernel_else_395:
+  mov.u64 %rd397, %rd391;
+  poseidon2_add_rc_kernel_end_395:
+  cvt.u32.u64 %r398, %rd397;
+  mov.u64 %rd399, 11;
+  add.u64 %rd400, %rd14, %rd399;
+  mov.u64 %rd401, 4;
+  mul.lo.u64 %rd402, %rd400, %rd401;
+  add.u64 %rd403, %rd0, %rd402;
+  st.global.u32 [%rd403], %r398;
+  cvt.u64.u32 %rd404, %r106;
+  cvt.u64.u32 %rd405, %r205;
+  add.u64 %rd406, %rd404, %rd405;
+  mov.u32 %r407, 2147483647;
+  cvt.u64.u32 %rd408, %r407;
+  setp.ge.u64 %p409, %rd406, %rd408;
+  @%p409 bra poseidon2_add_rc_kernel_then_410;
+  bra poseidon2_add_rc_kernel_else_410;
+  poseidon2_add_rc_kernel_then_410:
+  sub.u64 %rd411, %rd406, %rd408;
+  mov.u64 %rd412, %rd411;
+  bra poseidon2_add_rc_kernel_end_410;
+  poseidon2_add_rc_kernel_else_410:
+  mov.u64 %rd412, %rd406;
+  poseidon2_add_rc_kernel_end_410:
+  cvt.u32.u64 %r413, %rd412;
+  mov.u64 %rd414, 12;
+  add.u64 %rd415, %rd14, %rd414;
+  mov.u64 %rd416, 4;
+  mul.lo.u64 %rd417, %rd415, %rd416;
+  add.u64 %rd418, %rd0, %rd417;
+  st.global.u32 [%rd418], %r413;
+  cvt.u64.u32 %rd419, %r113;
+  cvt.u64.u32 %rd420, %r211;
+  add.u64 %rd421, %rd419, %rd420;
+  mov.u32 %r422, 2147483647;
+  cvt.u64.u32 %rd423, %r422;
+  setp.ge.u64 %p424, %rd421, %rd423;
+  @%p424 bra poseidon2_add_rc_kernel_then_425;
+  bra poseidon2_add_rc_kernel_else_425;
+  poseidon2_add_rc_kernel_then_425:
+  sub.u64 %rd426, %rd421, %rd423;
+  mov.u64 %rd427, %rd426;
+  bra poseidon2_add_rc_kernel_end_425;
+  poseidon2_add_rc_kernel_else_425:
+  mov.u64 %rd427, %rd421;
+  poseidon2_add_rc_kernel_end_425:
+  cvt.u32.u64 %r428, %rd427;
+  mov.u64 %rd429, 13;
+  add.u64 %rd430, %rd14, %rd429;
+  mov.u64 %rd431, 4;
+  mul.lo.u64 %rd432, %rd430, %rd431;
+  add.u64 %rd433, %rd0, %rd432;
+  st.global.u32 [%rd433], %r428;
+  cvt.u64.u32 %rd434, %r120;
+  cvt.u64.u32 %rd435, %r217;
+  add.u64 %rd436, %rd434, %rd435;
+  mov.u32 %r437, 2147483647;
+  cvt.u64.u32 %rd438, %r437;
+  setp.ge.u64 %p439, %rd436, %rd438;
+  @%p439 bra poseidon2_add_rc_kernel_then_440;
+  bra poseidon2_add_rc_kernel_else_440;
+  poseidon2_add_rc_kernel_then_440:
+  sub.u64 %rd441, %rd436, %rd438;
+  mov.u64 %rd442, %rd441;
+  bra poseidon2_add_rc_kernel_end_440;
+  poseidon2_add_rc_kernel_else_440:
+  mov.u64 %rd442, %rd436;
+  poseidon2_add_rc_kernel_end_440:
+  cvt.u32.u64 %r443, %rd442;
+  mov.u64 %rd444, 14;
+  add.u64 %rd445, %rd14, %rd444;
+  mov.u64 %rd446, 4;
+  mul.lo.u64 %rd447, %rd445, %rd446;
+  add.u64 %rd448, %rd0, %rd447;
+  st.global.u32 [%rd448], %r443;
+  cvt.u64.u32 %rd449, %r127;
+  cvt.u64.u32 %rd450, %r223;
+  add.u64 %rd451, %rd449, %rd450;
+  mov.u32 %r452, 2147483647;
+  cvt.u64.u32 %rd453, %r452;
+  setp.ge.u64 %p454, %rd451, %rd453;
+  @%p454 bra poseidon2_add_rc_kernel_then_455;
+  bra poseidon2_add_rc_kernel_else_455;
+  poseidon2_add_rc_kernel_then_455:
+  sub.u64 %rd456, %rd451, %rd453;
+  mov.u64 %rd457, %rd456;
+  bra poseidon2_add_rc_kernel_end_455;
+  poseidon2_add_rc_kernel_else_455:
+  mov.u64 %rd457, %rd451;
+  poseidon2_add_rc_kernel_end_455:
+  cvt.u32.u64 %r458, %rd457;
+  mov.u64 %rd459, 15;
+  add.u64 %rd460, %rd14, %rd459;
+  mov.u64 %rd461, 4;
+  mul.lo.u64 %rd462, %rd460, %rd461;
+  add.u64 %rd463, %rd0, %rd462;
+  st.global.u32 [%rd463], %r458;
+  mov.u32 %r464, 0; // unit
+  mov.u32 %r465, %r464;
   bra poseidon2_add_rc_kernel_end_12;
   poseidon2_add_rc_kernel_else_12:
-  mov.u32 %r561, 0; // no else branch
+  mov.u32 %r465, 0; // no else branch
   poseidon2_add_rc_kernel_end_12:
-  mov.u32 %r562, 0; // unit
+  mov.u32 %r466, 0; // unit
   ret;
 }
 
@@ -1434,8 +1194,8 @@
 )
 {
     .reg .pred %p9;
-    .reg .u32 %r20, %r21, %r22, %r23, %r27, %r3, %r30, %r31, %r32, %r36, %r39, %r4, %r40, %r41, %r45, %r48, %r5, %r52, %r53, %r54, %r6, %r7;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd24, %rd25, %rd26, %rd28, %rd29, %rd33, %rd34, %rd35, %rd37, %rd38, %rd42, %rd43, %rd44, %rd46, %rd47, %rd49, %rd50, %rd51, %rd8;
+    .reg .u32 %r18, %r22, %r25, %r29, %r3, %r32, %r36, %r39, %r4, %r43, %r44, %r45, %r5, %r6, %r7;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd14, %rd15, %rd16, %rd17, %rd19, %rd2, %rd20, %rd21, %rd23, %rd24, %rd26, %rd27, %rd28, %rd30, %rd31, %rd33, %rd34, %rd35, %rd37, %rd38, %rd40, %rd41, %rd42, %rd8;
 
   ld.param.u64 %rd0, [poseidon2_partial_sbox_kernel_param_state_data];
   ld.param.u64 %rd1, [poseidon2_partial_sbox_kernel_param_state_len];
@@ -1454,52 +1214,43 @@
   mov.u64 %rd11, 16;
   mul.lo.u64 %rd12, %rd8, %rd11;
   mov.u64 %rd13, 0; // unhandled expr
-  mov.b64 %rd14, %rd0; // param: arr
-  mov.b64 %rd15, %rd12; // param: idx
-  mov.u64 %rd16, 0; // unhandled expr
-  mov.u64 %rd17, 4;
-  mul.lo.u64 %rd18, %rd15, %rd17;
-  add.u64 %rd19, %rd14, %rd18;
-  ld.global.u32 %r20, [%rd19];
-  mov.b32 %r21, %r20; // param: x
-  mov.b32 %r22, %r21; // param: a
-  mov.b32 %r23, %r21; // param: b
-  cvt.u64.u32 %rd24, %r22;
-  cvt.u64.u32 %rd25, %r23;
-  mul.lo.u64 %rd26, %rd24, %rd25;
-  mov.u32 %r27, 2147483647;
-  cvt.u64.u32 %rd28, %r27;
-  rem.u64 %rd29, %rd26, %rd28;
-  cvt.u32.u64 %r30, %rd29;
-  mov.b32 %r31, %r30; // param: a
-  mov.b32 %r32, %r30; // param: b
-  cvt.u64.u32 %rd33, %r31;
-  cvt.u64.u32 %rd34, %r32;
+  mov.u64 %rd14, 0; // unhandled expr
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd12, %rd15;
+  add.u64 %rd17, %rd0, %rd16;
+  ld.global.u32 %r18, [%rd17];
+  cvt.u64.u32 %rd19, %r18;
+  cvt.u64.u32 %rd20, %r18;
+  mul.lo.u64 %rd21, %rd19, %rd20;
+  mov.u32 %r22, 2147483647;
+  cvt.u64.u32 %rd23, %r22;
+  rem.u64 %rd24, %rd21, %rd23;
+  cvt.u32.u64 %r25, %rd24;
+  cvt.u64.u32 %rd26, %r25;
+  cvt.u64.u32 %rd27, %r25;
+  mul.lo.u64 %rd28, %rd26, %rd27;
+  mov.u32 %r29, 2147483647;
+  cvt.u64.u32 %rd30, %r29;
+  rem.u64 %rd31, %rd28, %rd30;
+  cvt.u32.u64 %r32, %rd31;
+  cvt.u64.u32 %rd33, %r32;
+  cvt.u64.u32 %rd34, %r18;
   mul.lo.u64 %rd35, %rd33, %rd34;
   mov.u32 %r36, 2147483647;
   cvt.u64.u32 %rd37, %r36;
   rem.u64 %rd38, %rd35, %rd37;
   cvt.u32.u64 %r39, %rd38;
-  mov.b32 %r40, %r39; // param: a
-  mov.b32 %r41, %r21; // param: b
-  cvt.u64.u32 %rd42, %r40;
-  cvt.u64.u32 %rd43, %r41;
-  mul.lo.u64 %rd44, %rd42, %rd43;
-  mov.u32 %r45, 2147483647;
-  cvt.u64.u32 %rd46, %r45;
-  rem.u64 %rd47, %rd44, %rd46;
-  cvt.u32.u64 %r48, %rd47;
-  mov.u64 %rd49, 4;
-  mul.lo.u64 %rd50, %rd12, %rd49;
-  add.u64 %rd51, %rd0, %rd50;
-  st.global.u32 [%rd51], %r48;
-  mov.u32 %r52, 0; // unit
-  mov.u32 %r53, %r52;
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd12, %rd40;
+  add.u64 %rd42, %rd0, %rd41;
+  st.global.u32 [%rd42], %r39;
+  mov.u32 %r43, 0; // unit
+  mov.u32 %r44, %r43;
   bra poseidon2_partial_sbox_kernel_end_10;
   poseidon2_partial_sbox_kernel_else_10:
-  mov.u32 %r53, 0; // no else branch
+  mov.u32 %r44, 0; // no else branch
   poseidon2_partial_sbox_kernel_end_10:
-  mov.u32 %r54, 0; // unit
+  mov.u32 %r45, 0; // unit
   ret;
 }
 

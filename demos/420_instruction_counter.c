@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct InstrCounter InstrCounter;
+
 typedef struct InstrCounter {
   uint64_t loads;
   uint64_t stores;

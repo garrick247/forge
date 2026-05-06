@@ -16,8 +16,8 @@
 )
 {
     .reg .pred %p13;
-    .reg .u32 %r10, %r11, %r24, %r31, %r32, %r33, %r37, %r40, %r44, %r45, %r46, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd34, %rd35, %rd36, %rd38, %rd39, %rd4, %rd41, %rd42, %rd43, %rd5, %rd6;
+    .reg .u32 %r10, %r11, %r22, %r27, %r31, %r34, %r38, %r39, %r40, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd23, %rd24, %rd25, %rd26, %rd28, %rd29, %rd3, %rd30, %rd32, %rd33, %rd35, %rd36, %rd37, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [quotient_by_inv_vanishing_kernel_param_quot_data];
   ld.param.u64 %rd1, [quotient_by_inv_vanishing_kernel_param_quot_len];
@@ -40,40 +40,34 @@
   mov.u64 %rd15, 0; // unhandled expr
   mov.u64 %rd16, 0; // unhandled expr
   mov.u64 %rd17, 0; // unhandled expr
-  mov.b64 %rd18, %rd2; // param: arr
-  mov.b64 %rd19, %rd12; // param: idx
-  mov.u64 %rd20, 0; // unhandled expr
-  mov.u64 %rd21, 4;
-  mul.lo.u64 %rd22, %rd19, %rd21;
-  add.u64 %rd23, %rd18, %rd22;
-  ld.global.u32 %r24, [%rd23];
-  mov.b64 %rd25, %rd4; // param: arr
-  mov.b64 %rd26, %rd12; // param: idx
-  mov.u64 %rd27, 0; // unhandled expr
-  mov.u64 %rd28, 4;
-  mul.lo.u64 %rd29, %rd26, %rd28;
-  add.u64 %rd30, %rd25, %rd29;
-  ld.global.u32 %r31, [%rd30];
-  mov.b32 %r32, %r24; // param: a
-  mov.b32 %r33, %r31; // param: b
-  cvt.u64.u32 %rd34, %r32;
-  cvt.u64.u32 %rd35, %r33;
-  mul.lo.u64 %rd36, %rd34, %rd35;
-  mov.u32 %r37, 2147483647;
-  cvt.u64.u32 %rd38, %r37;
-  rem.u64 %rd39, %rd36, %rd38;
-  cvt.u32.u64 %r40, %rd39;
-  mov.u64 %rd41, 4;
-  mul.lo.u64 %rd42, %rd12, %rd41;
-  add.u64 %rd43, %rd0, %rd42;
-  st.global.u32 [%rd43], %r40;
-  mov.u32 %r44, 0; // unit
-  mov.u32 %r45, %r44;
+  mov.u64 %rd18, 0; // unhandled expr
+  mov.u64 %rd19, 4;
+  mul.lo.u64 %rd20, %rd12, %rd19;
+  add.u64 %rd21, %rd2, %rd20;
+  ld.global.u32 %r22, [%rd21];
+  mov.u64 %rd23, 0; // unhandled expr
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd12, %rd24;
+  add.u64 %rd26, %rd4, %rd25;
+  ld.global.u32 %r27, [%rd26];
+  cvt.u64.u32 %rd28, %r22;
+  cvt.u64.u32 %rd29, %r27;
+  mul.lo.u64 %rd30, %rd28, %rd29;
+  mov.u32 %r31, 2147483647;
+  cvt.u64.u32 %rd32, %r31;
+  rem.u64 %rd33, %rd30, %rd32;
+  cvt.u32.u64 %r34, %rd33;
+  mov.u64 %rd35, 4;
+  mul.lo.u64 %rd36, %rd12, %rd35;
+  add.u64 %rd37, %rd0, %rd36;
+  st.global.u32 [%rd37], %r34;
+  mov.u32 %r38, 0; // unit
+  mov.u32 %r39, %r38;
   bra quotient_by_inv_vanishing_kernel_end_14;
   quotient_by_inv_vanishing_kernel_else_14:
-  mov.u32 %r45, 0; // no else branch
+  mov.u32 %r39, 0; // no else branch
   quotient_by_inv_vanishing_kernel_end_14:
-  mov.u32 %r46, 0; // unit
+  mov.u32 %r40, 0; // unit
   ret;
 }
 
@@ -88,9 +82,9 @@
     .param .u64 boundary_quotient_kernel_param_n
 )
 {
-    .reg .pred %p14, %p39;
-    .reg .u32 %r10, %r11, %r12, %r25, %r32, %r33, %r34, %r37, %r45, %r46, %r47, %r51, %r54, %r58, %r59, %r6, %r60, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd13, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd35, %rd36, %rd38, %rd4, %rd41, %rd42, %rd43, %rd44, %rd48, %rd49, %rd5, %rd50, %rd52, %rd53, %rd55, %rd56, %rd57, %rd7;
+    .reg .pred %p14, %p33;
+    .reg .u32 %r10, %r11, %r12, %r23, %r28, %r31, %r39, %r43, %r46, %r50, %r51, %r52, %r6, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd13, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd27, %rd29, %rd3, %rd30, %rd32, %rd35, %rd36, %rd37, %rd38, %rd4, %rd40, %rd41, %rd42, %rd44, %rd45, %rd47, %rd48, %rd49, %rd5, %rd7;
 
   ld.param.u64 %rd0, [boundary_quotient_kernel_param_bquot_data];
   ld.param.u64 %rd1, [boundary_quotient_kernel_param_bquot_len];
@@ -114,59 +108,51 @@
   mov.u64 %rd16, 0; // unhandled expr
   mov.u64 %rd17, 0; // unhandled expr
   mov.u64 %rd18, 0; // unhandled expr
-  mov.b64 %rd19, %rd2; // param: arr
-  mov.b64 %rd20, %rd13; // param: idx
-  mov.u64 %rd21, 0; // unhandled expr
-  mov.u64 %rd22, 4;
-  mul.lo.u64 %rd23, %rd20, %rd22;
-  add.u64 %rd24, %rd19, %rd23;
-  ld.global.u32 %r25, [%rd24];
-  mov.b64 %rd26, %rd4; // param: arr
-  mov.b64 %rd27, %rd13; // param: idx
-  mov.u64 %rd28, 0; // unhandled expr
-  mov.u64 %rd29, 4;
-  mul.lo.u64 %rd30, %rd27, %rd29;
-  add.u64 %rd31, %rd26, %rd30;
-  ld.global.u32 %r32, [%rd31];
-  mov.b32 %r33, %r25; // param: a
-  mov.b32 %r34, %r6; // param: b
-  cvt.u64.u32 %rd35, %r33;
-  cvt.u64.u32 %rd36, %r34;
-  mov.u32 %r37, 2147483647;
-  cvt.u64.u32 %rd38, %r37;
-  setp.ge.u64 %p39, %rd35, %rd36;
-  @%p39 bra boundary_quotient_kernel_then_40;
-  bra boundary_quotient_kernel_else_40;
-  boundary_quotient_kernel_then_40:
-  sub.u64 %rd41, %rd35, %rd36;
-  mov.u64 %rd42, %rd41;
-  bra boundary_quotient_kernel_end_40;
-  boundary_quotient_kernel_else_40:
-  add.u64 %rd43, %rd35, %rd38;
-  sub.u64 %rd44, %rd43, %rd36;
-  mov.u64 %rd42, %rd44;
-  boundary_quotient_kernel_end_40:
-  cvt.u32.u64 %r45, %rd42;
-  mov.b32 %r46, %r45; // param: a
-  mov.b32 %r47, %r32; // param: b
-  cvt.u64.u32 %rd48, %r46;
-  cvt.u64.u32 %rd49, %r47;
-  mul.lo.u64 %rd50, %rd48, %rd49;
-  mov.u32 %r51, 2147483647;
-  cvt.u64.u32 %rd52, %r51;
-  rem.u64 %rd53, %rd50, %rd52;
-  cvt.u32.u64 %r54, %rd53;
-  mov.u64 %rd55, 4;
-  mul.lo.u64 %rd56, %rd13, %rd55;
-  add.u64 %rd57, %rd0, %rd56;
-  st.global.u32 [%rd57], %r54;
-  mov.u32 %r58, 0; // unit
-  mov.u32 %r59, %r58;
+  mov.u64 %rd19, 0; // unhandled expr
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd13, %rd20;
+  add.u64 %rd22, %rd2, %rd21;
+  ld.global.u32 %r23, [%rd22];
+  mov.u64 %rd24, 0; // unhandled expr
+  mov.u64 %rd25, 4;
+  mul.lo.u64 %rd26, %rd13, %rd25;
+  add.u64 %rd27, %rd4, %rd26;
+  ld.global.u32 %r28, [%rd27];
+  cvt.u64.u32 %rd29, %r23;
+  cvt.u64.u32 %rd30, %r6;
+  mov.u32 %r31, 2147483647;
+  cvt.u64.u32 %rd32, %r31;
+  setp.ge.u64 %p33, %rd29, %rd30;
+  @%p33 bra boundary_quotient_kernel_then_34;
+  bra boundary_quotient_kernel_else_34;
+  boundary_quotient_kernel_then_34:
+  sub.u64 %rd35, %rd29, %rd30;
+  mov.u64 %rd36, %rd35;
+  bra boundary_quotient_kernel_end_34;
+  boundary_quotient_kernel_else_34:
+  add.u64 %rd37, %rd29, %rd32;
+  sub.u64 %rd38, %rd37, %rd30;
+  mov.u64 %rd36, %rd38;
+  boundary_quotient_kernel_end_34:
+  cvt.u32.u64 %r39, %rd36;
+  cvt.u64.u32 %rd40, %r39;
+  cvt.u64.u32 %rd41, %r28;
+  mul.lo.u64 %rd42, %rd40, %rd41;
+  mov.u32 %r43, 2147483647;
+  cvt.u64.u32 %rd44, %r43;
+  rem.u64 %rd45, %rd42, %rd44;
+  cvt.u32.u64 %r46, %rd45;
+  mov.u64 %rd47, 4;
+  mul.lo.u64 %rd48, %rd13, %rd47;
+  add.u64 %rd49, %rd0, %rd48;
+  st.global.u32 [%rd49], %r46;
+  mov.u32 %r50, 0; // unit
+  mov.u32 %r51, %r50;
   bra boundary_quotient_kernel_end_15;
   boundary_quotient_kernel_else_15:
-  mov.u32 %r59, 0; // no else branch
+  mov.u32 %r51, 0; // no else branch
   boundary_quotient_kernel_end_15:
-  mov.u32 %r60, 0; // unit
+  mov.u32 %r52, 0; // unit
   ret;
 }
 
@@ -182,9 +168,9 @@
     .param .u64 combine_quotients_kernel_param_n
 )
 {
-    .reg .pred %p15, %p59;
-    .reg .u32 %r10, %r11, %r12, %r13, %r26, %r33, %r34, %r35, %r39, %r42, %r43, %r44, %r48, %r51, %r52, %r53, %r57, %r6, %r63, %r67, %r68, %r69, %r7, %r9;
-    .reg .u64 %rd0, %rd1, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd25, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd36, %rd37, %rd38, %rd4, %rd40, %rd41, %rd45, %rd46, %rd47, %rd49, %rd5, %rd50, %rd54, %rd55, %rd56, %rd58, %rd61, %rd62, %rd64, %rd65, %rd66, %rd8;
+    .reg .pred %p15, %p49;
+    .reg .u32 %r10, %r11, %r12, %r13, %r24, %r29, %r33, %r36, %r40, %r43, %r47, %r53, %r57, %r58, %r59, %r6, %r7, %r9;
+    .reg .u64 %rd0, %rd1, %rd14, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd28, %rd3, %rd30, %rd31, %rd32, %rd34, %rd35, %rd37, %rd38, %rd39, %rd4, %rd41, %rd42, %rd44, %rd45, %rd46, %rd48, %rd5, %rd51, %rd52, %rd54, %rd55, %rd56, %rd8;
 
   ld.param.u64 %rd0, [combine_quotients_kernel_param_combined_data];
   ld.param.u64 %rd1, [combine_quotients_kernel_param_combined_len];
@@ -209,67 +195,57 @@
   mov.u64 %rd17, 0; // unhandled expr
   mov.u64 %rd18, 0; // unhandled expr
   mov.u64 %rd19, 0; // unhandled expr
-  mov.b64 %rd20, %rd2; // param: arr
-  mov.b64 %rd21, %rd14; // param: idx
-  mov.u64 %rd22, 0; // unhandled expr
-  mov.u64 %rd23, 4;
-  mul.lo.u64 %rd24, %rd21, %rd23;
-  add.u64 %rd25, %rd20, %rd24;
-  ld.global.u32 %r26, [%rd25];
-  mov.b64 %rd27, %rd4; // param: arr
-  mov.b64 %rd28, %rd14; // param: idx
-  mov.u64 %rd29, 0; // unhandled expr
-  mov.u64 %rd30, 4;
-  mul.lo.u64 %rd31, %rd28, %rd30;
-  add.u64 %rd32, %rd27, %rd31;
-  ld.global.u32 %r33, [%rd32];
-  mov.b32 %r34, %r6; // param: a
-  mov.b32 %r35, %r26; // param: b
-  cvt.u64.u32 %rd36, %r34;
-  cvt.u64.u32 %rd37, %r35;
-  mul.lo.u64 %rd38, %rd36, %rd37;
-  mov.u32 %r39, 2147483647;
-  cvt.u64.u32 %rd40, %r39;
-  rem.u64 %rd41, %rd38, %rd40;
-  cvt.u32.u64 %r42, %rd41;
-  mov.b32 %r43, %r7; // param: a
-  mov.b32 %r44, %r33; // param: b
+  mov.u64 %rd20, 0; // unhandled expr
+  mov.u64 %rd21, 4;
+  mul.lo.u64 %rd22, %rd14, %rd21;
+  add.u64 %rd23, %rd2, %rd22;
+  ld.global.u32 %r24, [%rd23];
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 4;
+  mul.lo.u64 %rd27, %rd14, %rd26;
+  add.u64 %rd28, %rd4, %rd27;
+  ld.global.u32 %r29, [%rd28];
+  cvt.u64.u32 %rd30, %r6;
+  cvt.u64.u32 %rd31, %r24;
+  mul.lo.u64 %rd32, %rd30, %rd31;
+  mov.u32 %r33, 2147483647;
+  cvt.u64.u32 %rd34, %r33;
+  rem.u64 %rd35, %rd32, %rd34;
+  cvt.u32.u64 %r36, %rd35;
+  cvt.u64.u32 %rd37, %r7;
+  cvt.u64.u32 %rd38, %r29;
+  mul.lo.u64 %rd39, %rd37, %rd38;
+  mov.u32 %r40, 2147483647;
+  cvt.u64.u32 %rd41, %r40;
+  rem.u64 %rd42, %rd39, %rd41;
+  cvt.u32.u64 %r43, %rd42;
+  cvt.u64.u32 %rd44, %r36;
   cvt.u64.u32 %rd45, %r43;
-  cvt.u64.u32 %rd46, %r44;
-  mul.lo.u64 %rd47, %rd45, %rd46;
-  mov.u32 %r48, 2147483647;
-  cvt.u64.u32 %rd49, %r48;
-  rem.u64 %rd50, %rd47, %rd49;
-  cvt.u32.u64 %r51, %rd50;
-  mov.b32 %r52, %r42; // param: a
-  mov.b32 %r53, %r51; // param: b
-  cvt.u64.u32 %rd54, %r52;
-  cvt.u64.u32 %rd55, %r53;
-  add.u64 %rd56, %rd54, %rd55;
-  mov.u32 %r57, 2147483647;
-  cvt.u64.u32 %rd58, %r57;
-  setp.ge.u64 %p59, %rd56, %rd58;
-  @%p59 bra combine_quotients_kernel_then_60;
-  bra combine_quotients_kernel_else_60;
-  combine_quotients_kernel_then_60:
-  sub.u64 %rd61, %rd56, %rd58;
-  mov.u64 %rd62, %rd61;
-  bra combine_quotients_kernel_end_60;
-  combine_quotients_kernel_else_60:
-  mov.u64 %rd62, %rd56;
-  combine_quotients_kernel_end_60:
-  cvt.u32.u64 %r63, %rd62;
-  mov.u64 %rd64, 4;
-  mul.lo.u64 %rd65, %rd14, %rd64;
-  add.u64 %rd66, %rd0, %rd65;
-  st.global.u32 [%rd66], %r63;
-  mov.u32 %r67, 0; // unit
-  mov.u32 %r68, %r67;
+  add.u64 %rd46, %rd44, %rd45;
+  mov.u32 %r47, 2147483647;
+  cvt.u64.u32 %rd48, %r47;
+  setp.ge.u64 %p49, %rd46, %rd48;
+  @%p49 bra combine_quotients_kernel_then_50;
+  bra combine_quotients_kernel_else_50;
+  combine_quotients_kernel_then_50:
+  sub.u64 %rd51, %rd46, %rd48;
+  mov.u64 %rd52, %rd51;
+  bra combine_quotients_kernel_end_50;
+  combine_quotients_kernel_else_50:
+  mov.u64 %rd52, %rd46;
+  combine_quotients_kernel_end_50:
+  cvt.u32.u64 %r53, %rd52;
+  mov.u64 %rd54, 4;
+  mul.lo.u64 %rd55, %rd14, %rd54;
+  add.u64 %rd56, %rd0, %rd55;
+  st.global.u32 [%rd56], %r53;
+  mov.u32 %r57, 0; // unit
+  mov.u32 %r58, %r57;
   bra combine_quotients_kernel_end_16;
   combine_quotients_kernel_else_16:
-  mov.u32 %r68, 0; // no else branch
+  mov.u32 %r58, 0; // no else branch
   combine_quotients_kernel_end_16:
-  mov.u32 %r69, 0; // unit
+  mov.u32 %r59, 0; // unit
   ret;
 }
 
@@ -284,8 +260,8 @@
 )
 {
     .reg .pred %p13;
-    .reg .u32 %r10, %r11, %r24, %r31, %r32, %r33, %r37, %r40, %r44, %r45, %r46, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd34, %rd35, %rd36, %rd38, %rd39, %rd4, %rd41, %rd42, %rd43, %rd5, %rd6;
+    .reg .u32 %r10, %r11, %r22, %r27, %r31, %r34, %r38, %r39, %r40, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd23, %rd24, %rd25, %rd26, %rd28, %rd29, %rd3, %rd30, %rd32, %rd33, %rd35, %rd36, %rd37, %rd4, %rd5, %rd6;
 
   ld.param.u64 %rd0, [coset_blowup_shift_kernel_param_blowup_data];
   ld.param.u64 %rd1, [coset_blowup_shift_kernel_param_blowup_len];
@@ -308,40 +284,34 @@
   mov.u64 %rd15, 0; // unhandled expr
   mov.u64 %rd16, 0; // unhandled expr
   mov.u64 %rd17, 0; // unhandled expr
-  mov.b64 %rd18, %rd2; // param: arr
-  mov.b64 %rd19, %rd12; // param: idx
-  mov.u64 %rd20, 0; // unhandled expr
-  mov.u64 %rd21, 4;
-  mul.lo.u64 %rd22, %rd19, %rd21;
-  add.u64 %rd23, %rd18, %rd22;
-  ld.global.u32 %r24, [%rd23];
-  mov.b64 %rd25, %rd4; // param: arr
-  mov.b64 %rd26, %rd12; // param: idx
-  mov.u64 %rd27, 0; // unhandled expr
-  mov.u64 %rd28, 4;
-  mul.lo.u64 %rd29, %rd26, %rd28;
-  add.u64 %rd30, %rd25, %rd29;
-  ld.global.u32 %r31, [%rd30];
-  mov.b32 %r32, %r24; // param: a
-  mov.b32 %r33, %r31; // param: b
-  cvt.u64.u32 %rd34, %r32;
-  cvt.u64.u32 %rd35, %r33;
-  mul.lo.u64 %rd36, %rd34, %rd35;
-  mov.u32 %r37, 2147483647;
-  cvt.u64.u32 %rd38, %r37;
-  rem.u64 %rd39, %rd36, %rd38;
-  cvt.u32.u64 %r40, %rd39;
-  mov.u64 %rd41, 4;
-  mul.lo.u64 %rd42, %rd12, %rd41;
-  add.u64 %rd43, %rd0, %rd42;
-  st.global.u32 [%rd43], %r40;
-  mov.u32 %r44, 0; // unit
-  mov.u32 %r45, %r44;
+  mov.u64 %rd18, 0; // unhandled expr
+  mov.u64 %rd19, 4;
+  mul.lo.u64 %rd20, %rd12, %rd19;
+  add.u64 %rd21, %rd2, %rd20;
+  ld.global.u32 %r22, [%rd21];
+  mov.u64 %rd23, 0; // unhandled expr
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd12, %rd24;
+  add.u64 %rd26, %rd4, %rd25;
+  ld.global.u32 %r27, [%rd26];
+  cvt.u64.u32 %rd28, %r22;
+  cvt.u64.u32 %rd29, %r27;
+  mul.lo.u64 %rd30, %rd28, %rd29;
+  mov.u32 %r31, 2147483647;
+  cvt.u64.u32 %rd32, %r31;
+  rem.u64 %rd33, %rd30, %rd32;
+  cvt.u32.u64 %r34, %rd33;
+  mov.u64 %rd35, 4;
+  mul.lo.u64 %rd36, %rd12, %rd35;
+  add.u64 %rd37, %rd0, %rd36;
+  st.global.u32 [%rd37], %r34;
+  mov.u32 %r38, 0; // unit
+  mov.u32 %r39, %r38;
   bra coset_blowup_shift_kernel_end_14;
   coset_blowup_shift_kernel_else_14:
-  mov.u32 %r45, 0; // no else branch
+  mov.u32 %r39, 0; // no else branch
   coset_blowup_shift_kernel_end_14:
-  mov.u32 %r46, 0; // unit
+  mov.u32 %r40, 0; // unit
   ret;
 }
 

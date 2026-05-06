@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct MerklePath MerklePath;
+
 typedef struct MerklePath {
   uint64_t depth;
   uint64_t siblings;

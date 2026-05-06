@@ -13,6 +13,11 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct Counter Counter;
+typedef struct Conn Conn;
+typedef struct Accum Accum;
+
 typedef struct Counter {
   uint64_t value;
   uint64_t max;

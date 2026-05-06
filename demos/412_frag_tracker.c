@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct FragTracker FragTracker;
+
 typedef struct FragTracker {
   uint64_t alloc_blocks;
   uint64_t free_fragments;

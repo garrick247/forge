@@ -11,9 +11,9 @@
     .param .u64 trace_reduce_kernel_param_n
 )
 {
-    .reg .pred %p19, %p9;
-    .reg .u32 %r15, %r17, %r18, %r21, %r22, %r26, %r27, %r28, %r3, %r4, %r5, %r6, %r7;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd14, %rd16, %rd2, %rd23, %rd24, %rd25, %rd8;
+    .reg .pred %p18, %p9;
+    .reg .u32 %r15, %r17, %r20, %r21, %r25, %r26, %r27, %r3, %r4, %r5, %r6, %r7;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd14, %rd16, %rd2, %rd22, %rd23, %rd24, %rd8;
 
   ld.param.u64 %rd0, [trace_reduce_kernel_param_data_data];
   ld.param.u64 %rd1, [trace_reduce_kernel_param_data_len];
@@ -35,29 +35,28 @@
   add.u64 %rd14, %rd0, %rd13;
   ld.global.u32 %r15, [%rd14];
   mov.u64 %rd16, 0; // unhandled expr
-  mov.b32 %r17, %r15; // param: v
-  mov.u32 %r18, 2147483647;
-  setp.ge.u32 %p19, %r17, %r18;
-  @%p19 bra trace_reduce_kernel_then_20;
-  bra trace_reduce_kernel_else_20;
-  trace_reduce_kernel_then_20:
-  sub.u32 %r21, %r17, %r18;
-  mov.u32 %r22, %r21;
-  bra trace_reduce_kernel_end_20;
-  trace_reduce_kernel_else_20:
-  mov.u32 %r22, %r17;
-  trace_reduce_kernel_end_20:
-  mov.u64 %rd23, 4;
-  mul.lo.u64 %rd24, %rd8, %rd23;
-  add.u64 %rd25, %rd0, %rd24;
-  st.global.u32 [%rd25], %r22;
-  mov.u32 %r26, 0; // unit
-  mov.u32 %r27, %r26;
+  mov.u32 %r17, 2147483647;
+  setp.ge.u32 %p18, %r15, %r17;
+  @%p18 bra trace_reduce_kernel_then_19;
+  bra trace_reduce_kernel_else_19;
+  trace_reduce_kernel_then_19:
+  sub.u32 %r20, %r15, %r17;
+  mov.u32 %r21, %r20;
+  bra trace_reduce_kernel_end_19;
+  trace_reduce_kernel_else_19:
+  mov.u32 %r21, %r15;
+  trace_reduce_kernel_end_19:
+  mov.u64 %rd22, 4;
+  mul.lo.u64 %rd23, %rd8, %rd22;
+  add.u64 %rd24, %rd0, %rd23;
+  st.global.u32 [%rd24], %r21;
+  mov.u32 %r25, 0; // unit
+  mov.u32 %r26, %r25;
   bra trace_reduce_kernel_end_10;
   trace_reduce_kernel_else_10:
-  mov.u32 %r27, 0; // no else branch
+  mov.u32 %r26, 0; // no else branch
   trace_reduce_kernel_end_10:
-  mov.u32 %r28, 0; // unit
+  mov.u32 %r27, 0; // unit
   ret;
 }
 
@@ -227,8 +226,8 @@
 )
 {
     .reg .pred %p13;
-    .reg .u32 %r10, %r23, %r27, %r28, %r29, %r6, %r7, %r8, %r9;
-    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd3, %rd4, %rd5;
+    .reg .u32 %r10, %r21, %r25, %r26, %r27, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd22, %rd23, %rd24, %rd3, %rd4, %rd5;
 
   ld.param.u64 %rd0, [trace_batch_copy_kernel_param_dst_data];
   ld.param.u64 %rd1, [trace_batch_copy_kernel_param_dst_len];
@@ -250,24 +249,22 @@
   trace_batch_copy_kernel_then_14:
   mov.u64 %rd15, 0; // unhandled expr
   mov.u64 %rd16, 0; // unhandled expr
-  mov.b64 %rd17, %rd2; // param: arr
-  mov.b64 %rd18, %rd11; // param: idx
-  mov.u64 %rd19, 0; // unhandled expr
-  mov.u64 %rd20, 4;
-  mul.lo.u64 %rd21, %rd18, %rd20;
-  add.u64 %rd22, %rd17, %rd21;
-  ld.global.u32 %r23, [%rd22];
-  mov.u64 %rd24, 4;
-  mul.lo.u64 %rd25, %rd11, %rd24;
-  add.u64 %rd26, %rd0, %rd25;
-  st.global.u32 [%rd26], %r23;
-  mov.u32 %r27, 0; // unit
-  mov.u32 %r28, %r27;
+  mov.u64 %rd17, 0; // unhandled expr
+  mov.u64 %rd18, 4;
+  mul.lo.u64 %rd19, %rd11, %rd18;
+  add.u64 %rd20, %rd2, %rd19;
+  ld.global.u32 %r21, [%rd20];
+  mov.u64 %rd22, 4;
+  mul.lo.u64 %rd23, %rd11, %rd22;
+  add.u64 %rd24, %rd0, %rd23;
+  st.global.u32 [%rd24], %r21;
+  mov.u32 %r25, 0; // unit
+  mov.u32 %r26, %r25;
   bra trace_batch_copy_kernel_end_14;
   trace_batch_copy_kernel_else_14:
-  mov.u32 %r28, 0; // no else branch
+  mov.u32 %r26, 0; // no else branch
   trace_batch_copy_kernel_end_14:
-  mov.u32 %r29, 0; // unit
+  mov.u32 %r27, 0; // unit
   ret;
 }
 

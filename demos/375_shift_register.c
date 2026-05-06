@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct ShiftReg ShiftReg;
+
 typedef struct ShiftReg {
   uint64_t s0;
   uint64_t s1;

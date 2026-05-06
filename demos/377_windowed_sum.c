@@ -13,6 +13,9 @@
 #  define FORGE_AGG(T, ...) ((T){__VA_ARGS__})
 #endif
 
+/* Forward typedefs for user-defined structs/enums */
+typedef struct WindowSum WindowSum;
+
 typedef struct WindowSum {
   uint64_t sum;
   uint64_t count;
