@@ -5,28 +5,26 @@ silently delete history (mark items resolved with date + PR).
 
 ## Tier 1 — CI hygiene across the stack
 
-### BLOCKER (added 2026-05-06): stwo-fork source recovery
+### ~~BLOCKER (added 2026-05-06): stwo-fork source recovery~~ — RESOLVED 2026-05-06
 
-VortexSTARK depends on `stwo` and `stwo-constraint-framework` v2.2.0 from
-`https://github.com/garrick99/stwo-fork.git#cuda-backend` (pinned SHA
-`79b131cb16cf1da179141edf083d5ed9ebc29089`). The garrick99 account is
-dead and the SHA is **not present in upstream `starkware-libs/stwo`**
-(verified via `gh api` — 404). No public mirror found via `gh search`
-or websearch. Without this dep, `cargo` cannot resolve the workspace
-and VortexSTARK is unbuildable from scratch.
+VortexSTARK was unbuildable because the stwo deps were pinned to a dead
+`garrick99/stwo-fork.git#cuda-backend`. Resolved by forking upstream
+`starkware-libs/stwo` to `garrick247/stwo-fork`, creating a
+`cuda-backend` branch at the v2.2.0 commit
+`289c20de80b7c7f508de9c46151fb81dae404154`, and updating Cargo.toml to
+point at the new fork. The rebuild works because every API VortexSTARK
+uses (`vcs_lifted::*`, `Blake2sChannelGeneric`, `MerkleDecommitmentLifted`,
+`MerkleVerifierLifted`, `PACKED_LEAF_SIZE`, etc.) is already present in
+upstream v2.2.0 — the dead fork was a maintenance snapshot, not a
+meaningful divergence. Also installed cuda-toolkit-13-2 on the runner
+and stripped a stray `int main` from `cuda/forge/circle_ntt_batch_forge.cu`.
+Final result: `cargo check` clean, **395/396 tests pass**.
+(VortexSTARK PR #3.)
 
-Options (need user direction):
-1. **Restore the fork** — requires the original source. Do we have a
-   local clone that survived the wipe? Backup HDD? WSL2 cache?
-2. **Migrate to upstream `starkware-libs/stwo`** — multi-day refactor;
-   the cuda-backend branch likely added GPU-specific extensions that
-   need to be re-implemented or stripped.
-3. **Vendor the fork** — needs source; same blocker as #1.
-
-The Cargo.toml lines deliberately left untouched in the URL-sweep PR so
-they remain visible:
-- `Cargo.toml:176`
-- `crates/cuda-backend/Cargo.toml:22-23`
+The single failing test, `stwo_export::tests::test_stwo_fri_verifier_e2e`,
+hits an assertion in upstream stwo (`LOG_BLOWUP_FACTOR_RANGE` is `1..=16`,
+test passes out-of-range value). Likely the dead fork had a wider range
+or relaxed assertion. Tracked as a Tier 5 follow-up.
 
 
 - [x] ~~**openptxas/corpus.yml**~~: ported to Linux self-hosted runner
@@ -102,6 +100,19 @@ Open questions resolved by user's "everything" instruction:
 
 ## Tier 5 — Followups
 
+- [ ] **VortexSTARK test_stwo_fri_verifier_e2e** failing on upstream
+      stwo `LOG_BLOWUP_FACTOR_RANGE` assertion (range `1..=16`, test
+      passes out-of-range value). Likely dead fork had a wider range.
+      Either narrow the test config or skip the test if the value was
+      intentional. (Surfaced 2026-05-06; VortexSTARK#3.)
+- [ ] **forge: stop emitting `int main()` for kernel-only .fg files**.
+      Currently every .fg compiles to a self-contained CUDA C file
+      with a stub `int main()` — but kernel-only files synced to
+      `VortexSTARK/cuda/forge/` need `main()` stripped so they do not
+      conflict with vortexstark's binary. Either strip on emit for
+      `#[kernel]`-only files, or add a `--lib-only` codegen flag.
+
+
 - [ ] Per-call-site generic-function monomorphization with type
       substitution. The current call-site-driven elision (2026-05-06)
       handles all demos in the corpus, but a future demo that calls an
@@ -122,6 +133,8 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 stwo-fork rebuilt from upstream (garrick247/stwo-fork at v2.2.0); VortexSTARK 395/396 tests pass (VortexSTARK#3)
+- ✅ 2026-05-06 cuda-toolkit-13-2 installed on linux runner box (nvcc + ptxas)
 - ✅ 2026-05-06 rustup install on linux runner box (nightly + clippy + rustfmt)
 - ✅ 2026-05-06 stack-wide garrick99 → garrick247 URL sweep (7 PRs across all repos)
 - ✅ 2026-05-06 VortexSTARK ci.yml gpu-tests PATH fix (VortexSTARK#2)
