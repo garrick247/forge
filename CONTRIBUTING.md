@@ -6,7 +6,7 @@ Thank you for your interest in Forge. This document explains how to contribute.
 
 ```bash
 # Clone
-git clone https://github.com/garrick99/forge.git
+git clone https://github.com/garrick247/forge.git
 cd forge
 
 # Install dependencies (OCaml 5.0+, Dune)
