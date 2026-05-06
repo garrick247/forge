@@ -100,11 +100,11 @@ Open questions resolved by user's "everything" instruction:
 
 ## Tier 5 — Followups
 
-- [ ] **VortexSTARK test_stwo_fri_verifier_e2e** failing on upstream
-      stwo `LOG_BLOWUP_FACTOR_RANGE` assertion (range `1..=16`, test
-      passes out-of-range value). Likely dead fork had a wider range.
-      Either narrow the test config or skip the test if the value was
-      intentional. (Surfaced 2026-05-06; VortexSTARK#3.)
+- [x] ~~**VortexSTARK test_stwo_fri_verifier_e2e**~~: dead fork
+      *did* carry a single-line patch widening LOG_MIN_BLOWUP_FACTOR
+      from 1 to 0. Reapplied on garrick247/stwo-fork at commit
+      4b7521e8 and bumped Cargo.lock. CI now 396/0/3 green.
+      (VortexSTARK#4, 2026-05-06.)
 - [ ] **forge: stop emitting `int main()` for kernel-only .fg files**.
       Currently every .fg compiles to a self-contained CUDA C file
       with a stub `int main()` — but kernel-only files synced to
@@ -133,6 +133,7 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 stwo-fork patched (LOG_MIN_BLOWUP_FACTOR 1→0); VortexSTARK CI fully green at 396/0/3 (VortexSTARK#4)
 - ✅ 2026-05-06 stwo-fork rebuilt from upstream (garrick247/stwo-fork at v2.2.0); VortexSTARK 395/396 tests pass (VortexSTARK#3)
 - ✅ 2026-05-06 cuda-toolkit-13-2 installed on linux runner box (nvcc + ptxas)
 - ✅ 2026-05-06 rustup install on linux runner box (nightly + clippy + rustfmt)
