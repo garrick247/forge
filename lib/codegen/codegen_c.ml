@@ -2622,6 +2622,30 @@ let emit_program ?(lib_mode=false) prog =
     ) sys_headers
   end;
   Buffer.add_char buf '\n';
+  (* Forward typedefs for user-defined non-generic structs and enums so derived
+     types (span<T>, fn-ptr, tuple) can reference them before the full struct
+     definition is emitted later in this same translation unit. The full
+     definition (`emit_struct`/`emit_enum`) re-issues `typedef struct X X;` —
+     gcc accepts the duplicate (C11 explicitly, gcc -std=c99 permissively).  *)
+  let fwd_decls =
+    List.filter_map (fun item -> match item.item_desc with
+      | IStruct sd when not (List.exists (fun (_, k) ->
+          match k with KType | KBounded _ -> true | _ -> false) sd.sd_params) ->
+          Some sd.sd_name.name
+      | IEnum ed when ed.ed_params = [] ->
+          Some ed.ed_name.name
+      | _ -> None) prog.prog_items
+  in
+  if fwd_decls <> [] then begin
+    Buffer.add_string buf "/* Forward typedefs for user-defined structs/enums */
+";
+    List.iter (fun n ->
+      Buffer.add_string buf (Printf.sprintf "typedef struct %s %s;
+" n n)
+    ) fwd_decls;
+    Buffer.add_char buf '
+'
+  end;
   (* Pre-collect all span, generic, and tuple types BEFORE emitting struct defs,
      so typedefs are available when structs reference them. *)
   let span_elems = List.fold_left collect_span_elems_item [] prog.prog_items in
