@@ -1,0 +1,38 @@
+// expected: 0
+// Demo 1152: bitfield width proof obligations (passing case)
+//
+// Struct bitfield assignments now generate an obligation that the rhs
+// fits in the declared width. Each function carries the matching
+// `requires` so SMT discharges the bitfield_width obligation.
+
+struct PixelFlags {
+    visible: u32 : 1,
+    layer:   u32 : 4,
+    palette: u32 : 8,
+}
+
+fn write_visible(p: PixelFlags, v: u32) -> u32
+    requires v < 2u32
+{
+    let mut q: PixelFlags = p;
+    q.visible = v;
+    q.visible
+}
+
+fn write_layer(p: PixelFlags, v: u32) -> u32
+    requires v < 16u32
+{
+    let mut q: PixelFlags = p;
+    q.layer = v;
+    q.layer
+}
+
+fn write_palette(p: PixelFlags, v: u32) -> u32
+    requires v < 256u32
+{
+    let mut q: PixelFlags = p;
+    q.palette = v;
+    q.palette
+}
+
+fn main() -> u64 { 0u64 }
