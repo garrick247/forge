@@ -25,25 +25,37 @@ void lu_decompose(forge_span_u64_t a __attribute__((unused)), uint64_t n __attri
   {
     while ((k < n)) {
       uint64_t pivot_idx __attribute__((unused)) = ((k * n) + k);
-      uint64_t pivot __attribute__((unused)) = a.data[pivot_idx];
-      if ((pivot > 0ULL)) {
-        uint64_t i __attribute__((unused)) = (k + 1ULL);
-        {
-          while ((i < n)) {
-            uint64_t lik_idx __attribute__((unused)) = ((i * n) + k);
-            a.data[lik_idx] = (a.data[lik_idx] / pivot);
-            uint64_t lik __attribute__((unused)) = a.data[lik_idx];
-            uint64_t j __attribute__((unused)) = (k + 1ULL);
-            {
-              while ((j < n)) {
-                uint64_t ij_idx __attribute__((unused)) = ((i * n) + j);
-                uint64_t kj_idx __attribute__((unused)) = ((k * n) + j);
-                a.data[ij_idx] = (a.data[ij_idx] - (lik * a.data[kj_idx]));
-                j = (j + 1ULL);
-              }
+      if ((pivot_idx < a.len)) {
+        uint64_t pivot __attribute__((unused)) = a.data[pivot_idx];
+        if ((pivot > 0ULL)) {
+          uint64_t i __attribute__((unused)) = (k + 1ULL);
+          {
+            while ((i < n)) {
+              uint64_t lik_idx __attribute__((unused)) = ((i * n) + k);
+              if ((lik_idx < a.len)) {
+                a.data[lik_idx] = (a.data[lik_idx] / pivot);
+                uint64_t lik __attribute__((unused)) = a.data[lik_idx];
+                uint64_t j __attribute__((unused)) = (k + 1ULL);
+                {
+                  while ((j < n)) {
+                    uint64_t ij_idx __attribute__((unused)) = ((i * n) + j);
+                    uint64_t kj_idx __attribute__((unused)) = ((k * n) + j);
+                    if ((ij_idx < a.len)) {
+                      if ((kj_idx < a.len)) {
+                        a.data[ij_idx] = (a.data[ij_idx] - (lik * a.data[kj_idx]));
 
+                      }
+
+                    }
+                    j = (j + 1ULL);
+                  }
+
+                }
+
+              }
+              i = (i + 1ULL);
             }
-            i = (i + 1ULL);
+
           }
 
         }
