@@ -100,12 +100,20 @@ Fuse layers into groups that fit in shared memory. For n=2^24 with
 block_size=256, the last 8 layers can be fused into a single kernel
 using 256 × 4 bytes = 1KB of shared memory.
 
-### Phase 4: Bitwise column demux (batch kernel, 10-20% improvement)
-Replace `tid / half_n` and `tid % half_n` with:
+### Phase 4: Bitwise column demux (batch kernel, 10-20% improvement) — IMPLEMENTED 2026-05-06
+Replaced `tid / half_n` and `tid % half_n` with:
 ```cuda
-uint32_t col_idx = tid >> log_half_n;
-uint32_t pair_idx = tid & (half_n - 1);
+uint64_t col_idx = tid >> log_half_n;
+uint64_t pair_idx = tid & (half_n - 1ULL);
 ```
+The kernels (`circle_ntt_batch_layer_forward`, `_inverse`, and
+`m31_batch_scale`) now take an additional `log_half_n` (resp. `log_n`)
+parameter, with the precondition `half_n == 1 << log_half_n` documenting
+the relationship. Host shim
+(`VortexSTARK/cuda/circle_ntt_batch_forge.cu`) computes the log via
+`__builtin_ctz` and threads it through the four entry points.
+Verification dropped 148 to 145 obligations (loss of overflow obligations
+from the col_idx * half_n multiply); all discharged, 0 assumes.
 
 ## Estimated Impact
 
