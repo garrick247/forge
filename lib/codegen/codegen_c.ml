@@ -2631,17 +2631,20 @@ let emit_program ?(lib_mode=false) prog =
     List.filter_map (fun item -> match item.item_desc with
       | IStruct sd when not (List.exists (fun (_, k) ->
           match k with KType | KBounded _ -> true | _ -> false) sd.sd_params) ->
-          Some sd.sd_name.name
+          let kw = if sd.sd_is_union then "union" else "struct" in
+          Some (kw, sd.sd_name.name)
       | IEnum ed when ed.ed_params = [] ->
-          Some ed.ed_name.name
+          (* Forge enums emit as `typedef struct N { ... } N;` so forward
+             matches `struct`. *)
+          Some ("struct", ed.ed_name.name)
       | _ -> None) prog.prog_items
   in
   if fwd_decls <> [] then begin
     Buffer.add_string buf "/* Forward typedefs for user-defined structs/enums */
 ";
-    List.iter (fun n ->
-      Buffer.add_string buf (Printf.sprintf "typedef struct %s %s;
-" n n)
+    List.iter (fun (kw, n) ->
+      Buffer.add_string buf (Printf.sprintf "typedef %s %s %s;
+" kw n n)
     ) fwd_decls;
     Buffer.add_char buf '
 '
