@@ -1,0 +1,112 @@
+// VortexSTARK Circle NTT — 4-layer fused warp-shuffle kernel.
+//
+// Mechanical extension of circle_ntt_warp_fused2.fg: fuses four consecutive
+// inner butterfly layers in registers, eliminating three global-memory
+// round-trips per fused group. Only valid when ALL four strides fit in a
+// warp, i.e. layer_idx <= 1 (strides 1, 2, 4, 8). Strides up to 16 plus a
+// 5th layer would overflow the 32-lane warp.
+//
+// Same reduce_word bridge between layers as the 2-layer variant (the
+// if-expression postcondition isn't threaded into the let-binding).
+
+use std::gpu;
+use std::m31;
+
+#[device]
+fn reduce_word(v: u32) -> u32
+    ensures result < M31_P
+{
+    let lo: u32 = v & M31_P;
+    let hi: u32 = v >> 31u32;
+    let r: u32 = lo + hi;
+    if r >= M31_P { r - M31_P } else { r }
+}
+
+#[kernel]
+fn circle_ntt_warp_fused4_forward(
+    data: span<u32>,
+    twiddles_a: span<u32>,
+    twiddles_b: span<u32>,
+    twiddles_c: span<u32>,
+    twiddles_d: span<u32>,
+    layer_idx: u32
+)
+    requires layer_idx < 2u32  // strides 1,2,4,8 — all fit in warp
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    let stride_a: u64 = 1u64 << (layer_idx as u64);
+    let stride_b: u64 = 1u64 << ((layer_idx + 1u32) as u64);
+    let stride_c: u64 = 1u64 << ((layer_idx + 2u32) as u64);
+    let stride_d: u64 = 1u64 << ((layer_idx + 3u32) as u64);
+    let h_a: u64 = tid >> ((layer_idx + 1u32) as u64);
+    let h_b: u64 = tid >> ((layer_idx + 2u32) as u64);
+    let h_c: u64 = tid >> ((layer_idx + 3u32) as u64);
+    let h_d: u64 = tid >> ((layer_idx + 4u32) as u64);
+
+    if tid < data.len {
+        if h_a < twiddles_a.len {
+            if h_b < twiddles_b.len {
+                if h_c < twiddles_c.len {
+                    if h_d < twiddles_d.len {
+                        let v0: u32 = reduce_word(data[tid]);
+                        let t_a: u32 = reduce_word(twiddles_a[h_a]);
+                        let t_b: u32 = reduce_word(twiddles_b[h_b]);
+                        let t_c: u32 = reduce_word(twiddles_c[h_c]);
+                        let t_d: u32 = reduce_word(twiddles_d[h_d]);
+
+                        // Layer A
+                        let pa_u64: u64 = shfl_xor_sync(v0 as u64, stride_a, 32u64);
+                        let pa: u32 = reduce_word(pa_u64 as u32);
+                        let v1_raw: u32 = if (tid & stride_a) == 0u64 {
+                            let prod: u32 = m31_mul(pa, t_a);
+                            m31_add(v0, prod)
+                        } else {
+                            let prod: u32 = m31_mul(v0, t_a);
+                            m31_sub(pa, prod)
+                        };
+                        let v1: u32 = reduce_word(v1_raw);
+
+                        // Layer B
+                        let pb_u64: u64 = shfl_xor_sync(v1 as u64, stride_b, 32u64);
+                        let pb: u32 = reduce_word(pb_u64 as u32);
+                        let v2_raw: u32 = if (tid & stride_b) == 0u64 {
+                            let prod: u32 = m31_mul(pb, t_b);
+                            m31_add(v1, prod)
+                        } else {
+                            let prod: u32 = m31_mul(v1, t_b);
+                            m31_sub(pb, prod)
+                        };
+                        let v2: u32 = reduce_word(v2_raw);
+
+                        // Layer C
+                        let pc_u64: u64 = shfl_xor_sync(v2 as u64, stride_c, 32u64);
+                        let pc: u32 = reduce_word(pc_u64 as u32);
+                        let v3_raw: u32 = if (tid & stride_c) == 0u64 {
+                            let prod: u32 = m31_mul(pc, t_c);
+                            m31_add(v2, prod)
+                        } else {
+                            let prod: u32 = m31_mul(v2, t_c);
+                            m31_sub(pc, prod)
+                        };
+                        let v3: u32 = reduce_word(v3_raw);
+
+                        // Layer D
+                        let pd_u64: u64 = shfl_xor_sync(v3 as u64, stride_d, 32u64);
+                        let pd: u32 = reduce_word(pd_u64 as u32);
+                        let v4: u32 = if (tid & stride_d) == 0u64 {
+                            let prod: u32 = m31_mul(pd, t_d);
+                            m31_add(v3, prod)
+                        } else {
+                            let prod: u32 = m31_mul(v3, t_d);
+                            m31_sub(pd, prod)
+                        };
+
+                        data[tid] = v4;
+                    };
+                };
+            };
+        };
+    };
+}
+
+fn main() -> u64 { 0u64 }
