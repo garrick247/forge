@@ -1,0 +1,106 @@
+// VortexSTARK Circle NTT — warp-shuffle inner-layer kernel.
+//
+// Replaces global-memory butterfly traffic for inner layers (stride <= 16)
+// with __shfl_xor_sync. Each thread processes ONE element (not one pair),
+// reading its partner's value from a register in another lane via shuffle.
+//
+// Pairing within the warp:
+//   stride = 1 << layer_idx               (1, 2, 4, 8, or 16)
+//   partner_lane = lane XOR stride        (single bit flip)
+//   if (lane & stride) == 0: this lane is v0 (lower index of the pair)
+//   else:                    this lane is v1
+//
+// Twiddle index (shared between paired lanes):
+//   h = tid >> (layer_idx + 1)
+//
+// Forward butterfly (m31): v0' = v0 + v1*t, v1' = v0 - v1*t
+// Inverse butterfly (m31): v0' = v0 + v1,    v1' = (v0 - v1)*t
+//
+// FORGE proves bounds on data[tid]/twiddles[h] reads/writes and m31 invariants
+// on all reduce/multiply/add/sub steps. The shuffle round-trip casts u32->u64->u32
+// and re-reduces before any m31 op, so the partner value is treated as untrusted
+// input and reduced to < M31_P before use.
+
+use std::gpu;
+use std::m31;
+
+#[device]
+fn reduce_word(v: u32) -> u32
+    ensures result < M31_P
+{
+    let lo: u32 = v & M31_P;
+    let hi: u32 = v >> 31u32;
+    let r: u32 = lo + hi;
+    if r >= M31_P { r - M31_P } else { r }
+}
+
+#[kernel]
+fn circle_ntt_warp_forward(
+    data: span<u32>,
+    twiddles: span<u32>,
+    layer_idx: u32
+)
+    requires layer_idx < 5u32      // stride 1..16, fits within one warp (32 lanes)
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    let stride: u64 = 1u64 << (layer_idx as u64);
+    let h: u64 = tid >> ((layer_idx + 1u32) as u64);
+
+    if tid < data.len {
+        if h < twiddles.len {
+            let val: u32 = reduce_word(data[tid]);
+            let t:   u32 = reduce_word(twiddles[h]);
+            let partner_u64: u64 = shfl_xor_sync(val as u64, stride, 32u64);
+            let partner: u32 = reduce_word(partner_u64 as u32);
+
+            // forward butterfly: each lane computes its own half.
+            // Inner m31_mul is let-bound so Forge can carry its `ensures
+            // result < M31_P` postcondition into m31_add/m31_sub.
+            let new_val: u32 = if (tid & stride) == 0u64 {
+                // v0 lane: my_val=v0, partner=v1. result = v0 + v1*t
+                let prod: u32 = m31_mul(partner, t);
+                m31_add(val, prod)
+            } else {
+                // v1 lane: my_val=v1, partner=v0. result = v0 - v1*t
+                let prod: u32 = m31_mul(val, t);
+                m31_sub(partner, prod)
+            };
+            data[tid] = new_val;
+        };
+    };
+}
+
+#[kernel]
+fn circle_ntt_warp_inverse(
+    data: span<u32>,
+    twiddles: span<u32>,
+    layer_idx: u32
+)
+    requires layer_idx < 5u32
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    let stride: u64 = 1u64 << (layer_idx as u64);
+    let h: u64 = tid >> ((layer_idx + 1u32) as u64);
+
+    if tid < data.len {
+        if h < twiddles.len {
+            let val: u32 = reduce_word(data[tid]);
+            let t:   u32 = reduce_word(twiddles[h]);
+            let partner_u64: u64 = shfl_xor_sync(val as u64, stride, 32u64);
+            let partner: u32 = reduce_word(partner_u64 as u32);
+
+            // inverse butterfly: v0' = v0 + v1, v1' = (v0 - v1)*t
+            let new_val: u32 = if (tid & stride) == 0u64 {
+                // v0 lane: my_val=v0, partner=v1. result = v0 + v1
+                m31_add(val, partner)
+            } else {
+                // v1 lane: my_val=v1, partner=v0. result = (v0 - v1)*t
+                let diff: u32 = m31_sub(partner, val);
+                m31_mul(diff, t)
+            };
+            data[tid] = new_val;
+        };
+    };
+}
+
+fn main() -> u64 { 0u64 }
