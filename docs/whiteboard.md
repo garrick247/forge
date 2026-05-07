@@ -100,21 +100,18 @@ Open questions resolved by user's "everything" instruction:
 
 ## Tier 5 — Followups
 
-- [ ] **VortexSTARK forge-ntt-batch host-side overhead amortization**.
-      `cuda_circle_ntt_batch_layer_forge` (in
-      `cuda/circle_ntt_batch_forge.cu`) does `cudaMalloc + cudaMemcpy +
-      cudaFree` for the span-of-spans descriptor on EVERY layer launch.
-      For log_n=18 (18 layers) that is ~54 extra CUDA API calls and
-      adds ~100ms host-side overhead, which is essentially the entire
-      gap between FORGE-on (~487ms) and FORGE-off (~362ms) at this
-      size. The `_evaluate_batch_forge` and `_interpolate_batch_forge`
-      entry points already amortize this across all layers; the fix
-      is to switch the `LAUNCH_NTT_BATCH_LAYER` macro dispatch in
-      `cuda/circle_ntt.cu` to call the aggregate entry points instead
-      of looping itself. Expected outcome: forge_bench ratio at log_n=18
-      drops from 1.35x to ~1.05x (matches the steady-state ratio at
-      log_n>=22). (Surfaced 2026-05-06 by end-to-end FORGE-vs-baseline
-      sweep.)
+- [x] ~~**VortexSTARK forge-ntt-batch host-side overhead amortization**~~:
+      shipped. `cuda_circle_ntt_evaluate_batch` and `_interpolate_batch`
+      now dispatch to the aggregate FORGE entry points
+      (`cuda_circle_ntt_evaluate_batch_forge` /
+      `_interpolate_batch_forge`) in a single call. Span descriptor
+      uploaded once, reused across all layers + final scale.
+      Measured: log_n=10 50.9ms→41.1ms (19%%), log_n=14 92.7→67.6 (27%%),
+      log_n=18 487→357 (27%%), log_n=22 5564→5121 (8%%). FORGE/baseline
+      ratio drops from 1.21x-1.38x to 0.98x-1.01x — at parity or slightly
+      faster than hand-written across the sweep. Bonus: inverse path
+      now also routes m31_batch_scale through the FORGE-emitted
+      kernel. (VortexSTARK PR #5, 2026-05-06.)
 
 - [ ] **VortexSTARK log_n>=25 VRAM ceiling**. At log_n=25 the prover
       panics on a 537MB cudaMalloc despite plenty of free VRAM at
@@ -164,6 +161,7 @@ Open questions resolved by user's "everything" instruction:
 
 ## Done (most-recent first)
 
+- ✅ 2026-05-06 forge-ntt-batch upload_col_spans amortization shipped — 19-27% prove speedup at small sizes, FORGE now at parity or faster than hand-written batch path (VortexSTARK#5)
 - ✅ 2026-05-06 VortexSTARK end-to-end campaign — 396 lib tests, 34 integration, sustained_bench 490 proofs/61s 100% verified, full_benchmark Cairo log_n=24 + Poseidon log_n=28, 5 stwo cross-validate tests green, FORGE-vs-baseline ratio quantified (1.06x at log_n>=22, ~1.35x at small sizes due to upload_col_spans overhead)
 - ✅ 2026-05-06 stwo-fork patched (LOG_MIN_BLOWUP_FACTOR 1→0); VortexSTARK CI fully green at 396/0/3 (VortexSTARK#4)
 - ✅ 2026-05-06 stwo-fork rebuilt from upstream (garrick247/stwo-fork at v2.2.0); VortexSTARK 395/396 tests pass (VortexSTARK#3)
