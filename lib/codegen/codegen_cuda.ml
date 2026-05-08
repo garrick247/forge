@@ -253,8 +253,19 @@ let rec emit_expr = function
        | "bf16_neg", [a] ->
            Printf.sprintf "__hneg(%s)" (emit_expr a)
        | name, args ->
+           (* Span args are lowered to (ptr, len) pairs at the function
+              signature (see emit_param), so call sites must also expand
+              them. Without this, a 2-arg `f(span, idx)` call against a
+              3-arg `f(ptr, ptr_len, idx)` definition silently misaligns
+              and the body reads `idx` as if it were `ptr_len`. *)
+           let emit_call_arg a =
+             match a.expr_ty, a.expr_desc with
+             | Some (TSpan _), EVar id ->
+                 Printf.sprintf "%s, %s_len" id.name id.name
+             | _ -> emit_expr a
+           in
            Printf.sprintf "%s(%s)" name
-             (String.concat ", " (List.map emit_expr args)))
+             (String.concat ", " (List.map emit_call_arg args)))
 
   | { expr_desc = ESync; _ } -> "__syncthreads()"
 
@@ -297,7 +308,30 @@ and is_simple_expr e =
 (* Statement emission                                                   *)
 (* ------------------------------------------------------------------ *)
 
-let rec emit_expr_as_stmt st e =
+(* Emit `e` so its value is assigned to `dst`. Handles EBlock by
+   inlining its stmts and assigning the tail expression. Used by the
+   let-bound-if lowering so we don't drop branches that contain stmts. *)
+let rec emit_expr_as_assign st dst e =
+  match e.expr_desc with
+  | EBlock (stmts, ret_expr) ->
+      List.iter (emit_stmt st) stmts;
+      (match ret_expr with
+       | Some re -> emit_expr_as_assign st dst re
+       | None -> ())
+  | EIf (cond, then_, Some else_) ->
+      line st (Printf.sprintf "if (%s) {" (emit_expr cond));
+      indent st;
+      emit_expr_as_assign st dst then_;
+      dedent st;
+      line st "} else {";
+      indent st;
+      emit_expr_as_assign st dst else_;
+      dedent st;
+      line st "}"
+  | _ ->
+      line st (Printf.sprintf "%s = %s;" dst (emit_expr e))
+
+and emit_expr_as_stmt st e =
   match e.expr_desc with
   | EBlock (stmts, ret_expr) ->
       List.iter (emit_stmt st) stmts;
@@ -337,6 +371,25 @@ and emit_stmt st s =
   | SLet (id, Some (TArray (elem_ty, Some sz_expr)), e, _) ->
       line st (Printf.sprintf "%s %s[%s] = %s;"
         (emit_ty elem_ty) id.name (emit_expr sz_expr) (emit_expr e))
+
+  (* Let-bound if-expressions where one or both branches don't fit a
+     C ternary (single-arm `if` with no else, or branches that contain
+     statements/blocks) cannot be lowered to `<ty> r = <expr>`. Lower
+     to `<ty> r; if (cond) r = then_; else r = else_;` instead. The
+     branches themselves go through emit_expr_as_assign which handles
+     EBlock-with-statements correctly. *)
+  | SLet (id, Some ty, ({ expr_desc = EIf (cond, then_, Some else_); _ }), _)
+      when not (is_simple_expr then_ && is_simple_expr else_) ->
+      line st (Printf.sprintf "%s %s;" (emit_ty ty) id.name);
+      line st (Printf.sprintf "if (%s) {" (emit_expr cond));
+      indent st;
+      emit_expr_as_assign st id.name then_;
+      dedent st;
+      line st "} else {";
+      indent st;
+      emit_expr_as_assign st id.name else_;
+      dedent st;
+      line st "}"
 
   | SLet (id, Some ty, e, _) ->
       line st (Printf.sprintf "%s %s = %s;" (emit_ty ty) id.name (emit_expr e))
@@ -456,12 +509,18 @@ let emit_function st fn =
   (* In CUDA, all non-main non-kernel functions must be __device__
      if they might be called from a kernel. Since Forge modules are
      compiled as a single TU and any function could be called from
-     a kernel, emit all non-main functions as __device__. *)
+     a kernel, emit all non-main functions as __device__.
+
+     `static` is required so that linking 2+ FORGE-emitted .cu files
+     into one binary doesn't trigger multiple-definition errors on
+     shared helpers (warp_reduce_*, grid_stride_*, field arithmetic,
+     etc.). Each TU gets its own internal-linkage copy. Mirrors the
+     codegen_c.ml approach for #[device] functions. *)
   let is_main = fn.fn_name.name = "main" in
   let prefix =
     if is_kernel fn then "__global__ void"
     else if is_main then ret
-    else Printf.sprintf "__device__ %s" ret
+    else Printf.sprintf "static __device__ __forceinline__ %s" ret
   in
   blank st;
   line st (Printf.sprintf "%s %s(%s) {" prefix fn.fn_name.name params);
@@ -531,6 +590,11 @@ let emit_cuda_program (items : item list) (sm : int) : string =
     | IFn fn -> Some fn
     | _ -> None
   ) items in
+  let consts = List.filter_map (fun item ->
+    match item.item_desc with
+    | IConst (id, ty, e) -> Some (id, ty, e)
+    | _ -> None
+  ) items in
   (* Only emit CUDA if there are kernel/device/parallel functions *)
   let has_gpu = List.exists (fun fn ->
     is_kernel fn || is_device fn || has_attr "parallel" fn
@@ -546,6 +610,18 @@ let emit_cuda_program (items : item list) (sm : int) : string =
     line st "#include <stdbool.h>";
     blank st;
 
+    (* Module-scope `const NAME: ty = expr;` items.
+       Emit as `static const ty NAME = <expr>;` so they're visible to
+       __device__ functions in this TU but don't conflict at link time
+       across multiple FORGE-emitted .cu files. *)
+    if consts <> [] then begin
+      List.iter (fun (id, ty, e) ->
+        line st (Printf.sprintf "static const %s %s = %s;"
+          (emit_ty ty) id.name (emit_expr e))
+      ) consts;
+      blank st
+    end;
+
     (* Check if we need warp reduce helpers *)
     let needs_reduce = List.exists (fun fn ->
       has_attr "reduce" fn || has_attr "parallel" fn
@@ -557,8 +633,12 @@ let emit_cuda_program (items : item list) (sm : int) : string =
       blank st
     end;
 
-    (* Emit all functions *)
-    List.iter (emit_function st) fns;
+    (* Emit all functions, skipping `main` (it's a host-side relic from
+       single-file C standalone use; in CUDA mode it has no entry-point
+       meaning and would collide on multi-TU link). *)
+    List.iter (fun fn ->
+      if fn.fn_name.name <> "main" then emit_function st fn
+    ) fns;
     blank st;
 
     Buffer.contents st.buf
