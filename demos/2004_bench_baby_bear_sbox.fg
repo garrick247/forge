@@ -1,0 +1,37 @@
+// Benchmark kernel: N parallel BabyBear x^7 S-box evaluations.
+//
+//   out[i] = sbox_x7(a[i])  in BabyBear   (4 mul per element)
+//
+// Pair with demos/2005_bench_koala_bear_sbox.fg (2 mul per element)
+// to measure the cost of the Plonky3 BB-vs-KB Poseidon2 S-box choice.
+
+use std::gpu;
+use std::baby_bear;
+use std::poseidon2_baby_bear;
+
+fn baby_bear_get(arr: span<u32>, idx: u64) -> u32
+    requires idx < arr.len
+    requires forall k: u64, k < arr.len ==> arr[k] < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    assert(arr[idx] < BABY_BEAR_P) "forall k instantiated at idx";
+    arr[idx]
+}
+
+#[kernel]
+fn baby_bear_sbox_kernel(
+    out: span<u32>,
+    a:   span<u32>,
+    n:   u64)
+    requires n <= out.len
+    requires n <= a.len
+    requires forall k: u64, k < a.len ==> a[k] < BABY_BEAR_P
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if tid < n {
+        let av: u32 = baby_bear_get(a, tid);
+        out[tid] = baby_bear_sbox_x7(av);
+    }
+}
+
+fn main() -> u64 { 0u64 }

@@ -585,16 +585,34 @@ let emit_warp_reduce st elem_ty op_str =
 (* ------------------------------------------------------------------ *)
 
 let emit_cuda_program (items : item list) (sm : int) : string =
+  (* Dedupe items by name. Transitive `use` (e.g. `use std::poseidon2_baby_bear`
+     itself uses `std::baby_bear`) currently surfaces the same items twice
+     in the program list, which would produce duplicate const/function
+     definitions in the .cu and a 'redefinition' compile error. Keep the
+     first occurrence of each named item; later ones are exact-duplicate
+     re-imports. *)
+  let seen_fn = Hashtbl.create 64 in
+  let seen_const = Hashtbl.create 32 in
+  let dedup_items = List.filter (fun item ->
+    match item.item_desc with
+    | IFn fn ->
+        if Hashtbl.mem seen_fn fn.fn_name.name then false
+        else (Hashtbl.add seen_fn fn.fn_name.name (); true)
+    | IConst (id, _, _) ->
+        if Hashtbl.mem seen_const id.name then false
+        else (Hashtbl.add seen_const id.name (); true)
+    | _ -> true
+  ) items in
   let fns = List.filter_map (fun item ->
     match item.item_desc with
     | IFn fn -> Some fn
     | _ -> None
-  ) items in
+  ) dedup_items in
   let consts = List.filter_map (fun item ->
     match item.item_desc with
     | IConst (id, ty, e) -> Some (id, ty, e)
     | _ -> None
-  ) items in
+  ) dedup_items in
   (* Only emit CUDA if there are kernel/device/parallel functions *)
   let has_gpu = List.exists (fun fn ->
     is_kernel fn || is_device fn || has_attr "parallel" fn
