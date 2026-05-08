@@ -1,0 +1,37 @@
+// Benchmark kernel: N parallel KoalaBear x^3 S-box evaluations.
+//
+//   out[i] = sbox_x3(a[i])  in KoalaBear   (2 mul per element)
+//
+// Pair with demos/2004_bench_baby_bear_sbox.fg (4 mul per element)
+// to measure the cost of the Plonky3 BB-vs-KB Poseidon2 S-box choice.
+
+use std::gpu;
+use std::koala_bear;
+use std::poseidon2_koala_bear;
+
+fn koala_bear_get(arr: span<u32>, idx: u64) -> u32
+    requires idx < arr.len
+    requires forall k: u64, k < arr.len ==> arr[k] < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+{
+    assert(arr[idx] < KOALA_BEAR_P) "forall k instantiated at idx";
+    arr[idx]
+}
+
+#[kernel]
+fn koala_bear_sbox_kernel(
+    out: span<u32>,
+    a:   span<u32>,
+    n:   u64)
+    requires n <= out.len
+    requires n <= a.len
+    requires forall k: u64, k < a.len ==> a[k] < KOALA_BEAR_P
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if tid < n {
+        let av: u32 = koala_bear_get(a, tid);
+        out[tid] = koala_bear_sbox_x3(av);
+    }
+}
+
+fn main() -> u64 { 0u64 }

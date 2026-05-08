@@ -1,0 +1,67 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry koala_bear_sbox_kernel(
+    .param .u64 koala_bear_sbox_kernel_param_out_data,
+    .param .u64 koala_bear_sbox_kernel_param_out_len,
+    .param .u64 koala_bear_sbox_kernel_param_a_data,
+    .param .u64 koala_bear_sbox_kernel_param_a_len,
+    .param .u64 koala_bear_sbox_kernel_param_n
+)
+{
+    .reg .pred %p11;
+    .reg .u32 %r17, %r21, %r24, %r28, %r31, %r35, %r36, %r5, %r6, %r7, %r8, %r9;
+    .reg .u64 %rd0, %rd1, %rd10, %rd13, %rd14, %rd15, %rd16, %rd18, %rd19, %rd2, %rd20, %rd22, %rd23, %rd25, %rd26, %rd27, %rd29, %rd3, %rd30, %rd32, %rd33, %rd34, %rd4;
+
+  ld.param.u64 %rd0, [koala_bear_sbox_kernel_param_out_data];
+  ld.param.u64 %rd1, [koala_bear_sbox_kernel_param_out_len];
+  ld.param.u64 %rd2, [koala_bear_sbox_kernel_param_a_data];
+  ld.param.u64 %rd3, [koala_bear_sbox_kernel_param_a_len];
+  ld.param.u64 %rd4, [koala_bear_sbox_kernel_param_n];
+
+  mov.u32 %r5, %ctaid.x;
+  mov.u32 %r6, %ntid.x;
+  mul.lo.u32 %r7, %r5, %r6;
+  mov.u32 %r8, %tid.x;
+  add.u32 %r9, %r7, %r8;
+  cvt.u64.u32 %rd10, %r9;
+  setp.lt.u64 %p11, %rd10, %rd4;
+  @%p11 bra koala_bear_sbox_kernel_then_12;
+  bra koala_bear_sbox_kernel_else_12;
+  koala_bear_sbox_kernel_then_12:
+  mov.u64 %rd13, 0; // unhandled expr
+  mov.u64 %rd14, 4;
+  mul.lo.u64 %rd15, %rd10, %rd14;
+  add.u64 %rd16, %rd2, %rd15;
+  ld.global.u32 %r17, [%rd16];
+  cvt.u64.u32 %rd18, %r17;
+  cvt.u64.u32 %rd19, %r17;
+  mul.lo.u64 %rd20, %rd18, %rd19;
+  mov.u32 %r21, 2130706433;
+  cvt.u64.u32 %rd22, %r21;
+  rem.u64 %rd23, %rd20, %rd22;
+  cvt.u32.u64 %r24, %rd23;
+  cvt.u64.u32 %rd25, %r24;
+  cvt.u64.u32 %rd26, %r17;
+  mul.lo.u64 %rd27, %rd25, %rd26;
+  mov.u32 %r28, 2130706433;
+  cvt.u64.u32 %rd29, %r28;
+  rem.u64 %rd30, %rd27, %rd29;
+  cvt.u32.u64 %r31, %rd30;
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd10, %rd32;
+  add.u64 %rd34, %rd0, %rd33;
+  st.global.u32 [%rd34], %r31;
+  mov.u32 %r35, 0; // unit
+  mov.u32 %r36, %r35;
+  bra koala_bear_sbox_kernel_end_12;
+  koala_bear_sbox_kernel_else_12:
+  mov.u32 %r36, 0; // no else branch
+  koala_bear_sbox_kernel_end_12:
+  ret;
+}
+
