@@ -1,0 +1,144 @@
+// std/poseidon2_baby_bear.fg -- Poseidon2 over BabyBear, width 16.
+//
+// Reference: "Poseidon2: A Faster Version of the Poseidon Hash Function"
+//   (Grassi, Khovratovich, Schofnegger, 2023 — eprint 2023/323).
+// Plonky3 implementation: p3-baby-bear, Poseidon2BabyBear, width 16.
+//
+// S-box:        x^7  (gcd(7, p-1) = 1 for BabyBear, p-1 = 2^27 * 3 * 5)
+// Width:        16
+// External rounds:  4 + 4 = 8 (rounds with full S-box + full MDS)
+// Internal rounds:  13 (S-box on state[0] only + diagonal-1 + W_int matrix)
+//
+// Element layout: state is 16 BabyBear felts, each < BABY_BEAR_P.
+//
+// All field operations call baby_bear_* from std/baby_bear.fg, so every
+// arithmetic step is already proven < P. The Poseidon2-specific obligations
+// here reduce to: "no out-of-bound array access" and "all postcondition felts
+// stay < P" — both discharged by the per-element baby_bear_add/mul ensures.
+//
+// This file proves the S-box and one round-step are well-formed.
+// Round constants for the full permutation are too large to embed verbatim
+// here; they live in poseidon2_baby_bear_constants.fg (companion file) and
+// are pulled in by the full-permutation kernel.
+//
+// Include with:  use std::poseidon2_baby_bear;
+
+use std::baby_bear;
+
+// ---- S-box: x -> x^7 -------------------------------------------------------
+// x^7 = ((x^2) * x)^2 * x   (5 multiplications).
+// Equivalent: x^7 = x^4 * x^2 * x = (x^2)^2 * x^2 * x.
+
+fn baby_bear_sbox_x7(x: u32) -> u32
+    requires x < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    let x2: u32 = baby_bear_mul(x, x);            // x^2
+    let x4: u32 = baby_bear_mul(x2, x2);           // x^4
+    let x6: u32 = baby_bear_mul(x4, x2);           // x^6
+    baby_bear_mul(x6, x)                           // x^7
+}
+
+// ---- External round linear layer: 4x4 MDS applied to each chunk of 4 -------
+// The Poseidon2 external matrix M_E is block-diagonal with 4x4 blocks
+// M_4, where M_4 = [[2,3,1,1],[1,2,3,1],[1,1,2,3],[3,1,1,2]] up to a
+// post-multiply by a circulant. For width 16, M_E acts on 4 chunks of 4
+// independently, then a "circulant-of-blocks" sums adjacent chunk-sums.
+//
+// We expose the per-chunk transform first; the chunk-sum step is in the
+// full-permutation kernel.
+//
+// One chunk: y = M_4 * x where x = (x0, x1, x2, x3).
+
+fn baby_bear_p2_ext_chunk_y0(x0: u32, x1: u32, x2: u32, x3: u32) -> u32
+    requires x0 < BABY_BEAR_P  requires x1 < BABY_BEAR_P
+    requires x2 < BABY_BEAR_P  requires x3 < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    // y0 = 2*x0 + 3*x1 + x2 + x3
+    let two_x0: u32 = baby_bear_double(x0);
+    let three_x1: u32 = baby_bear_add(baby_bear_double(x1), x1);
+    let s1: u32 = baby_bear_add(two_x0, three_x1);
+    let s2: u32 = baby_bear_add(s1, x2);
+    baby_bear_add(s2, x3)
+}
+
+fn baby_bear_p2_ext_chunk_y1(x0: u32, x1: u32, x2: u32, x3: u32) -> u32
+    requires x0 < BABY_BEAR_P  requires x1 < BABY_BEAR_P
+    requires x2 < BABY_BEAR_P  requires x3 < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    // y1 = x0 + 2*x1 + 3*x2 + x3
+    let two_x1: u32 = baby_bear_double(x1);
+    let three_x2: u32 = baby_bear_add(baby_bear_double(x2), x2);
+    let s1: u32 = baby_bear_add(x0, two_x1);
+    let s2: u32 = baby_bear_add(s1, three_x2);
+    baby_bear_add(s2, x3)
+}
+
+fn baby_bear_p2_ext_chunk_y2(x0: u32, x1: u32, x2: u32, x3: u32) -> u32
+    requires x0 < BABY_BEAR_P  requires x1 < BABY_BEAR_P
+    requires x2 < BABY_BEAR_P  requires x3 < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    // y2 = x0 + x1 + 2*x2 + 3*x3
+    let two_x2: u32 = baby_bear_double(x2);
+    let three_x3: u32 = baby_bear_add(baby_bear_double(x3), x3);
+    let s1: u32 = baby_bear_add(x0, x1);
+    let s2: u32 = baby_bear_add(s1, two_x2);
+    baby_bear_add(s2, three_x3)
+}
+
+fn baby_bear_p2_ext_chunk_y3(x0: u32, x1: u32, x2: u32, x3: u32) -> u32
+    requires x0 < BABY_BEAR_P  requires x1 < BABY_BEAR_P
+    requires x2 < BABY_BEAR_P  requires x3 < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    // y3 = 3*x0 + x1 + x2 + 2*x3
+    let two_x0: u32 = baby_bear_double(x0);
+    let three_x0: u32 = baby_bear_add(two_x0, x0);
+    let two_x3: u32 = baby_bear_double(x3);
+    let s1: u32 = baby_bear_add(three_x0, x1);
+    let s2: u32 = baby_bear_add(s1, x2);
+    baby_bear_add(s2, two_x3)
+}
+
+// ---- Internal round S-box step ---------------------------------------------
+// Internal rounds: only state[0] gets the S-box; rest is identity, then
+// linear layer M_I = I + diag(d_0..d_15) for some constants. This file
+// exposes the S-box-on-element-0 + ARK (add round constant) helper.
+
+fn baby_bear_p2_int_sbox_with_rc(state0: u32, rc: u32) -> u32
+    requires state0 < BABY_BEAR_P
+    requires rc < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    let with_rc: u32 = baby_bear_add(state0, rc);
+    baby_bear_sbox_x7(with_rc)
+}
+
+// ---- ARK (add round constant) — for the external rounds, every element ----
+
+fn baby_bear_p2_ark(s: u32, rc: u32) -> u32
+    requires s < BABY_BEAR_P
+    requires rc < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    baby_bear_add(s, rc)
+}
+
+// ---- A single external round (full S-box on all 16 elements + ARK) ---------
+// One representative element: out = sbox(state + rc).
+// Exposed as a per-element function; the kernel calls it 16 times in parallel
+// and then applies the per-chunk MDS layer above.
+
+fn baby_bear_p2_ext_sbox_with_rc(s: u32, rc: u32) -> u32
+    requires s < BABY_BEAR_P
+    requires rc < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    let with_rc: u32 = baby_bear_add(s, rc);
+    baby_bear_sbox_x7(with_rc)
+}
+
+fn main() -> u64 { 0u64 }

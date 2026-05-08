@@ -1,0 +1,87 @@
+// std/poseidon2_baby_bear_round.fg -- one full external round of
+// Poseidon2 over BabyBear, width 16.
+//
+// Layout: state = (s0..s15), round constants rc = (rc0..rc15).
+//
+// Step 1: ARK — for each i, s_i := s_i + rc_i
+// Step 2: S-box — for each i, s_i := s_i^7
+// Step 3: M_E (external linear layer) — block-diagonal with 4x4 M_4 blocks,
+//         then a "circulant of blocks" sums adjacent chunk-sums (skipped here
+//         for now — that's the post-MDS chunk-mixing step).
+//
+// This file proves the per-element ARK+S-box composition. The chunk MDS
+// reuses baby_bear_p2_ext_chunk_y0..y3 from poseidon2_baby_bear.fg.
+
+use std::baby_bear;
+use std::poseidon2_baby_bear;
+
+// One element's ARK + S-box. Equivalent to:
+//   y = (s + rc)^7 mod P
+fn baby_bear_p2_ark_sbox(s: u32, rc: u32) -> u32
+    requires s < BABY_BEAR_P
+    requires rc < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    let with_rc: u32 = baby_bear_add(s, rc);
+    baby_bear_sbox_x7(with_rc)
+}
+
+// One full chunk (4 elements) post-S-box, applying the 4x4 M_4 transform.
+// Out: (y0, y1, y2, y3) = M_4 * (x0, x1, x2, x3).
+//
+// We expose only y0 here as a representative; the kernel calls the four
+// y0/y1/y2/y3 functions from poseidon2_baby_bear.fg in parallel.
+fn baby_bear_p2_chunk_mds_y0(x0: u32, x1: u32, x2: u32, x3: u32) -> u32
+    requires x0 < BABY_BEAR_P  requires x1 < BABY_BEAR_P
+    requires x2 < BABY_BEAR_P  requires x3 < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    baby_bear_p2_ext_chunk_y0(x0, x1, x2, x3)
+}
+
+// "Circulant of blocks" final step for width-16 external layer:
+//   For chunk_i_out = chunk_i + sum_of_all_chunks
+//   This is the cheap version of the full M_E circulant.
+//
+// One element of the result: out[k] = chunk_after_M4[k] + chunk_sum[k mod 4]
+// where chunk_sum[k mod 4] is the sum across all 4 chunks of column (k mod 4).
+//
+// We expose the per-element add. The kernel is responsible for computing
+// the 4 chunk-sum columns once and reusing them for all 16 outputs.
+fn baby_bear_p2_circulant_add(chunk_after_mds: u32, chunk_sum_col: u32) -> u32
+    requires chunk_after_mds < BABY_BEAR_P
+    requires chunk_sum_col < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    baby_bear_add(chunk_after_mds, chunk_sum_col)
+}
+
+// One internal round step on the full state.
+// Internal rounds: only state[0] gets the S-box; state[1..15] are identity
+// (no S-box). Then linear layer M_I = I + outer(d, e), where d is a fixed
+// diagonal and e is the all-ones vector. Implemented as:
+//   sum_state = sum_i state[i]
+//   for k in 0..16: state[k] := d[k] * state[k] + sum_state
+//
+// We expose the per-element step here; the kernel computes sum_state once.
+fn baby_bear_p2_internal_step(state_k: u32, d_k: u32, sum_state: u32) -> u32
+    requires state_k < BABY_BEAR_P
+    requires d_k < BABY_BEAR_P
+    requires sum_state < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    let scaled: u32 = baby_bear_mul(d_k, state_k);
+    baby_bear_add(scaled, sum_state)
+}
+
+// Sum of two state elements with the < P invariant preserved.
+// Used to compute sum_state inside the kernel by repeated reduction.
+fn baby_bear_p2_state_sum_step(acc: u32, s_i: u32) -> u32
+    requires acc < BABY_BEAR_P
+    requires s_i < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    baby_bear_add(acc, s_i)
+}
+
+fn main() -> u64 { 0u64 }
