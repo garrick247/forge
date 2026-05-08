@@ -1,0 +1,28 @@
+use std::gpu;
+use std::m31;
+
+fn m31_get(arr: span<u32>, idx: u64) -> u32
+    requires idx < arr.len
+    requires forall k: u64, k < arr.len ==> arr[k] < M31_P
+    ensures result < M31_P
+{
+    assert(arr[idx] < M31_P) "forall k instantiated at idx";
+    arr[idx]
+}
+
+#[kernel]
+fn m31_mul_kernel(
+    out: span<u32>, a: span<u32>, b: span<u32>, n: u64)
+    requires n <= out.len  requires n <= a.len  requires n <= b.len
+    requires forall k: u64, k < a.len ==> a[k] < M31_P
+    requires forall k: u64, k < b.len ==> b[k] < M31_P
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if tid < n {
+        let av: u32 = m31_get(a, tid);
+        let bv: u32 = m31_get(b, tid);
+        out[tid] = m31_mul(av, bv);
+    }
+}
+
+fn main() -> u64 { 0u64 }
