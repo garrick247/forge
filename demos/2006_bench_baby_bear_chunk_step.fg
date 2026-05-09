@@ -1,0 +1,73 @@
+// Benchmark kernel: N parallel BabyBear Poseidon2 chunk-steps.
+//
+// One chunk-step = (ARK + SBOX_x7 on each of 4 elements) followed by
+// 4x4 MDS = one chunk's worth of one external round. The Poseidon2
+// width-16 BB permutation has 4 chunks per external round, and ~8
+// external rounds per permutation, so ~32 of these per perm.
+//
+// Layout: state[i] and rc[i] are interleaved as 4-tuples per thread.
+//   in:  state[4*tid + 0..3], rc[4*tid + 0..3]
+//   out: out[4*tid + 0..3]
+//
+// Pair with demos/2007 for KoalaBear (x^3) comparison.
+
+use std::gpu;
+use std::baby_bear;
+use std::poseidon2_baby_bear;
+
+fn baby_bear_get(arr: span<u32>, idx: u64) -> u32
+    requires idx < arr.len
+    requires forall k: u64, k < arr.len ==> arr[k] < BABY_BEAR_P
+    ensures result < BABY_BEAR_P
+{
+    assert(arr[idx] < BABY_BEAR_P) "forall k instantiated at idx";
+    arr[idx]
+}
+
+#[kernel]
+fn baby_bear_chunk_step_kernel(
+    out:   span<u32>,
+    state: span<u32>,
+    rc:    span<u32>,
+    n:     u64)
+    requires n > 0
+    requires 4 * n <= out.len
+    requires 4 * n <= state.len
+    requires 4 * n <= rc.len
+    requires forall k: u64, k < state.len ==> state[k] < BABY_BEAR_P
+    requires forall k: u64, k < rc.len ==> rc[k] < BABY_BEAR_P
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if tid < n {
+        let base: u64 = 4u64 * tid;
+
+        let s0: u32 = baby_bear_get(state, base);
+        let s1: u32 = baby_bear_get(state, base + 1u64);
+        let s2: u32 = baby_bear_get(state, base + 2u64);
+        let s3: u32 = baby_bear_get(state, base + 3u64);
+
+        let r0: u32 = baby_bear_get(rc, base);
+        let r1: u32 = baby_bear_get(rc, base + 1u64);
+        let r2: u32 = baby_bear_get(rc, base + 2u64);
+        let r3: u32 = baby_bear_get(rc, base + 3u64);
+
+        // ARK + SBOX (x^7) on each element.
+        let a0: u32 = baby_bear_p2_ext_sbox_with_rc(s0, r0);
+        let a1: u32 = baby_bear_p2_ext_sbox_with_rc(s1, r1);
+        let a2: u32 = baby_bear_p2_ext_sbox_with_rc(s2, r2);
+        let a3: u32 = baby_bear_p2_ext_sbox_with_rc(s3, r3);
+
+        // 4x4 MDS chunk transform.
+        let y0: u32 = baby_bear_p2_ext_chunk_y0(a0, a1, a2, a3);
+        let y1: u32 = baby_bear_p2_ext_chunk_y1(a0, a1, a2, a3);
+        let y2: u32 = baby_bear_p2_ext_chunk_y2(a0, a1, a2, a3);
+        let y3: u32 = baby_bear_p2_ext_chunk_y3(a0, a1, a2, a3);
+
+        out[base] = y0;
+        out[base + 1u64] = y1;
+        out[base + 2u64] = y2;
+        out[base + 3u64] = y3;
+    }
+}
+
+fn main() -> u64 { 0u64 }
