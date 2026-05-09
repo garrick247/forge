@@ -59,3 +59,11 @@ test/__pycache__/
 
 # pq_kyber stdlib copy/symlink (mirrors analysis/vortex_ntt/std)
 analysis/pq_kyber/std
+
+# Compiled benchmark binaries (built locally)
+benchmarks/bench_chunk_step
+benchmarks/bench_fused_factored
+benchmarks/bench_fused_perm
+benchmarks/bench_fused_pr
+benchmarks/bench_plonky3_fields
+benchmarks/bench_sbox
