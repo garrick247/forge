@@ -1,0 +1,684 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry baby_bear_chunk_step_kernel(
+    .param .u64 baby_bear_chunk_step_kernel_param_out_data,
+    .param .u64 baby_bear_chunk_step_kernel_param_out_len,
+    .param .u64 baby_bear_chunk_step_kernel_param_state_data,
+    .param .u64 baby_bear_chunk_step_kernel_param_state_len,
+    .param .u64 baby_bear_chunk_step_kernel_param_rc_data,
+    .param .u64 baby_bear_chunk_step_kernel_param_rc_len,
+    .param .u64 baby_bear_chunk_step_kernel_param_n
+)
+{
+    .reg .pred %p112, %p13, %p150, %p188, %p226, %p236, %p246, %p256, %p266, %p276, %p286, %p296, %p306, %p316, %p326, %p336, %p346, %p356, %p366, %p376, %p386, %p396, %p406, %p416, %p426, %p436, %p446, %p456, %p74;
+    .reg .u32 %r10, %r103, %r106, %r11, %r110, %r116, %r120, %r123, %r127, %r130, %r134, %r137, %r141, %r144, %r148, %r154, %r158, %r161, %r165, %r168, %r172, %r175, %r179, %r182, %r186, %r192, %r196, %r199, %r203, %r206, %r21, %r210, %r213, %r217, %r220, %r224, %r230, %r234, %r240, %r244, %r250, %r254, %r260, %r264, %r270, %r274, %r28, %r280, %r284, %r290, %r294, %r300, %r304, %r310, %r314, %r320, %r324, %r330, %r334, %r340, %r344, %r35, %r350, %r354, %r360, %r364, %r370, %r374, %r380, %r384, %r390, %r394, %r400, %r404, %r410, %r414, %r42, %r420, %r424, %r430, %r434, %r440, %r444, %r450, %r454, %r460, %r47, %r479, %r480, %r54, %r61, %r68, %r7, %r72, %r78, %r8, %r82, %r85, %r89, %r9, %r92, %r96, %r99;
+    .reg .u64 %rd0, %rd1, %rd100, %rd101, %rd102, %rd104, %rd105, %rd107, %rd108, %rd109, %rd111, %rd114, %rd115, %rd117, %rd118, %rd119, %rd12, %rd121, %rd122, %rd124, %rd125, %rd126, %rd128, %rd129, %rd131, %rd132, %rd133, %rd135, %rd136, %rd138, %rd139, %rd140, %rd142, %rd143, %rd145, %rd146, %rd147, %rd149, %rd15, %rd152, %rd153, %rd155, %rd156, %rd157, %rd159, %rd16, %rd160, %rd162, %rd163, %rd164, %rd166, %rd167, %rd169, %rd17, %rd170, %rd171, %rd173, %rd174, %rd176, %rd177, %rd178, %rd18, %rd180, %rd181, %rd183, %rd184, %rd185, %rd187, %rd19, %rd190, %rd191, %rd193, %rd194, %rd195, %rd197, %rd198, %rd2, %rd20, %rd200, %rd201, %rd202, %rd204, %rd205, %rd207, %rd208, %rd209, %rd211, %rd212, %rd214, %rd215, %rd216, %rd218, %rd219, %rd22, %rd221, %rd222, %rd223, %rd225, %rd228, %rd229, %rd23, %rd231, %rd232, %rd233, %rd235, %rd238, %rd239, %rd24, %rd241, %rd242, %rd243, %rd245, %rd248, %rd249, %rd25, %rd251, %rd252, %rd253, %rd255, %rd258, %rd259, %rd26, %rd261, %rd262, %rd263, %rd265, %rd268, %rd269, %rd27, %rd271, %rd272, %rd273, %rd275, %rd278, %rd279, %rd281, %rd282, %rd283, %rd285, %rd288, %rd289, %rd29, %rd291, %rd292, %rd293, %rd295, %rd298, %rd299, %rd3, %rd30, %rd301, %rd302, %rd303, %rd305, %rd308, %rd309, %rd31, %rd311, %rd312, %rd313, %rd315, %rd318, %rd319, %rd32, %rd321, %rd322, %rd323, %rd325, %rd328, %rd329, %rd33, %rd331, %rd332, %rd333, %rd335, %rd338, %rd339, %rd34, %rd341, %rd342, %rd343, %rd345, %rd348, %rd349, %rd351, %rd352, %rd353, %rd355, %rd358, %rd359, %rd36, %rd361, %rd362, %rd363, %rd365, %rd368, %rd369, %rd37, %rd371, %rd372, %rd373, %rd375, %rd378, %rd379, %rd38, %rd381, %rd382, %rd383, %rd385, %rd388, %rd389, %rd39, %rd391, %rd392, %rd393, %rd395, %rd398, %rd399, %rd4, %rd40, %rd401, %rd402, %rd403, %rd405, %rd408, %rd409, %rd41, %rd411, %rd412, %rd413, %rd415, %rd418, %rd419, %rd421, %rd422, %rd423, %rd425, %rd428, %rd429, %rd43, %rd431, %rd432, %rd433, %rd435, %rd438, %rd439, %rd44, %rd441, %rd442, %rd443, %rd445, %rd448, %rd449, %rd45, %rd451, %rd452, %rd453, %rd455, %rd458, %rd459, %rd46, %rd461, %rd462, %rd463, %rd464, %rd465, %rd466, %rd467, %rd468, %rd469, %rd470, %rd471, %rd472, %rd473, %rd474, %rd475, %rd476, %rd477, %rd478, %rd48, %rd49, %rd5, %rd50, %rd51, %rd52, %rd53, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd62, %rd63, %rd64, %rd65, %rd66, %rd67, %rd69, %rd70, %rd71, %rd73, %rd76, %rd77, %rd79, %rd80, %rd81, %rd83, %rd84, %rd86, %rd87, %rd88, %rd90, %rd91, %rd93, %rd94, %rd95, %rd97, %rd98;
+
+  ld.param.u64 %rd0, [baby_bear_chunk_step_kernel_param_out_data];
+  ld.param.u64 %rd1, [baby_bear_chunk_step_kernel_param_out_len];
+  ld.param.u64 %rd2, [baby_bear_chunk_step_kernel_param_state_data];
+  ld.param.u64 %rd3, [baby_bear_chunk_step_kernel_param_state_len];
+  ld.param.u64 %rd4, [baby_bear_chunk_step_kernel_param_rc_data];
+  ld.param.u64 %rd5, [baby_bear_chunk_step_kernel_param_rc_len];
+  ld.param.u64 %rd6, [baby_bear_chunk_step_kernel_param_n];
+
+  mov.u32 %r7, %ctaid.x;
+  mov.u32 %r8, %ntid.x;
+  mul.lo.u32 %r9, %r7, %r8;
+  mov.u32 %r10, %tid.x;
+  add.u32 %r11, %r9, %r10;
+  cvt.u64.u32 %rd12, %r11;
+  setp.lt.u64 %p13, %rd12, %rd6;
+  @%p13 bra baby_bear_chunk_step_kernel_then_14;
+  bra baby_bear_chunk_step_kernel_else_14;
+  baby_bear_chunk_step_kernel_then_14:
+  mov.u64 %rd15, 4;
+  mul.lo.u64 %rd16, %rd15, %rd12;
+  mov.u64 %rd17, 0; // unhandled expr
+  mov.u64 %rd18, 4;
+  mul.lo.u64 %rd19, %rd16, %rd18;
+  add.u64 %rd20, %rd2, %rd19;
+  ld.global.u32 %r21, [%rd20];
+  mov.u64 %rd22, 1;
+  add.u64 %rd23, %rd16, %rd22;
+  mov.u64 %rd24, 0; // unhandled expr
+  mov.u64 %rd25, 4;
+  mul.lo.u64 %rd26, %rd23, %rd25;
+  add.u64 %rd27, %rd2, %rd26;
+  ld.global.u32 %r28, [%rd27];
+  mov.u64 %rd29, 2;
+  add.u64 %rd30, %rd16, %rd29;
+  mov.u64 %rd31, 0; // unhandled expr
+  mov.u64 %rd32, 4;
+  mul.lo.u64 %rd33, %rd30, %rd32;
+  add.u64 %rd34, %rd2, %rd33;
+  ld.global.u32 %r35, [%rd34];
+  mov.u64 %rd36, 3;
+  add.u64 %rd37, %rd16, %rd36;
+  mov.u64 %rd38, 0; // unhandled expr
+  mov.u64 %rd39, 4;
+  mul.lo.u64 %rd40, %rd37, %rd39;
+  add.u64 %rd41, %rd2, %rd40;
+  ld.global.u32 %r42, [%rd41];
+  mov.u64 %rd43, 0; // unhandled expr
+  mov.u64 %rd44, 4;
+  mul.lo.u64 %rd45, %rd16, %rd44;
+  add.u64 %rd46, %rd4, %rd45;
+  ld.global.u32 %r47, [%rd46];
+  mov.u64 %rd48, 1;
+  add.u64 %rd49, %rd16, %rd48;
+  mov.u64 %rd50, 0; // unhandled expr
+  mov.u64 %rd51, 4;
+  mul.lo.u64 %rd52, %rd49, %rd51;
+  add.u64 %rd53, %rd4, %rd52;
+  ld.global.u32 %r54, [%rd53];
+  mov.u64 %rd55, 2;
+  add.u64 %rd56, %rd16, %rd55;
+  mov.u64 %rd57, 0; // unhandled expr
+  mov.u64 %rd58, 4;
+  mul.lo.u64 %rd59, %rd56, %rd58;
+  add.u64 %rd60, %rd4, %rd59;
+  ld.global.u32 %r61, [%rd60];
+  mov.u64 %rd62, 3;
+  add.u64 %rd63, %rd16, %rd62;
+  mov.u64 %rd64, 0; // unhandled expr
+  mov.u64 %rd65, 4;
+  mul.lo.u64 %rd66, %rd63, %rd65;
+  add.u64 %rd67, %rd4, %rd66;
+  ld.global.u32 %r68, [%rd67];
+  cvt.u64.u32 %rd69, %r21;
+  cvt.u64.u32 %rd70, %r47;
+  add.u64 %rd71, %rd69, %rd70;
+  mov.u32 %r72, 2013265921;
+  cvt.u64.u32 %rd73, %r72;
+  setp.ge.u64 %p74, %rd71, %rd73;
+  @%p74 bra baby_bear_chunk_step_kernel_then_75;
+  bra baby_bear_chunk_step_kernel_else_75;
+  baby_bear_chunk_step_kernel_then_75:
+  sub.u64 %rd76, %rd71, %rd73;
+  mov.u64 %rd77, %rd76;
+  bra baby_bear_chunk_step_kernel_end_75;
+  baby_bear_chunk_step_kernel_else_75:
+  mov.u64 %rd77, %rd71;
+  baby_bear_chunk_step_kernel_end_75:
+  cvt.u32.u64 %r78, %rd77;
+  cvt.u64.u32 %rd79, %r78;
+  cvt.u64.u32 %rd80, %r78;
+  mul.lo.u64 %rd81, %rd79, %rd80;
+  mov.u32 %r82, 2013265921;
+  cvt.u64.u32 %rd83, %r82;
+  rem.u64 %rd84, %rd81, %rd83;
+  cvt.u32.u64 %r85, %rd84;
+  cvt.u64.u32 %rd86, %r85;
+  cvt.u64.u32 %rd87, %r85;
+  mul.lo.u64 %rd88, %rd86, %rd87;
+  mov.u32 %r89, 2013265921;
+  cvt.u64.u32 %rd90, %r89;
+  rem.u64 %rd91, %rd88, %rd90;
+  cvt.u32.u64 %r92, %rd91;
+  cvt.u64.u32 %rd93, %r92;
+  cvt.u64.u32 %rd94, %r85;
+  mul.lo.u64 %rd95, %rd93, %rd94;
+  mov.u32 %r96, 2013265921;
+  cvt.u64.u32 %rd97, %r96;
+  rem.u64 %rd98, %rd95, %rd97;
+  cvt.u32.u64 %r99, %rd98;
+  cvt.u64.u32 %rd100, %r99;
+  cvt.u64.u32 %rd101, %r78;
+  mul.lo.u64 %rd102, %rd100, %rd101;
+  mov.u32 %r103, 2013265921;
+  cvt.u64.u32 %rd104, %r103;
+  rem.u64 %rd105, %rd102, %rd104;
+  cvt.u32.u64 %r106, %rd105;
+  cvt.u64.u32 %rd107, %r28;
+  cvt.u64.u32 %rd108, %r54;
+  add.u64 %rd109, %rd107, %rd108;
+  mov.u32 %r110, 2013265921;
+  cvt.u64.u32 %rd111, %r110;
+  setp.ge.u64 %p112, %rd109, %rd111;
+  @%p112 bra baby_bear_chunk_step_kernel_then_113;
+  bra baby_bear_chunk_step_kernel_else_113;
+  baby_bear_chunk_step_kernel_then_113:
+  sub.u64 %rd114, %rd109, %rd111;
+  mov.u64 %rd115, %rd114;
+  bra baby_bear_chunk_step_kernel_end_113;
+  baby_bear_chunk_step_kernel_else_113:
+  mov.u64 %rd115, %rd109;
+  baby_bear_chunk_step_kernel_end_113:
+  cvt.u32.u64 %r116, %rd115;
+  cvt.u64.u32 %rd117, %r116;
+  cvt.u64.u32 %rd118, %r116;
+  mul.lo.u64 %rd119, %rd117, %rd118;
+  mov.u32 %r120, 2013265921;
+  cvt.u64.u32 %rd121, %r120;
+  rem.u64 %rd122, %rd119, %rd121;
+  cvt.u32.u64 %r123, %rd122;
+  cvt.u64.u32 %rd124, %r123;
+  cvt.u64.u32 %rd125, %r123;
+  mul.lo.u64 %rd126, %rd124, %rd125;
+  mov.u32 %r127, 2013265921;
+  cvt.u64.u32 %rd128, %r127;
+  rem.u64 %rd129, %rd126, %rd128;
+  cvt.u32.u64 %r130, %rd129;
+  cvt.u64.u32 %rd131, %r130;
+  cvt.u64.u32 %rd132, %r123;
+  mul.lo.u64 %rd133, %rd131, %rd132;
+  mov.u32 %r134, 2013265921;
+  cvt.u64.u32 %rd135, %r134;
+  rem.u64 %rd136, %rd133, %rd135;
+  cvt.u32.u64 %r137, %rd136;
+  cvt.u64.u32 %rd138, %r137;
+  cvt.u64.u32 %rd139, %r116;
+  mul.lo.u64 %rd140, %rd138, %rd139;
+  mov.u32 %r141, 2013265921;
+  cvt.u64.u32 %rd142, %r141;
+  rem.u64 %rd143, %rd140, %rd142;
+  cvt.u32.u64 %r144, %rd143;
+  cvt.u64.u32 %rd145, %r35;
+  cvt.u64.u32 %rd146, %r61;
+  add.u64 %rd147, %rd145, %rd146;
+  mov.u32 %r148, 2013265921;
+  cvt.u64.u32 %rd149, %r148;
+  setp.ge.u64 %p150, %rd147, %rd149;
+  @%p150 bra baby_bear_chunk_step_kernel_then_151;
+  bra baby_bear_chunk_step_kernel_else_151;
+  baby_bear_chunk_step_kernel_then_151:
+  sub.u64 %rd152, %rd147, %rd149;
+  mov.u64 %rd153, %rd152;
+  bra baby_bear_chunk_step_kernel_end_151;
+  baby_bear_chunk_step_kernel_else_151:
+  mov.u64 %rd153, %rd147;
+  baby_bear_chunk_step_kernel_end_151:
+  cvt.u32.u64 %r154, %rd153;
+  cvt.u64.u32 %rd155, %r154;
+  cvt.u64.u32 %rd156, %r154;
+  mul.lo.u64 %rd157, %rd155, %rd156;
+  mov.u32 %r158, 2013265921;
+  cvt.u64.u32 %rd159, %r158;
+  rem.u64 %rd160, %rd157, %rd159;
+  cvt.u32.u64 %r161, %rd160;
+  cvt.u64.u32 %rd162, %r161;
+  cvt.u64.u32 %rd163, %r161;
+  mul.lo.u64 %rd164, %rd162, %rd163;
+  mov.u32 %r165, 2013265921;
+  cvt.u64.u32 %rd166, %r165;
+  rem.u64 %rd167, %rd164, %rd166;
+  cvt.u32.u64 %r168, %rd167;
+  cvt.u64.u32 %rd169, %r168;
+  cvt.u64.u32 %rd170, %r161;
+  mul.lo.u64 %rd171, %rd169, %rd170;
+  mov.u32 %r172, 2013265921;
+  cvt.u64.u32 %rd173, %r172;
+  rem.u64 %rd174, %rd171, %rd173;
+  cvt.u32.u64 %r175, %rd174;
+  cvt.u64.u32 %rd176, %r175;
+  cvt.u64.u32 %rd177, %r154;
+  mul.lo.u64 %rd178, %rd176, %rd177;
+  mov.u32 %r179, 2013265921;
+  cvt.u64.u32 %rd180, %r179;
+  rem.u64 %rd181, %rd178, %rd180;
+  cvt.u32.u64 %r182, %rd181;
+  cvt.u64.u32 %rd183, %r42;
+  cvt.u64.u32 %rd184, %r68;
+  add.u64 %rd185, %rd183, %rd184;
+  mov.u32 %r186, 2013265921;
+  cvt.u64.u32 %rd187, %r186;
+  setp.ge.u64 %p188, %rd185, %rd187;
+  @%p188 bra baby_bear_chunk_step_kernel_then_189;
+  bra baby_bear_chunk_step_kernel_else_189;
+  baby_bear_chunk_step_kernel_then_189:
+  sub.u64 %rd190, %rd185, %rd187;
+  mov.u64 %rd191, %rd190;
+  bra baby_bear_chunk_step_kernel_end_189;
+  baby_bear_chunk_step_kernel_else_189:
+  mov.u64 %rd191, %rd185;
+  baby_bear_chunk_step_kernel_end_189:
+  cvt.u32.u64 %r192, %rd191;
+  cvt.u64.u32 %rd193, %r192;
+  cvt.u64.u32 %rd194, %r192;
+  mul.lo.u64 %rd195, %rd193, %rd194;
+  mov.u32 %r196, 2013265921;
+  cvt.u64.u32 %rd197, %r196;
+  rem.u64 %rd198, %rd195, %rd197;
+  cvt.u32.u64 %r199, %rd198;
+  cvt.u64.u32 %rd200, %r199;
+  cvt.u64.u32 %rd201, %r199;
+  mul.lo.u64 %rd202, %rd200, %rd201;
+  mov.u32 %r203, 2013265921;
+  cvt.u64.u32 %rd204, %r203;
+  rem.u64 %rd205, %rd202, %rd204;
+  cvt.u32.u64 %r206, %rd205;
+  cvt.u64.u32 %rd207, %r206;
+  cvt.u64.u32 %rd208, %r199;
+  mul.lo.u64 %rd209, %rd207, %rd208;
+  mov.u32 %r210, 2013265921;
+  cvt.u64.u32 %rd211, %r210;
+  rem.u64 %rd212, %rd209, %rd211;
+  cvt.u32.u64 %r213, %rd212;
+  cvt.u64.u32 %rd214, %r213;
+  cvt.u64.u32 %rd215, %r192;
+  mul.lo.u64 %rd216, %rd214, %rd215;
+  mov.u32 %r217, 2013265921;
+  cvt.u64.u32 %rd218, %r217;
+  rem.u64 %rd219, %rd216, %rd218;
+  cvt.u32.u64 %r220, %rd219;
+  cvt.u64.u32 %rd221, %r106;
+  cvt.u64.u32 %rd222, %r106;
+  add.u64 %rd223, %rd221, %rd222;
+  mov.u32 %r224, 2013265921;
+  cvt.u64.u32 %rd225, %r224;
+  setp.ge.u64 %p226, %rd223, %rd225;
+  @%p226 bra baby_bear_chunk_step_kernel_then_227;
+  bra baby_bear_chunk_step_kernel_else_227;
+  baby_bear_chunk_step_kernel_then_227:
+  sub.u64 %rd228, %rd223, %rd225;
+  mov.u64 %rd229, %rd228;
+  bra baby_bear_chunk_step_kernel_end_227;
+  baby_bear_chunk_step_kernel_else_227:
+  mov.u64 %rd229, %rd223;
+  baby_bear_chunk_step_kernel_end_227:
+  cvt.u32.u64 %r230, %rd229;
+  cvt.u64.u32 %rd231, %r144;
+  cvt.u64.u32 %rd232, %r144;
+  add.u64 %rd233, %rd231, %rd232;
+  mov.u32 %r234, 2013265921;
+  cvt.u64.u32 %rd235, %r234;
+  setp.ge.u64 %p236, %rd233, %rd235;
+  @%p236 bra baby_bear_chunk_step_kernel_then_237;
+  bra baby_bear_chunk_step_kernel_else_237;
+  baby_bear_chunk_step_kernel_then_237:
+  sub.u64 %rd238, %rd233, %rd235;
+  mov.u64 %rd239, %rd238;
+  bra baby_bear_chunk_step_kernel_end_237;
+  baby_bear_chunk_step_kernel_else_237:
+  mov.u64 %rd239, %rd233;
+  baby_bear_chunk_step_kernel_end_237:
+  cvt.u32.u64 %r240, %rd239;
+  cvt.u64.u32 %rd241, %r240;
+  cvt.u64.u32 %rd242, %r144;
+  add.u64 %rd243, %rd241, %rd242;
+  mov.u32 %r244, 2013265921;
+  cvt.u64.u32 %rd245, %r244;
+  setp.ge.u64 %p246, %rd243, %rd245;
+  @%p246 bra baby_bear_chunk_step_kernel_then_247;
+  bra baby_bear_chunk_step_kernel_else_247;
+  baby_bear_chunk_step_kernel_then_247:
+  sub.u64 %rd248, %rd243, %rd245;
+  mov.u64 %rd249, %rd248;
+  bra baby_bear_chunk_step_kernel_end_247;
+  baby_bear_chunk_step_kernel_else_247:
+  mov.u64 %rd249, %rd243;
+  baby_bear_chunk_step_kernel_end_247:
+  cvt.u32.u64 %r250, %rd249;
+  cvt.u64.u32 %rd251, %r230;
+  cvt.u64.u32 %rd252, %r250;
+  add.u64 %rd253, %rd251, %rd252;
+  mov.u32 %r254, 2013265921;
+  cvt.u64.u32 %rd255, %r254;
+  setp.ge.u64 %p256, %rd253, %rd255;
+  @%p256 bra baby_bear_chunk_step_kernel_then_257;
+  bra baby_bear_chunk_step_kernel_else_257;
+  baby_bear_chunk_step_kernel_then_257:
+  sub.u64 %rd258, %rd253, %rd255;
+  mov.u64 %rd259, %rd258;
+  bra baby_bear_chunk_step_kernel_end_257;
+  baby_bear_chunk_step_kernel_else_257:
+  mov.u64 %rd259, %rd253;
+  baby_bear_chunk_step_kernel_end_257:
+  cvt.u32.u64 %r260, %rd259;
+  cvt.u64.u32 %rd261, %r260;
+  cvt.u64.u32 %rd262, %r182;
+  add.u64 %rd263, %rd261, %rd262;
+  mov.u32 %r264, 2013265921;
+  cvt.u64.u32 %rd265, %r264;
+  setp.ge.u64 %p266, %rd263, %rd265;
+  @%p266 bra baby_bear_chunk_step_kernel_then_267;
+  bra baby_bear_chunk_step_kernel_else_267;
+  baby_bear_chunk_step_kernel_then_267:
+  sub.u64 %rd268, %rd263, %rd265;
+  mov.u64 %rd269, %rd268;
+  bra baby_bear_chunk_step_kernel_end_267;
+  baby_bear_chunk_step_kernel_else_267:
+  mov.u64 %rd269, %rd263;
+  baby_bear_chunk_step_kernel_end_267:
+  cvt.u32.u64 %r270, %rd269;
+  cvt.u64.u32 %rd271, %r270;
+  cvt.u64.u32 %rd272, %r220;
+  add.u64 %rd273, %rd271, %rd272;
+  mov.u32 %r274, 2013265921;
+  cvt.u64.u32 %rd275, %r274;
+  setp.ge.u64 %p276, %rd273, %rd275;
+  @%p276 bra baby_bear_chunk_step_kernel_then_277;
+  bra baby_bear_chunk_step_kernel_else_277;
+  baby_bear_chunk_step_kernel_then_277:
+  sub.u64 %rd278, %rd273, %rd275;
+  mov.u64 %rd279, %rd278;
+  bra baby_bear_chunk_step_kernel_end_277;
+  baby_bear_chunk_step_kernel_else_277:
+  mov.u64 %rd279, %rd273;
+  baby_bear_chunk_step_kernel_end_277:
+  cvt.u32.u64 %r280, %rd279;
+  cvt.u64.u32 %rd281, %r144;
+  cvt.u64.u32 %rd282, %r144;
+  add.u64 %rd283, %rd281, %rd282;
+  mov.u32 %r284, 2013265921;
+  cvt.u64.u32 %rd285, %r284;
+  setp.ge.u64 %p286, %rd283, %rd285;
+  @%p286 bra baby_bear_chunk_step_kernel_then_287;
+  bra baby_bear_chunk_step_kernel_else_287;
+  baby_bear_chunk_step_kernel_then_287:
+  sub.u64 %rd288, %rd283, %rd285;
+  mov.u64 %rd289, %rd288;
+  bra baby_bear_chunk_step_kernel_end_287;
+  baby_bear_chunk_step_kernel_else_287:
+  mov.u64 %rd289, %rd283;
+  baby_bear_chunk_step_kernel_end_287:
+  cvt.u32.u64 %r290, %rd289;
+  cvt.u64.u32 %rd291, %r182;
+  cvt.u64.u32 %rd292, %r182;
+  add.u64 %rd293, %rd291, %rd292;
+  mov.u32 %r294, 2013265921;
+  cvt.u64.u32 %rd295, %r294;
+  setp.ge.u64 %p296, %rd293, %rd295;
+  @%p296 bra baby_bear_chunk_step_kernel_then_297;
+  bra baby_bear_chunk_step_kernel_else_297;
+  baby_bear_chunk_step_kernel_then_297:
+  sub.u64 %rd298, %rd293, %rd295;
+  mov.u64 %rd299, %rd298;
+  bra baby_bear_chunk_step_kernel_end_297;
+  baby_bear_chunk_step_kernel_else_297:
+  mov.u64 %rd299, %rd293;
+  baby_bear_chunk_step_kernel_end_297:
+  cvt.u32.u64 %r300, %rd299;
+  cvt.u64.u32 %rd301, %r300;
+  cvt.u64.u32 %rd302, %r182;
+  add.u64 %rd303, %rd301, %rd302;
+  mov.u32 %r304, 2013265921;
+  cvt.u64.u32 %rd305, %r304;
+  setp.ge.u64 %p306, %rd303, %rd305;
+  @%p306 bra baby_bear_chunk_step_kernel_then_307;
+  bra baby_bear_chunk_step_kernel_else_307;
+  baby_bear_chunk_step_kernel_then_307:
+  sub.u64 %rd308, %rd303, %rd305;
+  mov.u64 %rd309, %rd308;
+  bra baby_bear_chunk_step_kernel_end_307;
+  baby_bear_chunk_step_kernel_else_307:
+  mov.u64 %rd309, %rd303;
+  baby_bear_chunk_step_kernel_end_307:
+  cvt.u32.u64 %r310, %rd309;
+  cvt.u64.u32 %rd311, %r106;
+  cvt.u64.u32 %rd312, %r290;
+  add.u64 %rd313, %rd311, %rd312;
+  mov.u32 %r314, 2013265921;
+  cvt.u64.u32 %rd315, %r314;
+  setp.ge.u64 %p316, %rd313, %rd315;
+  @%p316 bra baby_bear_chunk_step_kernel_then_317;
+  bra baby_bear_chunk_step_kernel_else_317;
+  baby_bear_chunk_step_kernel_then_317:
+  sub.u64 %rd318, %rd313, %rd315;
+  mov.u64 %rd319, %rd318;
+  bra baby_bear_chunk_step_kernel_end_317;
+  baby_bear_chunk_step_kernel_else_317:
+  mov.u64 %rd319, %rd313;
+  baby_bear_chunk_step_kernel_end_317:
+  cvt.u32.u64 %r320, %rd319;
+  cvt.u64.u32 %rd321, %r320;
+  cvt.u64.u32 %rd322, %r310;
+  add.u64 %rd323, %rd321, %rd322;
+  mov.u32 %r324, 2013265921;
+  cvt.u64.u32 %rd325, %r324;
+  setp.ge.u64 %p326, %rd323, %rd325;
+  @%p326 bra baby_bear_chunk_step_kernel_then_327;
+  bra baby_bear_chunk_step_kernel_else_327;
+  baby_bear_chunk_step_kernel_then_327:
+  sub.u64 %rd328, %rd323, %rd325;
+  mov.u64 %rd329, %rd328;
+  bra baby_bear_chunk_step_kernel_end_327;
+  baby_bear_chunk_step_kernel_else_327:
+  mov.u64 %rd329, %rd323;
+  baby_bear_chunk_step_kernel_end_327:
+  cvt.u32.u64 %r330, %rd329;
+  cvt.u64.u32 %rd331, %r330;
+  cvt.u64.u32 %rd332, %r220;
+  add.u64 %rd333, %rd331, %rd332;
+  mov.u32 %r334, 2013265921;
+  cvt.u64.u32 %rd335, %r334;
+  setp.ge.u64 %p336, %rd333, %rd335;
+  @%p336 bra baby_bear_chunk_step_kernel_then_337;
+  bra baby_bear_chunk_step_kernel_else_337;
+  baby_bear_chunk_step_kernel_then_337:
+  sub.u64 %rd338, %rd333, %rd335;
+  mov.u64 %rd339, %rd338;
+  bra baby_bear_chunk_step_kernel_end_337;
+  baby_bear_chunk_step_kernel_else_337:
+  mov.u64 %rd339, %rd333;
+  baby_bear_chunk_step_kernel_end_337:
+  cvt.u32.u64 %r340, %rd339;
+  cvt.u64.u32 %rd341, %r182;
+  cvt.u64.u32 %rd342, %r182;
+  add.u64 %rd343, %rd341, %rd342;
+  mov.u32 %r344, 2013265921;
+  cvt.u64.u32 %rd345, %r344;
+  setp.ge.u64 %p346, %rd343, %rd345;
+  @%p346 bra baby_bear_chunk_step_kernel_then_347;
+  bra baby_bear_chunk_step_kernel_else_347;
+  baby_bear_chunk_step_kernel_then_347:
+  sub.u64 %rd348, %rd343, %rd345;
+  mov.u64 %rd349, %rd348;
+  bra baby_bear_chunk_step_kernel_end_347;
+  baby_bear_chunk_step_kernel_else_347:
+  mov.u64 %rd349, %rd343;
+  baby_bear_chunk_step_kernel_end_347:
+  cvt.u32.u64 %r350, %rd349;
+  cvt.u64.u32 %rd351, %r220;
+  cvt.u64.u32 %rd352, %r220;
+  add.u64 %rd353, %rd351, %rd352;
+  mov.u32 %r354, 2013265921;
+  cvt.u64.u32 %rd355, %r354;
+  setp.ge.u64 %p356, %rd353, %rd355;
+  @%p356 bra baby_bear_chunk_step_kernel_then_357;
+  bra baby_bear_chunk_step_kernel_else_357;
+  baby_bear_chunk_step_kernel_then_357:
+  sub.u64 %rd358, %rd353, %rd355;
+  mov.u64 %rd359, %rd358;
+  bra baby_bear_chunk_step_kernel_end_357;
+  baby_bear_chunk_step_kernel_else_357:
+  mov.u64 %rd359, %rd353;
+  baby_bear_chunk_step_kernel_end_357:
+  cvt.u32.u64 %r360, %rd359;
+  cvt.u64.u32 %rd361, %r360;
+  cvt.u64.u32 %rd362, %r220;
+  add.u64 %rd363, %rd361, %rd362;
+  mov.u32 %r364, 2013265921;
+  cvt.u64.u32 %rd365, %r364;
+  setp.ge.u64 %p366, %rd363, %rd365;
+  @%p366 bra baby_bear_chunk_step_kernel_then_367;
+  bra baby_bear_chunk_step_kernel_else_367;
+  baby_bear_chunk_step_kernel_then_367:
+  sub.u64 %rd368, %rd363, %rd365;
+  mov.u64 %rd369, %rd368;
+  bra baby_bear_chunk_step_kernel_end_367;
+  baby_bear_chunk_step_kernel_else_367:
+  mov.u64 %rd369, %rd363;
+  baby_bear_chunk_step_kernel_end_367:
+  cvt.u32.u64 %r370, %rd369;
+  cvt.u64.u32 %rd371, %r106;
+  cvt.u64.u32 %rd372, %r144;
+  add.u64 %rd373, %rd371, %rd372;
+  mov.u32 %r374, 2013265921;
+  cvt.u64.u32 %rd375, %r374;
+  setp.ge.u64 %p376, %rd373, %rd375;
+  @%p376 bra baby_bear_chunk_step_kernel_then_377;
+  bra baby_bear_chunk_step_kernel_else_377;
+  baby_bear_chunk_step_kernel_then_377:
+  sub.u64 %rd378, %rd373, %rd375;
+  mov.u64 %rd379, %rd378;
+  bra baby_bear_chunk_step_kernel_end_377;
+  baby_bear_chunk_step_kernel_else_377:
+  mov.u64 %rd379, %rd373;
+  baby_bear_chunk_step_kernel_end_377:
+  cvt.u32.u64 %r380, %rd379;
+  cvt.u64.u32 %rd381, %r380;
+  cvt.u64.u32 %rd382, %r350;
+  add.u64 %rd383, %rd381, %rd382;
+  mov.u32 %r384, 2013265921;
+  cvt.u64.u32 %rd385, %r384;
+  setp.ge.u64 %p386, %rd383, %rd385;
+  @%p386 bra baby_bear_chunk_step_kernel_then_387;
+  bra baby_bear_chunk_step_kernel_else_387;
+  baby_bear_chunk_step_kernel_then_387:
+  sub.u64 %rd388, %rd383, %rd385;
+  mov.u64 %rd389, %rd388;
+  bra baby_bear_chunk_step_kernel_end_387;
+  baby_bear_chunk_step_kernel_else_387:
+  mov.u64 %rd389, %rd383;
+  baby_bear_chunk_step_kernel_end_387:
+  cvt.u32.u64 %r390, %rd389;
+  cvt.u64.u32 %rd391, %r390;
+  cvt.u64.u32 %rd392, %r370;
+  add.u64 %rd393, %rd391, %rd392;
+  mov.u32 %r394, 2013265921;
+  cvt.u64.u32 %rd395, %r394;
+  setp.ge.u64 %p396, %rd393, %rd395;
+  @%p396 bra baby_bear_chunk_step_kernel_then_397;
+  bra baby_bear_chunk_step_kernel_else_397;
+  baby_bear_chunk_step_kernel_then_397:
+  sub.u64 %rd398, %rd393, %rd395;
+  mov.u64 %rd399, %rd398;
+  bra baby_bear_chunk_step_kernel_end_397;
+  baby_bear_chunk_step_kernel_else_397:
+  mov.u64 %rd399, %rd393;
+  baby_bear_chunk_step_kernel_end_397:
+  cvt.u32.u64 %r400, %rd399;
+  cvt.u64.u32 %rd401, %r106;
+  cvt.u64.u32 %rd402, %r106;
+  add.u64 %rd403, %rd401, %rd402;
+  mov.u32 %r404, 2013265921;
+  cvt.u64.u32 %rd405, %r404;
+  setp.ge.u64 %p406, %rd403, %rd405;
+  @%p406 bra baby_bear_chunk_step_kernel_then_407;
+  bra baby_bear_chunk_step_kernel_else_407;
+  baby_bear_chunk_step_kernel_then_407:
+  sub.u64 %rd408, %rd403, %rd405;
+  mov.u64 %rd409, %rd408;
+  bra baby_bear_chunk_step_kernel_end_407;
+  baby_bear_chunk_step_kernel_else_407:
+  mov.u64 %rd409, %rd403;
+  baby_bear_chunk_step_kernel_end_407:
+  cvt.u32.u64 %r410, %rd409;
+  cvt.u64.u32 %rd411, %r410;
+  cvt.u64.u32 %rd412, %r106;
+  add.u64 %rd413, %rd411, %rd412;
+  mov.u32 %r414, 2013265921;
+  cvt.u64.u32 %rd415, %r414;
+  setp.ge.u64 %p416, %rd413, %rd415;
+  @%p416 bra baby_bear_chunk_step_kernel_then_417;
+  bra baby_bear_chunk_step_kernel_else_417;
+  baby_bear_chunk_step_kernel_then_417:
+  sub.u64 %rd418, %rd413, %rd415;
+  mov.u64 %rd419, %rd418;
+  bra baby_bear_chunk_step_kernel_end_417;
+  baby_bear_chunk_step_kernel_else_417:
+  mov.u64 %rd419, %rd413;
+  baby_bear_chunk_step_kernel_end_417:
+  cvt.u32.u64 %r420, %rd419;
+  cvt.u64.u32 %rd421, %r220;
+  cvt.u64.u32 %rd422, %r220;
+  add.u64 %rd423, %rd421, %rd422;
+  mov.u32 %r424, 2013265921;
+  cvt.u64.u32 %rd425, %r424;
+  setp.ge.u64 %p426, %rd423, %rd425;
+  @%p426 bra baby_bear_chunk_step_kernel_then_427;
+  bra baby_bear_chunk_step_kernel_else_427;
+  baby_bear_chunk_step_kernel_then_427:
+  sub.u64 %rd428, %rd423, %rd425;
+  mov.u64 %rd429, %rd428;
+  bra baby_bear_chunk_step_kernel_end_427;
+  baby_bear_chunk_step_kernel_else_427:
+  mov.u64 %rd429, %rd423;
+  baby_bear_chunk_step_kernel_end_427:
+  cvt.u32.u64 %r430, %rd429;
+  cvt.u64.u32 %rd431, %r420;
+  cvt.u64.u32 %rd432, %r144;
+  add.u64 %rd433, %rd431, %rd432;
+  mov.u32 %r434, 2013265921;
+  cvt.u64.u32 %rd435, %r434;
+  setp.ge.u64 %p436, %rd433, %rd435;
+  @%p436 bra baby_bear_chunk_step_kernel_then_437;
+  bra baby_bear_chunk_step_kernel_else_437;
+  baby_bear_chunk_step_kernel_then_437:
+  sub.u64 %rd438, %rd433, %rd435;
+  mov.u64 %rd439, %rd438;
+  bra baby_bear_chunk_step_kernel_end_437;
+  baby_bear_chunk_step_kernel_else_437:
+  mov.u64 %rd439, %rd433;
+  baby_bear_chunk_step_kernel_end_437:
+  cvt.u32.u64 %r440, %rd439;
+  cvt.u64.u32 %rd441, %r440;
+  cvt.u64.u32 %rd442, %r182;
+  add.u64 %rd443, %rd441, %rd442;
+  mov.u32 %r444, 2013265921;
+  cvt.u64.u32 %rd445, %r444;
+  setp.ge.u64 %p446, %rd443, %rd445;
+  @%p446 bra baby_bear_chunk_step_kernel_then_447;
+  bra baby_bear_chunk_step_kernel_else_447;
+  baby_bear_chunk_step_kernel_then_447:
+  sub.u64 %rd448, %rd443, %rd445;
+  mov.u64 %rd449, %rd448;
+  bra baby_bear_chunk_step_kernel_end_447;
+  baby_bear_chunk_step_kernel_else_447:
+  mov.u64 %rd449, %rd443;
+  baby_bear_chunk_step_kernel_end_447:
+  cvt.u32.u64 %r450, %rd449;
+  cvt.u64.u32 %rd451, %r450;
+  cvt.u64.u32 %rd452, %r430;
+  add.u64 %rd453, %rd451, %rd452;
+  mov.u32 %r454, 2013265921;
+  cvt.u64.u32 %rd455, %r454;
+  setp.ge.u64 %p456, %rd453, %rd455;
+  @%p456 bra baby_bear_chunk_step_kernel_then_457;
+  bra baby_bear_chunk_step_kernel_else_457;
+  baby_bear_chunk_step_kernel_then_457:
+  sub.u64 %rd458, %rd453, %rd455;
+  mov.u64 %rd459, %rd458;
+  bra baby_bear_chunk_step_kernel_end_457;
+  baby_bear_chunk_step_kernel_else_457:
+  mov.u64 %rd459, %rd453;
+  baby_bear_chunk_step_kernel_end_457:
+  cvt.u32.u64 %r460, %rd459;
+  mov.u64 %rd461, 4;
+  mul.lo.u64 %rd462, %rd16, %rd461;
+  add.u64 %rd463, %rd0, %rd462;
+  st.global.u32 [%rd463], %r280;
+  mov.u64 %rd464, 1;
+  add.u64 %rd465, %rd16, %rd464;
+  mov.u64 %rd466, 4;
+  mul.lo.u64 %rd467, %rd465, %rd466;
+  add.u64 %rd468, %rd0, %rd467;
+  st.global.u32 [%rd468], %r340;
+  mov.u64 %rd469, 2;
+  add.u64 %rd470, %rd16, %rd469;
+  mov.u64 %rd471, 4;
+  mul.lo.u64 %rd472, %rd470, %rd471;
+  add.u64 %rd473, %rd0, %rd472;
+  st.global.u32 [%rd473], %r400;
+  mov.u64 %rd474, 3;
+  add.u64 %rd475, %rd16, %rd474;
+  mov.u64 %rd476, 4;
+  mul.lo.u64 %rd477, %rd475, %rd476;
+  add.u64 %rd478, %rd0, %rd477;
+  st.global.u32 [%rd478], %r460;
+  mov.u32 %r479, 0; // unit
+  mov.u32 %r480, %r479;
+  bra baby_bear_chunk_step_kernel_end_14;
+  baby_bear_chunk_step_kernel_else_14:
+  mov.u32 %r480, 0; // no else branch
+  baby_bear_chunk_step_kernel_end_14:
+  ret;
+}
+

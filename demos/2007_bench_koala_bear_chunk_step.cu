@@ -88,11 +88,11 @@ static __device__ __forceinline__ float warp_reduce_max_f32(float val __attribut
 static __device__ __forceinline__ float warp_reduce_min_f32(float val __attribute__((unused)));
 uint64_t grid_stride_start(uint64_t block_idx __attribute__((unused)), uint64_t block_dim __attribute__((unused)), uint64_t thread_idx __attribute__((unused)));
 uint64_t grid_stride_step(uint64_t block_dim __attribute__((unused)), uint64_t grid_dim __attribute__((unused)));
-uint32_t koala_bear_add(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_add(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
 uint32_t koala_bear_sub(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
 static __host__ __device__ __forceinline__ uint32_t koala_bear_mul(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
 uint32_t koala_bear_neg(uint32_t a __attribute__((unused)));
-uint32_t koala_bear_double(uint32_t a __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_double(uint32_t a __attribute__((unused)));
 uint32_t koala_bear_mul_w(uint32_t a __attribute__((unused)));
 uint32_t koala_bear_ext4_mul_c0(uint32_t a0 __attribute__((unused)), uint32_t a1 __attribute__((unused)), uint32_t a2 __attribute__((unused)), uint32_t a3 __attribute__((unused)), uint32_t b0 __attribute__((unused)), uint32_t b1 __attribute__((unused)), uint32_t b2 __attribute__((unused)), uint32_t b3 __attribute__((unused)));
 uint32_t koala_bear_ext4_mul_c1(uint32_t a0 __attribute__((unused)), uint32_t a1 __attribute__((unused)), uint32_t a2 __attribute__((unused)), uint32_t a3 __attribute__((unused)), uint32_t b0 __attribute__((unused)), uint32_t b1 __attribute__((unused)), uint32_t b2 __attribute__((unused)), uint32_t b3 __attribute__((unused)));
@@ -107,15 +107,15 @@ uint32_t koala_bear_ext4_sub_c1(uint32_t a __attribute__((unused)), uint32_t b _
 uint32_t koala_bear_ext4_sub_c2(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
 uint32_t koala_bear_ext4_sub_c3(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused)));
 static __host__ __device__ __forceinline__ uint32_t koala_bear_sbox_x3(uint32_t x __attribute__((unused)));
-uint32_t koala_bear_p2_ext_chunk_y0(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
-uint32_t koala_bear_p2_ext_chunk_y1(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
-uint32_t koala_bear_p2_ext_chunk_y2(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
-uint32_t koala_bear_p2_ext_chunk_y3(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y0(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y1(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y2(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y3(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused)));
 uint32_t koala_bear_p2_int_sbox_with_rc(uint32_t state0 __attribute__((unused)), uint32_t rc __attribute__((unused)));
 uint32_t koala_bear_p2_ark(uint32_t s __attribute__((unused)), uint32_t rc __attribute__((unused)));
-uint32_t koala_bear_p2_ext_sbox_with_rc(uint32_t s __attribute__((unused)), uint32_t rc __attribute__((unused)));
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_sbox_with_rc(uint32_t s __attribute__((unused)), uint32_t rc __attribute__((unused)));
 static __host__ __device__ __forceinline__ uint32_t koala_bear_get(forge_span_u32_t arr __attribute__((unused)), uint64_t idx __attribute__((unused)));
-__global__ void koala_bear_sbox_kernel(forge_span_u32_t out __attribute__((unused)), forge_span_u32_t a __attribute__((unused)), uint64_t n __attribute__((unused)));
+__global__ void koala_bear_chunk_step_kernel(forge_span_u32_t out __attribute__((unused)), forge_span_u32_t state __attribute__((unused)), forge_span_u32_t rc __attribute__((unused)), uint64_t n __attribute__((unused)));
 int main();
 
 static __device__ __forceinline__ uint64_t warp_reduce_sum(uint64_t val __attribute__((unused))) {
@@ -266,7 +266,7 @@ uint64_t grid_stride_step(uint64_t block_dim __attribute__((unused)), uint64_t g
   return (block_dim * grid_dim);
 }
 
-uint32_t koala_bear_add(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_add(uint32_t a __attribute__((unused)), uint32_t b __attribute__((unused))) {
   uint64_t s __attribute__((unused)) = (((uint64_t)a) + ((uint64_t)b));
   uint64_t p __attribute__((unused)) = ((uint64_t)KOALA_BEAR_P);
   uint64_t r;
@@ -306,7 +306,7 @@ uint32_t koala_bear_neg(uint32_t a __attribute__((unused))) {
   }
 }
 
-uint32_t koala_bear_double(uint32_t a __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_double(uint32_t a __attribute__((unused))) {
   return koala_bear_add(a, a);
 }
 
@@ -394,7 +394,7 @@ static __host__ __device__ __forceinline__ uint32_t koala_bear_sbox_x3(uint32_t 
   return koala_bear_mul(x2, x);
 }
 
-uint32_t koala_bear_p2_ext_chunk_y0(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y0(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
   uint32_t two_x0 __attribute__((unused)) = koala_bear_double(x0);
   uint32_t three_x1 __attribute__((unused)) = koala_bear_add(koala_bear_double(x1), x1);
   uint32_t s1 __attribute__((unused)) = koala_bear_add(two_x0, three_x1);
@@ -402,7 +402,7 @@ uint32_t koala_bear_p2_ext_chunk_y0(uint32_t x0 __attribute__((unused)), uint32_
   return koala_bear_add(s2, x3);
 }
 
-uint32_t koala_bear_p2_ext_chunk_y1(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y1(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
   uint32_t two_x1 __attribute__((unused)) = koala_bear_double(x1);
   uint32_t three_x2 __attribute__((unused)) = koala_bear_add(koala_bear_double(x2), x2);
   uint32_t s1 __attribute__((unused)) = koala_bear_add(x0, two_x1);
@@ -410,7 +410,7 @@ uint32_t koala_bear_p2_ext_chunk_y1(uint32_t x0 __attribute__((unused)), uint32_
   return koala_bear_add(s2, x3);
 }
 
-uint32_t koala_bear_p2_ext_chunk_y2(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y2(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
   uint32_t two_x2 __attribute__((unused)) = koala_bear_double(x2);
   uint32_t three_x3 __attribute__((unused)) = koala_bear_add(koala_bear_double(x3), x3);
   uint32_t s1 __attribute__((unused)) = koala_bear_add(x0, x1);
@@ -418,7 +418,7 @@ uint32_t koala_bear_p2_ext_chunk_y2(uint32_t x0 __attribute__((unused)), uint32_
   return koala_bear_add(s2, three_x3);
 }
 
-uint32_t koala_bear_p2_ext_chunk_y3(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_chunk_y3(uint32_t x0 __attribute__((unused)), uint32_t x1 __attribute__((unused)), uint32_t x2 __attribute__((unused)), uint32_t x3 __attribute__((unused))) {
   uint32_t two_x0 __attribute__((unused)) = koala_bear_double(x0);
   uint32_t three_x0 __attribute__((unused)) = koala_bear_add(two_x0, x0);
   uint32_t two_x3 __attribute__((unused)) = koala_bear_double(x3);
@@ -436,7 +436,7 @@ uint32_t koala_bear_p2_ark(uint32_t s __attribute__((unused)), uint32_t rc __att
   return koala_bear_add(s, rc);
 }
 
-uint32_t koala_bear_p2_ext_sbox_with_rc(uint32_t s __attribute__((unused)), uint32_t rc __attribute__((unused))) {
+static __host__ __device__ __forceinline__ uint32_t koala_bear_p2_ext_sbox_with_rc(uint32_t s __attribute__((unused)), uint32_t rc __attribute__((unused))) {
   uint32_t with_rc __attribute__((unused)) = koala_bear_add(s, rc);
   return koala_bear_sbox_x3(with_rc);
 }
@@ -446,11 +446,30 @@ static __host__ __device__ __forceinline__ uint32_t koala_bear_get(forge_span_u3
   return arr.data[idx];
 }
 
-__global__ void koala_bear_sbox_kernel(forge_span_u32_t out __attribute__((unused)), forge_span_u32_t a __attribute__((unused)), uint64_t n __attribute__((unused))) {
+__global__ void koala_bear_chunk_step_kernel(forge_span_u32_t out __attribute__((unused)), forge_span_u32_t state __attribute__((unused)), forge_span_u32_t rc __attribute__((unused)), uint64_t n __attribute__((unused))) {
   uint64_t tid __attribute__((unused)) = ((blockIdx_x * blockDim_x) + threadIdx_x);
   if ((tid < n)) {
-    uint32_t av __attribute__((unused)) = koala_bear_get(a, tid);
-    out.data[tid] = koala_bear_sbox_x3(av);
+    uint64_t base __attribute__((unused)) = (4ULL * tid);
+    uint32_t s0 __attribute__((unused)) = koala_bear_get(state, base);
+    uint32_t s1 __attribute__((unused)) = koala_bear_get(state, (base + 1ULL));
+    uint32_t s2 __attribute__((unused)) = koala_bear_get(state, (base + 2ULL));
+    uint32_t s3 __attribute__((unused)) = koala_bear_get(state, (base + 3ULL));
+    uint32_t r0 __attribute__((unused)) = koala_bear_get(rc, base);
+    uint32_t r1 __attribute__((unused)) = koala_bear_get(rc, (base + 1ULL));
+    uint32_t r2 __attribute__((unused)) = koala_bear_get(rc, (base + 2ULL));
+    uint32_t r3 __attribute__((unused)) = koala_bear_get(rc, (base + 3ULL));
+    uint32_t a0 __attribute__((unused)) = koala_bear_p2_ext_sbox_with_rc(s0, r0);
+    uint32_t a1 __attribute__((unused)) = koala_bear_p2_ext_sbox_with_rc(s1, r1);
+    uint32_t a2 __attribute__((unused)) = koala_bear_p2_ext_sbox_with_rc(s2, r2);
+    uint32_t a3 __attribute__((unused)) = koala_bear_p2_ext_sbox_with_rc(s3, r3);
+    uint32_t y0 __attribute__((unused)) = koala_bear_p2_ext_chunk_y0(a0, a1, a2, a3);
+    uint32_t y1 __attribute__((unused)) = koala_bear_p2_ext_chunk_y1(a0, a1, a2, a3);
+    uint32_t y2 __attribute__((unused)) = koala_bear_p2_ext_chunk_y2(a0, a1, a2, a3);
+    uint32_t y3 __attribute__((unused)) = koala_bear_p2_ext_chunk_y3(a0, a1, a2, a3);
+    out.data[base] = y0;
+    out.data[(base + 1ULL)] = y1;
+    out.data[(base + 2ULL)] = y2;
+    out.data[(base + 3ULL)] = y3;
 
   }
 }

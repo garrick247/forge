@@ -1,0 +1,64 @@
+// Benchmark kernel: N parallel KoalaBear Poseidon2 chunk-steps.
+//
+// Same shape as demos/2006 but with x^3 S-box (cheaper) and KoalaBear field.
+
+use std::gpu;
+use std::koala_bear;
+use std::poseidon2_koala_bear;
+
+fn koala_bear_get(arr: span<u32>, idx: u64) -> u32
+    requires idx < arr.len
+    requires forall k: u64, k < arr.len ==> arr[k] < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+{
+    assert(arr[idx] < KOALA_BEAR_P) "forall k instantiated at idx";
+    arr[idx]
+}
+
+#[kernel]
+fn koala_bear_chunk_step_kernel(
+    out:   span<u32>,
+    state: span<u32>,
+    rc:    span<u32>,
+    n:     u64)
+    requires n > 0
+    requires 4 * n <= out.len
+    requires 4 * n <= state.len
+    requires 4 * n <= rc.len
+    requires forall k: u64, k < state.len ==> state[k] < KOALA_BEAR_P
+    requires forall k: u64, k < rc.len ==> rc[k] < KOALA_BEAR_P
+{
+    let tid: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if tid < n {
+        let base: u64 = 4u64 * tid;
+
+        let s0: u32 = koala_bear_get(state, base);
+        let s1: u32 = koala_bear_get(state, base + 1u64);
+        let s2: u32 = koala_bear_get(state, base + 2u64);
+        let s3: u32 = koala_bear_get(state, base + 3u64);
+
+        let r0: u32 = koala_bear_get(rc, base);
+        let r1: u32 = koala_bear_get(rc, base + 1u64);
+        let r2: u32 = koala_bear_get(rc, base + 2u64);
+        let r3: u32 = koala_bear_get(rc, base + 3u64);
+
+        // ARK + SBOX (x^3) on each element.
+        let a0: u32 = koala_bear_p2_ext_sbox_with_rc(s0, r0);
+        let a1: u32 = koala_bear_p2_ext_sbox_with_rc(s1, r1);
+        let a2: u32 = koala_bear_p2_ext_sbox_with_rc(s2, r2);
+        let a3: u32 = koala_bear_p2_ext_sbox_with_rc(s3, r3);
+
+        // 4x4 MDS chunk transform.
+        let y0: u32 = koala_bear_p2_ext_chunk_y0(a0, a1, a2, a3);
+        let y1: u32 = koala_bear_p2_ext_chunk_y1(a0, a1, a2, a3);
+        let y2: u32 = koala_bear_p2_ext_chunk_y2(a0, a1, a2, a3);
+        let y3: u32 = koala_bear_p2_ext_chunk_y3(a0, a1, a2, a3);
+
+        out[base] = y0;
+        out[base + 1u64] = y1;
+        out[base + 2u64] = y2;
+        out[base + 3u64] = y3;
+    }
+}
+
+fn main() -> u64 { 0u64 }
