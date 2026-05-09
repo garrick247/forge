@@ -391,8 +391,18 @@ module Z3Bridge = struct
          | [] ->
              Printf.sprintf "(forall ((%s %s)) %s)" x.name qs guarded_body
          | _ ->
-             let pat = String.concat " " triggers in
-             Printf.sprintf "(forall ((%s %s)) (! %s :pattern (%s)))" x.name qs guarded_body pat)
+             (* Emit each trigger as its own :pattern clause (alternative
+                triggers) rather than one multi-pattern. Multi-patterns
+                require ALL trigger terms to be simultaneously in scope
+                before instantiating; alternatives fire when ANY of them
+                is in scope. For frame facts the forall body references
+                both (select new j) and (select old j), and we want
+                instantiation to fire as soon as either appears in a
+                goal — particularly inside loops where the goal references
+                only one of them. *)
+             let pat_clauses = String.concat " "
+               (List.map (fun t -> Printf.sprintf ":pattern (%s)" t) triggers) in
+             Printf.sprintf "(forall ((%s %s)) (! %s %s))" x.name qs guarded_body pat_clauses)
     | PExists (x, ty, body) ->
         let qs = if bv then sort_to_smt (ty_to_sort ty) else "Int" in
         let body_s = pred_to_smtlib ~bv ctx body in
@@ -536,19 +546,38 @@ module Z3Bridge = struct
     | PIndex (arr, idx) -> pred_vars (pred_vars acc arr) idx
     | _ -> acc
 
-  (* Collect names of variables used as array base in (select arr idx). *)
+  (* Collect names of variables used as array base in (select arr idx)
+     OR as the first argument to (store arr idx val).
+
+     The store case is critical for SSA-renamed arrays whose only mention
+     in the formula is via store. env_array_write emits a chain like
+       __s_p18 = (store __s_p17 i0 v0)
+       __s_p19 = (store __s_p18 i1 v1)
+     and these intermediate __s_pN names appear neither in any select nor
+     in the goal. Without recognizing them as arrays here they get declared
+     as Int and Z3 rejects the (store ...) on a non-array as ill-sorted. *)
   let rec collect_array_var_names acc pred =
     match pred with
     | PIndex (PVar id, idx) ->
         collect_array_var_names (id.name :: acc) idx
     | PIndex (arr, idx) ->
         collect_array_var_names (collect_array_var_names acc arr) idx
+    | PBinop (Eq, PVar id, (PApp (f, _) as rhs)) when f.name = "store" ->
+        collect_array_var_names (id.name :: acc) rhs
+    | PBinop (Eq, (PApp (f, _) as lhs), PVar id) when f.name = "store" ->
+        collect_array_var_names (id.name :: acc) lhs
     | PBinop (_, l, r) ->
         collect_array_var_names (collect_array_var_names acc l) r
     | PUnop (_, p) -> collect_array_var_names acc p
     | PIte (c, t, e) ->
         collect_array_var_names
           (collect_array_var_names (collect_array_var_names acc c) t) e
+    | PApp (f, args) when f.name = "store" ->
+        (match args with
+         | (PVar id) :: idx :: v :: _ ->
+             collect_array_var_names
+               (collect_array_var_names (id.name :: acc) idx) v
+         | _ -> List.fold_left collect_array_var_names acc args)
     | PApp (_, args) -> List.fold_left collect_array_var_names acc args
     | PForall (_, _, p) | PExists (_, _, p) -> collect_array_var_names acc p
     | PLex ps -> List.fold_left collect_array_var_names acc ps
@@ -959,7 +988,7 @@ module Z3Bridge = struct
       (not (List.exists has_divmod goal_preds)) &&
       (List.exists has_nonlinear goal_preds)
     in
-    let (tmp, result) = run_z3 ~get_model:true query 10 in
+    let (tmp, result) = run_z3 ~get_model:true query 20 in
     (* nlsat works over the reals — it may return sat for a goal that is only
        a theorem over integers (e.g. i*cols+j < rows*cols given 0<=i<rows, 0<=j<cols).
        When nlsat returns non-Unsat, retry with the NIA solver. *)
@@ -967,7 +996,7 @@ module Z3Bridge = struct
       let is_unsat = match result with Unsat -> true | _ -> false in
       if used_nlsat && not is_unsat then
         let nia_query = build_query ~force_nia:true ctx pred in
-        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query 10 in
+        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query 20 in
         (match nia_result with
          | Sat _ | Unknown _ when Sys.getenv_opt "FORGE_DUMP_SMT" <> None ->
              Printf.eprintf "[forge-smt] NIA query dumped to %s\n%!" tmp2

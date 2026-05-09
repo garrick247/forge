@@ -285,7 +285,22 @@ let env_array_write env (arr_id : ident) (idx_pred : pred) (rhs_pred : pred) =
   let renamed_assumes = List.map rename_pred env.proof_ctx.pc_assumes in
   let idx_pred' = rename_pred idx_pred in
   let rhs_pred' = rename_pred rhs_pred in
-  (* Frame quantifier variable — unique per write *)
+  (* Emit BOTH a `(store ...)` equation AND a forall frame fact.
+     - store equation `new = (store old idx rhs)`: Z3's array theory
+       resolves `(select new j)` via read-over-write axioms with no
+       quantifier instantiation, so chains of N sequential writes
+       verify in O(N) without E-matching depth limits. (The forall
+       encoding alone collapsed at ~5 writes.)
+     - forall `(forall j != idx, new[j] = old[j])`: Z3 sometimes
+       needs the explicit pattern-driven form when reasoning inside
+       loops with non-trivial arithmetic invariants on the index
+       variable, where the array-theory + arithmetic-theory
+       combination doesn't fire automatically.
+     Both facts are sound; emitting both lets Z3 pick whichever
+     path is easier per goal. *)
+  let store_id = { name = "store"; loc = arr_id.loc } in
+  let store_pred = PApp (store_id, [old_arr; idx_pred'; rhs_pred']) in
+  let store_fact = PBinop (Eq, new_arr, store_pred) in
   let j_name = Printf.sprintf "__fj_%d" n in
   let j_id   = { name = j_name; loc = arr_id.loc } in
   let write_fact = PBinop (Eq, PIndex (new_arr, idx_pred'), rhs_pred') in
@@ -300,7 +315,7 @@ let env_array_write env (arr_id : ident) (idx_pred : pred) (rhs_pred : pred) =
   in
   let new_ctx = { env.proof_ctx with
     pc_vars    = (old_name, old_arr_ty) :: env.proof_ctx.pc_vars;
-    pc_assumes = len_fact :: frame_fact :: write_fact :: renamed_assumes;
+    pc_assumes = len_fact :: store_fact :: frame_fact :: write_fact :: renamed_assumes;
   } in
   { env with proof_ctx = new_ctx }
 
