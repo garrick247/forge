@@ -1887,6 +1887,64 @@ fn felt252_mul_raw_spec(
 }
 
 
+
+// ---- felt252_montgomery_reduce_spec: wrapper over the verified base ------
+//
+// Contract-correctness is verified on felt252_montgomery_reduce (above):
+// every helper precondition is discharged transitively. Math-correctness
+// at the per-iteration level (eight CIOS iterations each updating 9 of
+// 16 limbs based on an m derived from the running state) is the next
+// research piece -- the projection expression for any single output limb
+// after 8 iterations is ~8x deeper than mul_raw_spec's, putting the
+// query past Z3's automatic-discharge envelope even with the
+// per-function decomposition. Standard literature (Vale-Crypto,
+// Fiat-Cryptography) addresses this with hand-written carry-tracking
+// lemmas; that is the natural next swing here.
+
+fn felt252_montgomery_reduce_spec(
+    m0:  u32, m1:  u32, m2:  u32, m3:  u32,
+    m4:  u32, m5:  u32, m6:  u32, m7:  u32,
+    m8:  u32, m9:  u32, m10: u32, m11: u32,
+    m12: u32, m13: u32, m14: u32, m15: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    felt252_montgomery_reduce(
+        m0,  m1,  m2,  m3,  m4,  m5,  m6,  m7,
+        m8,  m9,  m10, m11, m12, m13, m14, m15)
+}
+
+// ---- felt252_mul_spec: composition of mul_raw_spec + montgomery_reduce ---
+//
+// Math-correctness inheritance:
+//   - felt252_mul_raw_spec produces a 16-limb integer product that is
+//     verified per limb against the schoolbook projection (16 separate
+//     verified per-limb functions, commit 3400433).
+//   - felt252_montgomery_reduce_spec performs the CIOS Montgomery reduce
+//     on that 16-limb input. Its per-iteration math-correctness is the
+//     deferred research piece noted above; contract-correctness is
+//     transitively verified via the helpers it delegates to.
+//
+// The composition's result is therefore (a * b) * R^-1 mod P in
+// Montgomery form, matching the semantics of felt252_mul (which uses
+// the original `_raw` and `_montgomery_reduce` functions).
+
+fn felt252_mul_spec(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let (p0,  p1,  p2,  p3,  p4,  p5,  p6,  p7,
+         p8,  p9,  p10, p11, p12, p13, p14, p15) =
+        felt252_mul_raw_spec(
+            a0, a1, a2, a3, a4, a5, a6, a7,
+            b0, b1, b2, b3, b4, b5, b6, b7);
+    felt252_montgomery_reduce_spec(
+        p0,  p1,  p2,  p3,  p4,  p5,  p6,  p7,
+        p8,  p9,  p10, p11, p12, p13, p14, p15)
+}
+
 // ---- ec_double: Stark-curve point doubling -------------------------------
 // Inputs (x, y) and output (x_new, y_new) are all in Montgomery form.
 // alpha = 1 (canonical) is converted to Montgomery form via felt252_to_mont
