@@ -1,72 +1,59 @@
-// std/pedersen.fg -- Stark Pedersen hash precomputation scaffold.
+// std/pedersen.fg -- Stark Pedersen hash curve constants and scaffold.
 //
 // Pedersen hash on the Stark curve:
 //   y^2 = x^3 + alpha * x + beta   over felt252
 //   alpha = 1
 //   beta  = 0x6F21413EFBE40DE150E596D72F7A8C5609AD26C15C915C1F4CDFCB99CEE9E89
 //
-// The Pedersen hash uses 4 fixed precomputed generators (P0, P1, P2, P3)
-// and a fixed shift point P_shift. Scalar multiplication uses windowed
+// EC point operations (ec_double, ec_add) live in std/felt252.fg, alongside
+// the felt252 Montgomery arithmetic they depend on. Forge has no multi-file
+// imports yet, so colocation is the only path; std/felt252.fg is the single
+// canonical file for the full Stark-field + Stark-curve toolkit.
+//
+// This file is documentation: the curve parameters with the BETA constant
+// laid out as 8 u32 limbs LSB-first, plus a sketch of the Pedersen hash
+// generation pipeline (point operations -> windowed double-and-add ->
+// precomputed tables). The actual table generation should remain CPU-side
+// per the cost analysis below.
+
+// ---- Stark curve parameters -----------------------------------------------
+// alpha = 1 in the field
+const STARK_CURVE_ALPHA: u32 = 1u32;
+
+// beta is a 252-bit value:
+//   0x6F21413EFBE40DE150E596D72F7A8C5609AD26C15C915C1F4CDFCB99CEE9E89
+// Limb decomposition LSB-first (limb[i] = bits [32*i .. 32*i+31] of beta).
+// The top limb is 28 bits because beta < 2^252 < 2^256.
+//
+// (Earlier version of this file had all 8 limbs encoded MSB-first by mistake;
+// fixed 2026-05-23 by computing limbs from the canonical hex string.)
+const STARK_CURVE_BETA_LIMB0: u32 = 2632883849u32;   // 0x9CEE9E89 (32 bits)
+const STARK_CURVE_BETA_LIMB1: u32 = 4107140281u32;   // 0xF4CDFCB9 (32 bits)
+const STARK_CURVE_BETA_LIMB2: u32 = 365499841u32;   // 0x15C915C1 (32 bits)
+const STARK_CURVE_BETA_LIMB3: u32 = 1620759148u32;   // 0x609AD26C (32 bits)
+const STARK_CURVE_BETA_LIMB4: u32 = 1928833221u32;   // 0x72F7A8C5 (32 bits)
+const STARK_CURVE_BETA_LIMB5: u32 = 353261933u32;   // 0x150E596D (32 bits)
+const STARK_CURVE_BETA_LIMB6: u32 = 4022223070u32;   // 0xEFBE40DE (32 bits)
+const STARK_CURVE_BETA_LIMB7: u32 = 116528147u32;   // 0x06F21413 (28 bits)
+
+// ---- Pedersen hash generation (cost analysis, deferred) ------------------
+// The Pedersen hash uses 4 fixed precomputed generators (P0..P3) and a
+// fixed shift point P_shift. Scalar multiplication uses windowed
 // double-and-add over precomputed tables of size 2^9 or 2^18.
 //
 // VortexSTARK currently computes these tables on CPU at startup
-// (~1.6 s LazyLock init). Moving to FORGE-emitted GPU code would
-// require:
+// (~1.6 s LazyLock init). Moving the table generation to FORGE-emitted
+// GPU code would require ~10^10 felt252 ops total across the four
+// generators. On the 5090 with verified felt252 mul taking ~50 ns,
+// that is ~500 s of GPU compute — vs the ~1.6 s CPU LazyLock cost.
 //
-//   1. Verified felt252 arithmetic    [std/felt252.fg — scaffold landed,
-//                                       full impl pending]
-//   2. Verified affine point ops:
-//        ec_add, ec_double, ec_double_and_add
-//   3. Verified scalar table generation:
-//        for k in 0..2^WINDOW_BITS:
-//          table[k] = -P_shift + k * P_generator
-//
-// The scalar mul is the bulk. With windowed double-and-add over
-// 2^18-entry tables (Plonky3-equivalent window sizes), each table is
-// ~32 MB on GPU. Generation cost is roughly:
-//   2^18 entries * (~252 doublings + ~252 additions per entry)
-//   = ~2.6 * 10^9 felt252 ops per generator
-//   = ~10^10 ops total across the four generators
-//
-// On the 5090 with verified felt252 mul taking ~50 ns (rough estimate),
-// that's ~500 s of GPU compute — vs the ~1.6 s CPU LazyLock cost.
-//
-// Conclusion: the Pedersen TABLES should remain CPU-precomputed (the
-// data is small at ~1.88 GB); what FORGE could verify is the runtime
+// Conclusion: the Pedersen TABLES should remain CPU-precomputed
+// (data is ~1.88 GB, fits easily). What FORGE verifies is the runtime
 // USE of the tables (table-lookup + accumulate), not the generation.
 //
-// This file documents the curve constants and the scaffold; full
-// implementation tracks felt252 progress.
-
-// ---- Stark curve parameters -----------------------------------------------
-// alpha = 1 (in field, so this is the felt 1)
-const STARK_CURVE_ALPHA: u32 = 1u32;
-
-// beta is a 252-bit value. Limb decomposition (LSB-first) of
-// 0x6F21413EFBE40DE150E596D72F7A8C5609AD26C15C915C1F4CDFCB99CEE9E89:
-const STARK_CURVE_BETA_LIMB0: u32 = 0xCEE9E89u32;
-const STARK_CURVE_BETA_LIMB1: u32 = 0x4CDFCB99u32;
-const STARK_CURVE_BETA_LIMB2: u32 = 0x5C915C1Fu32;
-const STARK_CURVE_BETA_LIMB3: u32 = 0x9AD26C15u32;
-const STARK_CURVE_BETA_LIMB4: u32 = 0x09AD26C1u32;   // (placeholder; see TODO)
-const STARK_CURVE_BETA_LIMB5: u32 = 0xF7A8C560u32;
-const STARK_CURVE_BETA_LIMB6: u32 = 0x150E596Du32;
-const STARK_CURVE_BETA_LIMB7: u32 = 0x6F21413Eu32;
-
-// ---- TODO -----------------------------------------------------------------
-// fn ec_double(x_limbs[8], y_limbs[8]) -> (x_new[8], y_new[8])
-//   lambda = (3*x^2 + alpha) / (2*y)
-//   x_new  = lambda^2 - 2*x
-//   y_new  = lambda * (x - x_new) - y
-//   Requires felt252_mul, felt252_inv, felt252_add, felt252_sub.
-//
-// fn ec_add(x1[8], y1[8], x2[8], y2[8]) -> (x3[8], y3[8])
-//   lambda = (y2 - y1) / (x2 - x1)
-//   x3 = lambda^2 - x1 - x2
-//   y3 = lambda * (x1 - x3) - y1
-//   Requires same felt252 primitives.
-//
-// Each operation is ~50 lines of FG once felt252 is solid.
-// Total Pedersen table generation kernel: ~500 lines on top of felt252.
+// The runtime use path is small and a natural next implementation:
+//   fn pedersen_step(acc_x, acc_y, table_x, table_y) -> (acc_x_new, acc_y_new)
+//      = ec_add(acc, table_entry)
+// with a precondition that the table is well-formed (no doublings needed).
 
 fn main() -> u64 { 0u64 }

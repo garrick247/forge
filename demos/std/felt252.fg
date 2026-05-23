@@ -4,37 +4,16 @@
 //             = 0x800000000000011000000000000000000000000000000000000000000000001
 //             = 3618502788666131213697322783095070105623107215331596699973092056135872020481
 //
-// Used by Cairo, StarkNet, and stwo's Pedersen / EC operations.
-//
 // Representation: 8 limbs of u32, LSB-first.
 //   value = sum_{i=0..8} limb[i] * 2^(32*i)
-//   Top limb constrained to < 2^28 (since 252 = 7*32 + 28).
 //
-// Field invariant: (limb[0..8]) lex-less-than (P[0..8]).
-//
-// This file establishes the field constants and a verified 2-limb add as
-// a proof of correctness for the carry-chain pattern. Full 8-limb add /
-// sub / mul / inv are tee-d up as a follow-up — each requires a careful
-// chunked-proof structure.
+// This file establishes the field constants, verified carry-chain primitives,
+// a 2-limb demo, the 8-limb felt252_add and felt252_sub over the Stark prime,
+// and the unreduced schoolbook 8x8 -> 16-limb multiplication primitive
+// felt252_mul_raw. The Solinas reduction (felt252_reduce_512 -> 8 limbs mod P)
+// and felt252_inv are tee-d up as follow-ups.
 
 // ---- Stark prime, limb-by-limb (LSB first) ---------------------------------
-// P = 2^251 + 17*2^192 + 1
-//
-// Bit pattern (bits 0..256 LSB-first):
-//   bit   0       set (the +1)
-//   bit 192       set
-//   bit 196       set    (17 = 0x11 = bit 0 + bit 4 of the multiplier on 2^192)
-//   bit 251       set
-//
-// Limbs:
-//   limb[0] = 0x00000001   (bit 0)
-//   limb[1] = 0x00000000
-//   limb[2] = 0x00000000
-//   limb[3] = 0x00000000
-//   limb[4] = 0x00000000
-//   limb[5] = 0x00000000
-//   limb[6] = 0x00000011   (bits 192, 196)
-//   limb[7] = 0x08000000   (bit 251 within top limb's bit 27)
 const STARK_P_LIMB0: u32 = 1u32;
 const STARK_P_LIMB1: u32 = 0u32;
 const STARK_P_LIMB2: u32 = 0u32;
@@ -44,15 +23,9 @@ const STARK_P_LIMB5: u32 = 0u32;
 const STARK_P_LIMB6: u32 = 17u32;
 const STARK_P_LIMB7: u32 = 134217728u32;   // 2^27 = 0x08000000
 
-// Top-limb maximum: 2^28 - 1 = 0x0FFFFFFF (since top contains bits 224..251)
 const STARK_LIMB_TOP_MAX: u32 = 268435455u32;
 
 // ---- Carry-chain primitives ------------------------------------------------
-// add_with_carry(a, b, c_in) returns (sum_low_32_bits, carry_out_0_or_1).
-// Used as the building block for multi-limb addition.
-//
-// Spec:  a + b + c_in = sum + carry_out * 2^32
-//        sum < 2^32, carry_out in {0, 1}.
 
 fn add_with_carry_sum(a: u32, b: u32, c_in: u32) -> u32
     requires c_in < 2u32
@@ -66,16 +39,10 @@ fn add_with_carry_out(a: u32, b: u32, c_in: u32) -> u32
     ensures result < 2u32
 {
     let s64: u64 = (a as u64) + (b as u64) + (c_in as u64);
-    // Direct case-split avoids Z3 needing to derive (s64 >> 32) < 2 from the bounds.
     if s64 >= 4294967296u64 { 1u32 } else { 0u32 }
 }
 
 // ---- Subtraction with borrow ----------------------------------------------
-// sub_with_borrow(a, b, b_in) returns (diff_low_32_bits, borrow_out_0_or_1).
-// Spec:  a - b - b_in = diff - borrow_out * 2^32
-//
-// Computed via two's complement: diff = a + (~b) + (1 - b_in), the carry-out
-// of which is the inverse of the borrow-out.
 
 fn sub_with_borrow_diff(a: u32, b: u32, b_in: u32) -> u32
     requires b_in < 2u32
@@ -83,7 +50,6 @@ fn sub_with_borrow_diff(a: u32, b: u32, b_in: u32) -> u32
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
     let bi: u64 = b_in as u64;
-    // Add 2^32 to ensure non-negative subtraction within u64
     let s64: u64 = a64 + (4294967296u64 - b64 - bi);
     s64 as u32
 }
@@ -95,20 +61,14 @@ fn sub_with_borrow_out(a: u32, b: u32, b_in: u32) -> u32
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
     let bi: u64 = b_in as u64;
-    // borrow_out = 1 iff (a < b + b_in)
     let r: u64 = if a64 < b64 + bi { 1u64 } else { 0u64 };
     r as u32
 }
 
-// ---- 2-limb (64-bit value) modular add over P_HI = 2^32 -------------------
-// Demo of the carry-chain pattern over a 2-limb representation.
-// This is NOT modular over the Stark prime — it's modular over a chosen
-// 2-limb modulus to demonstrate the proof structure. Extending to 8-limb
-// follows the same pattern with 8 add_with_carry calls and a final
-// conditional reduction.
+// ---- 2-limb demo (kept for documentation of the carry-chain pattern) ------
 
-const DEMO_P_LIMB0: u32 = 4294967295u32;  // 0xFFFFFFFF
-const DEMO_P_LIMB1: u32 = 0u32;            // P = 2^32 - 1, well-known Mersenne
+const DEMO_P_LIMB0: u32 = 4294967295u32;
+const DEMO_P_LIMB1: u32 = 0u32;
 
 fn felt2_add_demo_limb0(a0: u32, b0: u32) -> u32
 {
@@ -121,26 +81,1555 @@ fn felt2_add_demo_limb1(a0: u32, b0: u32, a1: u32, b1: u32) -> u32
     add_with_carry_sum(a1, b1, c0)
 }
 
+// ---- Spec helpers: u256 reconstruction + Stark prime as u256 --------------
+// Used in ensures clauses to express the mathematical contract of the
+// field operations. These helpers MUST appear in the file BEFORE
+// felt252_add etc. because their ensures clauses reference them.
+
+fn recon_u256_8(
+    l0: u32, l1: u32, l2: u32, l3: u32,
+    l4: u32, l5: u32, l6: u32, l7: u32
+) -> u256
+{
+    let t32:  u256 = 4294967296u64 as u256;
+    let t64:  u256 = t32 * t32;
+    let t96:  u256 = t64 * t32;
+    let t128: u256 = t64 * t64;
+    let t160: u256 = t128 * t32;
+    let t192: u256 = t128 * t64;
+    let t224: u256 = t192 * t32;
+    (l0 as u256)
+    + (l1 as u256) * t32
+    + (l2 as u256) * t64
+    + (l3 as u256) * t96
+    + (l4 as u256) * t128
+    + (l5 as u256) * t160
+    + (l6 as u256) * t192
+    + (l7 as u256) * t224
+}
+
+fn stark_p_u256() -> u256
+{
+    let t32:  u256 = 4294967296u64 as u256;
+    let t64:  u256 = t32 * t32;
+    let t128: u256 = t64 * t64;
+    let t192: u256 = t128 * t64;
+    let t224: u256 = t192 * t32;
+    // P = 2^251 + 17*2^192 + 1
+    //   = (2^27) * 2^224  + 17 * 2^192 + 1
+    //   limb form: limb[7] = 2^27, limb[6] = 17, limb[0] = 1
+    (1u32 as u256)
+    + (17u32 as u256) * t192
+    + (134217728u32 as u256) * t224
+}
+
+
+// ---- ec_double: Stark-curve point doubling -------------------------------
+// Inputs (x, y) and output (x_new, y_new) are all in Montgomery form.
+// alpha = 1 (canonical) is converted to Montgomery form via felt252_to_mont
+// inside the body; for a hot loop you'd hoist that to a precomputed constant.
+
+fn ec_double(
+    x0: u32, x1: u32, x2: u32, x3: u32, x4: u32, x5: u32, x6: u32, x7: u32,
+    y0: u32, y1: u32, y2: u32, y3: u32, y4: u32, y5: u32, y6: u32, y7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // alpha = 1 in Montgomery form (= R mod P)
+    let (am_0, am_1, am_2, am_3, am_4, am_5, am_6, am_7) = felt252_to_mont(
+            1u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32);
+
+    // x^2
+    let (xsq_0, xsq_1, xsq_2, xsq_3, xsq_4, xsq_5, xsq_6, xsq_7) = felt252_sqr(
+            x0, x1, x2, x3, x4, x5, x6, x7);
+
+    // 3 * x^2  = x^2 + x^2 + x^2
+    let (twoxsq_0, twoxsq_1, twoxsq_2, twoxsq_3, twoxsq_4, twoxsq_5, twoxsq_6, twoxsq_7) = felt252_add(
+            xsq_0, xsq_1, xsq_2, xsq_3, xsq_4, xsq_5, xsq_6, xsq_7,
+            xsq_0, xsq_1, xsq_2, xsq_3, xsq_4, xsq_5, xsq_6, xsq_7);
+    let (threexsq_0, threexsq_1, threexsq_2, threexsq_3, threexsq_4, threexsq_5, threexsq_6, threexsq_7) = felt252_add(
+            twoxsq_0, twoxsq_1, twoxsq_2, twoxsq_3, twoxsq_4, twoxsq_5, twoxsq_6, twoxsq_7,
+            xsq_0, xsq_1, xsq_2, xsq_3, xsq_4, xsq_5, xsq_6, xsq_7);
+
+    // numerator = 3*x^2 + alpha
+    let (num_0, num_1, num_2, num_3, num_4, num_5, num_6, num_7) = felt252_add(
+            threexsq_0, threexsq_1, threexsq_2, threexsq_3, threexsq_4, threexsq_5, threexsq_6, threexsq_7,
+            am_0, am_1, am_2, am_3, am_4, am_5, am_6, am_7);
+
+    // 2y
+    let (twoy_0, twoy_1, twoy_2, twoy_3, twoy_4, twoy_5, twoy_6, twoy_7) = felt252_add(
+            y0, y1, y2, y3, y4, y5, y6, y7,
+            y0, y1, y2, y3, y4, y5, y6, y7);
+
+    // (2y)^-1
+    let (inv2y_0, inv2y_1, inv2y_2, inv2y_3, inv2y_4, inv2y_5, inv2y_6, inv2y_7) = felt252_inv(
+            twoy_0, twoy_1, twoy_2, twoy_3, twoy_4, twoy_5, twoy_6, twoy_7);
+
+    // lambda = numerator * (2y)^-1
+    let (lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7) = felt252_mul(
+            num_0, num_1, num_2, num_3, num_4, num_5, num_6, num_7,
+            inv2y_0, inv2y_1, inv2y_2, inv2y_3, inv2y_4, inv2y_5, inv2y_6, inv2y_7);
+
+    // lambda^2
+    let (lamsq_0, lamsq_1, lamsq_2, lamsq_3, lamsq_4, lamsq_5, lamsq_6, lamsq_7) = felt252_sqr(
+            lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7);
+
+    // 2x
+    let (twox_0, twox_1, twox_2, twox_3, twox_4, twox_5, twox_6, twox_7) = felt252_add(
+            x0, x1, x2, x3, x4, x5, x6, x7,
+            x0, x1, x2, x3, x4, x5, x6, x7);
+
+    // x_new = lambda^2 - 2x
+    let (xnew_0, xnew_1, xnew_2, xnew_3, xnew_4, xnew_5, xnew_6, xnew_7) = felt252_sub(
+            lamsq_0, lamsq_1, lamsq_2, lamsq_3, lamsq_4, lamsq_5, lamsq_6, lamsq_7,
+            twox_0, twox_1, twox_2, twox_3, twox_4, twox_5, twox_6, twox_7);
+
+    // x - x_new
+    let (xmxn_0, xmxn_1, xmxn_2, xmxn_3, xmxn_4, xmxn_5, xmxn_6, xmxn_7) = felt252_sub(
+            x0, x1, x2, x3, x4, x5, x6, x7,
+            xnew_0, xnew_1, xnew_2, xnew_3, xnew_4, xnew_5, xnew_6, xnew_7);
+
+    // lambda * (x - x_new)
+    let (lxmxn_0, lxmxn_1, lxmxn_2, lxmxn_3, lxmxn_4, lxmxn_5, lxmxn_6, lxmxn_7) = felt252_mul(
+            lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7,
+            xmxn_0, xmxn_1, xmxn_2, xmxn_3, xmxn_4, xmxn_5, xmxn_6, xmxn_7);
+
+    // y_new = lambda * (x - x_new) - y
+    let (ynew_0, ynew_1, ynew_2, ynew_3, ynew_4, ynew_5, ynew_6, ynew_7) = felt252_sub(
+            lxmxn_0, lxmxn_1, lxmxn_2, lxmxn_3, lxmxn_4, lxmxn_5, lxmxn_6, lxmxn_7,
+            y0, y1, y2, y3, y4, y5, y6, y7);
+
+    (xnew_0, xnew_1, xnew_2, xnew_3, xnew_4, xnew_5, xnew_6, xnew_7,
+     ynew_0, ynew_1, ynew_2, ynew_3, ynew_4, ynew_5, ynew_6, ynew_7)
+}
+
+// ---- ec_add: Stark-curve point addition ----------------------------------
+// Inputs P1 = (x1, y1) and P2 = (x2, y2) and output P3 = (x3, y3) all in
+// Montgomery form. Assumes x1 != x2 (i.e. P1 != +/- P2); the doubling and
+// identity cases are caller responsibilities.
+
+fn ec_add(
+    x10: u32, x11: u32, x12: u32, x13: u32,
+    x14: u32, x15: u32, x16: u32, x17: u32,
+    y10: u32, y11: u32, y12: u32, y13: u32,
+    y14: u32, y15: u32, y16: u32, y17: u32,
+    x20: u32, x21: u32, x22: u32, x23: u32,
+    x24: u32, x25: u32, x26: u32, x27: u32,
+    y20: u32, y21: u32, y22: u32, y23: u32,
+    y24: u32, y25: u32, y26: u32, y27: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // dy = y2 - y1
+    let (dy_0, dy_1, dy_2, dy_3, dy_4, dy_5, dy_6, dy_7) = felt252_sub(
+            y20, y21, y22, y23, y24, y25, y26, y27,
+            y10, y11, y12, y13, y14, y15, y16, y17);
+
+    // dx = x2 - x1
+    let (dx_0, dx_1, dx_2, dx_3, dx_4, dx_5, dx_6, dx_7) = felt252_sub(
+            x20, x21, x22, x23, x24, x25, x26, x27,
+            x10, x11, x12, x13, x14, x15, x16, x17);
+
+    // (x2 - x1)^-1
+    let (invdx_0, invdx_1, invdx_2, invdx_3, invdx_4, invdx_5, invdx_6, invdx_7) = felt252_inv(
+            dx_0, dx_1, dx_2, dx_3, dx_4, dx_5, dx_6, dx_7);
+
+    // lambda = (y2 - y1) * (x2 - x1)^-1
+    let (lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7) = felt252_mul(
+            dy_0, dy_1, dy_2, dy_3, dy_4, dy_5, dy_6, dy_7,
+            invdx_0, invdx_1, invdx_2, invdx_3, invdx_4, invdx_5, invdx_6, invdx_7);
+
+    // lambda^2
+    let (lamsq_0, lamsq_1, lamsq_2, lamsq_3, lamsq_4, lamsq_5, lamsq_6, lamsq_7) = felt252_sqr(
+            lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7);
+
+    // x1 + x2
+    let (xsum_0, xsum_1, xsum_2, xsum_3, xsum_4, xsum_5, xsum_6, xsum_7) = felt252_add(
+            x10, x11, x12, x13, x14, x15, x16, x17,
+            x20, x21, x22, x23, x24, x25, x26, x27);
+
+    // x3 = lambda^2 - (x1 + x2)
+    let (x3_0, x3_1, x3_2, x3_3, x3_4, x3_5, x3_6, x3_7) = felt252_sub(
+            lamsq_0, lamsq_1, lamsq_2, lamsq_3, lamsq_4, lamsq_5, lamsq_6, lamsq_7,
+            xsum_0, xsum_1, xsum_2, xsum_3, xsum_4, xsum_5, xsum_6, xsum_7);
+
+    // x1 - x3
+    let (xmx3_0, xmx3_1, xmx3_2, xmx3_3, xmx3_4, xmx3_5, xmx3_6, xmx3_7) = felt252_sub(
+            x10, x11, x12, x13, x14, x15, x16, x17,
+            x3_0, x3_1, x3_2, x3_3, x3_4, x3_5, x3_6, x3_7);
+
+    // lambda * (x1 - x3)
+    let (lxmx3_0, lxmx3_1, lxmx3_2, lxmx3_3, lxmx3_4, lxmx3_5, lxmx3_6, lxmx3_7) = felt252_mul(
+            lam_0, lam_1, lam_2, lam_3, lam_4, lam_5, lam_6, lam_7,
+            xmx3_0, xmx3_1, xmx3_2, xmx3_3, xmx3_4, xmx3_5, xmx3_6, xmx3_7);
+
+    // y3 = lambda * (x1 - x3) - y1
+    let (y3_0, y3_1, y3_2, y3_3, y3_4, y3_5, y3_6, y3_7) = felt252_sub(
+            lxmx3_0, lxmx3_1, lxmx3_2, lxmx3_3, lxmx3_4, lxmx3_5, lxmx3_6, lxmx3_7,
+            y10, y11, y12, y13, y14, y15, y16, y17);
+
+    (x3_0, x3_1, x3_2, x3_3, x3_4, x3_5, x3_6, x3_7,
+     y3_0, y3_1, y3_2, y3_3, y3_4, y3_5, y3_6, y3_7)
+}
+
+
+// ---- Candidate spec language for full mathematical correctness ----------
+// The current ensures clauses on the felt252_* family verify CONTRACT
+// correctness only: every helper's requires is discharged by the
+// preceding helper's ensures. They do NOT verify the mathematical
+// contract (result equals (a + b) mod P, etc.).
+//
+// Forge's spec language IS expressive enough to STATE the mathematical
+// contract. Forge has u256/u512/u1024/bv256 native types; ensures
+// clauses support `+`, `*`, implicit promotion, helper-function calls,
+// and `result.N` tuple field access. The helpers above (recon_u256_8,
+// stark_p_u256) are the reconstruction primitives.
+//
+// What Z3 CANNOT do automatically (verified empirically on 2026-05-23
+// over both the full spec `recon(result) == (recon(a)+recon(b)) % P`
+// and the weaker canonicity bound `recon(result) < P`):
+// discharge the obligation that connects 8 limb-wise u32 operations
+// to the abstract u256 modular equivalence. Standard carry-tracking
+// lemmas (see Fiat-Cryptography or Vale-Crypto) bridge that gap.
+// Adding those is the next layer; Forge supports `guided` and `manual`
+// proof categories per the proof summary header for exactly this case.
+
+// ---- felt252_add: 8-limb modular add over the Stark prime -----------------
+
+fn felt252_add(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let s0: u32 = add_with_carry_sum(a0, b0, 0u32);
+    let c0: u32 = add_with_carry_out(a0, b0, 0u32);
+    let s1: u32 = add_with_carry_sum(a1, b1, c0);
+    let c1: u32 = add_with_carry_out(a1, b1, c0);
+    let s2: u32 = add_with_carry_sum(a2, b2, c1);
+    let c2: u32 = add_with_carry_out(a2, b2, c1);
+    let s3: u32 = add_with_carry_sum(a3, b3, c2);
+    let c3: u32 = add_with_carry_out(a3, b3, c2);
+    let s4: u32 = add_with_carry_sum(a4, b4, c3);
+    let c4: u32 = add_with_carry_out(a4, b4, c3);
+    let s5: u32 = add_with_carry_sum(a5, b5, c4);
+    let c5: u32 = add_with_carry_out(a5, b5, c4);
+    let s6: u32 = add_with_carry_sum(a6, b6, c5);
+    let c6: u32 = add_with_carry_out(a6, b6, c5);
+    let s7: u32 = add_with_carry_sum(a7, b7, c6);
+    let c7: u32 = add_with_carry_out(a7, b7, c6);
+
+    let d0: u32 = sub_with_borrow_diff(s0, STARK_P_LIMB0, 0u32);
+    let bo0: u32 = sub_with_borrow_out(s0, STARK_P_LIMB0, 0u32);
+    let d1: u32 = sub_with_borrow_diff(s1, STARK_P_LIMB1, bo0);
+    let bo1: u32 = sub_with_borrow_out(s1, STARK_P_LIMB1, bo0);
+    let d2: u32 = sub_with_borrow_diff(s2, STARK_P_LIMB2, bo1);
+    let bo2: u32 = sub_with_borrow_out(s2, STARK_P_LIMB2, bo1);
+    let d3: u32 = sub_with_borrow_diff(s3, STARK_P_LIMB3, bo2);
+    let bo3: u32 = sub_with_borrow_out(s3, STARK_P_LIMB3, bo2);
+    let d4: u32 = sub_with_borrow_diff(s4, STARK_P_LIMB4, bo3);
+    let bo4: u32 = sub_with_borrow_out(s4, STARK_P_LIMB4, bo3);
+    let d5: u32 = sub_with_borrow_diff(s5, STARK_P_LIMB5, bo4);
+    let bo5: u32 = sub_with_borrow_out(s5, STARK_P_LIMB5, bo4);
+    let d6: u32 = sub_with_borrow_diff(s6, STARK_P_LIMB6, bo5);
+    let bo6: u32 = sub_with_borrow_out(s6, STARK_P_LIMB6, bo5);
+    let d7: u32 = sub_with_borrow_diff(s7, STARK_P_LIMB7, bo6);
+    let bo7: u32 = sub_with_borrow_out(s7, STARK_P_LIMB7, bo6);
+
+    let use_diff: u32 = if c7 == 1u32 {
+        1u32
+    } else {
+        if bo7 == 0u32 { 1u32 } else { 0u32 }
+    };
+
+    let r0: u32 = if use_diff == 1u32 { d0 } else { s0 };
+    let r1: u32 = if use_diff == 1u32 { d1 } else { s1 };
+    let r2: u32 = if use_diff == 1u32 { d2 } else { s2 };
+    let r3: u32 = if use_diff == 1u32 { d3 } else { s3 };
+    let r4: u32 = if use_diff == 1u32 { d4 } else { s4 };
+    let r5: u32 = if use_diff == 1u32 { d5 } else { s5 };
+    let r6: u32 = if use_diff == 1u32 { d6 } else { s6 };
+    let r7: u32 = if use_diff == 1u32 { d7 } else { s7 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
+// ---- felt252_sub: 8-limb modular subtract over the Stark prime ------------
+// Mirror of felt252_add: chain 8 sub_with_borrow calls; if the final
+// borrow_out is 1 (a < b in unsigned), add P back to bring the result into
+// [0, P). Otherwise the diff is already in [0, P).
+
+fn felt252_sub(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // Step 1: 8-limb subtract with borrow chain
+    let d0: u32 = sub_with_borrow_diff(a0, b0, 0u32);
+    let bo0: u32 = sub_with_borrow_out(a0, b0, 0u32);
+    let d1: u32 = sub_with_borrow_diff(a1, b1, bo0);
+    let bo1: u32 = sub_with_borrow_out(a1, b1, bo0);
+    let d2: u32 = sub_with_borrow_diff(a2, b2, bo1);
+    let bo2: u32 = sub_with_borrow_out(a2, b2, bo1);
+    let d3: u32 = sub_with_borrow_diff(a3, b3, bo2);
+    let bo3: u32 = sub_with_borrow_out(a3, b3, bo2);
+    let d4: u32 = sub_with_borrow_diff(a4, b4, bo3);
+    let bo4: u32 = sub_with_borrow_out(a4, b4, bo3);
+    let d5: u32 = sub_with_borrow_diff(a5, b5, bo4);
+    let bo5: u32 = sub_with_borrow_out(a5, b5, bo4);
+    let d6: u32 = sub_with_borrow_diff(a6, b6, bo5);
+    let bo6: u32 = sub_with_borrow_out(a6, b6, bo5);
+    let d7: u32 = sub_with_borrow_diff(a7, b7, bo6);
+    let bo7: u32 = sub_with_borrow_out(a7, b7, bo6);
+
+    // Step 2: tentative add-back of P (used when a < b, i.e. bo7 == 1)
+    let t0: u32 = add_with_carry_sum(d0, STARK_P_LIMB0, 0u32);
+    let cc0: u32 = add_with_carry_out(d0, STARK_P_LIMB0, 0u32);
+    let t1: u32 = add_with_carry_sum(d1, STARK_P_LIMB1, cc0);
+    let cc1: u32 = add_with_carry_out(d1, STARK_P_LIMB1, cc0);
+    let t2: u32 = add_with_carry_sum(d2, STARK_P_LIMB2, cc1);
+    let cc2: u32 = add_with_carry_out(d2, STARK_P_LIMB2, cc1);
+    let t3: u32 = add_with_carry_sum(d3, STARK_P_LIMB3, cc2);
+    let cc3: u32 = add_with_carry_out(d3, STARK_P_LIMB3, cc2);
+    let t4: u32 = add_with_carry_sum(d4, STARK_P_LIMB4, cc3);
+    let cc4: u32 = add_with_carry_out(d4, STARK_P_LIMB4, cc3);
+    let t5: u32 = add_with_carry_sum(d5, STARK_P_LIMB5, cc4);
+    let cc5: u32 = add_with_carry_out(d5, STARK_P_LIMB5, cc4);
+    let t6: u32 = add_with_carry_sum(d6, STARK_P_LIMB6, cc5);
+    let cc6: u32 = add_with_carry_out(d6, STARK_P_LIMB6, cc5);
+    let t7: u32 = add_with_carry_sum(d7, STARK_P_LIMB7, cc6);
+
+    // Step 3: select. If bo7 == 1, a < b in unsigned -> use d + P. Else d.
+    let r0: u32 = if bo7 == 1u32 { t0 } else { d0 };
+    let r1: u32 = if bo7 == 1u32 { t1 } else { d1 };
+    let r2: u32 = if bo7 == 1u32 { t2 } else { d2 };
+    let r3: u32 = if bo7 == 1u32 { t3 } else { d3 };
+    let r4: u32 = if bo7 == 1u32 { t4 } else { d4 };
+    let r5: u32 = if bo7 == 1u32 { t5 } else { d5 };
+    let r6: u32 = if bo7 == 1u32 { t6 } else { d6 };
+    let r7: u32 = if bo7 == 1u32 { t7 } else { d7 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
+// ---- felt252_mul_raw: schoolbook 8x8 -> 16-limb product (no reduction) ----
+// Computes a * b as a 16-limb (512-bit) integer. Modular reduction to fit
+// back into 8 limbs mod P is deferred to felt252_reduce_512 (uses Solinas
+// folding via 2^251 == -17*2^192 - 1 mod P).
+//
+// Strategy: 64 partial products p_ij = a_i * b_j as u64. Each contributes
+// its low 32 bits to output limb (i+j) and its high 32 bits to limb (i+j+1).
+// Accumulate per-limb in a u64; the carry between limbs is bounded (~16
+// u32 contributions per middle limb, sum well within u64).
+
+fn felt252_mul_raw(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // 64 partial products as u64
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+
+    // For each partial product p_ij, lo = (p as u32) zero-extended into a u64
+    // for accumulation; hi = p >> 32 (already u64).
+    // Inline the cast at use sites for compactness.
+
+    // Limb 0: lo(p00). No prior carry, no hi contributions.
+    let acc0: u64 = ((p00 as u32) as u64);
+    let m0: u32 = acc0 as u32;
+    let k1: u64 = acc0 >> 32u64;
+
+    // Limb 1: prior carry + lo(p01) + lo(p10) + hi(p00)
+    let acc1: u64 = k1
+        + ((p01 as u32) as u64) + ((p10 as u32) as u64)
+        + (p00 >> 32u64);
+    let m1: u32 = acc1 as u32;
+    let k2: u64 = acc1 >> 32u64;
+
+    // Limb 2: k2 + lo(p02, p11, p20) + hi(p01, p10)
+    let acc2: u64 = k2
+        + ((p02 as u32) as u64) + ((p11 as u32) as u64) + ((p20 as u32) as u64)
+        + (p01 >> 32u64) + (p10 >> 32u64);
+    let m2: u32 = acc2 as u32;
+    let k3: u64 = acc2 >> 32u64;
+
+    // Limb 3: k3 + lo(p03, p12, p21, p30) + hi(p02, p11, p20)
+    let acc3: u64 = k3
+        + ((p03 as u32) as u64) + ((p12 as u32) as u64)
+        + ((p21 as u32) as u64) + ((p30 as u32) as u64)
+        + (p02 >> 32u64) + (p11 >> 32u64) + (p20 >> 32u64);
+    let m3: u32 = acc3 as u32;
+    let k4: u64 = acc3 >> 32u64;
+
+    // Limb 4: k4 + lo(p04, p13, p22, p31, p40) + hi(p03, p12, p21, p30)
+    let acc4: u64 = k4
+        + ((p04 as u32) as u64) + ((p13 as u32) as u64)
+        + ((p22 as u32) as u64) + ((p31 as u32) as u64) + ((p40 as u32) as u64)
+        + (p03 >> 32u64) + (p12 >> 32u64) + (p21 >> 32u64) + (p30 >> 32u64);
+    let m4: u32 = acc4 as u32;
+    let k5: u64 = acc4 >> 32u64;
+
+    // Limb 5: k5 + lo(p05..p50 along anti-diagonal) + hi(p04..p40)
+    let acc5: u64 = k5
+        + ((p05 as u32) as u64) + ((p14 as u32) as u64) + ((p23 as u32) as u64)
+        + ((p32 as u32) as u64) + ((p41 as u32) as u64) + ((p50 as u32) as u64)
+        + (p04 >> 32u64) + (p13 >> 32u64) + (p22 >> 32u64)
+        + (p31 >> 32u64) + (p40 >> 32u64);
+    let m5: u32 = acc5 as u32;
+    let k6: u64 = acc5 >> 32u64;
+
+    // Limb 6: k6 + lo(p06..p60) + hi(p05..p50)
+    let acc6: u64 = k6
+        + ((p06 as u32) as u64) + ((p15 as u32) as u64) + ((p24 as u32) as u64)
+        + ((p33 as u32) as u64) + ((p42 as u32) as u64) + ((p51 as u32) as u64)
+        + ((p60 as u32) as u64)
+        + (p05 >> 32u64) + (p14 >> 32u64) + (p23 >> 32u64)
+        + (p32 >> 32u64) + (p41 >> 32u64) + (p50 >> 32u64);
+    let m6: u32 = acc6 as u32;
+    let k7: u64 = acc6 >> 32u64;
+
+    // Limb 7: k7 + lo(p07..p70) + hi(p06..p60)
+    let acc7: u64 = k7
+        + ((p07 as u32) as u64) + ((p16 as u32) as u64) + ((p25 as u32) as u64)
+        + ((p34 as u32) as u64) + ((p43 as u32) as u64) + ((p52 as u32) as u64)
+        + ((p61 as u32) as u64) + ((p70 as u32) as u64)
+        + (p06 >> 32u64) + (p15 >> 32u64) + (p24 >> 32u64)
+        + (p33 >> 32u64) + (p42 >> 32u64) + (p51 >> 32u64) + (p60 >> 32u64);
+    let m7: u32 = acc7 as u32;
+    let k8: u64 = acc7 >> 32u64;
+
+    // Limb 8: k8 + lo(p17..p71) + hi(p07..p70)
+    let acc8: u64 = k8
+        + ((p17 as u32) as u64) + ((p26 as u32) as u64) + ((p35 as u32) as u64)
+        + ((p44 as u32) as u64) + ((p53 as u32) as u64) + ((p62 as u32) as u64)
+        + ((p71 as u32) as u64)
+        + (p07 >> 32u64) + (p16 >> 32u64) + (p25 >> 32u64)
+        + (p34 >> 32u64) + (p43 >> 32u64) + (p52 >> 32u64)
+        + (p61 >> 32u64) + (p70 >> 32u64);
+    let m8: u32 = acc8 as u32;
+    let k9: u64 = acc8 >> 32u64;
+
+    // Limb 9: k9 + lo(p27..p72) + hi(p17..p71)
+    let acc9: u64 = k9
+        + ((p27 as u32) as u64) + ((p36 as u32) as u64) + ((p45 as u32) as u64)
+        + ((p54 as u32) as u64) + ((p63 as u32) as u64) + ((p72 as u32) as u64)
+        + (p17 >> 32u64) + (p26 >> 32u64) + (p35 >> 32u64)
+        + (p44 >> 32u64) + (p53 >> 32u64) + (p62 >> 32u64) + (p71 >> 32u64);
+    let m9: u32 = acc9 as u32;
+    let k10: u64 = acc9 >> 32u64;
+
+    // Limb 10: k10 + lo(p37..p73) + hi(p27..p72)
+    let acc10: u64 = k10
+        + ((p37 as u32) as u64) + ((p46 as u32) as u64) + ((p55 as u32) as u64)
+        + ((p64 as u32) as u64) + ((p73 as u32) as u64)
+        + (p27 >> 32u64) + (p36 >> 32u64) + (p45 >> 32u64)
+        + (p54 >> 32u64) + (p63 >> 32u64) + (p72 >> 32u64);
+    let m10: u32 = acc10 as u32;
+    let k11: u64 = acc10 >> 32u64;
+
+    // Limb 11: k11 + lo(p47..p74) + hi(p37..p73)
+    let acc11: u64 = k11
+        + ((p47 as u32) as u64) + ((p56 as u32) as u64)
+        + ((p65 as u32) as u64) + ((p74 as u32) as u64)
+        + (p37 >> 32u64) + (p46 >> 32u64) + (p55 >> 32u64)
+        + (p64 >> 32u64) + (p73 >> 32u64);
+    let m11: u32 = acc11 as u32;
+    let k12: u64 = acc11 >> 32u64;
+
+    // Limb 12: k12 + lo(p57..p75) + hi(p47..p74)
+    let acc12: u64 = k12
+        + ((p57 as u32) as u64) + ((p66 as u32) as u64) + ((p75 as u32) as u64)
+        + (p47 >> 32u64) + (p56 >> 32u64) + (p65 >> 32u64) + (p74 >> 32u64);
+    let m12: u32 = acc12 as u32;
+    let k13: u64 = acc12 >> 32u64;
+
+    // Limb 13: k13 + lo(p67, p76) + hi(p57, p66, p75)
+    let acc13: u64 = k13
+        + ((p67 as u32) as u64) + ((p76 as u32) as u64)
+        + (p57 >> 32u64) + (p66 >> 32u64) + (p75 >> 32u64);
+    let m13: u32 = acc13 as u32;
+    let k14: u64 = acc13 >> 32u64;
+
+    // Limb 14: k14 + lo(p77) + hi(p67, p76)
+    let acc14: u64 = k14
+        + ((p77 as u32) as u64)
+        + (p67 >> 32u64) + (p76 >> 32u64);
+    let m14: u32 = acc14 as u32;
+    let k15: u64 = acc14 >> 32u64;
+
+    // Limb 15: k15 + hi(p77). No further contributions; this is the top limb.
+    let acc15: u64 = k15 + (p77 >> 32u64);
+    let m15: u32 = acc15 as u32;
+
+    (m0,  m1,  m2,  m3,  m4,  m5,  m6,  m7,
+     m8,  m9,  m10, m11, m12, m13, m14, m15)
+}
+
+// felt252_montgomery_reduce: CIOS Montgomery reduction over the Stark prime.
+//
+// Takes a 16-limb (512-bit) integer T (typically the output of
+// felt252_mul_raw) and returns T * R^-1 mod P as an 8-limb value, where
+// R = 2^256. For Stark prime P, P mod 2^32 = 1 so P^-1 mod 2^32 = 1 and
+// N' = -P^-1 mod 2^32 = 2^32 - 1. The m at each step is m_i = -T_i mod 2^32,
+// computed via m_prod = T_i * (2^32 - 1) (truncated to low 32 bits).
+//
+// P limb-by-limb: (1, 0, 0, 0, 0, 0, 17, 2^27). So adding m*P at position i
+// touches three limbs explicitly: i (m*1), i+6 (m*17), i+7 (m*2^27).
+// Each m*const product is u64, split into low/high 32-bit halves that
+// straddle the boundary at the destination limbs.
+//
+// After 8 iterations, result is held in limbs 8..15 of the working register.
+// Standard Montgomery analysis gives result < 2P, so one conditional
+// subtract of P brings it canonical. (A tighter bound proof is deferred.)
+
+fn felt252_montgomery_reduce(
+    m0:  u32, m1:  u32, m2:  u32, m3:  u32,
+    m4:  u32, m5:  u32, m6:  u32, m7:  u32,
+    m8:  u32, m9:  u32, m10: u32, m11: u32,
+    m12: u32, m13: u32, m14: u32, m15: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // ===== Iteration 0: zero out limb 0, touches limbs 0..8 =====
+    let n0: u32 = ((m0 as u64) * 4294967295u64) as u32;
+    let n0_17: u64 = (n0 as u64) * 17u64;
+    let n0_17_lo: u32 = n0_17 as u32;
+    let n0_17_hi: u32 = (n0_17 >> 32u64) as u32;
+    let n0_pow: u64 = (n0 as u64) * 134217728u64;
+    let n0_pow_lo: u32 = n0_pow as u32;
+    let n0_pow_hi: u32 = (n0_pow >> 32u64) as u32;
+
+    let a00: u64 = (m0 as u64) + (n0 as u64);
+    let k01: u64 = a00 >> 32u64;
+    let a01: u64 = (m1 as u64) + k01;
+    let t0_1: u32 = a01 as u32;
+    let k02: u64 = a01 >> 32u64;
+    let a02: u64 = (m2 as u64) + k02;
+    let t0_2: u32 = a02 as u32;
+    let k03: u64 = a02 >> 32u64;
+    let a03: u64 = (m3 as u64) + k03;
+    let t0_3: u32 = a03 as u32;
+    let k04: u64 = a03 >> 32u64;
+    let a04: u64 = (m4 as u64) + k04;
+    let t0_4: u32 = a04 as u32;
+    let k05: u64 = a04 >> 32u64;
+    let a05: u64 = (m5 as u64) + k05;
+    let t0_5: u32 = a05 as u32;
+    let k06: u64 = a05 >> 32u64;
+    let a06: u64 = (m6 as u64) + (n0_17_lo as u64) + k06;
+    let t0_6: u32 = a06 as u32;
+    let k07: u64 = a06 >> 32u64;
+    let a07: u64 = (m7 as u64) + (n0_17_hi as u64) + (n0_pow_lo as u64) + k07;
+    let t0_7: u32 = a07 as u32;
+    let k08: u64 = a07 >> 32u64;
+    let a08: u64 = (m8 as u64) + (n0_pow_hi as u64) + k08;
+    let t0_8: u32 = a08 as u32;
+    let k09: u64 = a08 >> 32u64;
+    let a09: u64 = (m9 as u64) + k09;
+    let t0_9: u32 = a09 as u32;
+    let k0a: u64 = a09 >> 32u64;
+    let a0a: u64 = (m10 as u64) + k0a;
+    let t0_10: u32 = a0a as u32;
+    let k0b: u64 = a0a >> 32u64;
+    let a0b: u64 = (m11 as u64) + k0b;
+    let t0_11: u32 = a0b as u32;
+    let k0c: u64 = a0b >> 32u64;
+    let a0c: u64 = (m12 as u64) + k0c;
+    let t0_12: u32 = a0c as u32;
+    let k0d: u64 = a0c >> 32u64;
+    let a0d: u64 = (m13 as u64) + k0d;
+    let t0_13: u32 = a0d as u32;
+    let k0e: u64 = a0d >> 32u64;
+    let a0e: u64 = (m14 as u64) + k0e;
+    let t0_14: u32 = a0e as u32;
+    let k0f: u64 = a0e >> 32u64;
+    let a0f: u64 = (m15 as u64) + k0f;
+    let t0_15: u32 = a0f as u32;
+    let cap0: u64 = a0f >> 32u64;
+
+    // ===== Iteration 1: zero out t0_1, touches limbs 1..9 =====
+    let n1: u32 = ((t0_1 as u64) * 4294967295u64) as u32;
+    let n1_17: u64 = (n1 as u64) * 17u64;
+    let n1_17_lo: u32 = n1_17 as u32;
+    let n1_17_hi: u32 = (n1_17 >> 32u64) as u32;
+    let n1_pow: u64 = (n1 as u64) * 134217728u64;
+    let n1_pow_lo: u32 = n1_pow as u32;
+    let n1_pow_hi: u32 = (n1_pow >> 32u64) as u32;
+
+    let b01: u64 = (t0_1 as u64) + (n1 as u64);
+    let k12: u64 = b01 >> 32u64;
+    let b02: u64 = (t0_2 as u64) + k12;
+    let t1_2: u32 = b02 as u32;
+    let k13: u64 = b02 >> 32u64;
+    let b03: u64 = (t0_3 as u64) + k13;
+    let t1_3: u32 = b03 as u32;
+    let k14: u64 = b03 >> 32u64;
+    let b04: u64 = (t0_4 as u64) + k14;
+    let t1_4: u32 = b04 as u32;
+    let k15: u64 = b04 >> 32u64;
+    let b05: u64 = (t0_5 as u64) + k15;
+    let t1_5: u32 = b05 as u32;
+    let k16: u64 = b05 >> 32u64;
+    let b06: u64 = (t0_6 as u64) + k16;
+    let t1_6: u32 = b06 as u32;
+    let k17: u64 = b06 >> 32u64;
+    let b07: u64 = (t0_7 as u64) + (n1_17_lo as u64) + k17;
+    let t1_7: u32 = b07 as u32;
+    let k18: u64 = b07 >> 32u64;
+    let b08: u64 = (t0_8 as u64) + (n1_17_hi as u64) + (n1_pow_lo as u64) + k18;
+    let t1_8: u32 = b08 as u32;
+    let k19: u64 = b08 >> 32u64;
+    let b09: u64 = (t0_9 as u64) + (n1_pow_hi as u64) + k19;
+    let t1_9: u32 = b09 as u32;
+    let k1a: u64 = b09 >> 32u64;
+    let b0a: u64 = (t0_10 as u64) + k1a;
+    let t1_10: u32 = b0a as u32;
+    let k1b: u64 = b0a >> 32u64;
+    let b0b: u64 = (t0_11 as u64) + k1b;
+    let t1_11: u32 = b0b as u32;
+    let k1c: u64 = b0b >> 32u64;
+    let b0c: u64 = (t0_12 as u64) + k1c;
+    let t1_12: u32 = b0c as u32;
+    let k1d: u64 = b0c >> 32u64;
+    let b0d: u64 = (t0_13 as u64) + k1d;
+    let t1_13: u32 = b0d as u32;
+    let k1e: u64 = b0d >> 32u64;
+    let b0e: u64 = (t0_14 as u64) + k1e;
+    let t1_14: u32 = b0e as u32;
+    let k1f: u64 = b0e >> 32u64;
+    let b0f: u64 = (t0_15 as u64) + cap0 + k1f;
+    let t1_15: u32 = b0f as u32;
+    let cap1: u64 = b0f >> 32u64;
+
+    // ===== Iteration 2: zero out t1_2, touches limbs 2..10 =====
+    let n2: u32 = ((t1_2 as u64) * 4294967295u64) as u32;
+    let n2_17: u64 = (n2 as u64) * 17u64;
+    let n2_17_lo: u32 = n2_17 as u32;
+    let n2_17_hi: u32 = (n2_17 >> 32u64) as u32;
+    let n2_pow: u64 = (n2 as u64) * 134217728u64;
+    let n2_pow_lo: u32 = n2_pow as u32;
+    let n2_pow_hi: u32 = (n2_pow >> 32u64) as u32;
+
+    let c02: u64 = (t1_2 as u64) + (n2 as u64);
+    let k23: u64 = c02 >> 32u64;
+    let c03: u64 = (t1_3 as u64) + k23;
+    let t2_3: u32 = c03 as u32;
+    let k24: u64 = c03 >> 32u64;
+    let c04: u64 = (t1_4 as u64) + k24;
+    let t2_4: u32 = c04 as u32;
+    let k25: u64 = c04 >> 32u64;
+    let c05: u64 = (t1_5 as u64) + k25;
+    let t2_5: u32 = c05 as u32;
+    let k26: u64 = c05 >> 32u64;
+    let c06: u64 = (t1_6 as u64) + k26;
+    let t2_6: u32 = c06 as u32;
+    let k27: u64 = c06 >> 32u64;
+    let c07: u64 = (t1_7 as u64) + k27;
+    let t2_7: u32 = c07 as u32;
+    let k28: u64 = c07 >> 32u64;
+    let c08: u64 = (t1_8 as u64) + (n2_17_lo as u64) + k28;
+    let t2_8: u32 = c08 as u32;
+    let k29: u64 = c08 >> 32u64;
+    let c09: u64 = (t1_9 as u64) + (n2_17_hi as u64) + (n2_pow_lo as u64) + k29;
+    let t2_9: u32 = c09 as u32;
+    let k2a: u64 = c09 >> 32u64;
+    let c0a: u64 = (t1_10 as u64) + (n2_pow_hi as u64) + k2a;
+    let t2_10: u32 = c0a as u32;
+    let k2b: u64 = c0a >> 32u64;
+    let c0b: u64 = (t1_11 as u64) + k2b;
+    let t2_11: u32 = c0b as u32;
+    let k2c: u64 = c0b >> 32u64;
+    let c0c: u64 = (t1_12 as u64) + k2c;
+    let t2_12: u32 = c0c as u32;
+    let k2d: u64 = c0c >> 32u64;
+    let c0d: u64 = (t1_13 as u64) + k2d;
+    let t2_13: u32 = c0d as u32;
+    let k2e: u64 = c0d >> 32u64;
+    let c0e: u64 = (t1_14 as u64) + k2e;
+    let t2_14: u32 = c0e as u32;
+    let k2f: u64 = c0e >> 32u64;
+    let c0f: u64 = (t1_15 as u64) + cap1 + k2f;
+    let t2_15: u32 = c0f as u32;
+    let cap2: u64 = c0f >> 32u64;
+
+    // ===== Iteration 3: zero out t2_3, touches limbs 3..11 =====
+    let n3: u32 = ((t2_3 as u64) * 4294967295u64) as u32;
+    let n3_17: u64 = (n3 as u64) * 17u64;
+    let n3_17_lo: u32 = n3_17 as u32;
+    let n3_17_hi: u32 = (n3_17 >> 32u64) as u32;
+    let n3_pow: u64 = (n3 as u64) * 134217728u64;
+    let n3_pow_lo: u32 = n3_pow as u32;
+    let n3_pow_hi: u32 = (n3_pow >> 32u64) as u32;
+
+    let d03: u64 = (t2_3 as u64) + (n3 as u64);
+    let k34: u64 = d03 >> 32u64;
+    let d04: u64 = (t2_4 as u64) + k34;
+    let t3_4: u32 = d04 as u32;
+    let k35: u64 = d04 >> 32u64;
+    let d05: u64 = (t2_5 as u64) + k35;
+    let t3_5: u32 = d05 as u32;
+    let k36: u64 = d05 >> 32u64;
+    let d06: u64 = (t2_6 as u64) + k36;
+    let t3_6: u32 = d06 as u32;
+    let k37: u64 = d06 >> 32u64;
+    let d07: u64 = (t2_7 as u64) + k37;
+    let t3_7: u32 = d07 as u32;
+    let k38: u64 = d07 >> 32u64;
+    let d08: u64 = (t2_8 as u64) + k38;
+    let t3_8: u32 = d08 as u32;
+    let k39: u64 = d08 >> 32u64;
+    let d09: u64 = (t2_9 as u64) + (n3_17_lo as u64) + k39;
+    let t3_9: u32 = d09 as u32;
+    let k3a: u64 = d09 >> 32u64;
+    let d0a: u64 = (t2_10 as u64) + (n3_17_hi as u64) + (n3_pow_lo as u64) + k3a;
+    let t3_10: u32 = d0a as u32;
+    let k3b: u64 = d0a >> 32u64;
+    let d0b: u64 = (t2_11 as u64) + (n3_pow_hi as u64) + k3b;
+    let t3_11: u32 = d0b as u32;
+    let k3c: u64 = d0b >> 32u64;
+    let d0c: u64 = (t2_12 as u64) + k3c;
+    let t3_12: u32 = d0c as u32;
+    let k3d: u64 = d0c >> 32u64;
+    let d0d: u64 = (t2_13 as u64) + k3d;
+    let t3_13: u32 = d0d as u32;
+    let k3e: u64 = d0d >> 32u64;
+    let d0e: u64 = (t2_14 as u64) + k3e;
+    let t3_14: u32 = d0e as u32;
+    let k3f: u64 = d0e >> 32u64;
+    let d0f: u64 = (t2_15 as u64) + cap2 + k3f;
+    let t3_15: u32 = d0f as u32;
+    let cap3: u64 = d0f >> 32u64;
+
+    // ===== Iteration 4: zero out t3_4, touches limbs 4..12 =====
+    let n4: u32 = ((t3_4 as u64) * 4294967295u64) as u32;
+    let n4_17: u64 = (n4 as u64) * 17u64;
+    let n4_17_lo: u32 = n4_17 as u32;
+    let n4_17_hi: u32 = (n4_17 >> 32u64) as u32;
+    let n4_pow: u64 = (n4 as u64) * 134217728u64;
+    let n4_pow_lo: u32 = n4_pow as u32;
+    let n4_pow_hi: u32 = (n4_pow >> 32u64) as u32;
+
+    let e04: u64 = (t3_4 as u64) + (n4 as u64);
+    let k45: u64 = e04 >> 32u64;
+    let e05: u64 = (t3_5 as u64) + k45;
+    let t4_5: u32 = e05 as u32;
+    let k46: u64 = e05 >> 32u64;
+    let e06: u64 = (t3_6 as u64) + k46;
+    let t4_6: u32 = e06 as u32;
+    let k47: u64 = e06 >> 32u64;
+    let e07: u64 = (t3_7 as u64) + k47;
+    let t4_7: u32 = e07 as u32;
+    let k48: u64 = e07 >> 32u64;
+    let e08: u64 = (t3_8 as u64) + k48;
+    let t4_8: u32 = e08 as u32;
+    let k49: u64 = e08 >> 32u64;
+    let e09: u64 = (t3_9 as u64) + k49;
+    let t4_9: u32 = e09 as u32;
+    let k4a: u64 = e09 >> 32u64;
+    let e0a: u64 = (t3_10 as u64) + (n4_17_lo as u64) + k4a;
+    let t4_10: u32 = e0a as u32;
+    let k4b: u64 = e0a >> 32u64;
+    let e0b: u64 = (t3_11 as u64) + (n4_17_hi as u64) + (n4_pow_lo as u64) + k4b;
+    let t4_11: u32 = e0b as u32;
+    let k4c: u64 = e0b >> 32u64;
+    let e0c: u64 = (t3_12 as u64) + (n4_pow_hi as u64) + k4c;
+    let t4_12: u32 = e0c as u32;
+    let k4d: u64 = e0c >> 32u64;
+    let e0d: u64 = (t3_13 as u64) + k4d;
+    let t4_13: u32 = e0d as u32;
+    let k4e: u64 = e0d >> 32u64;
+    let e0e: u64 = (t3_14 as u64) + k4e;
+    let t4_14: u32 = e0e as u32;
+    let k4f: u64 = e0e >> 32u64;
+    let e0f: u64 = (t3_15 as u64) + cap3 + k4f;
+    let t4_15: u32 = e0f as u32;
+    let cap4: u64 = e0f >> 32u64;
+
+    // ===== Iteration 5: zero out t4_5, touches limbs 5..13 =====
+    let n5: u32 = ((t4_5 as u64) * 4294967295u64) as u32;
+    let n5_17: u64 = (n5 as u64) * 17u64;
+    let n5_17_lo: u32 = n5_17 as u32;
+    let n5_17_hi: u32 = (n5_17 >> 32u64) as u32;
+    let n5_pow: u64 = (n5 as u64) * 134217728u64;
+    let n5_pow_lo: u32 = n5_pow as u32;
+    let n5_pow_hi: u32 = (n5_pow >> 32u64) as u32;
+
+    let f05: u64 = (t4_5 as u64) + (n5 as u64);
+    let k56: u64 = f05 >> 32u64;
+    let f06: u64 = (t4_6 as u64) + k56;
+    let t5_6: u32 = f06 as u32;
+    let k57: u64 = f06 >> 32u64;
+    let f07: u64 = (t4_7 as u64) + k57;
+    let t5_7: u32 = f07 as u32;
+    let k58: u64 = f07 >> 32u64;
+    let f08: u64 = (t4_8 as u64) + k58;
+    let t5_8: u32 = f08 as u32;
+    let k59: u64 = f08 >> 32u64;
+    let f09: u64 = (t4_9 as u64) + k59;
+    let t5_9: u32 = f09 as u32;
+    let k5a: u64 = f09 >> 32u64;
+    let f0a: u64 = (t4_10 as u64) + k5a;
+    let t5_10: u32 = f0a as u32;
+    let k5b: u64 = f0a >> 32u64;
+    let f0b: u64 = (t4_11 as u64) + (n5_17_lo as u64) + k5b;
+    let t5_11: u32 = f0b as u32;
+    let k5c: u64 = f0b >> 32u64;
+    let f0c: u64 = (t4_12 as u64) + (n5_17_hi as u64) + (n5_pow_lo as u64) + k5c;
+    let t5_12: u32 = f0c as u32;
+    let k5d: u64 = f0c >> 32u64;
+    let f0d: u64 = (t4_13 as u64) + (n5_pow_hi as u64) + k5d;
+    let t5_13: u32 = f0d as u32;
+    let k5e: u64 = f0d >> 32u64;
+    let f0e: u64 = (t4_14 as u64) + k5e;
+    let t5_14: u32 = f0e as u32;
+    let k5f: u64 = f0e >> 32u64;
+    let f0f: u64 = (t4_15 as u64) + cap4 + k5f;
+    let t5_15: u32 = f0f as u32;
+    let cap5: u64 = f0f >> 32u64;
+
+    // ===== Iteration 6: zero out t5_6, touches limbs 6..14 =====
+    let n6: u32 = ((t5_6 as u64) * 4294967295u64) as u32;
+    let n6_17: u64 = (n6 as u64) * 17u64;
+    let n6_17_lo: u32 = n6_17 as u32;
+    let n6_17_hi: u32 = (n6_17 >> 32u64) as u32;
+    let n6_pow: u64 = (n6 as u64) * 134217728u64;
+    let n6_pow_lo: u32 = n6_pow as u32;
+    let n6_pow_hi: u32 = (n6_pow >> 32u64) as u32;
+
+    let g06: u64 = (t5_6 as u64) + (n6 as u64);
+    let k67: u64 = g06 >> 32u64;
+    let g07: u64 = (t5_7 as u64) + k67;
+    let t6_7: u32 = g07 as u32;
+    let k68: u64 = g07 >> 32u64;
+    let g08: u64 = (t5_8 as u64) + k68;
+    let t6_8: u32 = g08 as u32;
+    let k69: u64 = g08 >> 32u64;
+    let g09: u64 = (t5_9 as u64) + k69;
+    let t6_9: u32 = g09 as u32;
+    let k6a: u64 = g09 >> 32u64;
+    let g0a: u64 = (t5_10 as u64) + k6a;
+    let t6_10: u32 = g0a as u32;
+    let k6b: u64 = g0a >> 32u64;
+    let g0b: u64 = (t5_11 as u64) + k6b;
+    let t6_11: u32 = g0b as u32;
+    let k6c: u64 = g0b >> 32u64;
+    let g0c: u64 = (t5_12 as u64) + (n6_17_lo as u64) + k6c;
+    let t6_12: u32 = g0c as u32;
+    let k6d: u64 = g0c >> 32u64;
+    let g0d: u64 = (t5_13 as u64) + (n6_17_hi as u64) + (n6_pow_lo as u64) + k6d;
+    let t6_13: u32 = g0d as u32;
+    let k6e: u64 = g0d >> 32u64;
+    let g0e: u64 = (t5_14 as u64) + (n6_pow_hi as u64) + k6e;
+    let t6_14: u32 = g0e as u32;
+    let k6f: u64 = g0e >> 32u64;
+    let g0f: u64 = (t5_15 as u64) + cap5 + k6f;
+    let t6_15: u32 = g0f as u32;
+    let cap6: u64 = g0f >> 32u64;
+
+    // ===== Iteration 7: zero out t6_7, touches limbs 7..15 =====
+    let n7: u32 = ((t6_7 as u64) * 4294967295u64) as u32;
+    let n7_17: u64 = (n7 as u64) * 17u64;
+    let n7_17_lo: u32 = n7_17 as u32;
+    let n7_17_hi: u32 = (n7_17 >> 32u64) as u32;
+    let n7_pow: u64 = (n7 as u64) * 134217728u64;
+    let n7_pow_lo: u32 = n7_pow as u32;
+    let n7_pow_hi: u32 = (n7_pow >> 32u64) as u32;
+
+    let h07: u64 = (t6_7 as u64) + (n7 as u64);
+    let k78: u64 = h07 >> 32u64;
+    let h08: u64 = (t6_8 as u64) + k78;
+    let t7_8: u32 = h08 as u32;
+    let k79: u64 = h08 >> 32u64;
+    let h09: u64 = (t6_9 as u64) + k79;
+    let t7_9: u32 = h09 as u32;
+    let k7a: u64 = h09 >> 32u64;
+    let h0a: u64 = (t6_10 as u64) + k7a;
+    let t7_10: u32 = h0a as u32;
+    let k7b: u64 = h0a >> 32u64;
+    let h0b: u64 = (t6_11 as u64) + k7b;
+    let t7_11: u32 = h0b as u32;
+    let k7c: u64 = h0b >> 32u64;
+    let h0c: u64 = (t6_12 as u64) + k7c;
+    let t7_12: u32 = h0c as u32;
+    let k7d: u64 = h0c >> 32u64;
+    let h0d: u64 = (t6_13 as u64) + (n7_17_lo as u64) + k7d;
+    let t7_13: u32 = h0d as u32;
+    let k7e: u64 = h0d >> 32u64;
+    let h0e: u64 = (t6_14 as u64) + (n7_17_hi as u64) + (n7_pow_lo as u64) + k7e;
+    let t7_14: u32 = h0e as u32;
+    let k7f: u64 = h0e >> 32u64;
+    let h0f: u64 = (t6_15 as u64) + (n7_pow_hi as u64) + cap6 + k7f;
+    let t7_15: u32 = h0f as u32;
+    // cap7 = h0f >> 32u64 — final overflow bit. In CIOS Montgomery the
+    // intermediate value is < 2P*R, so after the >>R shift the result is
+    // < 2P, and cap7 ∈ {0, 1} acts as the "high bit" beyond limb 15.
+
+    // ===== Conditional subtract P =====
+    // The 8-limb candidate result is (t7_8..t7_15). Tentatively compute
+    // (candidate - P) via the borrow chain; use the diff if the candidate
+    // was >= P (i.e., the subtract didn't underflow), else keep candidate.
+
+    let r0d: u32 = sub_with_borrow_diff(t7_8,  STARK_P_LIMB0, 0u32);
+    let rb0: u32 = sub_with_borrow_out (t7_8,  STARK_P_LIMB0, 0u32);
+    let r1d: u32 = sub_with_borrow_diff(t7_9,  STARK_P_LIMB1, rb0);
+    let rb1: u32 = sub_with_borrow_out (t7_9,  STARK_P_LIMB1, rb0);
+    let r2d: u32 = sub_with_borrow_diff(t7_10, STARK_P_LIMB2, rb1);
+    let rb2: u32 = sub_with_borrow_out (t7_10, STARK_P_LIMB2, rb1);
+    let r3d: u32 = sub_with_borrow_diff(t7_11, STARK_P_LIMB3, rb2);
+    let rb3: u32 = sub_with_borrow_out (t7_11, STARK_P_LIMB3, rb2);
+    let r4d: u32 = sub_with_borrow_diff(t7_12, STARK_P_LIMB4, rb3);
+    let rb4: u32 = sub_with_borrow_out (t7_12, STARK_P_LIMB4, rb3);
+    let r5d: u32 = sub_with_borrow_diff(t7_13, STARK_P_LIMB5, rb4);
+    let rb5: u32 = sub_with_borrow_out (t7_13, STARK_P_LIMB5, rb4);
+    let r6d: u32 = sub_with_borrow_diff(t7_14, STARK_P_LIMB6, rb5);
+    let rb6: u32 = sub_with_borrow_out (t7_14, STARK_P_LIMB6, rb5);
+    let r7d: u32 = sub_with_borrow_diff(t7_15, STARK_P_LIMB7, rb6);
+    let rb7: u32 = sub_with_borrow_out (t7_15, STARK_P_LIMB7, rb6);
+
+    // Use the diff when (cap7 carry was set) OR (subtract didn't underflow).
+    // cap7 is just (h0f >> 32u64); compute it inline to avoid an unused-warn.
+    let cap7: u64 = h0f >> 32u64;
+    let use_diff: u32 = if cap7 >= 1u64 {
+        1u32
+    } else {
+        if rb7 == 0u32 { 1u32 } else { 0u32 }
+    };
+
+    let r0: u32 = if use_diff == 1u32 { r0d } else { t7_8  };
+    let r1: u32 = if use_diff == 1u32 { r1d } else { t7_9  };
+    let r2: u32 = if use_diff == 1u32 { r2d } else { t7_10 };
+    let r3: u32 = if use_diff == 1u32 { r3d } else { t7_11 };
+    let r4: u32 = if use_diff == 1u32 { r4d } else { t7_12 };
+    let r5: u32 = if use_diff == 1u32 { r5d } else { t7_13 };
+    let r6: u32 = if use_diff == 1u32 { r6d } else { t7_14 };
+    let r7: u32 = if use_diff == 1u32 { r7d } else { t7_15 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
+
+
+
+// ---- felt252_mul: composed multiplication via Montgomery reduction --------
+// Produces (a * b * R^-1) mod P where R = 2^256. For canonical multiplication
+// (a * b mod P), inputs and output are interpreted in Montgomery form (each
+// canonical value v represented as v*R mod P). Converting in/out of
+// Montgomery form is felt252_to_mont / felt252_from_mont, deferred.
+
+fn felt252_mul(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let (p0, p1, p2,  p3,  p4,  p5,  p6,  p7,
+         p8, p9, p10, p11, p12, p13, p14, p15) =
+        felt252_mul_raw(a0, a1, a2, a3, a4, a5, a6, a7,
+                        b0, b1, b2, b3, b4, b5, b6, b7);
+    felt252_montgomery_reduce(p0, p1, p2,  p3,  p4,  p5,  p6,  p7,
+                              p8, p9, p10, p11, p12, p13, p14, p15)
+}
+
+
+
+// ---- felt252_sqr: squaring as a degenerate multiplication ----------------
+// felt252_sqr(a) == felt252_mul(a, a). A specialised squaring kernel would
+// halve the partial-product count (you only need p_ij for i <= j and
+// double the off-diagonal terms), but the proof structure is identical
+// and the schoolbook composition is fast to verify, so we keep it as a
+// thin wrapper for now.
+
+fn felt252_sqr(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    felt252_mul(a0, a1, a2, a3, a4, a5, a6, a7,
+                a0, a1, a2, a3, a4, a5, a6, a7)
+}
+
+// ---- felt252_inv: modular inverse via square-and-multiply ----------
+// a^(P-2) mod P. Generated by gen_felt252_inv.py — do not hand-edit;
+// regenerate the body from the canonical bit pattern of (P-2) if the
+// prime changes. Calls felt252_sqr and felt252_mul; both have empty
+// contracts so this function emits zero new proof obligations.
+//
+// MSB at bit 251; iterate bits 250..0. 251 squarings + 193 multiplies.
+
+fn felt252_inv(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let (s1_0, s1_1, s1_2, s1_3, s1_4, s1_5, s1_6, s1_7) = felt252_sqr(a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s2_0, s2_1, s2_2, s2_3, s2_4, s2_5, s2_6, s2_7) = felt252_sqr(s1_0, s1_1, s1_2, s1_3, s1_4, s1_5, s1_6, s1_7);
+    let (s3_0, s3_1, s3_2, s3_3, s3_4, s3_5, s3_6, s3_7) = felt252_sqr(s2_0, s2_1, s2_2, s2_3, s2_4, s2_5, s2_6, s2_7);
+    let (s4_0, s4_1, s4_2, s4_3, s4_4, s4_5, s4_6, s4_7) = felt252_sqr(s3_0, s3_1, s3_2, s3_3, s3_4, s3_5, s3_6, s3_7);
+    let (s5_0, s5_1, s5_2, s5_3, s5_4, s5_5, s5_6, s5_7) = felt252_sqr(s4_0, s4_1, s4_2, s4_3, s4_4, s4_5, s4_6, s4_7);
+    let (s6_0, s6_1, s6_2, s6_3, s6_4, s6_5, s6_6, s6_7) = felt252_sqr(s5_0, s5_1, s5_2, s5_3, s5_4, s5_5, s5_6, s5_7);
+    let (s7_0, s7_1, s7_2, s7_3, s7_4, s7_5, s7_6, s7_7) = felt252_sqr(s6_0, s6_1, s6_2, s6_3, s6_4, s6_5, s6_6, s6_7);
+    let (s8_0, s8_1, s8_2, s8_3, s8_4, s8_5, s8_6, s8_7) = felt252_sqr(s7_0, s7_1, s7_2, s7_3, s7_4, s7_5, s7_6, s7_7);
+    let (s9_0, s9_1, s9_2, s9_3, s9_4, s9_5, s9_6, s9_7) = felt252_sqr(s8_0, s8_1, s8_2, s8_3, s8_4, s8_5, s8_6, s8_7);
+    let (s10_0, s10_1, s10_2, s10_3, s10_4, s10_5, s10_6, s10_7) = felt252_sqr(s9_0, s9_1, s9_2, s9_3, s9_4, s9_5, s9_6, s9_7);
+    let (s11_0, s11_1, s11_2, s11_3, s11_4, s11_5, s11_6, s11_7) = felt252_sqr(s10_0, s10_1, s10_2, s10_3, s10_4, s10_5, s10_6, s10_7);
+    let (s12_0, s12_1, s12_2, s12_3, s12_4, s12_5, s12_6, s12_7) = felt252_sqr(s11_0, s11_1, s11_2, s11_3, s11_4, s11_5, s11_6, s11_7);
+    let (s13_0, s13_1, s13_2, s13_3, s13_4, s13_5, s13_6, s13_7) = felt252_sqr(s12_0, s12_1, s12_2, s12_3, s12_4, s12_5, s12_6, s12_7);
+    let (s14_0, s14_1, s14_2, s14_3, s14_4, s14_5, s14_6, s14_7) = felt252_sqr(s13_0, s13_1, s13_2, s13_3, s13_4, s13_5, s13_6, s13_7);
+    let (s15_0, s15_1, s15_2, s15_3, s15_4, s15_5, s15_6, s15_7) = felt252_sqr(s14_0, s14_1, s14_2, s14_3, s14_4, s14_5, s14_6, s14_7);
+    let (s16_0, s16_1, s16_2, s16_3, s16_4, s16_5, s16_6, s16_7) = felt252_sqr(s15_0, s15_1, s15_2, s15_3, s15_4, s15_5, s15_6, s15_7);
+    let (s17_0, s17_1, s17_2, s17_3, s17_4, s17_5, s17_6, s17_7) = felt252_sqr(s16_0, s16_1, s16_2, s16_3, s16_4, s16_5, s16_6, s16_7);
+    let (s18_0, s18_1, s18_2, s18_3, s18_4, s18_5, s18_6, s18_7) = felt252_sqr(s17_0, s17_1, s17_2, s17_3, s17_4, s17_5, s17_6, s17_7);
+    let (s19_0, s19_1, s19_2, s19_3, s19_4, s19_5, s19_6, s19_7) = felt252_sqr(s18_0, s18_1, s18_2, s18_3, s18_4, s18_5, s18_6, s18_7);
+    let (s20_0, s20_1, s20_2, s20_3, s20_4, s20_5, s20_6, s20_7) = felt252_sqr(s19_0, s19_1, s19_2, s19_3, s19_4, s19_5, s19_6, s19_7);
+    let (s21_0, s21_1, s21_2, s21_3, s21_4, s21_5, s21_6, s21_7) = felt252_sqr(s20_0, s20_1, s20_2, s20_3, s20_4, s20_5, s20_6, s20_7);
+    let (s22_0, s22_1, s22_2, s22_3, s22_4, s22_5, s22_6, s22_7) = felt252_sqr(s21_0, s21_1, s21_2, s21_3, s21_4, s21_5, s21_6, s21_7);
+    let (s23_0, s23_1, s23_2, s23_3, s23_4, s23_5, s23_6, s23_7) = felt252_sqr(s22_0, s22_1, s22_2, s22_3, s22_4, s22_5, s22_6, s22_7);
+    let (s24_0, s24_1, s24_2, s24_3, s24_4, s24_5, s24_6, s24_7) = felt252_sqr(s23_0, s23_1, s23_2, s23_3, s23_4, s23_5, s23_6, s23_7);
+    let (s25_0, s25_1, s25_2, s25_3, s25_4, s25_5, s25_6, s25_7) = felt252_sqr(s24_0, s24_1, s24_2, s24_3, s24_4, s24_5, s24_6, s24_7);
+    let (s26_0, s26_1, s26_2, s26_3, s26_4, s26_5, s26_6, s26_7) = felt252_sqr(s25_0, s25_1, s25_2, s25_3, s25_4, s25_5, s25_6, s25_7);
+    let (s27_0, s27_1, s27_2, s27_3, s27_4, s27_5, s27_6, s27_7) = felt252_sqr(s26_0, s26_1, s26_2, s26_3, s26_4, s26_5, s26_6, s26_7);
+    let (s28_0, s28_1, s28_2, s28_3, s28_4, s28_5, s28_6, s28_7) = felt252_sqr(s27_0, s27_1, s27_2, s27_3, s27_4, s27_5, s27_6, s27_7);
+    let (s29_0, s29_1, s29_2, s29_3, s29_4, s29_5, s29_6, s29_7) = felt252_sqr(s28_0, s28_1, s28_2, s28_3, s28_4, s28_5, s28_6, s28_7);
+    let (s30_0, s30_1, s30_2, s30_3, s30_4, s30_5, s30_6, s30_7) = felt252_sqr(s29_0, s29_1, s29_2, s29_3, s29_4, s29_5, s29_6, s29_7);
+    let (s31_0, s31_1, s31_2, s31_3, s31_4, s31_5, s31_6, s31_7) = felt252_sqr(s30_0, s30_1, s30_2, s30_3, s30_4, s30_5, s30_6, s30_7);
+    let (s32_0, s32_1, s32_2, s32_3, s32_4, s32_5, s32_6, s32_7) = felt252_sqr(s31_0, s31_1, s31_2, s31_3, s31_4, s31_5, s31_6, s31_7);
+    let (s33_0, s33_1, s33_2, s33_3, s33_4, s33_5, s33_6, s33_7) = felt252_sqr(s32_0, s32_1, s32_2, s32_3, s32_4, s32_5, s32_6, s32_7);
+    let (s34_0, s34_1, s34_2, s34_3, s34_4, s34_5, s34_6, s34_7) = felt252_sqr(s33_0, s33_1, s33_2, s33_3, s33_4, s33_5, s33_6, s33_7);
+    let (s35_0, s35_1, s35_2, s35_3, s35_4, s35_5, s35_6, s35_7) = felt252_sqr(s34_0, s34_1, s34_2, s34_3, s34_4, s34_5, s34_6, s34_7);
+    let (s36_0, s36_1, s36_2, s36_3, s36_4, s36_5, s36_6, s36_7) = felt252_sqr(s35_0, s35_1, s35_2, s35_3, s35_4, s35_5, s35_6, s35_7);
+    let (s37_0, s37_1, s37_2, s37_3, s37_4, s37_5, s37_6, s37_7) = felt252_sqr(s36_0, s36_1, s36_2, s36_3, s36_4, s36_5, s36_6, s36_7);
+    let (s38_0, s38_1, s38_2, s38_3, s38_4, s38_5, s38_6, s38_7) = felt252_sqr(s37_0, s37_1, s37_2, s37_3, s37_4, s37_5, s37_6, s37_7);
+    let (s39_0, s39_1, s39_2, s39_3, s39_4, s39_5, s39_6, s39_7) = felt252_sqr(s38_0, s38_1, s38_2, s38_3, s38_4, s38_5, s38_6, s38_7);
+    let (s40_0, s40_1, s40_2, s40_3, s40_4, s40_5, s40_6, s40_7) = felt252_sqr(s39_0, s39_1, s39_2, s39_3, s39_4, s39_5, s39_6, s39_7);
+    let (s41_0, s41_1, s41_2, s41_3, s41_4, s41_5, s41_6, s41_7) = felt252_sqr(s40_0, s40_1, s40_2, s40_3, s40_4, s40_5, s40_6, s40_7);
+    let (s42_0, s42_1, s42_2, s42_3, s42_4, s42_5, s42_6, s42_7) = felt252_sqr(s41_0, s41_1, s41_2, s41_3, s41_4, s41_5, s41_6, s41_7);
+    let (s43_0, s43_1, s43_2, s43_3, s43_4, s43_5, s43_6, s43_7) = felt252_sqr(s42_0, s42_1, s42_2, s42_3, s42_4, s42_5, s42_6, s42_7);
+    let (s44_0, s44_1, s44_2, s44_3, s44_4, s44_5, s44_6, s44_7) = felt252_sqr(s43_0, s43_1, s43_2, s43_3, s43_4, s43_5, s43_6, s43_7);
+    let (s45_0, s45_1, s45_2, s45_3, s45_4, s45_5, s45_6, s45_7) = felt252_sqr(s44_0, s44_1, s44_2, s44_3, s44_4, s44_5, s44_6, s44_7);
+    let (s46_0, s46_1, s46_2, s46_3, s46_4, s46_5, s46_6, s46_7) = felt252_sqr(s45_0, s45_1, s45_2, s45_3, s45_4, s45_5, s45_6, s45_7);
+    let (s47_0, s47_1, s47_2, s47_3, s47_4, s47_5, s47_6, s47_7) = felt252_sqr(s46_0, s46_1, s46_2, s46_3, s46_4, s46_5, s46_6, s46_7);
+    let (s48_0, s48_1, s48_2, s48_3, s48_4, s48_5, s48_6, s48_7) = felt252_sqr(s47_0, s47_1, s47_2, s47_3, s47_4, s47_5, s47_6, s47_7);
+    let (s49_0, s49_1, s49_2, s49_3, s49_4, s49_5, s49_6, s49_7) = felt252_sqr(s48_0, s48_1, s48_2, s48_3, s48_4, s48_5, s48_6, s48_7);
+    let (s50_0, s50_1, s50_2, s50_3, s50_4, s50_5, s50_6, s50_7) = felt252_sqr(s49_0, s49_1, s49_2, s49_3, s49_4, s49_5, s49_6, s49_7);
+    let (s51_0, s51_1, s51_2, s51_3, s51_4, s51_5, s51_6, s51_7) = felt252_sqr(s50_0, s50_1, s50_2, s50_3, s50_4, s50_5, s50_6, s50_7);
+    let (s52_0, s52_1, s52_2, s52_3, s52_4, s52_5, s52_6, s52_7) = felt252_sqr(s51_0, s51_1, s51_2, s51_3, s51_4, s51_5, s51_6, s51_7);
+    let (s53_0, s53_1, s53_2, s53_3, s53_4, s53_5, s53_6, s53_7) = felt252_sqr(s52_0, s52_1, s52_2, s52_3, s52_4, s52_5, s52_6, s52_7);
+    let (s54_0, s54_1, s54_2, s54_3, s54_4, s54_5, s54_6, s54_7) = felt252_sqr(s53_0, s53_1, s53_2, s53_3, s53_4, s53_5, s53_6, s53_7);
+    let (s55_0, s55_1, s55_2, s55_3, s55_4, s55_5, s55_6, s55_7) = felt252_sqr(s54_0, s54_1, s54_2, s54_3, s54_4, s54_5, s54_6, s54_7);
+    let (m55_0, m55_1, m55_2, m55_3, m55_4, m55_5, m55_6, m55_7) = felt252_mul(s55_0, s55_1, s55_2, s55_3, s55_4, s55_5, s55_6, s55_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s56_0, s56_1, s56_2, s56_3, s56_4, s56_5, s56_6, s56_7) = felt252_sqr(m55_0, m55_1, m55_2, m55_3, m55_4, m55_5, m55_6, m55_7);
+    let (s57_0, s57_1, s57_2, s57_3, s57_4, s57_5, s57_6, s57_7) = felt252_sqr(s56_0, s56_1, s56_2, s56_3, s56_4, s56_5, s56_6, s56_7);
+    let (s58_0, s58_1, s58_2, s58_3, s58_4, s58_5, s58_6, s58_7) = felt252_sqr(s57_0, s57_1, s57_2, s57_3, s57_4, s57_5, s57_6, s57_7);
+    let (s59_0, s59_1, s59_2, s59_3, s59_4, s59_5, s59_6, s59_7) = felt252_sqr(s58_0, s58_1, s58_2, s58_3, s58_4, s58_5, s58_6, s58_7);
+    let (s60_0, s60_1, s60_2, s60_3, s60_4, s60_5, s60_6, s60_7) = felt252_sqr(s59_0, s59_1, s59_2, s59_3, s59_4, s59_5, s59_6, s59_7);
+    let (m60_0, m60_1, m60_2, m60_3, m60_4, m60_5, m60_6, m60_7) = felt252_mul(s60_0, s60_1, s60_2, s60_3, s60_4, s60_5, s60_6, s60_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s61_0, s61_1, s61_2, s61_3, s61_4, s61_5, s61_6, s61_7) = felt252_sqr(m60_0, m60_1, m60_2, m60_3, m60_4, m60_5, m60_6, m60_7);
+    let (m61_0, m61_1, m61_2, m61_3, m61_4, m61_5, m61_6, m61_7) = felt252_mul(s61_0, s61_1, s61_2, s61_3, s61_4, s61_5, s61_6, s61_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s62_0, s62_1, s62_2, s62_3, s62_4, s62_5, s62_6, s62_7) = felt252_sqr(m61_0, m61_1, m61_2, m61_3, m61_4, m61_5, m61_6, m61_7);
+    let (m62_0, m62_1, m62_2, m62_3, m62_4, m62_5, m62_6, m62_7) = felt252_mul(s62_0, s62_1, s62_2, s62_3, s62_4, s62_5, s62_6, s62_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s63_0, s63_1, s63_2, s63_3, s63_4, s63_5, s63_6, s63_7) = felt252_sqr(m62_0, m62_1, m62_2, m62_3, m62_4, m62_5, m62_6, m62_7);
+    let (m63_0, m63_1, m63_2, m63_3, m63_4, m63_5, m63_6, m63_7) = felt252_mul(s63_0, s63_1, s63_2, s63_3, s63_4, s63_5, s63_6, s63_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s64_0, s64_1, s64_2, s64_3, s64_4, s64_5, s64_6, s64_7) = felt252_sqr(m63_0, m63_1, m63_2, m63_3, m63_4, m63_5, m63_6, m63_7);
+    let (m64_0, m64_1, m64_2, m64_3, m64_4, m64_5, m64_6, m64_7) = felt252_mul(s64_0, s64_1, s64_2, s64_3, s64_4, s64_5, s64_6, s64_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s65_0, s65_1, s65_2, s65_3, s65_4, s65_5, s65_6, s65_7) = felt252_sqr(m64_0, m64_1, m64_2, m64_3, m64_4, m64_5, m64_6, m64_7);
+    let (m65_0, m65_1, m65_2, m65_3, m65_4, m65_5, m65_6, m65_7) = felt252_mul(s65_0, s65_1, s65_2, s65_3, s65_4, s65_5, s65_6, s65_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s66_0, s66_1, s66_2, s66_3, s66_4, s66_5, s66_6, s66_7) = felt252_sqr(m65_0, m65_1, m65_2, m65_3, m65_4, m65_5, m65_6, m65_7);
+    let (m66_0, m66_1, m66_2, m66_3, m66_4, m66_5, m66_6, m66_7) = felt252_mul(s66_0, s66_1, s66_2, s66_3, s66_4, s66_5, s66_6, s66_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s67_0, s67_1, s67_2, s67_3, s67_4, s67_5, s67_6, s67_7) = felt252_sqr(m66_0, m66_1, m66_2, m66_3, m66_4, m66_5, m66_6, m66_7);
+    let (m67_0, m67_1, m67_2, m67_3, m67_4, m67_5, m67_6, m67_7) = felt252_mul(s67_0, s67_1, s67_2, s67_3, s67_4, s67_5, s67_6, s67_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s68_0, s68_1, s68_2, s68_3, s68_4, s68_5, s68_6, s68_7) = felt252_sqr(m67_0, m67_1, m67_2, m67_3, m67_4, m67_5, m67_6, m67_7);
+    let (m68_0, m68_1, m68_2, m68_3, m68_4, m68_5, m68_6, m68_7) = felt252_mul(s68_0, s68_1, s68_2, s68_3, s68_4, s68_5, s68_6, s68_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s69_0, s69_1, s69_2, s69_3, s69_4, s69_5, s69_6, s69_7) = felt252_sqr(m68_0, m68_1, m68_2, m68_3, m68_4, m68_5, m68_6, m68_7);
+    let (m69_0, m69_1, m69_2, m69_3, m69_4, m69_5, m69_6, m69_7) = felt252_mul(s69_0, s69_1, s69_2, s69_3, s69_4, s69_5, s69_6, s69_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s70_0, s70_1, s70_2, s70_3, s70_4, s70_5, s70_6, s70_7) = felt252_sqr(m69_0, m69_1, m69_2, m69_3, m69_4, m69_5, m69_6, m69_7);
+    let (m70_0, m70_1, m70_2, m70_3, m70_4, m70_5, m70_6, m70_7) = felt252_mul(s70_0, s70_1, s70_2, s70_3, s70_4, s70_5, s70_6, s70_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s71_0, s71_1, s71_2, s71_3, s71_4, s71_5, s71_6, s71_7) = felt252_sqr(m70_0, m70_1, m70_2, m70_3, m70_4, m70_5, m70_6, m70_7);
+    let (m71_0, m71_1, m71_2, m71_3, m71_4, m71_5, m71_6, m71_7) = felt252_mul(s71_0, s71_1, s71_2, s71_3, s71_4, s71_5, s71_6, s71_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s72_0, s72_1, s72_2, s72_3, s72_4, s72_5, s72_6, s72_7) = felt252_sqr(m71_0, m71_1, m71_2, m71_3, m71_4, m71_5, m71_6, m71_7);
+    let (m72_0, m72_1, m72_2, m72_3, m72_4, m72_5, m72_6, m72_7) = felt252_mul(s72_0, s72_1, s72_2, s72_3, s72_4, s72_5, s72_6, s72_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s73_0, s73_1, s73_2, s73_3, s73_4, s73_5, s73_6, s73_7) = felt252_sqr(m72_0, m72_1, m72_2, m72_3, m72_4, m72_5, m72_6, m72_7);
+    let (m73_0, m73_1, m73_2, m73_3, m73_4, m73_5, m73_6, m73_7) = felt252_mul(s73_0, s73_1, s73_2, s73_3, s73_4, s73_5, s73_6, s73_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s74_0, s74_1, s74_2, s74_3, s74_4, s74_5, s74_6, s74_7) = felt252_sqr(m73_0, m73_1, m73_2, m73_3, m73_4, m73_5, m73_6, m73_7);
+    let (m74_0, m74_1, m74_2, m74_3, m74_4, m74_5, m74_6, m74_7) = felt252_mul(s74_0, s74_1, s74_2, s74_3, s74_4, s74_5, s74_6, s74_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s75_0, s75_1, s75_2, s75_3, s75_4, s75_5, s75_6, s75_7) = felt252_sqr(m74_0, m74_1, m74_2, m74_3, m74_4, m74_5, m74_6, m74_7);
+    let (m75_0, m75_1, m75_2, m75_3, m75_4, m75_5, m75_6, m75_7) = felt252_mul(s75_0, s75_1, s75_2, s75_3, s75_4, s75_5, s75_6, s75_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s76_0, s76_1, s76_2, s76_3, s76_4, s76_5, s76_6, s76_7) = felt252_sqr(m75_0, m75_1, m75_2, m75_3, m75_4, m75_5, m75_6, m75_7);
+    let (m76_0, m76_1, m76_2, m76_3, m76_4, m76_5, m76_6, m76_7) = felt252_mul(s76_0, s76_1, s76_2, s76_3, s76_4, s76_5, s76_6, s76_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s77_0, s77_1, s77_2, s77_3, s77_4, s77_5, s77_6, s77_7) = felt252_sqr(m76_0, m76_1, m76_2, m76_3, m76_4, m76_5, m76_6, m76_7);
+    let (m77_0, m77_1, m77_2, m77_3, m77_4, m77_5, m77_6, m77_7) = felt252_mul(s77_0, s77_1, s77_2, s77_3, s77_4, s77_5, s77_6, s77_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s78_0, s78_1, s78_2, s78_3, s78_4, s78_5, s78_6, s78_7) = felt252_sqr(m77_0, m77_1, m77_2, m77_3, m77_4, m77_5, m77_6, m77_7);
+    let (m78_0, m78_1, m78_2, m78_3, m78_4, m78_5, m78_6, m78_7) = felt252_mul(s78_0, s78_1, s78_2, s78_3, s78_4, s78_5, s78_6, s78_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s79_0, s79_1, s79_2, s79_3, s79_4, s79_5, s79_6, s79_7) = felt252_sqr(m78_0, m78_1, m78_2, m78_3, m78_4, m78_5, m78_6, m78_7);
+    let (m79_0, m79_1, m79_2, m79_3, m79_4, m79_5, m79_6, m79_7) = felt252_mul(s79_0, s79_1, s79_2, s79_3, s79_4, s79_5, s79_6, s79_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s80_0, s80_1, s80_2, s80_3, s80_4, s80_5, s80_6, s80_7) = felt252_sqr(m79_0, m79_1, m79_2, m79_3, m79_4, m79_5, m79_6, m79_7);
+    let (m80_0, m80_1, m80_2, m80_3, m80_4, m80_5, m80_6, m80_7) = felt252_mul(s80_0, s80_1, s80_2, s80_3, s80_4, s80_5, s80_6, s80_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s81_0, s81_1, s81_2, s81_3, s81_4, s81_5, s81_6, s81_7) = felt252_sqr(m80_0, m80_1, m80_2, m80_3, m80_4, m80_5, m80_6, m80_7);
+    let (m81_0, m81_1, m81_2, m81_3, m81_4, m81_5, m81_6, m81_7) = felt252_mul(s81_0, s81_1, s81_2, s81_3, s81_4, s81_5, s81_6, s81_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s82_0, s82_1, s82_2, s82_3, s82_4, s82_5, s82_6, s82_7) = felt252_sqr(m81_0, m81_1, m81_2, m81_3, m81_4, m81_5, m81_6, m81_7);
+    let (m82_0, m82_1, m82_2, m82_3, m82_4, m82_5, m82_6, m82_7) = felt252_mul(s82_0, s82_1, s82_2, s82_3, s82_4, s82_5, s82_6, s82_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s83_0, s83_1, s83_2, s83_3, s83_4, s83_5, s83_6, s83_7) = felt252_sqr(m82_0, m82_1, m82_2, m82_3, m82_4, m82_5, m82_6, m82_7);
+    let (m83_0, m83_1, m83_2, m83_3, m83_4, m83_5, m83_6, m83_7) = felt252_mul(s83_0, s83_1, s83_2, s83_3, s83_4, s83_5, s83_6, s83_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s84_0, s84_1, s84_2, s84_3, s84_4, s84_5, s84_6, s84_7) = felt252_sqr(m83_0, m83_1, m83_2, m83_3, m83_4, m83_5, m83_6, m83_7);
+    let (m84_0, m84_1, m84_2, m84_3, m84_4, m84_5, m84_6, m84_7) = felt252_mul(s84_0, s84_1, s84_2, s84_3, s84_4, s84_5, s84_6, s84_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s85_0, s85_1, s85_2, s85_3, s85_4, s85_5, s85_6, s85_7) = felt252_sqr(m84_0, m84_1, m84_2, m84_3, m84_4, m84_5, m84_6, m84_7);
+    let (m85_0, m85_1, m85_2, m85_3, m85_4, m85_5, m85_6, m85_7) = felt252_mul(s85_0, s85_1, s85_2, s85_3, s85_4, s85_5, s85_6, s85_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s86_0, s86_1, s86_2, s86_3, s86_4, s86_5, s86_6, s86_7) = felt252_sqr(m85_0, m85_1, m85_2, m85_3, m85_4, m85_5, m85_6, m85_7);
+    let (m86_0, m86_1, m86_2, m86_3, m86_4, m86_5, m86_6, m86_7) = felt252_mul(s86_0, s86_1, s86_2, s86_3, s86_4, s86_5, s86_6, s86_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s87_0, s87_1, s87_2, s87_3, s87_4, s87_5, s87_6, s87_7) = felt252_sqr(m86_0, m86_1, m86_2, m86_3, m86_4, m86_5, m86_6, m86_7);
+    let (m87_0, m87_1, m87_2, m87_3, m87_4, m87_5, m87_6, m87_7) = felt252_mul(s87_0, s87_1, s87_2, s87_3, s87_4, s87_5, s87_6, s87_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s88_0, s88_1, s88_2, s88_3, s88_4, s88_5, s88_6, s88_7) = felt252_sqr(m87_0, m87_1, m87_2, m87_3, m87_4, m87_5, m87_6, m87_7);
+    let (m88_0, m88_1, m88_2, m88_3, m88_4, m88_5, m88_6, m88_7) = felt252_mul(s88_0, s88_1, s88_2, s88_3, s88_4, s88_5, s88_6, s88_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s89_0, s89_1, s89_2, s89_3, s89_4, s89_5, s89_6, s89_7) = felt252_sqr(m88_0, m88_1, m88_2, m88_3, m88_4, m88_5, m88_6, m88_7);
+    let (m89_0, m89_1, m89_2, m89_3, m89_4, m89_5, m89_6, m89_7) = felt252_mul(s89_0, s89_1, s89_2, s89_3, s89_4, s89_5, s89_6, s89_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s90_0, s90_1, s90_2, s90_3, s90_4, s90_5, s90_6, s90_7) = felt252_sqr(m89_0, m89_1, m89_2, m89_3, m89_4, m89_5, m89_6, m89_7);
+    let (m90_0, m90_1, m90_2, m90_3, m90_4, m90_5, m90_6, m90_7) = felt252_mul(s90_0, s90_1, s90_2, s90_3, s90_4, s90_5, s90_6, s90_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s91_0, s91_1, s91_2, s91_3, s91_4, s91_5, s91_6, s91_7) = felt252_sqr(m90_0, m90_1, m90_2, m90_3, m90_4, m90_5, m90_6, m90_7);
+    let (m91_0, m91_1, m91_2, m91_3, m91_4, m91_5, m91_6, m91_7) = felt252_mul(s91_0, s91_1, s91_2, s91_3, s91_4, s91_5, s91_6, s91_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s92_0, s92_1, s92_2, s92_3, s92_4, s92_5, s92_6, s92_7) = felt252_sqr(m91_0, m91_1, m91_2, m91_3, m91_4, m91_5, m91_6, m91_7);
+    let (m92_0, m92_1, m92_2, m92_3, m92_4, m92_5, m92_6, m92_7) = felt252_mul(s92_0, s92_1, s92_2, s92_3, s92_4, s92_5, s92_6, s92_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s93_0, s93_1, s93_2, s93_3, s93_4, s93_5, s93_6, s93_7) = felt252_sqr(m92_0, m92_1, m92_2, m92_3, m92_4, m92_5, m92_6, m92_7);
+    let (m93_0, m93_1, m93_2, m93_3, m93_4, m93_5, m93_6, m93_7) = felt252_mul(s93_0, s93_1, s93_2, s93_3, s93_4, s93_5, s93_6, s93_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s94_0, s94_1, s94_2, s94_3, s94_4, s94_5, s94_6, s94_7) = felt252_sqr(m93_0, m93_1, m93_2, m93_3, m93_4, m93_5, m93_6, m93_7);
+    let (m94_0, m94_1, m94_2, m94_3, m94_4, m94_5, m94_6, m94_7) = felt252_mul(s94_0, s94_1, s94_2, s94_3, s94_4, s94_5, s94_6, s94_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s95_0, s95_1, s95_2, s95_3, s95_4, s95_5, s95_6, s95_7) = felt252_sqr(m94_0, m94_1, m94_2, m94_3, m94_4, m94_5, m94_6, m94_7);
+    let (m95_0, m95_1, m95_2, m95_3, m95_4, m95_5, m95_6, m95_7) = felt252_mul(s95_0, s95_1, s95_2, s95_3, s95_4, s95_5, s95_6, s95_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s96_0, s96_1, s96_2, s96_3, s96_4, s96_5, s96_6, s96_7) = felt252_sqr(m95_0, m95_1, m95_2, m95_3, m95_4, m95_5, m95_6, m95_7);
+    let (m96_0, m96_1, m96_2, m96_3, m96_4, m96_5, m96_6, m96_7) = felt252_mul(s96_0, s96_1, s96_2, s96_3, s96_4, s96_5, s96_6, s96_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s97_0, s97_1, s97_2, s97_3, s97_4, s97_5, s97_6, s97_7) = felt252_sqr(m96_0, m96_1, m96_2, m96_3, m96_4, m96_5, m96_6, m96_7);
+    let (m97_0, m97_1, m97_2, m97_3, m97_4, m97_5, m97_6, m97_7) = felt252_mul(s97_0, s97_1, s97_2, s97_3, s97_4, s97_5, s97_6, s97_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s98_0, s98_1, s98_2, s98_3, s98_4, s98_5, s98_6, s98_7) = felt252_sqr(m97_0, m97_1, m97_2, m97_3, m97_4, m97_5, m97_6, m97_7);
+    let (m98_0, m98_1, m98_2, m98_3, m98_4, m98_5, m98_6, m98_7) = felt252_mul(s98_0, s98_1, s98_2, s98_3, s98_4, s98_5, s98_6, s98_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s99_0, s99_1, s99_2, s99_3, s99_4, s99_5, s99_6, s99_7) = felt252_sqr(m98_0, m98_1, m98_2, m98_3, m98_4, m98_5, m98_6, m98_7);
+    let (m99_0, m99_1, m99_2, m99_3, m99_4, m99_5, m99_6, m99_7) = felt252_mul(s99_0, s99_1, s99_2, s99_3, s99_4, s99_5, s99_6, s99_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s100_0, s100_1, s100_2, s100_3, s100_4, s100_5, s100_6, s100_7) = felt252_sqr(m99_0, m99_1, m99_2, m99_3, m99_4, m99_5, m99_6, m99_7);
+    let (m100_0, m100_1, m100_2, m100_3, m100_4, m100_5, m100_6, m100_7) = felt252_mul(s100_0, s100_1, s100_2, s100_3, s100_4, s100_5, s100_6, s100_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s101_0, s101_1, s101_2, s101_3, s101_4, s101_5, s101_6, s101_7) = felt252_sqr(m100_0, m100_1, m100_2, m100_3, m100_4, m100_5, m100_6, m100_7);
+    let (m101_0, m101_1, m101_2, m101_3, m101_4, m101_5, m101_6, m101_7) = felt252_mul(s101_0, s101_1, s101_2, s101_3, s101_4, s101_5, s101_6, s101_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s102_0, s102_1, s102_2, s102_3, s102_4, s102_5, s102_6, s102_7) = felt252_sqr(m101_0, m101_1, m101_2, m101_3, m101_4, m101_5, m101_6, m101_7);
+    let (m102_0, m102_1, m102_2, m102_3, m102_4, m102_5, m102_6, m102_7) = felt252_mul(s102_0, s102_1, s102_2, s102_3, s102_4, s102_5, s102_6, s102_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s103_0, s103_1, s103_2, s103_3, s103_4, s103_5, s103_6, s103_7) = felt252_sqr(m102_0, m102_1, m102_2, m102_3, m102_4, m102_5, m102_6, m102_7);
+    let (m103_0, m103_1, m103_2, m103_3, m103_4, m103_5, m103_6, m103_7) = felt252_mul(s103_0, s103_1, s103_2, s103_3, s103_4, s103_5, s103_6, s103_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s104_0, s104_1, s104_2, s104_3, s104_4, s104_5, s104_6, s104_7) = felt252_sqr(m103_0, m103_1, m103_2, m103_3, m103_4, m103_5, m103_6, m103_7);
+    let (m104_0, m104_1, m104_2, m104_3, m104_4, m104_5, m104_6, m104_7) = felt252_mul(s104_0, s104_1, s104_2, s104_3, s104_4, s104_5, s104_6, s104_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s105_0, s105_1, s105_2, s105_3, s105_4, s105_5, s105_6, s105_7) = felt252_sqr(m104_0, m104_1, m104_2, m104_3, m104_4, m104_5, m104_6, m104_7);
+    let (m105_0, m105_1, m105_2, m105_3, m105_4, m105_5, m105_6, m105_7) = felt252_mul(s105_0, s105_1, s105_2, s105_3, s105_4, s105_5, s105_6, s105_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s106_0, s106_1, s106_2, s106_3, s106_4, s106_5, s106_6, s106_7) = felt252_sqr(m105_0, m105_1, m105_2, m105_3, m105_4, m105_5, m105_6, m105_7);
+    let (m106_0, m106_1, m106_2, m106_3, m106_4, m106_5, m106_6, m106_7) = felt252_mul(s106_0, s106_1, s106_2, s106_3, s106_4, s106_5, s106_6, s106_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s107_0, s107_1, s107_2, s107_3, s107_4, s107_5, s107_6, s107_7) = felt252_sqr(m106_0, m106_1, m106_2, m106_3, m106_4, m106_5, m106_6, m106_7);
+    let (m107_0, m107_1, m107_2, m107_3, m107_4, m107_5, m107_6, m107_7) = felt252_mul(s107_0, s107_1, s107_2, s107_3, s107_4, s107_5, s107_6, s107_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s108_0, s108_1, s108_2, s108_3, s108_4, s108_5, s108_6, s108_7) = felt252_sqr(m107_0, m107_1, m107_2, m107_3, m107_4, m107_5, m107_6, m107_7);
+    let (m108_0, m108_1, m108_2, m108_3, m108_4, m108_5, m108_6, m108_7) = felt252_mul(s108_0, s108_1, s108_2, s108_3, s108_4, s108_5, s108_6, s108_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s109_0, s109_1, s109_2, s109_3, s109_4, s109_5, s109_6, s109_7) = felt252_sqr(m108_0, m108_1, m108_2, m108_3, m108_4, m108_5, m108_6, m108_7);
+    let (m109_0, m109_1, m109_2, m109_3, m109_4, m109_5, m109_6, m109_7) = felt252_mul(s109_0, s109_1, s109_2, s109_3, s109_4, s109_5, s109_6, s109_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s110_0, s110_1, s110_2, s110_3, s110_4, s110_5, s110_6, s110_7) = felt252_sqr(m109_0, m109_1, m109_2, m109_3, m109_4, m109_5, m109_6, m109_7);
+    let (m110_0, m110_1, m110_2, m110_3, m110_4, m110_5, m110_6, m110_7) = felt252_mul(s110_0, s110_1, s110_2, s110_3, s110_4, s110_5, s110_6, s110_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s111_0, s111_1, s111_2, s111_3, s111_4, s111_5, s111_6, s111_7) = felt252_sqr(m110_0, m110_1, m110_2, m110_3, m110_4, m110_5, m110_6, m110_7);
+    let (m111_0, m111_1, m111_2, m111_3, m111_4, m111_5, m111_6, m111_7) = felt252_mul(s111_0, s111_1, s111_2, s111_3, s111_4, s111_5, s111_6, s111_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s112_0, s112_1, s112_2, s112_3, s112_4, s112_5, s112_6, s112_7) = felt252_sqr(m111_0, m111_1, m111_2, m111_3, m111_4, m111_5, m111_6, m111_7);
+    let (m112_0, m112_1, m112_2, m112_3, m112_4, m112_5, m112_6, m112_7) = felt252_mul(s112_0, s112_1, s112_2, s112_3, s112_4, s112_5, s112_6, s112_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s113_0, s113_1, s113_2, s113_3, s113_4, s113_5, s113_6, s113_7) = felt252_sqr(m112_0, m112_1, m112_2, m112_3, m112_4, m112_5, m112_6, m112_7);
+    let (m113_0, m113_1, m113_2, m113_3, m113_4, m113_5, m113_6, m113_7) = felt252_mul(s113_0, s113_1, s113_2, s113_3, s113_4, s113_5, s113_6, s113_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s114_0, s114_1, s114_2, s114_3, s114_4, s114_5, s114_6, s114_7) = felt252_sqr(m113_0, m113_1, m113_2, m113_3, m113_4, m113_5, m113_6, m113_7);
+    let (m114_0, m114_1, m114_2, m114_3, m114_4, m114_5, m114_6, m114_7) = felt252_mul(s114_0, s114_1, s114_2, s114_3, s114_4, s114_5, s114_6, s114_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s115_0, s115_1, s115_2, s115_3, s115_4, s115_5, s115_6, s115_7) = felt252_sqr(m114_0, m114_1, m114_2, m114_3, m114_4, m114_5, m114_6, m114_7);
+    let (m115_0, m115_1, m115_2, m115_3, m115_4, m115_5, m115_6, m115_7) = felt252_mul(s115_0, s115_1, s115_2, s115_3, s115_4, s115_5, s115_6, s115_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s116_0, s116_1, s116_2, s116_3, s116_4, s116_5, s116_6, s116_7) = felt252_sqr(m115_0, m115_1, m115_2, m115_3, m115_4, m115_5, m115_6, m115_7);
+    let (m116_0, m116_1, m116_2, m116_3, m116_4, m116_5, m116_6, m116_7) = felt252_mul(s116_0, s116_1, s116_2, s116_3, s116_4, s116_5, s116_6, s116_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s117_0, s117_1, s117_2, s117_3, s117_4, s117_5, s117_6, s117_7) = felt252_sqr(m116_0, m116_1, m116_2, m116_3, m116_4, m116_5, m116_6, m116_7);
+    let (m117_0, m117_1, m117_2, m117_3, m117_4, m117_5, m117_6, m117_7) = felt252_mul(s117_0, s117_1, s117_2, s117_3, s117_4, s117_5, s117_6, s117_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s118_0, s118_1, s118_2, s118_3, s118_4, s118_5, s118_6, s118_7) = felt252_sqr(m117_0, m117_1, m117_2, m117_3, m117_4, m117_5, m117_6, m117_7);
+    let (m118_0, m118_1, m118_2, m118_3, m118_4, m118_5, m118_6, m118_7) = felt252_mul(s118_0, s118_1, s118_2, s118_3, s118_4, s118_5, s118_6, s118_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s119_0, s119_1, s119_2, s119_3, s119_4, s119_5, s119_6, s119_7) = felt252_sqr(m118_0, m118_1, m118_2, m118_3, m118_4, m118_5, m118_6, m118_7);
+    let (m119_0, m119_1, m119_2, m119_3, m119_4, m119_5, m119_6, m119_7) = felt252_mul(s119_0, s119_1, s119_2, s119_3, s119_4, s119_5, s119_6, s119_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s120_0, s120_1, s120_2, s120_3, s120_4, s120_5, s120_6, s120_7) = felt252_sqr(m119_0, m119_1, m119_2, m119_3, m119_4, m119_5, m119_6, m119_7);
+    let (m120_0, m120_1, m120_2, m120_3, m120_4, m120_5, m120_6, m120_7) = felt252_mul(s120_0, s120_1, s120_2, s120_3, s120_4, s120_5, s120_6, s120_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s121_0, s121_1, s121_2, s121_3, s121_4, s121_5, s121_6, s121_7) = felt252_sqr(m120_0, m120_1, m120_2, m120_3, m120_4, m120_5, m120_6, m120_7);
+    let (m121_0, m121_1, m121_2, m121_3, m121_4, m121_5, m121_6, m121_7) = felt252_mul(s121_0, s121_1, s121_2, s121_3, s121_4, s121_5, s121_6, s121_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s122_0, s122_1, s122_2, s122_3, s122_4, s122_5, s122_6, s122_7) = felt252_sqr(m121_0, m121_1, m121_2, m121_3, m121_4, m121_5, m121_6, m121_7);
+    let (m122_0, m122_1, m122_2, m122_3, m122_4, m122_5, m122_6, m122_7) = felt252_mul(s122_0, s122_1, s122_2, s122_3, s122_4, s122_5, s122_6, s122_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s123_0, s123_1, s123_2, s123_3, s123_4, s123_5, s123_6, s123_7) = felt252_sqr(m122_0, m122_1, m122_2, m122_3, m122_4, m122_5, m122_6, m122_7);
+    let (m123_0, m123_1, m123_2, m123_3, m123_4, m123_5, m123_6, m123_7) = felt252_mul(s123_0, s123_1, s123_2, s123_3, s123_4, s123_5, s123_6, s123_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s124_0, s124_1, s124_2, s124_3, s124_4, s124_5, s124_6, s124_7) = felt252_sqr(m123_0, m123_1, m123_2, m123_3, m123_4, m123_5, m123_6, m123_7);
+    let (m124_0, m124_1, m124_2, m124_3, m124_4, m124_5, m124_6, m124_7) = felt252_mul(s124_0, s124_1, s124_2, s124_3, s124_4, s124_5, s124_6, s124_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s125_0, s125_1, s125_2, s125_3, s125_4, s125_5, s125_6, s125_7) = felt252_sqr(m124_0, m124_1, m124_2, m124_3, m124_4, m124_5, m124_6, m124_7);
+    let (m125_0, m125_1, m125_2, m125_3, m125_4, m125_5, m125_6, m125_7) = felt252_mul(s125_0, s125_1, s125_2, s125_3, s125_4, s125_5, s125_6, s125_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s126_0, s126_1, s126_2, s126_3, s126_4, s126_5, s126_6, s126_7) = felt252_sqr(m125_0, m125_1, m125_2, m125_3, m125_4, m125_5, m125_6, m125_7);
+    let (m126_0, m126_1, m126_2, m126_3, m126_4, m126_5, m126_6, m126_7) = felt252_mul(s126_0, s126_1, s126_2, s126_3, s126_4, s126_5, s126_6, s126_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s127_0, s127_1, s127_2, s127_3, s127_4, s127_5, s127_6, s127_7) = felt252_sqr(m126_0, m126_1, m126_2, m126_3, m126_4, m126_5, m126_6, m126_7);
+    let (m127_0, m127_1, m127_2, m127_3, m127_4, m127_5, m127_6, m127_7) = felt252_mul(s127_0, s127_1, s127_2, s127_3, s127_4, s127_5, s127_6, s127_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s128_0, s128_1, s128_2, s128_3, s128_4, s128_5, s128_6, s128_7) = felt252_sqr(m127_0, m127_1, m127_2, m127_3, m127_4, m127_5, m127_6, m127_7);
+    let (m128_0, m128_1, m128_2, m128_3, m128_4, m128_5, m128_6, m128_7) = felt252_mul(s128_0, s128_1, s128_2, s128_3, s128_4, s128_5, s128_6, s128_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s129_0, s129_1, s129_2, s129_3, s129_4, s129_5, s129_6, s129_7) = felt252_sqr(m128_0, m128_1, m128_2, m128_3, m128_4, m128_5, m128_6, m128_7);
+    let (m129_0, m129_1, m129_2, m129_3, m129_4, m129_5, m129_6, m129_7) = felt252_mul(s129_0, s129_1, s129_2, s129_3, s129_4, s129_5, s129_6, s129_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s130_0, s130_1, s130_2, s130_3, s130_4, s130_5, s130_6, s130_7) = felt252_sqr(m129_0, m129_1, m129_2, m129_3, m129_4, m129_5, m129_6, m129_7);
+    let (m130_0, m130_1, m130_2, m130_3, m130_4, m130_5, m130_6, m130_7) = felt252_mul(s130_0, s130_1, s130_2, s130_3, s130_4, s130_5, s130_6, s130_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s131_0, s131_1, s131_2, s131_3, s131_4, s131_5, s131_6, s131_7) = felt252_sqr(m130_0, m130_1, m130_2, m130_3, m130_4, m130_5, m130_6, m130_7);
+    let (m131_0, m131_1, m131_2, m131_3, m131_4, m131_5, m131_6, m131_7) = felt252_mul(s131_0, s131_1, s131_2, s131_3, s131_4, s131_5, s131_6, s131_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s132_0, s132_1, s132_2, s132_3, s132_4, s132_5, s132_6, s132_7) = felt252_sqr(m131_0, m131_1, m131_2, m131_3, m131_4, m131_5, m131_6, m131_7);
+    let (m132_0, m132_1, m132_2, m132_3, m132_4, m132_5, m132_6, m132_7) = felt252_mul(s132_0, s132_1, s132_2, s132_3, s132_4, s132_5, s132_6, s132_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s133_0, s133_1, s133_2, s133_3, s133_4, s133_5, s133_6, s133_7) = felt252_sqr(m132_0, m132_1, m132_2, m132_3, m132_4, m132_5, m132_6, m132_7);
+    let (m133_0, m133_1, m133_2, m133_3, m133_4, m133_5, m133_6, m133_7) = felt252_mul(s133_0, s133_1, s133_2, s133_3, s133_4, s133_5, s133_6, s133_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s134_0, s134_1, s134_2, s134_3, s134_4, s134_5, s134_6, s134_7) = felt252_sqr(m133_0, m133_1, m133_2, m133_3, m133_4, m133_5, m133_6, m133_7);
+    let (m134_0, m134_1, m134_2, m134_3, m134_4, m134_5, m134_6, m134_7) = felt252_mul(s134_0, s134_1, s134_2, s134_3, s134_4, s134_5, s134_6, s134_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s135_0, s135_1, s135_2, s135_3, s135_4, s135_5, s135_6, s135_7) = felt252_sqr(m134_0, m134_1, m134_2, m134_3, m134_4, m134_5, m134_6, m134_7);
+    let (m135_0, m135_1, m135_2, m135_3, m135_4, m135_5, m135_6, m135_7) = felt252_mul(s135_0, s135_1, s135_2, s135_3, s135_4, s135_5, s135_6, s135_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s136_0, s136_1, s136_2, s136_3, s136_4, s136_5, s136_6, s136_7) = felt252_sqr(m135_0, m135_1, m135_2, m135_3, m135_4, m135_5, m135_6, m135_7);
+    let (m136_0, m136_1, m136_2, m136_3, m136_4, m136_5, m136_6, m136_7) = felt252_mul(s136_0, s136_1, s136_2, s136_3, s136_4, s136_5, s136_6, s136_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s137_0, s137_1, s137_2, s137_3, s137_4, s137_5, s137_6, s137_7) = felt252_sqr(m136_0, m136_1, m136_2, m136_3, m136_4, m136_5, m136_6, m136_7);
+    let (m137_0, m137_1, m137_2, m137_3, m137_4, m137_5, m137_6, m137_7) = felt252_mul(s137_0, s137_1, s137_2, s137_3, s137_4, s137_5, s137_6, s137_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s138_0, s138_1, s138_2, s138_3, s138_4, s138_5, s138_6, s138_7) = felt252_sqr(m137_0, m137_1, m137_2, m137_3, m137_4, m137_5, m137_6, m137_7);
+    let (m138_0, m138_1, m138_2, m138_3, m138_4, m138_5, m138_6, m138_7) = felt252_mul(s138_0, s138_1, s138_2, s138_3, s138_4, s138_5, s138_6, s138_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s139_0, s139_1, s139_2, s139_3, s139_4, s139_5, s139_6, s139_7) = felt252_sqr(m138_0, m138_1, m138_2, m138_3, m138_4, m138_5, m138_6, m138_7);
+    let (m139_0, m139_1, m139_2, m139_3, m139_4, m139_5, m139_6, m139_7) = felt252_mul(s139_0, s139_1, s139_2, s139_3, s139_4, s139_5, s139_6, s139_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s140_0, s140_1, s140_2, s140_3, s140_4, s140_5, s140_6, s140_7) = felt252_sqr(m139_0, m139_1, m139_2, m139_3, m139_4, m139_5, m139_6, m139_7);
+    let (m140_0, m140_1, m140_2, m140_3, m140_4, m140_5, m140_6, m140_7) = felt252_mul(s140_0, s140_1, s140_2, s140_3, s140_4, s140_5, s140_6, s140_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s141_0, s141_1, s141_2, s141_3, s141_4, s141_5, s141_6, s141_7) = felt252_sqr(m140_0, m140_1, m140_2, m140_3, m140_4, m140_5, m140_6, m140_7);
+    let (m141_0, m141_1, m141_2, m141_3, m141_4, m141_5, m141_6, m141_7) = felt252_mul(s141_0, s141_1, s141_2, s141_3, s141_4, s141_5, s141_6, s141_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s142_0, s142_1, s142_2, s142_3, s142_4, s142_5, s142_6, s142_7) = felt252_sqr(m141_0, m141_1, m141_2, m141_3, m141_4, m141_5, m141_6, m141_7);
+    let (m142_0, m142_1, m142_2, m142_3, m142_4, m142_5, m142_6, m142_7) = felt252_mul(s142_0, s142_1, s142_2, s142_3, s142_4, s142_5, s142_6, s142_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s143_0, s143_1, s143_2, s143_3, s143_4, s143_5, s143_6, s143_7) = felt252_sqr(m142_0, m142_1, m142_2, m142_3, m142_4, m142_5, m142_6, m142_7);
+    let (m143_0, m143_1, m143_2, m143_3, m143_4, m143_5, m143_6, m143_7) = felt252_mul(s143_0, s143_1, s143_2, s143_3, s143_4, s143_5, s143_6, s143_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s144_0, s144_1, s144_2, s144_3, s144_4, s144_5, s144_6, s144_7) = felt252_sqr(m143_0, m143_1, m143_2, m143_3, m143_4, m143_5, m143_6, m143_7);
+    let (m144_0, m144_1, m144_2, m144_3, m144_4, m144_5, m144_6, m144_7) = felt252_mul(s144_0, s144_1, s144_2, s144_3, s144_4, s144_5, s144_6, s144_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s145_0, s145_1, s145_2, s145_3, s145_4, s145_5, s145_6, s145_7) = felt252_sqr(m144_0, m144_1, m144_2, m144_3, m144_4, m144_5, m144_6, m144_7);
+    let (m145_0, m145_1, m145_2, m145_3, m145_4, m145_5, m145_6, m145_7) = felt252_mul(s145_0, s145_1, s145_2, s145_3, s145_4, s145_5, s145_6, s145_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s146_0, s146_1, s146_2, s146_3, s146_4, s146_5, s146_6, s146_7) = felt252_sqr(m145_0, m145_1, m145_2, m145_3, m145_4, m145_5, m145_6, m145_7);
+    let (m146_0, m146_1, m146_2, m146_3, m146_4, m146_5, m146_6, m146_7) = felt252_mul(s146_0, s146_1, s146_2, s146_3, s146_4, s146_5, s146_6, s146_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s147_0, s147_1, s147_2, s147_3, s147_4, s147_5, s147_6, s147_7) = felt252_sqr(m146_0, m146_1, m146_2, m146_3, m146_4, m146_5, m146_6, m146_7);
+    let (m147_0, m147_1, m147_2, m147_3, m147_4, m147_5, m147_6, m147_7) = felt252_mul(s147_0, s147_1, s147_2, s147_3, s147_4, s147_5, s147_6, s147_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s148_0, s148_1, s148_2, s148_3, s148_4, s148_5, s148_6, s148_7) = felt252_sqr(m147_0, m147_1, m147_2, m147_3, m147_4, m147_5, m147_6, m147_7);
+    let (m148_0, m148_1, m148_2, m148_3, m148_4, m148_5, m148_6, m148_7) = felt252_mul(s148_0, s148_1, s148_2, s148_3, s148_4, s148_5, s148_6, s148_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s149_0, s149_1, s149_2, s149_3, s149_4, s149_5, s149_6, s149_7) = felt252_sqr(m148_0, m148_1, m148_2, m148_3, m148_4, m148_5, m148_6, m148_7);
+    let (m149_0, m149_1, m149_2, m149_3, m149_4, m149_5, m149_6, m149_7) = felt252_mul(s149_0, s149_1, s149_2, s149_3, s149_4, s149_5, s149_6, s149_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s150_0, s150_1, s150_2, s150_3, s150_4, s150_5, s150_6, s150_7) = felt252_sqr(m149_0, m149_1, m149_2, m149_3, m149_4, m149_5, m149_6, m149_7);
+    let (m150_0, m150_1, m150_2, m150_3, m150_4, m150_5, m150_6, m150_7) = felt252_mul(s150_0, s150_1, s150_2, s150_3, s150_4, s150_5, s150_6, s150_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s151_0, s151_1, s151_2, s151_3, s151_4, s151_5, s151_6, s151_7) = felt252_sqr(m150_0, m150_1, m150_2, m150_3, m150_4, m150_5, m150_6, m150_7);
+    let (m151_0, m151_1, m151_2, m151_3, m151_4, m151_5, m151_6, m151_7) = felt252_mul(s151_0, s151_1, s151_2, s151_3, s151_4, s151_5, s151_6, s151_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s152_0, s152_1, s152_2, s152_3, s152_4, s152_5, s152_6, s152_7) = felt252_sqr(m151_0, m151_1, m151_2, m151_3, m151_4, m151_5, m151_6, m151_7);
+    let (m152_0, m152_1, m152_2, m152_3, m152_4, m152_5, m152_6, m152_7) = felt252_mul(s152_0, s152_1, s152_2, s152_3, s152_4, s152_5, s152_6, s152_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s153_0, s153_1, s153_2, s153_3, s153_4, s153_5, s153_6, s153_7) = felt252_sqr(m152_0, m152_1, m152_2, m152_3, m152_4, m152_5, m152_6, m152_7);
+    let (m153_0, m153_1, m153_2, m153_3, m153_4, m153_5, m153_6, m153_7) = felt252_mul(s153_0, s153_1, s153_2, s153_3, s153_4, s153_5, s153_6, s153_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s154_0, s154_1, s154_2, s154_3, s154_4, s154_5, s154_6, s154_7) = felt252_sqr(m153_0, m153_1, m153_2, m153_3, m153_4, m153_5, m153_6, m153_7);
+    let (m154_0, m154_1, m154_2, m154_3, m154_4, m154_5, m154_6, m154_7) = felt252_mul(s154_0, s154_1, s154_2, s154_3, s154_4, s154_5, s154_6, s154_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s155_0, s155_1, s155_2, s155_3, s155_4, s155_5, s155_6, s155_7) = felt252_sqr(m154_0, m154_1, m154_2, m154_3, m154_4, m154_5, m154_6, m154_7);
+    let (m155_0, m155_1, m155_2, m155_3, m155_4, m155_5, m155_6, m155_7) = felt252_mul(s155_0, s155_1, s155_2, s155_3, s155_4, s155_5, s155_6, s155_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s156_0, s156_1, s156_2, s156_3, s156_4, s156_5, s156_6, s156_7) = felt252_sqr(m155_0, m155_1, m155_2, m155_3, m155_4, m155_5, m155_6, m155_7);
+    let (m156_0, m156_1, m156_2, m156_3, m156_4, m156_5, m156_6, m156_7) = felt252_mul(s156_0, s156_1, s156_2, s156_3, s156_4, s156_5, s156_6, s156_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s157_0, s157_1, s157_2, s157_3, s157_4, s157_5, s157_6, s157_7) = felt252_sqr(m156_0, m156_1, m156_2, m156_3, m156_4, m156_5, m156_6, m156_7);
+    let (m157_0, m157_1, m157_2, m157_3, m157_4, m157_5, m157_6, m157_7) = felt252_mul(s157_0, s157_1, s157_2, s157_3, s157_4, s157_5, s157_6, s157_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s158_0, s158_1, s158_2, s158_3, s158_4, s158_5, s158_6, s158_7) = felt252_sqr(m157_0, m157_1, m157_2, m157_3, m157_4, m157_5, m157_6, m157_7);
+    let (m158_0, m158_1, m158_2, m158_3, m158_4, m158_5, m158_6, m158_7) = felt252_mul(s158_0, s158_1, s158_2, s158_3, s158_4, s158_5, s158_6, s158_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s159_0, s159_1, s159_2, s159_3, s159_4, s159_5, s159_6, s159_7) = felt252_sqr(m158_0, m158_1, m158_2, m158_3, m158_4, m158_5, m158_6, m158_7);
+    let (m159_0, m159_1, m159_2, m159_3, m159_4, m159_5, m159_6, m159_7) = felt252_mul(s159_0, s159_1, s159_2, s159_3, s159_4, s159_5, s159_6, s159_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s160_0, s160_1, s160_2, s160_3, s160_4, s160_5, s160_6, s160_7) = felt252_sqr(m159_0, m159_1, m159_2, m159_3, m159_4, m159_5, m159_6, m159_7);
+    let (m160_0, m160_1, m160_2, m160_3, m160_4, m160_5, m160_6, m160_7) = felt252_mul(s160_0, s160_1, s160_2, s160_3, s160_4, s160_5, s160_6, s160_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s161_0, s161_1, s161_2, s161_3, s161_4, s161_5, s161_6, s161_7) = felt252_sqr(m160_0, m160_1, m160_2, m160_3, m160_4, m160_5, m160_6, m160_7);
+    let (m161_0, m161_1, m161_2, m161_3, m161_4, m161_5, m161_6, m161_7) = felt252_mul(s161_0, s161_1, s161_2, s161_3, s161_4, s161_5, s161_6, s161_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s162_0, s162_1, s162_2, s162_3, s162_4, s162_5, s162_6, s162_7) = felt252_sqr(m161_0, m161_1, m161_2, m161_3, m161_4, m161_5, m161_6, m161_7);
+    let (m162_0, m162_1, m162_2, m162_3, m162_4, m162_5, m162_6, m162_7) = felt252_mul(s162_0, s162_1, s162_2, s162_3, s162_4, s162_5, s162_6, s162_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s163_0, s163_1, s163_2, s163_3, s163_4, s163_5, s163_6, s163_7) = felt252_sqr(m162_0, m162_1, m162_2, m162_3, m162_4, m162_5, m162_6, m162_7);
+    let (m163_0, m163_1, m163_2, m163_3, m163_4, m163_5, m163_6, m163_7) = felt252_mul(s163_0, s163_1, s163_2, s163_3, s163_4, s163_5, s163_6, s163_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s164_0, s164_1, s164_2, s164_3, s164_4, s164_5, s164_6, s164_7) = felt252_sqr(m163_0, m163_1, m163_2, m163_3, m163_4, m163_5, m163_6, m163_7);
+    let (m164_0, m164_1, m164_2, m164_3, m164_4, m164_5, m164_6, m164_7) = felt252_mul(s164_0, s164_1, s164_2, s164_3, s164_4, s164_5, s164_6, s164_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s165_0, s165_1, s165_2, s165_3, s165_4, s165_5, s165_6, s165_7) = felt252_sqr(m164_0, m164_1, m164_2, m164_3, m164_4, m164_5, m164_6, m164_7);
+    let (m165_0, m165_1, m165_2, m165_3, m165_4, m165_5, m165_6, m165_7) = felt252_mul(s165_0, s165_1, s165_2, s165_3, s165_4, s165_5, s165_6, s165_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s166_0, s166_1, s166_2, s166_3, s166_4, s166_5, s166_6, s166_7) = felt252_sqr(m165_0, m165_1, m165_2, m165_3, m165_4, m165_5, m165_6, m165_7);
+    let (m166_0, m166_1, m166_2, m166_3, m166_4, m166_5, m166_6, m166_7) = felt252_mul(s166_0, s166_1, s166_2, s166_3, s166_4, s166_5, s166_6, s166_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s167_0, s167_1, s167_2, s167_3, s167_4, s167_5, s167_6, s167_7) = felt252_sqr(m166_0, m166_1, m166_2, m166_3, m166_4, m166_5, m166_6, m166_7);
+    let (m167_0, m167_1, m167_2, m167_3, m167_4, m167_5, m167_6, m167_7) = felt252_mul(s167_0, s167_1, s167_2, s167_3, s167_4, s167_5, s167_6, s167_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s168_0, s168_1, s168_2, s168_3, s168_4, s168_5, s168_6, s168_7) = felt252_sqr(m167_0, m167_1, m167_2, m167_3, m167_4, m167_5, m167_6, m167_7);
+    let (m168_0, m168_1, m168_2, m168_3, m168_4, m168_5, m168_6, m168_7) = felt252_mul(s168_0, s168_1, s168_2, s168_3, s168_4, s168_5, s168_6, s168_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s169_0, s169_1, s169_2, s169_3, s169_4, s169_5, s169_6, s169_7) = felt252_sqr(m168_0, m168_1, m168_2, m168_3, m168_4, m168_5, m168_6, m168_7);
+    let (m169_0, m169_1, m169_2, m169_3, m169_4, m169_5, m169_6, m169_7) = felt252_mul(s169_0, s169_1, s169_2, s169_3, s169_4, s169_5, s169_6, s169_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s170_0, s170_1, s170_2, s170_3, s170_4, s170_5, s170_6, s170_7) = felt252_sqr(m169_0, m169_1, m169_2, m169_3, m169_4, m169_5, m169_6, m169_7);
+    let (m170_0, m170_1, m170_2, m170_3, m170_4, m170_5, m170_6, m170_7) = felt252_mul(s170_0, s170_1, s170_2, s170_3, s170_4, s170_5, s170_6, s170_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s171_0, s171_1, s171_2, s171_3, s171_4, s171_5, s171_6, s171_7) = felt252_sqr(m170_0, m170_1, m170_2, m170_3, m170_4, m170_5, m170_6, m170_7);
+    let (m171_0, m171_1, m171_2, m171_3, m171_4, m171_5, m171_6, m171_7) = felt252_mul(s171_0, s171_1, s171_2, s171_3, s171_4, s171_5, s171_6, s171_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s172_0, s172_1, s172_2, s172_3, s172_4, s172_5, s172_6, s172_7) = felt252_sqr(m171_0, m171_1, m171_2, m171_3, m171_4, m171_5, m171_6, m171_7);
+    let (m172_0, m172_1, m172_2, m172_3, m172_4, m172_5, m172_6, m172_7) = felt252_mul(s172_0, s172_1, s172_2, s172_3, s172_4, s172_5, s172_6, s172_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s173_0, s173_1, s173_2, s173_3, s173_4, s173_5, s173_6, s173_7) = felt252_sqr(m172_0, m172_1, m172_2, m172_3, m172_4, m172_5, m172_6, m172_7);
+    let (m173_0, m173_1, m173_2, m173_3, m173_4, m173_5, m173_6, m173_7) = felt252_mul(s173_0, s173_1, s173_2, s173_3, s173_4, s173_5, s173_6, s173_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s174_0, s174_1, s174_2, s174_3, s174_4, s174_5, s174_6, s174_7) = felt252_sqr(m173_0, m173_1, m173_2, m173_3, m173_4, m173_5, m173_6, m173_7);
+    let (m174_0, m174_1, m174_2, m174_3, m174_4, m174_5, m174_6, m174_7) = felt252_mul(s174_0, s174_1, s174_2, s174_3, s174_4, s174_5, s174_6, s174_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s175_0, s175_1, s175_2, s175_3, s175_4, s175_5, s175_6, s175_7) = felt252_sqr(m174_0, m174_1, m174_2, m174_3, m174_4, m174_5, m174_6, m174_7);
+    let (m175_0, m175_1, m175_2, m175_3, m175_4, m175_5, m175_6, m175_7) = felt252_mul(s175_0, s175_1, s175_2, s175_3, s175_4, s175_5, s175_6, s175_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s176_0, s176_1, s176_2, s176_3, s176_4, s176_5, s176_6, s176_7) = felt252_sqr(m175_0, m175_1, m175_2, m175_3, m175_4, m175_5, m175_6, m175_7);
+    let (m176_0, m176_1, m176_2, m176_3, m176_4, m176_5, m176_6, m176_7) = felt252_mul(s176_0, s176_1, s176_2, s176_3, s176_4, s176_5, s176_6, s176_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s177_0, s177_1, s177_2, s177_3, s177_4, s177_5, s177_6, s177_7) = felt252_sqr(m176_0, m176_1, m176_2, m176_3, m176_4, m176_5, m176_6, m176_7);
+    let (m177_0, m177_1, m177_2, m177_3, m177_4, m177_5, m177_6, m177_7) = felt252_mul(s177_0, s177_1, s177_2, s177_3, s177_4, s177_5, s177_6, s177_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s178_0, s178_1, s178_2, s178_3, s178_4, s178_5, s178_6, s178_7) = felt252_sqr(m177_0, m177_1, m177_2, m177_3, m177_4, m177_5, m177_6, m177_7);
+    let (m178_0, m178_1, m178_2, m178_3, m178_4, m178_5, m178_6, m178_7) = felt252_mul(s178_0, s178_1, s178_2, s178_3, s178_4, s178_5, s178_6, s178_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s179_0, s179_1, s179_2, s179_3, s179_4, s179_5, s179_6, s179_7) = felt252_sqr(m178_0, m178_1, m178_2, m178_3, m178_4, m178_5, m178_6, m178_7);
+    let (m179_0, m179_1, m179_2, m179_3, m179_4, m179_5, m179_6, m179_7) = felt252_mul(s179_0, s179_1, s179_2, s179_3, s179_4, s179_5, s179_6, s179_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s180_0, s180_1, s180_2, s180_3, s180_4, s180_5, s180_6, s180_7) = felt252_sqr(m179_0, m179_1, m179_2, m179_3, m179_4, m179_5, m179_6, m179_7);
+    let (m180_0, m180_1, m180_2, m180_3, m180_4, m180_5, m180_6, m180_7) = felt252_mul(s180_0, s180_1, s180_2, s180_3, s180_4, s180_5, s180_6, s180_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s181_0, s181_1, s181_2, s181_3, s181_4, s181_5, s181_6, s181_7) = felt252_sqr(m180_0, m180_1, m180_2, m180_3, m180_4, m180_5, m180_6, m180_7);
+    let (m181_0, m181_1, m181_2, m181_3, m181_4, m181_5, m181_6, m181_7) = felt252_mul(s181_0, s181_1, s181_2, s181_3, s181_4, s181_5, s181_6, s181_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s182_0, s182_1, s182_2, s182_3, s182_4, s182_5, s182_6, s182_7) = felt252_sqr(m181_0, m181_1, m181_2, m181_3, m181_4, m181_5, m181_6, m181_7);
+    let (m182_0, m182_1, m182_2, m182_3, m182_4, m182_5, m182_6, m182_7) = felt252_mul(s182_0, s182_1, s182_2, s182_3, s182_4, s182_5, s182_6, s182_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s183_0, s183_1, s183_2, s183_3, s183_4, s183_5, s183_6, s183_7) = felt252_sqr(m182_0, m182_1, m182_2, m182_3, m182_4, m182_5, m182_6, m182_7);
+    let (m183_0, m183_1, m183_2, m183_3, m183_4, m183_5, m183_6, m183_7) = felt252_mul(s183_0, s183_1, s183_2, s183_3, s183_4, s183_5, s183_6, s183_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s184_0, s184_1, s184_2, s184_3, s184_4, s184_5, s184_6, s184_7) = felt252_sqr(m183_0, m183_1, m183_2, m183_3, m183_4, m183_5, m183_6, m183_7);
+    let (m184_0, m184_1, m184_2, m184_3, m184_4, m184_5, m184_6, m184_7) = felt252_mul(s184_0, s184_1, s184_2, s184_3, s184_4, s184_5, s184_6, s184_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s185_0, s185_1, s185_2, s185_3, s185_4, s185_5, s185_6, s185_7) = felt252_sqr(m184_0, m184_1, m184_2, m184_3, m184_4, m184_5, m184_6, m184_7);
+    let (m185_0, m185_1, m185_2, m185_3, m185_4, m185_5, m185_6, m185_7) = felt252_mul(s185_0, s185_1, s185_2, s185_3, s185_4, s185_5, s185_6, s185_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s186_0, s186_1, s186_2, s186_3, s186_4, s186_5, s186_6, s186_7) = felt252_sqr(m185_0, m185_1, m185_2, m185_3, m185_4, m185_5, m185_6, m185_7);
+    let (m186_0, m186_1, m186_2, m186_3, m186_4, m186_5, m186_6, m186_7) = felt252_mul(s186_0, s186_1, s186_2, s186_3, s186_4, s186_5, s186_6, s186_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s187_0, s187_1, s187_2, s187_3, s187_4, s187_5, s187_6, s187_7) = felt252_sqr(m186_0, m186_1, m186_2, m186_3, m186_4, m186_5, m186_6, m186_7);
+    let (m187_0, m187_1, m187_2, m187_3, m187_4, m187_5, m187_6, m187_7) = felt252_mul(s187_0, s187_1, s187_2, s187_3, s187_4, s187_5, s187_6, s187_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s188_0, s188_1, s188_2, s188_3, s188_4, s188_5, s188_6, s188_7) = felt252_sqr(m187_0, m187_1, m187_2, m187_3, m187_4, m187_5, m187_6, m187_7);
+    let (m188_0, m188_1, m188_2, m188_3, m188_4, m188_5, m188_6, m188_7) = felt252_mul(s188_0, s188_1, s188_2, s188_3, s188_4, s188_5, s188_6, s188_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s189_0, s189_1, s189_2, s189_3, s189_4, s189_5, s189_6, s189_7) = felt252_sqr(m188_0, m188_1, m188_2, m188_3, m188_4, m188_5, m188_6, m188_7);
+    let (m189_0, m189_1, m189_2, m189_3, m189_4, m189_5, m189_6, m189_7) = felt252_mul(s189_0, s189_1, s189_2, s189_3, s189_4, s189_5, s189_6, s189_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s190_0, s190_1, s190_2, s190_3, s190_4, s190_5, s190_6, s190_7) = felt252_sqr(m189_0, m189_1, m189_2, m189_3, m189_4, m189_5, m189_6, m189_7);
+    let (m190_0, m190_1, m190_2, m190_3, m190_4, m190_5, m190_6, m190_7) = felt252_mul(s190_0, s190_1, s190_2, s190_3, s190_4, s190_5, s190_6, s190_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s191_0, s191_1, s191_2, s191_3, s191_4, s191_5, s191_6, s191_7) = felt252_sqr(m190_0, m190_1, m190_2, m190_3, m190_4, m190_5, m190_6, m190_7);
+    let (m191_0, m191_1, m191_2, m191_3, m191_4, m191_5, m191_6, m191_7) = felt252_mul(s191_0, s191_1, s191_2, s191_3, s191_4, s191_5, s191_6, s191_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s192_0, s192_1, s192_2, s192_3, s192_4, s192_5, s192_6, s192_7) = felt252_sqr(m191_0, m191_1, m191_2, m191_3, m191_4, m191_5, m191_6, m191_7);
+    let (m192_0, m192_1, m192_2, m192_3, m192_4, m192_5, m192_6, m192_7) = felt252_mul(s192_0, s192_1, s192_2, s192_3, s192_4, s192_5, s192_6, s192_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s193_0, s193_1, s193_2, s193_3, s193_4, s193_5, s193_6, s193_7) = felt252_sqr(m192_0, m192_1, m192_2, m192_3, m192_4, m192_5, m192_6, m192_7);
+    let (m193_0, m193_1, m193_2, m193_3, m193_4, m193_5, m193_6, m193_7) = felt252_mul(s193_0, s193_1, s193_2, s193_3, s193_4, s193_5, s193_6, s193_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s194_0, s194_1, s194_2, s194_3, s194_4, s194_5, s194_6, s194_7) = felt252_sqr(m193_0, m193_1, m193_2, m193_3, m193_4, m193_5, m193_6, m193_7);
+    let (m194_0, m194_1, m194_2, m194_3, m194_4, m194_5, m194_6, m194_7) = felt252_mul(s194_0, s194_1, s194_2, s194_3, s194_4, s194_5, s194_6, s194_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s195_0, s195_1, s195_2, s195_3, s195_4, s195_5, s195_6, s195_7) = felt252_sqr(m194_0, m194_1, m194_2, m194_3, m194_4, m194_5, m194_6, m194_7);
+    let (m195_0, m195_1, m195_2, m195_3, m195_4, m195_5, m195_6, m195_7) = felt252_mul(s195_0, s195_1, s195_2, s195_3, s195_4, s195_5, s195_6, s195_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s196_0, s196_1, s196_2, s196_3, s196_4, s196_5, s196_6, s196_7) = felt252_sqr(m195_0, m195_1, m195_2, m195_3, m195_4, m195_5, m195_6, m195_7);
+    let (m196_0, m196_1, m196_2, m196_3, m196_4, m196_5, m196_6, m196_7) = felt252_mul(s196_0, s196_1, s196_2, s196_3, s196_4, s196_5, s196_6, s196_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s197_0, s197_1, s197_2, s197_3, s197_4, s197_5, s197_6, s197_7) = felt252_sqr(m196_0, m196_1, m196_2, m196_3, m196_4, m196_5, m196_6, m196_7);
+    let (m197_0, m197_1, m197_2, m197_3, m197_4, m197_5, m197_6, m197_7) = felt252_mul(s197_0, s197_1, s197_2, s197_3, s197_4, s197_5, s197_6, s197_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s198_0, s198_1, s198_2, s198_3, s198_4, s198_5, s198_6, s198_7) = felt252_sqr(m197_0, m197_1, m197_2, m197_3, m197_4, m197_5, m197_6, m197_7);
+    let (m198_0, m198_1, m198_2, m198_3, m198_4, m198_5, m198_6, m198_7) = felt252_mul(s198_0, s198_1, s198_2, s198_3, s198_4, s198_5, s198_6, s198_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s199_0, s199_1, s199_2, s199_3, s199_4, s199_5, s199_6, s199_7) = felt252_sqr(m198_0, m198_1, m198_2, m198_3, m198_4, m198_5, m198_6, m198_7);
+    let (m199_0, m199_1, m199_2, m199_3, m199_4, m199_5, m199_6, m199_7) = felt252_mul(s199_0, s199_1, s199_2, s199_3, s199_4, s199_5, s199_6, s199_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s200_0, s200_1, s200_2, s200_3, s200_4, s200_5, s200_6, s200_7) = felt252_sqr(m199_0, m199_1, m199_2, m199_3, m199_4, m199_5, m199_6, m199_7);
+    let (m200_0, m200_1, m200_2, m200_3, m200_4, m200_5, m200_6, m200_7) = felt252_mul(s200_0, s200_1, s200_2, s200_3, s200_4, s200_5, s200_6, s200_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s201_0, s201_1, s201_2, s201_3, s201_4, s201_5, s201_6, s201_7) = felt252_sqr(m200_0, m200_1, m200_2, m200_3, m200_4, m200_5, m200_6, m200_7);
+    let (m201_0, m201_1, m201_2, m201_3, m201_4, m201_5, m201_6, m201_7) = felt252_mul(s201_0, s201_1, s201_2, s201_3, s201_4, s201_5, s201_6, s201_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s202_0, s202_1, s202_2, s202_3, s202_4, s202_5, s202_6, s202_7) = felt252_sqr(m201_0, m201_1, m201_2, m201_3, m201_4, m201_5, m201_6, m201_7);
+    let (m202_0, m202_1, m202_2, m202_3, m202_4, m202_5, m202_6, m202_7) = felt252_mul(s202_0, s202_1, s202_2, s202_3, s202_4, s202_5, s202_6, s202_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s203_0, s203_1, s203_2, s203_3, s203_4, s203_5, s203_6, s203_7) = felt252_sqr(m202_0, m202_1, m202_2, m202_3, m202_4, m202_5, m202_6, m202_7);
+    let (m203_0, m203_1, m203_2, m203_3, m203_4, m203_5, m203_6, m203_7) = felt252_mul(s203_0, s203_1, s203_2, s203_3, s203_4, s203_5, s203_6, s203_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s204_0, s204_1, s204_2, s204_3, s204_4, s204_5, s204_6, s204_7) = felt252_sqr(m203_0, m203_1, m203_2, m203_3, m203_4, m203_5, m203_6, m203_7);
+    let (m204_0, m204_1, m204_2, m204_3, m204_4, m204_5, m204_6, m204_7) = felt252_mul(s204_0, s204_1, s204_2, s204_3, s204_4, s204_5, s204_6, s204_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s205_0, s205_1, s205_2, s205_3, s205_4, s205_5, s205_6, s205_7) = felt252_sqr(m204_0, m204_1, m204_2, m204_3, m204_4, m204_5, m204_6, m204_7);
+    let (m205_0, m205_1, m205_2, m205_3, m205_4, m205_5, m205_6, m205_7) = felt252_mul(s205_0, s205_1, s205_2, s205_3, s205_4, s205_5, s205_6, s205_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s206_0, s206_1, s206_2, s206_3, s206_4, s206_5, s206_6, s206_7) = felt252_sqr(m205_0, m205_1, m205_2, m205_3, m205_4, m205_5, m205_6, m205_7);
+    let (m206_0, m206_1, m206_2, m206_3, m206_4, m206_5, m206_6, m206_7) = felt252_mul(s206_0, s206_1, s206_2, s206_3, s206_4, s206_5, s206_6, s206_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s207_0, s207_1, s207_2, s207_3, s207_4, s207_5, s207_6, s207_7) = felt252_sqr(m206_0, m206_1, m206_2, m206_3, m206_4, m206_5, m206_6, m206_7);
+    let (m207_0, m207_1, m207_2, m207_3, m207_4, m207_5, m207_6, m207_7) = felt252_mul(s207_0, s207_1, s207_2, s207_3, s207_4, s207_5, s207_6, s207_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s208_0, s208_1, s208_2, s208_3, s208_4, s208_5, s208_6, s208_7) = felt252_sqr(m207_0, m207_1, m207_2, m207_3, m207_4, m207_5, m207_6, m207_7);
+    let (m208_0, m208_1, m208_2, m208_3, m208_4, m208_5, m208_6, m208_7) = felt252_mul(s208_0, s208_1, s208_2, s208_3, s208_4, s208_5, s208_6, s208_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s209_0, s209_1, s209_2, s209_3, s209_4, s209_5, s209_6, s209_7) = felt252_sqr(m208_0, m208_1, m208_2, m208_3, m208_4, m208_5, m208_6, m208_7);
+    let (m209_0, m209_1, m209_2, m209_3, m209_4, m209_5, m209_6, m209_7) = felt252_mul(s209_0, s209_1, s209_2, s209_3, s209_4, s209_5, s209_6, s209_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s210_0, s210_1, s210_2, s210_3, s210_4, s210_5, s210_6, s210_7) = felt252_sqr(m209_0, m209_1, m209_2, m209_3, m209_4, m209_5, m209_6, m209_7);
+    let (m210_0, m210_1, m210_2, m210_3, m210_4, m210_5, m210_6, m210_7) = felt252_mul(s210_0, s210_1, s210_2, s210_3, s210_4, s210_5, s210_6, s210_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s211_0, s211_1, s211_2, s211_3, s211_4, s211_5, s211_6, s211_7) = felt252_sqr(m210_0, m210_1, m210_2, m210_3, m210_4, m210_5, m210_6, m210_7);
+    let (m211_0, m211_1, m211_2, m211_3, m211_4, m211_5, m211_6, m211_7) = felt252_mul(s211_0, s211_1, s211_2, s211_3, s211_4, s211_5, s211_6, s211_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s212_0, s212_1, s212_2, s212_3, s212_4, s212_5, s212_6, s212_7) = felt252_sqr(m211_0, m211_1, m211_2, m211_3, m211_4, m211_5, m211_6, m211_7);
+    let (m212_0, m212_1, m212_2, m212_3, m212_4, m212_5, m212_6, m212_7) = felt252_mul(s212_0, s212_1, s212_2, s212_3, s212_4, s212_5, s212_6, s212_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s213_0, s213_1, s213_2, s213_3, s213_4, s213_5, s213_6, s213_7) = felt252_sqr(m212_0, m212_1, m212_2, m212_3, m212_4, m212_5, m212_6, m212_7);
+    let (m213_0, m213_1, m213_2, m213_3, m213_4, m213_5, m213_6, m213_7) = felt252_mul(s213_0, s213_1, s213_2, s213_3, s213_4, s213_5, s213_6, s213_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s214_0, s214_1, s214_2, s214_3, s214_4, s214_5, s214_6, s214_7) = felt252_sqr(m213_0, m213_1, m213_2, m213_3, m213_4, m213_5, m213_6, m213_7);
+    let (m214_0, m214_1, m214_2, m214_3, m214_4, m214_5, m214_6, m214_7) = felt252_mul(s214_0, s214_1, s214_2, s214_3, s214_4, s214_5, s214_6, s214_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s215_0, s215_1, s215_2, s215_3, s215_4, s215_5, s215_6, s215_7) = felt252_sqr(m214_0, m214_1, m214_2, m214_3, m214_4, m214_5, m214_6, m214_7);
+    let (m215_0, m215_1, m215_2, m215_3, m215_4, m215_5, m215_6, m215_7) = felt252_mul(s215_0, s215_1, s215_2, s215_3, s215_4, s215_5, s215_6, s215_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s216_0, s216_1, s216_2, s216_3, s216_4, s216_5, s216_6, s216_7) = felt252_sqr(m215_0, m215_1, m215_2, m215_3, m215_4, m215_5, m215_6, m215_7);
+    let (m216_0, m216_1, m216_2, m216_3, m216_4, m216_5, m216_6, m216_7) = felt252_mul(s216_0, s216_1, s216_2, s216_3, s216_4, s216_5, s216_6, s216_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s217_0, s217_1, s217_2, s217_3, s217_4, s217_5, s217_6, s217_7) = felt252_sqr(m216_0, m216_1, m216_2, m216_3, m216_4, m216_5, m216_6, m216_7);
+    let (m217_0, m217_1, m217_2, m217_3, m217_4, m217_5, m217_6, m217_7) = felt252_mul(s217_0, s217_1, s217_2, s217_3, s217_4, s217_5, s217_6, s217_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s218_0, s218_1, s218_2, s218_3, s218_4, s218_5, s218_6, s218_7) = felt252_sqr(m217_0, m217_1, m217_2, m217_3, m217_4, m217_5, m217_6, m217_7);
+    let (m218_0, m218_1, m218_2, m218_3, m218_4, m218_5, m218_6, m218_7) = felt252_mul(s218_0, s218_1, s218_2, s218_3, s218_4, s218_5, s218_6, s218_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s219_0, s219_1, s219_2, s219_3, s219_4, s219_5, s219_6, s219_7) = felt252_sqr(m218_0, m218_1, m218_2, m218_3, m218_4, m218_5, m218_6, m218_7);
+    let (m219_0, m219_1, m219_2, m219_3, m219_4, m219_5, m219_6, m219_7) = felt252_mul(s219_0, s219_1, s219_2, s219_3, s219_4, s219_5, s219_6, s219_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s220_0, s220_1, s220_2, s220_3, s220_4, s220_5, s220_6, s220_7) = felt252_sqr(m219_0, m219_1, m219_2, m219_3, m219_4, m219_5, m219_6, m219_7);
+    let (m220_0, m220_1, m220_2, m220_3, m220_4, m220_5, m220_6, m220_7) = felt252_mul(s220_0, s220_1, s220_2, s220_3, s220_4, s220_5, s220_6, s220_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s221_0, s221_1, s221_2, s221_3, s221_4, s221_5, s221_6, s221_7) = felt252_sqr(m220_0, m220_1, m220_2, m220_3, m220_4, m220_5, m220_6, m220_7);
+    let (m221_0, m221_1, m221_2, m221_3, m221_4, m221_5, m221_6, m221_7) = felt252_mul(s221_0, s221_1, s221_2, s221_3, s221_4, s221_5, s221_6, s221_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s222_0, s222_1, s222_2, s222_3, s222_4, s222_5, s222_6, s222_7) = felt252_sqr(m221_0, m221_1, m221_2, m221_3, m221_4, m221_5, m221_6, m221_7);
+    let (m222_0, m222_1, m222_2, m222_3, m222_4, m222_5, m222_6, m222_7) = felt252_mul(s222_0, s222_1, s222_2, s222_3, s222_4, s222_5, s222_6, s222_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s223_0, s223_1, s223_2, s223_3, s223_4, s223_5, s223_6, s223_7) = felt252_sqr(m222_0, m222_1, m222_2, m222_3, m222_4, m222_5, m222_6, m222_7);
+    let (m223_0, m223_1, m223_2, m223_3, m223_4, m223_5, m223_6, m223_7) = felt252_mul(s223_0, s223_1, s223_2, s223_3, s223_4, s223_5, s223_6, s223_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s224_0, s224_1, s224_2, s224_3, s224_4, s224_5, s224_6, s224_7) = felt252_sqr(m223_0, m223_1, m223_2, m223_3, m223_4, m223_5, m223_6, m223_7);
+    let (m224_0, m224_1, m224_2, m224_3, m224_4, m224_5, m224_6, m224_7) = felt252_mul(s224_0, s224_1, s224_2, s224_3, s224_4, s224_5, s224_6, s224_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s225_0, s225_1, s225_2, s225_3, s225_4, s225_5, s225_6, s225_7) = felt252_sqr(m224_0, m224_1, m224_2, m224_3, m224_4, m224_5, m224_6, m224_7);
+    let (m225_0, m225_1, m225_2, m225_3, m225_4, m225_5, m225_6, m225_7) = felt252_mul(s225_0, s225_1, s225_2, s225_3, s225_4, s225_5, s225_6, s225_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s226_0, s226_1, s226_2, s226_3, s226_4, s226_5, s226_6, s226_7) = felt252_sqr(m225_0, m225_1, m225_2, m225_3, m225_4, m225_5, m225_6, m225_7);
+    let (m226_0, m226_1, m226_2, m226_3, m226_4, m226_5, m226_6, m226_7) = felt252_mul(s226_0, s226_1, s226_2, s226_3, s226_4, s226_5, s226_6, s226_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s227_0, s227_1, s227_2, s227_3, s227_4, s227_5, s227_6, s227_7) = felt252_sqr(m226_0, m226_1, m226_2, m226_3, m226_4, m226_5, m226_6, m226_7);
+    let (m227_0, m227_1, m227_2, m227_3, m227_4, m227_5, m227_6, m227_7) = felt252_mul(s227_0, s227_1, s227_2, s227_3, s227_4, s227_5, s227_6, s227_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s228_0, s228_1, s228_2, s228_3, s228_4, s228_5, s228_6, s228_7) = felt252_sqr(m227_0, m227_1, m227_2, m227_3, m227_4, m227_5, m227_6, m227_7);
+    let (m228_0, m228_1, m228_2, m228_3, m228_4, m228_5, m228_6, m228_7) = felt252_mul(s228_0, s228_1, s228_2, s228_3, s228_4, s228_5, s228_6, s228_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s229_0, s229_1, s229_2, s229_3, s229_4, s229_5, s229_6, s229_7) = felt252_sqr(m228_0, m228_1, m228_2, m228_3, m228_4, m228_5, m228_6, m228_7);
+    let (m229_0, m229_1, m229_2, m229_3, m229_4, m229_5, m229_6, m229_7) = felt252_mul(s229_0, s229_1, s229_2, s229_3, s229_4, s229_5, s229_6, s229_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s230_0, s230_1, s230_2, s230_3, s230_4, s230_5, s230_6, s230_7) = felt252_sqr(m229_0, m229_1, m229_2, m229_3, m229_4, m229_5, m229_6, m229_7);
+    let (m230_0, m230_1, m230_2, m230_3, m230_4, m230_5, m230_6, m230_7) = felt252_mul(s230_0, s230_1, s230_2, s230_3, s230_4, s230_5, s230_6, s230_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s231_0, s231_1, s231_2, s231_3, s231_4, s231_5, s231_6, s231_7) = felt252_sqr(m230_0, m230_1, m230_2, m230_3, m230_4, m230_5, m230_6, m230_7);
+    let (m231_0, m231_1, m231_2, m231_3, m231_4, m231_5, m231_6, m231_7) = felt252_mul(s231_0, s231_1, s231_2, s231_3, s231_4, s231_5, s231_6, s231_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s232_0, s232_1, s232_2, s232_3, s232_4, s232_5, s232_6, s232_7) = felt252_sqr(m231_0, m231_1, m231_2, m231_3, m231_4, m231_5, m231_6, m231_7);
+    let (m232_0, m232_1, m232_2, m232_3, m232_4, m232_5, m232_6, m232_7) = felt252_mul(s232_0, s232_1, s232_2, s232_3, s232_4, s232_5, s232_6, s232_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s233_0, s233_1, s233_2, s233_3, s233_4, s233_5, s233_6, s233_7) = felt252_sqr(m232_0, m232_1, m232_2, m232_3, m232_4, m232_5, m232_6, m232_7);
+    let (m233_0, m233_1, m233_2, m233_3, m233_4, m233_5, m233_6, m233_7) = felt252_mul(s233_0, s233_1, s233_2, s233_3, s233_4, s233_5, s233_6, s233_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s234_0, s234_1, s234_2, s234_3, s234_4, s234_5, s234_6, s234_7) = felt252_sqr(m233_0, m233_1, m233_2, m233_3, m233_4, m233_5, m233_6, m233_7);
+    let (m234_0, m234_1, m234_2, m234_3, m234_4, m234_5, m234_6, m234_7) = felt252_mul(s234_0, s234_1, s234_2, s234_3, s234_4, s234_5, s234_6, s234_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s235_0, s235_1, s235_2, s235_3, s235_4, s235_5, s235_6, s235_7) = felt252_sqr(m234_0, m234_1, m234_2, m234_3, m234_4, m234_5, m234_6, m234_7);
+    let (m235_0, m235_1, m235_2, m235_3, m235_4, m235_5, m235_6, m235_7) = felt252_mul(s235_0, s235_1, s235_2, s235_3, s235_4, s235_5, s235_6, s235_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s236_0, s236_1, s236_2, s236_3, s236_4, s236_5, s236_6, s236_7) = felt252_sqr(m235_0, m235_1, m235_2, m235_3, m235_4, m235_5, m235_6, m235_7);
+    let (m236_0, m236_1, m236_2, m236_3, m236_4, m236_5, m236_6, m236_7) = felt252_mul(s236_0, s236_1, s236_2, s236_3, s236_4, s236_5, s236_6, s236_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s237_0, s237_1, s237_2, s237_3, s237_4, s237_5, s237_6, s237_7) = felt252_sqr(m236_0, m236_1, m236_2, m236_3, m236_4, m236_5, m236_6, m236_7);
+    let (m237_0, m237_1, m237_2, m237_3, m237_4, m237_5, m237_6, m237_7) = felt252_mul(s237_0, s237_1, s237_2, s237_3, s237_4, s237_5, s237_6, s237_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s238_0, s238_1, s238_2, s238_3, s238_4, s238_5, s238_6, s238_7) = felt252_sqr(m237_0, m237_1, m237_2, m237_3, m237_4, m237_5, m237_6, m237_7);
+    let (m238_0, m238_1, m238_2, m238_3, m238_4, m238_5, m238_6, m238_7) = felt252_mul(s238_0, s238_1, s238_2, s238_3, s238_4, s238_5, s238_6, s238_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s239_0, s239_1, s239_2, s239_3, s239_4, s239_5, s239_6, s239_7) = felt252_sqr(m238_0, m238_1, m238_2, m238_3, m238_4, m238_5, m238_6, m238_7);
+    let (m239_0, m239_1, m239_2, m239_3, m239_4, m239_5, m239_6, m239_7) = felt252_mul(s239_0, s239_1, s239_2, s239_3, s239_4, s239_5, s239_6, s239_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s240_0, s240_1, s240_2, s240_3, s240_4, s240_5, s240_6, s240_7) = felt252_sqr(m239_0, m239_1, m239_2, m239_3, m239_4, m239_5, m239_6, m239_7);
+    let (m240_0, m240_1, m240_2, m240_3, m240_4, m240_5, m240_6, m240_7) = felt252_mul(s240_0, s240_1, s240_2, s240_3, s240_4, s240_5, s240_6, s240_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s241_0, s241_1, s241_2, s241_3, s241_4, s241_5, s241_6, s241_7) = felt252_sqr(m240_0, m240_1, m240_2, m240_3, m240_4, m240_5, m240_6, m240_7);
+    let (m241_0, m241_1, m241_2, m241_3, m241_4, m241_5, m241_6, m241_7) = felt252_mul(s241_0, s241_1, s241_2, s241_3, s241_4, s241_5, s241_6, s241_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s242_0, s242_1, s242_2, s242_3, s242_4, s242_5, s242_6, s242_7) = felt252_sqr(m241_0, m241_1, m241_2, m241_3, m241_4, m241_5, m241_6, m241_7);
+    let (m242_0, m242_1, m242_2, m242_3, m242_4, m242_5, m242_6, m242_7) = felt252_mul(s242_0, s242_1, s242_2, s242_3, s242_4, s242_5, s242_6, s242_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s243_0, s243_1, s243_2, s243_3, s243_4, s243_5, s243_6, s243_7) = felt252_sqr(m242_0, m242_1, m242_2, m242_3, m242_4, m242_5, m242_6, m242_7);
+    let (m243_0, m243_1, m243_2, m243_3, m243_4, m243_5, m243_6, m243_7) = felt252_mul(s243_0, s243_1, s243_2, s243_3, s243_4, s243_5, s243_6, s243_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s244_0, s244_1, s244_2, s244_3, s244_4, s244_5, s244_6, s244_7) = felt252_sqr(m243_0, m243_1, m243_2, m243_3, m243_4, m243_5, m243_6, m243_7);
+    let (m244_0, m244_1, m244_2, m244_3, m244_4, m244_5, m244_6, m244_7) = felt252_mul(s244_0, s244_1, s244_2, s244_3, s244_4, s244_5, s244_6, s244_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s245_0, s245_1, s245_2, s245_3, s245_4, s245_5, s245_6, s245_7) = felt252_sqr(m244_0, m244_1, m244_2, m244_3, m244_4, m244_5, m244_6, m244_7);
+    let (m245_0, m245_1, m245_2, m245_3, m245_4, m245_5, m245_6, m245_7) = felt252_mul(s245_0, s245_1, s245_2, s245_3, s245_4, s245_5, s245_6, s245_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s246_0, s246_1, s246_2, s246_3, s246_4, s246_5, s246_6, s246_7) = felt252_sqr(m245_0, m245_1, m245_2, m245_3, m245_4, m245_5, m245_6, m245_7);
+    let (m246_0, m246_1, m246_2, m246_3, m246_4, m246_5, m246_6, m246_7) = felt252_mul(s246_0, s246_1, s246_2, s246_3, s246_4, s246_5, s246_6, s246_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s247_0, s247_1, s247_2, s247_3, s247_4, s247_5, s247_6, s247_7) = felt252_sqr(m246_0, m246_1, m246_2, m246_3, m246_4, m246_5, m246_6, m246_7);
+    let (m247_0, m247_1, m247_2, m247_3, m247_4, m247_5, m247_6, m247_7) = felt252_mul(s247_0, s247_1, s247_2, s247_3, s247_4, s247_5, s247_6, s247_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s248_0, s248_1, s248_2, s248_3, s248_4, s248_5, s248_6, s248_7) = felt252_sqr(m247_0, m247_1, m247_2, m247_3, m247_4, m247_5, m247_6, m247_7);
+    let (m248_0, m248_1, m248_2, m248_3, m248_4, m248_5, m248_6, m248_7) = felt252_mul(s248_0, s248_1, s248_2, s248_3, s248_4, s248_5, s248_6, s248_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s249_0, s249_1, s249_2, s249_3, s249_4, s249_5, s249_6, s249_7) = felt252_sqr(m248_0, m248_1, m248_2, m248_3, m248_4, m248_5, m248_6, m248_7);
+    let (m249_0, m249_1, m249_2, m249_3, m249_4, m249_5, m249_6, m249_7) = felt252_mul(s249_0, s249_1, s249_2, s249_3, s249_4, s249_5, s249_6, s249_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s250_0, s250_1, s250_2, s250_3, s250_4, s250_5, s250_6, s250_7) = felt252_sqr(m249_0, m249_1, m249_2, m249_3, m249_4, m249_5, m249_6, m249_7);
+    let (m250_0, m250_1, m250_2, m250_3, m250_4, m250_5, m250_6, m250_7) = felt252_mul(s250_0, s250_1, s250_2, s250_3, s250_4, s250_5, s250_6, s250_7, a0, a1, a2, a3, a4, a5, a6, a7);
+    let (s251_0, s251_1, s251_2, s251_3, s251_4, s251_5, s251_6, s251_7) = felt252_sqr(m250_0, m250_1, m250_2, m250_3, m250_4, m250_5, m250_6, m250_7);
+    let (m251_0, m251_1, m251_2, m251_3, m251_4, m251_5, m251_6, m251_7) = felt252_mul(s251_0, s251_1, s251_2, s251_3, s251_4, s251_5, s251_6, s251_7, a0, a1, a2, a3, a4, a5, a6, a7);
+
+    (m251_0, m251_1, m251_2, m251_3, m251_4, m251_5, m251_6, m251_7)
+}
+
+
+// ---- Montgomery form conversions -----------------------------------
+// Canonical form of v is the natural 8-limb representation of v in [0, P).
+// Montgomery form of v is v*R mod P, where R = 2^256. The Montgomery
+// multiplication felt252_mul produces a * b * R^-1 mod P, so:
+//   to_mont(v)        = felt252_mul(v, R^2 mod P)   (gives v*R)
+//   from_mont(v_mont) = felt252_mul(v_mont, 1)      (gives v_mont * R^-1)
+//
+// R^2 mod P precomputed below, split into 8 u32 limbs LSB-first.
+
+const STARK_R2_LIMB0: u32 = 2113930241u32;   // 0x7E000401
+const STARK_R2_LIMB1: u32 = 4294966643u32;   // 0xFFFFFD73
+const STARK_R2_LIMB2: u32 = 856686591u32;   // 0x330FFFFF
+const STARK_R2_LIMB3: u32 = 1u32;   // 0x00000001
+const STARK_R2_LIMB4: u32 = 4285497344u32;   // 0xFF6F8000
+const STARK_R2_LIMB5: u32 = 4294967295u32;   // 0xFFFFFFFF
+const STARK_R2_LIMB6: u32 = 1577093136u32;   // 0x5E008810
+const STARK_R2_LIMB7: u32 = 134206635u32;   // 0x07FFD4AB
+
+fn felt252_to_mont(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    felt252_mul(a0, a1, a2, a3, a4, a5, a6, a7,
+                STARK_R2_LIMB0, STARK_R2_LIMB1,
+                STARK_R2_LIMB2, STARK_R2_LIMB3,
+                STARK_R2_LIMB4, STARK_R2_LIMB5,
+                STARK_R2_LIMB6, STARK_R2_LIMB7)
+}
+
+fn felt252_from_mont(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // Multiply by 1 (as 8-limb integer) to apply one Montgomery reduction.
+    felt252_mul(a0, a1, a2, a3, a4, a5, a6, a7,
+                1u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32, 0u32)
+}
+
+
 // ---- TODO (not yet implemented) -------------------------------------------
-// felt252_add(a_limbs[8], b_limbs[8]) -> result_limbs[8]
-//   Apply add_with_carry_sum/out across 8 limbs (LSB to MSB), then
-//   conditional subtract STARK_P if result >= P. Z3 obligations:
-//   - each limb result < 2^32 (free from u32 type)
-//   - top limb result <= STARK_LIMB_TOP_MAX after reduction
-//   - lex-less-than P after final conditional sub
-//
-// felt252_sub(a, b) -> a - b (mod P)
-//   Borrow chain across 8 limbs, conditional add P if borrow_out == 1.
-//
-// felt252_mul(a, b) -> a*b (mod P)
-//   Schoolbook 8x8 = 16-limb product, then Solinas reduction using
-//   2^251 = -17*2^192 - 1 (mod P) folded into the upper 8 limbs.
-//
-// felt252_inv(a) -> a^(P-2) (mod P)
-//   Square-and-multiply ladder, ~252 steps. Each step uses felt252_mul.
-//
-// Each operation's Z3 proof requires explicit carry-tracking lemmas
-// (similar to standard bignum arithmetic verification — see e.g.
-// Fiat-Cryptography or Vale-Crypto). Not a one-shot port.
+// A stronger spec on felt252_add/_sub/_mul ("ensures result == (a op b)
+// reconstruct-mod-P") requires explicit carry-tracking lemmas — see e.g.
+// Fiat-Cryptography or Vale-Crypto. Deferred.
 
 fn main() -> u64 { 0u64 }
