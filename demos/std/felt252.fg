@@ -206,6 +206,55 @@ fn add_8limb_full(
     (s0, s1, s2, s3, s4, s5, s6, s7, c7)
 }
 
+
+// sub_with_borrow_full: borrow-chain mirror of add_with_carry_full.
+// Math: a + bo * 2^32 == b + b_in + diff. Always-positive u64 form.
+fn sub_with_borrow_full(a: u32, b: u32, b_in: u32) -> (u32, u32)
+    requires b_in < 2u32
+    ensures result.1 < 2u32
+    ensures a + result.1 * 4294967296u64 == b + b_in + result.0
+{
+    let a64: u64 = a as u64;
+    let b64: u64 = b as u64;
+    let bi: u64 = b_in as u64;
+    let s64: u64 = a64 + 4294967296u64 - b64 - bi;
+    let d: u32 = s64 as u32;
+    let bo: u32 = if a64 < b64 + bi { 1u32 } else { 0u32 };
+    (d, bo)
+}
+
+// sub_8limb_full: 8-limb integer subtract. Returns (r0..r7, final_borrow).
+// Projection-style ensures, mirroring add_8limb_full: each result limb
+// equals (a_i + 2^32 - b_i - bo_{i-1}) mod 2^32, with the borrow chain
+// encoded as nested (1 - partial/2^32) expressions.
+fn sub_8limb_full(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32, u32)
+    ensures result.0 == (a0 + 4294967296u64 - b0) % 4294967296u64
+    ensures result.1 == (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) % 4294967296u64
+    ensures result.2 == (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.3 == (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.4 == (a4 + 4294967296u64 - b4 - (1u64 - (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.5 == (a5 + 4294967296u64 - b5 - (1u64 - (a4 + 4294967296u64 - b4 - (1u64 - (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.6 == (a6 + 4294967296u64 - b6 - (1u64 - (a5 + 4294967296u64 - b5 - (1u64 - (a4 + 4294967296u64 - b4 - (1u64 - (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.7 == (a7 + 4294967296u64 - b7 - (1u64 - (a6 + 4294967296u64 - b6 - (1u64 - (a5 + 4294967296u64 - b5 - (1u64 - (a4 + 4294967296u64 - b4 - (1u64 - (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) % 4294967296u64
+    ensures result.8 == (1u64 - (a7 + 4294967296u64 - b7 - (1u64 - (a6 + 4294967296u64 - b6 - (1u64 - (a5 + 4294967296u64 - b5 - (1u64 - (a4 + 4294967296u64 - b4 - (1u64 - (a3 + 4294967296u64 - b3 - (1u64 - (a2 + 4294967296u64 - b2 - (1u64 - (a1 + 4294967296u64 - b1 - (1u64 - (a0 + 4294967296u64 - b0) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)) / 4294967296u64)
+    ensures result.8 < 2u64
+{
+    let (d0, bo0) = sub_with_borrow_full(a0, b0, 0u32);
+    let (d1, bo1) = sub_with_borrow_full(a1, b1, bo0);
+    let (d2, bo2) = sub_with_borrow_full(a2, b2, bo1);
+    let (d3, bo3) = sub_with_borrow_full(a3, b3, bo2);
+    let (d4, bo4) = sub_with_borrow_full(a4, b4, bo3);
+    let (d5, bo5) = sub_with_borrow_full(a5, b5, bo4);
+    let (d6, bo6) = sub_with_borrow_full(a6, b6, bo5);
+    let (d7, bo7) = sub_with_borrow_full(a7, b7, bo6);
+    (d0, d1, d2, d3, d4, d5, d6, d7, bo7)
+}
+
 // ---- ec_double: Stark-curve point doubling -------------------------------
 // Inputs (x, y) and output (x_new, y_new) are all in Montgomery form.
 // alpha = 1 (canonical) is converted to Montgomery form via felt252_to_mont
