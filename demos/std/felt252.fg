@@ -370,6 +370,1523 @@ fn felt252_sub_mod_spec(
     (r0, r1, r2, r3, r4, r5, r6, r7)
 }
 
+// ---- felt252_mul_raw_spec: split-function math-correctness layer ----
+//
+// The 8x8 schoolbook product (16-limb output) is too deep for Z3 to
+// auto-discharge as 16 ensures in a single function -- the combined
+// SMT query exceeds practical timeouts. Decomposing into 16 separate
+// per-limb functions, each with a single ensures, gives Z3 16 small
+// independent queries that each discharge in ~2-4s.
+//
+// Each mul_raw_limb_k(a, b) returns the k-th limb of the 16-limb
+// product as u32, with the projection-style ensures verified.
+// felt252_mul_raw_spec composes them into the full 16-tuple.
+
+fn mul_raw_limb_0(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let result_u64: u64 = acc0 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_1(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let result_u64: u64 = acc1 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_2(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let result_u64: u64 = acc2 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_3(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let result_u64: u64 = acc3 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_4(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let result_u64: u64 = acc4 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_5(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let result_u64: u64 = acc5 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_6(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let result_u64: u64 = acc6 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_7(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let result_u64: u64 = acc7 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_8(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let result_u64: u64 = acc8 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_9(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let result_u64: u64 = acc9 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_10(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let result_u64: u64 = acc10 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_11(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a4 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) / 4294967296u64) + ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (p47 % 4294967296u64) + (p56 % 4294967296u64) + (p65 % 4294967296u64) + (p74 % 4294967296u64) + (p37 / 4294967296u64) + (p46 / 4294967296u64) + (p55 / 4294967296u64) + (p64 / 4294967296u64) + (p73 / 4294967296u64) + k11;
+    let result_u64: u64 = acc11 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_12(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a5 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) / 4294967296u64) + ((((a4 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) / 4294967296u64) + ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (p47 % 4294967296u64) + (p56 % 4294967296u64) + (p65 % 4294967296u64) + (p74 % 4294967296u64) + (p37 / 4294967296u64) + (p46 / 4294967296u64) + (p55 / 4294967296u64) + (p64 / 4294967296u64) + (p73 / 4294967296u64) + k11;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (p57 % 4294967296u64) + (p66 % 4294967296u64) + (p75 % 4294967296u64) + (p47 / 4294967296u64) + (p56 / 4294967296u64) + (p65 / 4294967296u64) + (p74 / 4294967296u64) + k12;
+    let result_u64: u64 = acc12 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_13(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a6 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) / 4294967296u64) + ((((a5 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) / 4294967296u64) + ((((a4 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) / 4294967296u64) + ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (p47 % 4294967296u64) + (p56 % 4294967296u64) + (p65 % 4294967296u64) + (p74 % 4294967296u64) + (p37 / 4294967296u64) + (p46 / 4294967296u64) + (p55 / 4294967296u64) + (p64 / 4294967296u64) + (p73 / 4294967296u64) + k11;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (p57 % 4294967296u64) + (p66 % 4294967296u64) + (p75 % 4294967296u64) + (p47 / 4294967296u64) + (p56 / 4294967296u64) + (p65 / 4294967296u64) + (p74 / 4294967296u64) + k12;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (p67 % 4294967296u64) + (p76 % 4294967296u64) + (p57 / 4294967296u64) + (p66 / 4294967296u64) + (p75 / 4294967296u64) + k13;
+    let result_u64: u64 = acc13 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_14(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a7 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b6 + 0u64)) / 4294967296u64) + ((((a6 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) / 4294967296u64) + ((((a5 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) / 4294967296u64) + ((((a4 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) / 4294967296u64) + ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (p47 % 4294967296u64) + (p56 % 4294967296u64) + (p65 % 4294967296u64) + (p74 % 4294967296u64) + (p37 / 4294967296u64) + (p46 / 4294967296u64) + (p55 / 4294967296u64) + (p64 / 4294967296u64) + (p73 / 4294967296u64) + k11;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (p57 % 4294967296u64) + (p66 % 4294967296u64) + (p75 % 4294967296u64) + (p47 / 4294967296u64) + (p56 / 4294967296u64) + (p65 / 4294967296u64) + (p74 / 4294967296u64) + k12;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (p67 % 4294967296u64) + (p76 % 4294967296u64) + (p57 / 4294967296u64) + (p66 / 4294967296u64) + (p75 / 4294967296u64) + k13;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (p77 % 4294967296u64) + (p67 / 4294967296u64) + (p76 / 4294967296u64) + k14;
+    let result_u64: u64 = acc14 % 4294967296u64;
+    result_u64 as u32
+}
+
+fn mul_raw_limb_15(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> u32
+    ensures result == ((((a7 + 0u64) * (b7 + 0u64)) / 4294967296u64) + ((((a7 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b6 + 0u64)) / 4294967296u64) + ((((a6 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) / 4294967296u64) + ((((a5 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) / 4294967296u64) + ((((a4 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) / 4294967296u64) + ((((a3 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) / 4294967296u64) + ((((a2 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) / 4294967296u64) + ((((a1 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b7 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b7 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a7 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b6 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b6 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a6 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b5 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b5 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a5 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b4 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b4 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a4 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b3 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b3 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a3 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b2 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b2 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a2 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b1 + 0u64)) / 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b1 + 0u64)) % 4294967296u64) + (((a1 + 0u64) * (b0 + 0u64)) % 4294967296u64) + (((a0 + 0u64) * (b0 + 0u64)) / 4294967296u64) + ((((a0 + 0u64) * (b0 + 0u64)) % 4294967296u64)) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+{
+    let p00: u64 = (a0 as u64) * (b0 as u64);
+    let p01: u64 = (a0 as u64) * (b1 as u64);
+    let p02: u64 = (a0 as u64) * (b2 as u64);
+    let p03: u64 = (a0 as u64) * (b3 as u64);
+    let p04: u64 = (a0 as u64) * (b4 as u64);
+    let p05: u64 = (a0 as u64) * (b5 as u64);
+    let p06: u64 = (a0 as u64) * (b6 as u64);
+    let p07: u64 = (a0 as u64) * (b7 as u64);
+    let p10: u64 = (a1 as u64) * (b0 as u64);
+    let p11: u64 = (a1 as u64) * (b1 as u64);
+    let p12: u64 = (a1 as u64) * (b2 as u64);
+    let p13: u64 = (a1 as u64) * (b3 as u64);
+    let p14: u64 = (a1 as u64) * (b4 as u64);
+    let p15: u64 = (a1 as u64) * (b5 as u64);
+    let p16: u64 = (a1 as u64) * (b6 as u64);
+    let p17: u64 = (a1 as u64) * (b7 as u64);
+    let p20: u64 = (a2 as u64) * (b0 as u64);
+    let p21: u64 = (a2 as u64) * (b1 as u64);
+    let p22: u64 = (a2 as u64) * (b2 as u64);
+    let p23: u64 = (a2 as u64) * (b3 as u64);
+    let p24: u64 = (a2 as u64) * (b4 as u64);
+    let p25: u64 = (a2 as u64) * (b5 as u64);
+    let p26: u64 = (a2 as u64) * (b6 as u64);
+    let p27: u64 = (a2 as u64) * (b7 as u64);
+    let p30: u64 = (a3 as u64) * (b0 as u64);
+    let p31: u64 = (a3 as u64) * (b1 as u64);
+    let p32: u64 = (a3 as u64) * (b2 as u64);
+    let p33: u64 = (a3 as u64) * (b3 as u64);
+    let p34: u64 = (a3 as u64) * (b4 as u64);
+    let p35: u64 = (a3 as u64) * (b5 as u64);
+    let p36: u64 = (a3 as u64) * (b6 as u64);
+    let p37: u64 = (a3 as u64) * (b7 as u64);
+    let p40: u64 = (a4 as u64) * (b0 as u64);
+    let p41: u64 = (a4 as u64) * (b1 as u64);
+    let p42: u64 = (a4 as u64) * (b2 as u64);
+    let p43: u64 = (a4 as u64) * (b3 as u64);
+    let p44: u64 = (a4 as u64) * (b4 as u64);
+    let p45: u64 = (a4 as u64) * (b5 as u64);
+    let p46: u64 = (a4 as u64) * (b6 as u64);
+    let p47: u64 = (a4 as u64) * (b7 as u64);
+    let p50: u64 = (a5 as u64) * (b0 as u64);
+    let p51: u64 = (a5 as u64) * (b1 as u64);
+    let p52: u64 = (a5 as u64) * (b2 as u64);
+    let p53: u64 = (a5 as u64) * (b3 as u64);
+    let p54: u64 = (a5 as u64) * (b4 as u64);
+    let p55: u64 = (a5 as u64) * (b5 as u64);
+    let p56: u64 = (a5 as u64) * (b6 as u64);
+    let p57: u64 = (a5 as u64) * (b7 as u64);
+    let p60: u64 = (a6 as u64) * (b0 as u64);
+    let p61: u64 = (a6 as u64) * (b1 as u64);
+    let p62: u64 = (a6 as u64) * (b2 as u64);
+    let p63: u64 = (a6 as u64) * (b3 as u64);
+    let p64: u64 = (a6 as u64) * (b4 as u64);
+    let p65: u64 = (a6 as u64) * (b5 as u64);
+    let p66: u64 = (a6 as u64) * (b6 as u64);
+    let p67: u64 = (a6 as u64) * (b7 as u64);
+    let p70: u64 = (a7 as u64) * (b0 as u64);
+    let p71: u64 = (a7 as u64) * (b1 as u64);
+    let p72: u64 = (a7 as u64) * (b2 as u64);
+    let p73: u64 = (a7 as u64) * (b3 as u64);
+    let p74: u64 = (a7 as u64) * (b4 as u64);
+    let p75: u64 = (a7 as u64) * (b5 as u64);
+    let p76: u64 = (a7 as u64) * (b6 as u64);
+    let p77: u64 = (a7 as u64) * (b7 as u64);
+    let acc0: u64 = (p00 % 4294967296u64);
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (p01 % 4294967296u64) + (p10 % 4294967296u64) + (p00 / 4294967296u64) + k1;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (p02 % 4294967296u64) + (p11 % 4294967296u64) + (p20 % 4294967296u64) + (p01 / 4294967296u64) + (p10 / 4294967296u64) + k2;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (p03 % 4294967296u64) + (p12 % 4294967296u64) + (p21 % 4294967296u64) + (p30 % 4294967296u64) + (p02 / 4294967296u64) + (p11 / 4294967296u64) + (p20 / 4294967296u64) + k3;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (p04 % 4294967296u64) + (p13 % 4294967296u64) + (p22 % 4294967296u64) + (p31 % 4294967296u64) + (p40 % 4294967296u64) + (p03 / 4294967296u64) + (p12 / 4294967296u64) + (p21 / 4294967296u64) + (p30 / 4294967296u64) + k4;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (p05 % 4294967296u64) + (p14 % 4294967296u64) + (p23 % 4294967296u64) + (p32 % 4294967296u64) + (p41 % 4294967296u64) + (p50 % 4294967296u64) + (p04 / 4294967296u64) + (p13 / 4294967296u64) + (p22 / 4294967296u64) + (p31 / 4294967296u64) + (p40 / 4294967296u64) + k5;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (p06 % 4294967296u64) + (p15 % 4294967296u64) + (p24 % 4294967296u64) + (p33 % 4294967296u64) + (p42 % 4294967296u64) + (p51 % 4294967296u64) + (p60 % 4294967296u64) + (p05 / 4294967296u64) + (p14 / 4294967296u64) + (p23 / 4294967296u64) + (p32 / 4294967296u64) + (p41 / 4294967296u64) + (p50 / 4294967296u64) + k6;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (p07 % 4294967296u64) + (p16 % 4294967296u64) + (p25 % 4294967296u64) + (p34 % 4294967296u64) + (p43 % 4294967296u64) + (p52 % 4294967296u64) + (p61 % 4294967296u64) + (p70 % 4294967296u64) + (p06 / 4294967296u64) + (p15 / 4294967296u64) + (p24 / 4294967296u64) + (p33 / 4294967296u64) + (p42 / 4294967296u64) + (p51 / 4294967296u64) + (p60 / 4294967296u64) + k7;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (p17 % 4294967296u64) + (p26 % 4294967296u64) + (p35 % 4294967296u64) + (p44 % 4294967296u64) + (p53 % 4294967296u64) + (p62 % 4294967296u64) + (p71 % 4294967296u64) + (p07 / 4294967296u64) + (p16 / 4294967296u64) + (p25 / 4294967296u64) + (p34 / 4294967296u64) + (p43 / 4294967296u64) + (p52 / 4294967296u64) + (p61 / 4294967296u64) + (p70 / 4294967296u64) + k8;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (p27 % 4294967296u64) + (p36 % 4294967296u64) + (p45 % 4294967296u64) + (p54 % 4294967296u64) + (p63 % 4294967296u64) + (p72 % 4294967296u64) + (p17 / 4294967296u64) + (p26 / 4294967296u64) + (p35 / 4294967296u64) + (p44 / 4294967296u64) + (p53 / 4294967296u64) + (p62 / 4294967296u64) + (p71 / 4294967296u64) + k9;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (p37 % 4294967296u64) + (p46 % 4294967296u64) + (p55 % 4294967296u64) + (p64 % 4294967296u64) + (p73 % 4294967296u64) + (p27 / 4294967296u64) + (p36 / 4294967296u64) + (p45 / 4294967296u64) + (p54 / 4294967296u64) + (p63 / 4294967296u64) + (p72 / 4294967296u64) + k10;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (p47 % 4294967296u64) + (p56 % 4294967296u64) + (p65 % 4294967296u64) + (p74 % 4294967296u64) + (p37 / 4294967296u64) + (p46 / 4294967296u64) + (p55 / 4294967296u64) + (p64 / 4294967296u64) + (p73 / 4294967296u64) + k11;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (p57 % 4294967296u64) + (p66 % 4294967296u64) + (p75 % 4294967296u64) + (p47 / 4294967296u64) + (p56 / 4294967296u64) + (p65 / 4294967296u64) + (p74 / 4294967296u64) + k12;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (p67 % 4294967296u64) + (p76 % 4294967296u64) + (p57 / 4294967296u64) + (p66 / 4294967296u64) + (p75 / 4294967296u64) + k13;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (p77 % 4294967296u64) + (p67 / 4294967296u64) + (p76 / 4294967296u64) + k14;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (p77 / 4294967296u64) + k15;
+    let result_u64: u64 = acc15 % 4294967296u64;
+    result_u64 as u32
+}
+
+// felt252_mul_raw_spec: composes 16 individually-verified per-limb
+// functions into the full 16-tuple schoolbook product. The verified
+// spec lives in the per-limb mul_raw_limb_k functions above; this
+// composer is a convenience packager.
+fn felt252_mul_raw_spec(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let r0: u32 = mul_raw_limb_0(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r1: u32 = mul_raw_limb_1(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r2: u32 = mul_raw_limb_2(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r3: u32 = mul_raw_limb_3(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r4: u32 = mul_raw_limb_4(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r5: u32 = mul_raw_limb_5(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r6: u32 = mul_raw_limb_6(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r7: u32 = mul_raw_limb_7(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r8: u32 = mul_raw_limb_8(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r9: u32 = mul_raw_limb_9(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r10: u32 = mul_raw_limb_10(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r11: u32 = mul_raw_limb_11(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r12: u32 = mul_raw_limb_12(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r13: u32 = mul_raw_limb_13(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r14: u32 = mul_raw_limb_14(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    let r15: u32 = mul_raw_limb_15(a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, b3, b4, b5, b6, b7);
+    (r0,  r1,  r2,  r3,  r4,  r5,  r6,  r7,
+     r8,  r9,  r10, r11, r12, r13, r14, r15)
+}
+
+
 // ---- ec_double: Stark-curve point doubling -------------------------------
 // Inputs (x, y) and output (x_new, y_new) are all in Montgomery form.
 // alpha = 1 (canonical) is converted to Montgomery form via felt252_to_mont
