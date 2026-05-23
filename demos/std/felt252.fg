@@ -1888,6 +1888,760 @@ fn felt252_mul_raw_spec(
 
 
 
+// ==== Per-iteration Montgomery reduce (math-correctness layer) =====
+// 8 separate mont_iter_K functions, each with the verified invariant
+// `result.K == 0u32` after iteration K. The composition
+// `felt252_montgomery_reduce_v2` chains them with the prior-iteration
+// cap propagation and the final conditional-subtract of P.
+
+// ---- Per-iteration Montgomery reduce with limb-zeroing invariant ---
+// Each mont_iter_K function operates on a 16-limb state + an incoming
+// cap carry, and outputs the 16-limb post-iteration state + outgoing
+// cap carry. Verified ensures: result.K == 0u32 (the limb this
+// iteration zeroes out). The full 8-iteration Montgomery reduce
+// composes them sequentially with cap_in=0u64 for iteration 0.
+
+// Montgomery iteration 0: zeroes out limb 0.
+fn mont_iter_0(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.0 == 0u32
+{
+    // m = t0 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t0 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let acc0: u64 = (t0 as u64) + (m as u64);
+    let new_t0_u64: u64 = acc0 % 4294967296u64;
+    let new_t0: u32 = new_t0_u64 as u32;
+    let k1: u64 = acc0 / 4294967296u64;
+    let acc1: u64 = (t1 as u64) + k1;
+    let new_t1_u64: u64 = acc1 % 4294967296u64;
+    let new_t1: u32 = new_t1_u64 as u32;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (t2 as u64) + k2;
+    let new_t2_u64: u64 = acc2 % 4294967296u64;
+    let new_t2: u32 = new_t2_u64 as u32;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (t3 as u64) + k3;
+    let new_t3_u64: u64 = acc3 % 4294967296u64;
+    let new_t3: u32 = new_t3_u64 as u32;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (t4 as u64) + k4;
+    let new_t4_u64: u64 = acc4 % 4294967296u64;
+    let new_t4: u32 = new_t4_u64 as u32;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (t5 as u64) + k5;
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + (m17_lo as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + (mpow_hi as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 1: zeroes out limb 1.
+fn mont_iter_1(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.1 == 0u32
+{
+    // m = t1 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t1 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let acc1: u64 = (t1 as u64) + (m as u64);
+    let new_t1_u64: u64 = acc1 % 4294967296u64;
+    let new_t1: u32 = new_t1_u64 as u32;
+    let k2: u64 = acc1 / 4294967296u64;
+    let acc2: u64 = (t2 as u64) + k2;
+    let new_t2_u64: u64 = acc2 % 4294967296u64;
+    let new_t2: u32 = new_t2_u64 as u32;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (t3 as u64) + k3;
+    let new_t3_u64: u64 = acc3 % 4294967296u64;
+    let new_t3: u32 = new_t3_u64 as u32;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (t4 as u64) + k4;
+    let new_t4_u64: u64 = acc4 % 4294967296u64;
+    let new_t4: u32 = new_t4_u64 as u32;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (t5 as u64) + k5;
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + (m17_lo as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + (mpow_hi as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 2: zeroes out limb 2.
+fn mont_iter_2(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.2 == 0u32
+{
+    // m = t2 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t2 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let acc2: u64 = (t2 as u64) + (m as u64);
+    let new_t2_u64: u64 = acc2 % 4294967296u64;
+    let new_t2: u32 = new_t2_u64 as u32;
+    let k3: u64 = acc2 / 4294967296u64;
+    let acc3: u64 = (t3 as u64) + k3;
+    let new_t3_u64: u64 = acc3 % 4294967296u64;
+    let new_t3: u32 = new_t3_u64 as u32;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (t4 as u64) + k4;
+    let new_t4_u64: u64 = acc4 % 4294967296u64;
+    let new_t4: u32 = new_t4_u64 as u32;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (t5 as u64) + k5;
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + (m17_lo as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + (mpow_hi as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 3: zeroes out limb 3.
+fn mont_iter_3(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.3 == 0u32
+{
+    // m = t3 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t3 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let new_t2: u32 = t2;
+    let acc3: u64 = (t3 as u64) + (m as u64);
+    let new_t3_u64: u64 = acc3 % 4294967296u64;
+    let new_t3: u32 = new_t3_u64 as u32;
+    let k4: u64 = acc3 / 4294967296u64;
+    let acc4: u64 = (t4 as u64) + k4;
+    let new_t4_u64: u64 = acc4 % 4294967296u64;
+    let new_t4: u32 = new_t4_u64 as u32;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (t5 as u64) + k5;
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + (m17_lo as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + (mpow_hi as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 4: zeroes out limb 4.
+fn mont_iter_4(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.4 == 0u32
+{
+    // m = t4 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t4 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let new_t2: u32 = t2;
+    let new_t3: u32 = t3;
+    let acc4: u64 = (t4 as u64) + (m as u64);
+    let new_t4_u64: u64 = acc4 % 4294967296u64;
+    let new_t4: u32 = new_t4_u64 as u32;
+    let k5: u64 = acc4 / 4294967296u64;
+    let acc5: u64 = (t5 as u64) + k5;
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + (m17_lo as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + (mpow_hi as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 5: zeroes out limb 5.
+fn mont_iter_5(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.5 == 0u32
+{
+    // m = t5 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t5 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let new_t2: u32 = t2;
+    let new_t3: u32 = t3;
+    let new_t4: u32 = t4;
+    let acc5: u64 = (t5 as u64) + (m as u64);
+    let new_t5_u64: u64 = acc5 % 4294967296u64;
+    let new_t5: u32 = new_t5_u64 as u32;
+    let k6: u64 = acc5 / 4294967296u64;
+    let acc6: u64 = (t6 as u64) + k6;
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + (m17_lo as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + (mpow_hi as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 6: zeroes out limb 6.
+fn mont_iter_6(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.6 == 0u32
+{
+    // m = t6 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t6 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let new_t2: u32 = t2;
+    let new_t3: u32 = t3;
+    let new_t4: u32 = t4;
+    let new_t5: u32 = t5;
+    let acc6: u64 = (t6 as u64) + (m as u64);
+    let new_t6_u64: u64 = acc6 % 4294967296u64;
+    let new_t6: u32 = new_t6_u64 as u32;
+    let k7: u64 = acc6 / 4294967296u64;
+    let acc7: u64 = (t7 as u64) + k7;
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + (m17_lo as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + (mpow_hi as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+// Montgomery iteration 7: zeroes out limb 7.
+fn mont_iter_7(
+    t0:  u32, t1:  u32, t2:  u32, t3:  u32,
+    t4:  u32, t5:  u32, t6:  u32, t7:  u32,
+    t8:  u32, t9:  u32, t10: u32, t11: u32,
+    t12: u32, t13: u32, t14: u32, t15: u32,
+    cap_in: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    ensures result.7 == 0u32
+{
+    // m = t7 * N' mod 2^32, where N' = 2^32 - 1.
+    let m_prod: u64 = (t7 as u64) * 4294967295u64;
+    let m_u64: u64 = m_prod % 4294967296u64;
+    let m: u32 = m_u64 as u32;
+    let m17: u64 = (m as u64) * 17u64;
+    let m17_lo: u32 = (m17 % 4294967296u64) as u32;
+    let m17_hi: u32 = (m17 / 4294967296u64) as u32;
+    let mpow: u64 = (m as u64) * 134217728u64;
+    let mpow_lo: u32 = (mpow % 4294967296u64) as u32;
+    let mpow_hi: u32 = (mpow / 4294967296u64) as u32;
+
+    let new_t0: u32 = t0;
+    let new_t1: u32 = t1;
+    let new_t2: u32 = t2;
+    let new_t3: u32 = t3;
+    let new_t4: u32 = t4;
+    let new_t5: u32 = t5;
+    let new_t6: u32 = t6;
+    let acc7: u64 = (t7 as u64) + (m as u64);
+    let new_t7_u64: u64 = acc7 % 4294967296u64;
+    let new_t7: u32 = new_t7_u64 as u32;
+    let k8: u64 = acc7 / 4294967296u64;
+    let acc8: u64 = (t8 as u64) + k8;
+    let new_t8_u64: u64 = acc8 % 4294967296u64;
+    let new_t8: u32 = new_t8_u64 as u32;
+    let k9: u64 = acc8 / 4294967296u64;
+    let acc9: u64 = (t9 as u64) + k9;
+    let new_t9_u64: u64 = acc9 % 4294967296u64;
+    let new_t9: u32 = new_t9_u64 as u32;
+    let k10: u64 = acc9 / 4294967296u64;
+    let acc10: u64 = (t10 as u64) + k10;
+    let new_t10_u64: u64 = acc10 % 4294967296u64;
+    let new_t10: u32 = new_t10_u64 as u32;
+    let k11: u64 = acc10 / 4294967296u64;
+    let acc11: u64 = (t11 as u64) + k11;
+    let new_t11_u64: u64 = acc11 % 4294967296u64;
+    let new_t11: u32 = new_t11_u64 as u32;
+    let k12: u64 = acc11 / 4294967296u64;
+    let acc12: u64 = (t12 as u64) + k12;
+    let new_t12_u64: u64 = acc12 % 4294967296u64;
+    let new_t12: u32 = new_t12_u64 as u32;
+    let k13: u64 = acc12 / 4294967296u64;
+    let acc13: u64 = (t13 as u64) + (m17_lo as u64) + k13;
+    let new_t13_u64: u64 = acc13 % 4294967296u64;
+    let new_t13: u32 = new_t13_u64 as u32;
+    let k14: u64 = acc13 / 4294967296u64;
+    let acc14: u64 = (t14 as u64) + (m17_hi as u64) + (mpow_lo as u64) + k14;
+    let new_t14_u64: u64 = acc14 % 4294967296u64;
+    let new_t14: u32 = new_t14_u64 as u32;
+    let k15: u64 = acc14 / 4294967296u64;
+    let acc15: u64 = (t15 as u64) + (mpow_hi as u64) + k15 + cap_in;
+    let new_t15_u64: u64 = acc15 % 4294967296u64;
+    let new_t15: u32 = new_t15_u64 as u32;
+    let cap_out: u64 = acc15 / 4294967296u64;
+    (new_t0,  new_t1,  new_t2,  new_t3,
+     new_t4,  new_t5,  new_t6,  new_t7,
+     new_t8,  new_t9,  new_t10, new_t11,
+     new_t12, new_t13, new_t14, new_t15, cap_out)
+}
+
+
+// ---- felt252_montgomery_reduce_v2: composed from the 8 verified iterations
+//
+// Math-correctness inherited per-iteration:
+//   - mont_iter_K guarantees result.K == 0u32 after iteration K (verified).
+// Together, the 8 chained calls produce a 16-limb state with limbs 0..7 all
+// zero -- the running state has been right-shifted by 256 bits (R^-1
+// multiplication) modulo P, modulo a final conditional subtract.
+//
+// Output: the high 8 limbs of the final state, conditionally reduced
+// against P using the same sub_with_borrow_diff / sub_with_borrow_out
+// helpers used by the original felt252_montgomery_reduce.
+
+fn felt252_montgomery_reduce_v2(
+    m0:  u32, m1:  u32, m2:  u32, m3:  u32,
+    m4:  u32, m5:  u32, m6:  u32, m7:  u32,
+    m8:  u32, m9:  u32, m10: u32, m11: u32,
+    m12: u32, m13: u32, m14: u32, m15: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let (s0_0,  s0_1,  s0_2,  s0_3,  s0_4,  s0_5,  s0_6,  s0_7,
+         s0_8,  s0_9,  s0_10, s0_11, s0_12, s0_13, s0_14, s0_15, cap0) =
+        mont_iter_0(m0,  m1,  m2,  m3,  m4,  m5,  m6,  m7,
+                    m8,  m9,  m10, m11, m12, m13, m14, m15, 0u64);
+    let (s1_0,  s1_1,  s1_2,  s1_3,  s1_4,  s1_5,  s1_6,  s1_7,
+         s1_8,  s1_9,  s1_10, s1_11, s1_12, s1_13, s1_14, s1_15, cap1) =
+        mont_iter_1(s0_0,  s0_1,  s0_2,  s0_3,  s0_4,  s0_5,  s0_6,  s0_7,
+                    s0_8,  s0_9,  s0_10, s0_11, s0_12, s0_13, s0_14, s0_15, cap0);
+    let (s2_0,  s2_1,  s2_2,  s2_3,  s2_4,  s2_5,  s2_6,  s2_7,
+         s2_8,  s2_9,  s2_10, s2_11, s2_12, s2_13, s2_14, s2_15, cap2) =
+        mont_iter_2(s1_0,  s1_1,  s1_2,  s1_3,  s1_4,  s1_5,  s1_6,  s1_7,
+                    s1_8,  s1_9,  s1_10, s1_11, s1_12, s1_13, s1_14, s1_15, cap1);
+    let (s3_0,  s3_1,  s3_2,  s3_3,  s3_4,  s3_5,  s3_6,  s3_7,
+         s3_8,  s3_9,  s3_10, s3_11, s3_12, s3_13, s3_14, s3_15, cap3) =
+        mont_iter_3(s2_0,  s2_1,  s2_2,  s2_3,  s2_4,  s2_5,  s2_6,  s2_7,
+                    s2_8,  s2_9,  s2_10, s2_11, s2_12, s2_13, s2_14, s2_15, cap2);
+    let (s4_0,  s4_1,  s4_2,  s4_3,  s4_4,  s4_5,  s4_6,  s4_7,
+         s4_8,  s4_9,  s4_10, s4_11, s4_12, s4_13, s4_14, s4_15, cap4) =
+        mont_iter_4(s3_0,  s3_1,  s3_2,  s3_3,  s3_4,  s3_5,  s3_6,  s3_7,
+                    s3_8,  s3_9,  s3_10, s3_11, s3_12, s3_13, s3_14, s3_15, cap3);
+    let (s5_0,  s5_1,  s5_2,  s5_3,  s5_4,  s5_5,  s5_6,  s5_7,
+         s5_8,  s5_9,  s5_10, s5_11, s5_12, s5_13, s5_14, s5_15, cap5) =
+        mont_iter_5(s4_0,  s4_1,  s4_2,  s4_3,  s4_4,  s4_5,  s4_6,  s4_7,
+                    s4_8,  s4_9,  s4_10, s4_11, s4_12, s4_13, s4_14, s4_15, cap4);
+    let (s6_0,  s6_1,  s6_2,  s6_3,  s6_4,  s6_5,  s6_6,  s6_7,
+         s6_8,  s6_9,  s6_10, s6_11, s6_12, s6_13, s6_14, s6_15, cap6) =
+        mont_iter_6(s5_0,  s5_1,  s5_2,  s5_3,  s5_4,  s5_5,  s5_6,  s5_7,
+                    s5_8,  s5_9,  s5_10, s5_11, s5_12, s5_13, s5_14, s5_15, cap5);
+    let (_s7_0, _s7_1, _s7_2, _s7_3, _s7_4, _s7_5, _s7_6, _s7_7,
+         s7_8,  s7_9,  s7_10, s7_11, s7_12, s7_13, s7_14, s7_15, cap7) =
+        mont_iter_7(s6_0,  s6_1,  s6_2,  s6_3,  s6_4,  s6_5,  s6_6,  s6_7,
+                    s6_8,  s6_9,  s6_10, s6_11, s6_12, s6_13, s6_14, s6_15, cap6);
+
+    // Conditional subtract of P, mirroring felt252_montgomery_reduce.
+    let r0d: u32 = sub_with_borrow_diff(s7_8,  STARK_P_LIMB0, 0u32);
+    let rb0: u32 = sub_with_borrow_out (s7_8,  STARK_P_LIMB0, 0u32);
+    let r1d: u32 = sub_with_borrow_diff(s7_9,  STARK_P_LIMB1, rb0);
+    let rb1: u32 = sub_with_borrow_out (s7_9,  STARK_P_LIMB1, rb0);
+    let r2d: u32 = sub_with_borrow_diff(s7_10, STARK_P_LIMB2, rb1);
+    let rb2: u32 = sub_with_borrow_out (s7_10, STARK_P_LIMB2, rb1);
+    let r3d: u32 = sub_with_borrow_diff(s7_11, STARK_P_LIMB3, rb2);
+    let rb3: u32 = sub_with_borrow_out (s7_11, STARK_P_LIMB3, rb2);
+    let r4d: u32 = sub_with_borrow_diff(s7_12, STARK_P_LIMB4, rb3);
+    let rb4: u32 = sub_with_borrow_out (s7_12, STARK_P_LIMB4, rb3);
+    let r5d: u32 = sub_with_borrow_diff(s7_13, STARK_P_LIMB5, rb4);
+    let rb5: u32 = sub_with_borrow_out (s7_13, STARK_P_LIMB5, rb4);
+    let r6d: u32 = sub_with_borrow_diff(s7_14, STARK_P_LIMB6, rb5);
+    let rb6: u32 = sub_with_borrow_out (s7_14, STARK_P_LIMB6, rb5);
+    let r7d: u32 = sub_with_borrow_diff(s7_15, STARK_P_LIMB7, rb6);
+    let rb7: u32 = sub_with_borrow_out (s7_15, STARK_P_LIMB7, rb6);
+
+    let use_diff: u32 = if cap7 >= 1u64 {
+        1u32
+    } else {
+        if rb7 == 0u32 { 1u32 } else { 0u32 }
+    };
+
+    let r0: u32 = if use_diff == 1u32 { r0d } else { s7_8  };
+    let r1: u32 = if use_diff == 1u32 { r1d } else { s7_9  };
+    let r2: u32 = if use_diff == 1u32 { r2d } else { s7_10 };
+    let r3: u32 = if use_diff == 1u32 { r3d } else { s7_11 };
+    let r4: u32 = if use_diff == 1u32 { r4d } else { s7_12 };
+    let r5: u32 = if use_diff == 1u32 { r5d } else { s7_13 };
+    let r6: u32 = if use_diff == 1u32 { r6d } else { s7_14 };
+    let r7: u32 = if use_diff == 1u32 { r7d } else { s7_15 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
 // ---- felt252_montgomery_reduce_spec: wrapper over the verified base ------
 //
 // Contract-correctness is verified on felt252_montgomery_reduce (above):
@@ -1908,7 +2662,7 @@ fn felt252_montgomery_reduce_spec(
     m12: u32, m13: u32, m14: u32, m15: u32
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32)
 {
-    felt252_montgomery_reduce(
+    felt252_montgomery_reduce_v2(
         m0,  m1,  m2,  m3,  m4,  m5,  m6,  m7,
         m8,  m9,  m10, m11, m12, m13, m14, m15)
 }
