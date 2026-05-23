@@ -29,14 +29,17 @@ const STARK_LIMB_TOP_MAX: u32 = 268435455u32;
 
 fn add_with_carry_sum(a: u32, b: u32, c_in: u32) -> u32
     requires c_in < 2u32
+    ensures result == (a + b + c_in) % 4294967296u64
 {
     let s64: u64 = (a as u64) + (b as u64) + (c_in as u64);
-    s64 as u32
+    let r: u64 = s64 % 4294967296u64;
+    r as u32
 }
 
 fn add_with_carry_out(a: u32, b: u32, c_in: u32) -> u32
     requires c_in < 2u32
     ensures result < 2u32
+    ensures result == (a + b + c_in) / 4294967296u64
 {
     let s64: u64 = (a as u64) + (b as u64) + (c_in as u64);
     if s64 >= 4294967296u64 { 1u32 } else { 0u32 }
@@ -46,17 +49,20 @@ fn add_with_carry_out(a: u32, b: u32, c_in: u32) -> u32
 
 fn sub_with_borrow_diff(a: u32, b: u32, b_in: u32) -> u32
     requires b_in < 2u32
+    ensures result == (a + 4294967296u64 - b - b_in) % 4294967296u64
 {
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
     let bi: u64 = b_in as u64;
     let s64: u64 = a64 + (4294967296u64 - b64 - bi);
-    s64 as u32
+    let r: u64 = s64 % 4294967296u64;
+    r as u32
 }
 
 fn sub_with_borrow_out(a: u32, b: u32, b_in: u32) -> u32
     requires b_in < 2u32
     ensures result < 2u32
+    ensures result == if (a + 4294967296u64 - b - b_in) < 4294967296u64 { 1u64 } else { 0u64 }
 {
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
@@ -2886,6 +2892,48 @@ fn ec_add(
 // proof categories per the proof summary header for exactly this case.
 
 // ---- felt252_add: 8-limb modular add over the Stark prime -----------------
+
+
+// ---- felt252_add_bigint_spec: 8-limb carry chain ↔ 257-bit integer sum ---
+//
+// Math-correctness via Int-mode Z3 encoding: the 9-tuple (s0..s7, c7) is
+// the bit-level representation of (a + b) as a 257-bit unsigned integer,
+// where a and b are 256-bit unsigned integers reconstructed from their 8
+// u32 limbs (LSB-first). This is the foundation of `felt252_add_mod_bigint_spec`
+// which lifts the same claim to (a + b) mod P.
+//
+// The proof relies on the equational ensures on add_with_carry_sum and
+// add_with_carry_out (lifted as part of this layer). Z3 in Int mode treats
+// u32/u64 as Int with range constraints; the modular arithmetic in the
+// helpers' postconditions provides the per-limb spec that the bigint claim
+// composes.
+
+fn felt252_add_bigint_spec(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32, u32)
+    ensures result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.8 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 == a0 + a1 * 4294967296u64 + a2 * 4294967296u64 * 4294967296u64 + a3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + a4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + a5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + a6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + a7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + b0 + b1 * 4294967296u64 + b2 * 4294967296u64 * 4294967296u64 + b3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + b4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + b5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + b6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + b7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64
+{
+    let s0: u32 = add_with_carry_sum(a0, b0, 0u32);
+    let c0: u32 = add_with_carry_out(a0, b0, 0u32);
+    let s1: u32 = add_with_carry_sum(a1, b1, c0);
+    let c1: u32 = add_with_carry_out(a1, b1, c0);
+    let s2: u32 = add_with_carry_sum(a2, b2, c1);
+    let c2: u32 = add_with_carry_out(a2, b2, c1);
+    let s3: u32 = add_with_carry_sum(a3, b3, c2);
+    let c3: u32 = add_with_carry_out(a3, b3, c2);
+    let s4: u32 = add_with_carry_sum(a4, b4, c3);
+    let c4: u32 = add_with_carry_out(a4, b4, c3);
+    let s5: u32 = add_with_carry_sum(a5, b5, c4);
+    let c5: u32 = add_with_carry_out(a5, b5, c4);
+    let s6: u32 = add_with_carry_sum(a6, b6, c5);
+    let c6: u32 = add_with_carry_out(a6, b6, c5);
+    let s7: u32 = add_with_carry_sum(a7, b7, c6);
+    let c7: u32 = add_with_carry_out(a7, b7, c6);
+    (s0, s1, s2, s3, s4, s5, s6, s7, c7)
+}
 
 fn felt252_add(
     a0: u32, a1: u32, a2: u32, a3: u32,
