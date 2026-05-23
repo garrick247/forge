@@ -124,6 +124,88 @@ fn stark_p_u256() -> u256
 }
 
 
+
+// ---- Verified-lemma foundation (math-correctness layer, 2026-05-23) ------
+// The functions above (felt252_add, _sub, _mul, _inv, etc.) verify CONTRACT
+// correctness only: every helper's `requires` is discharged by the
+// preceding helper's `ensures`, transitively. They do NOT verify the
+// MATHEMATICAL contract (`recon(result) == (recon(a)+recon(b)) % P`).
+//
+// The candidate-spec documentation block earlier in this file shows that
+// Forge's spec language CAN state the mathematical contract (u256 types,
+// `result.N` tuple field access, helper-fn calls in ensures), but Z3
+// cannot discharge an obligation that requires it to bridge "8 limb-wise
+// u32 ops" to "abstract u256 modular equivalence" without explicit
+// carry-tracking lemmas.
+//
+// The breakthrough below: projection-style ensures (`result == partial %
+// 2^32`, with carry chained via `/ 2^32`) keep every claim u64-sized.
+// Each per-limb projection is an independently u64-fitting fact that
+// Z3 discharges directly. No 2^256 value ever has to materialise in an
+// ensures clause -- which is fortunate because `as` casts are forbidden
+// there and 2^64 is the maximum literal Forge's lexer accepts.
+//
+// add_with_carry_full is the foundational lemma: a strengthened helper
+// returning (sum, carry) with the FULL arithmetic ensures
+//   `result.0 + result.1 * 2^32 == a + b + c_in`.
+// add_8limb_full chains 8 of these for an unreduced 8-limb integer add,
+// projection-spec'd per limb. Both verify automatically (20 obligations
+// discharged, no manual proofs).
+//
+// What's NOT yet verified at this layer:
+//   - The MODULAR reduction (conditional subtract of P) in felt252_add.
+//     Same projection technique should apply but needs case-split-friendly
+//     phrasing; the next research piece.
+//   - sub_with_borrow_full / sub_8limb_full mirror.
+//   - mul / inv / ec_double / ec_add layered specs.
+//
+// Each of those is its own swing. The methodology is now established.
+
+fn add_with_carry_full(a: u32, b: u32, c_in: u32) -> (u32, u32)
+    requires c_in < 2u32
+    ensures result.1 < 2u32
+    ensures result.0 + result.1 * 4294967296u64 == a + b + c_in
+{
+    let s64: u64 = (a as u64) + (b as u64) + (c_in as u64);
+    let s_lo: u32 = s64 as u32;
+    let c_out: u32 = if s64 >= 4294967296u64 { 1u32 } else { 0u32 };
+    (s_lo, c_out)
+}
+
+// add_8limb_full: 8-limb integer add. Returns (r0..r7, final_carry).
+// Each per-limb ensures is a projection: result.i == partial_i mod 2^32,
+// where partial_i is the cumulative limb sum (a_i + b_i + carry_in_i),
+// and carry_in_i is encoded as the div-by-2^32 of the prior partial.
+// All 9 ensures are u64-fitting and discharge automatically (verified
+// 2026-05-23 against the Stark prime context).
+fn add_8limb_full(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32, u32)
+    ensures result.0 == (a0 + b0) % 4294967296u64
+    ensures result.1 == (a1 + b1 + (a0 + b0) / 4294967296u64) % 4294967296u64
+    ensures result.2 == (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.3 == (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.4 == (a4 + b4 + (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.5 == (a5 + b5 + (a4 + b4 + (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.6 == (a6 + b6 + (a5 + b5 + (a4 + b4 + (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.7 == (a7 + b7 + (a6 + b6 + (a5 + b5 + (a4 + b4 + (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) % 4294967296u64
+    ensures result.8 == (a7 + b7 + (a6 + b6 + (a5 + b5 + (a4 + b4 + (a3 + b3 + (a2 + b2 + (a1 + b1 + (a0 + b0) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64) / 4294967296u64
+    ensures result.8 < 2u64
+{
+    let (s0, c0) = add_with_carry_full(a0, b0, 0u32);
+    let (s1, c1) = add_with_carry_full(a1, b1, c0);
+    let (s2, c2) = add_with_carry_full(a2, b2, c1);
+    let (s3, c3) = add_with_carry_full(a3, b3, c2);
+    let (s4, c4) = add_with_carry_full(a4, b4, c3);
+    let (s5, c5) = add_with_carry_full(a5, b5, c4);
+    let (s6, c6) = add_with_carry_full(a6, b6, c5);
+    let (s7, c7) = add_with_carry_full(a7, b7, c6);
+    (s0, s1, s2, s3, s4, s5, s6, s7, c7)
+}
+
 // ---- ec_double: Stark-curve point doubling -------------------------------
 // Inputs (x, y) and output (x_new, y_new) are all in Montgomery form.
 // alpha = 1 (canonical) is converted to Montgomery form via felt252_to_mont
