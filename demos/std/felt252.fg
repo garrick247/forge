@@ -1910,7 +1910,9 @@ fn mont_iter_0(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.0 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t0 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t0 as u64) * 4294967295u64;
@@ -2002,7 +2004,9 @@ fn mont_iter_1(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.1 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t1 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t1 as u64) * 4294967295u64;
@@ -2091,7 +2095,9 @@ fn mont_iter_2(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.2 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t2 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t2 as u64) * 4294967295u64;
@@ -2177,7 +2183,9 @@ fn mont_iter_3(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.3 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t3 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t3 as u64) * 4294967295u64;
@@ -2260,7 +2268,9 @@ fn mont_iter_4(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.4 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t4 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t4 as u64) * 4294967295u64;
@@ -2340,7 +2350,9 @@ fn mont_iter_5(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.5 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t5 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t5 as u64) * 4294967295u64;
@@ -2417,7 +2429,9 @@ fn mont_iter_6(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.6 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t6 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t6 as u64) * 4294967295u64;
@@ -2491,7 +2505,9 @@ fn mont_iter_7(
     cap_in: u64
 ) -> (u32, u32, u32, u32, u32, u32, u32, u32,
       u32, u32, u32, u32, u32, u32, u32, u32, u64)
+    requires cap_in <= 1u64
     ensures result.7 == 0u32
+    ensures result.16 <= 1u64
 {
     // m = t7 * N' mod 2^32, where N' = 2^32 - 1.
     let m_prod: u64 = (t7 as u64) * 4294967295u64;
