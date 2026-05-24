@@ -1,0 +1,64 @@
+From: garrick247 <garrick.wagner@gmail.com>
+Subject: [PATCH] typecheck: propagate body assume/assert facts to postcondition check
+
+stmt_final_env's SExpr branch had handlers for EAssign/EIf/ECall but no
+case for EAssume/EAssert, so its catch-all fell through to expr_final_env
+which returns env unchanged. The result: in-body `assume(pred)` and
+`assert(pred)` statements were silently dropped from the body_env used
+in the function's postcondition check.
+
+Meanwhile check_stmt's SExpr handler (line 2828) correctly calls
+env_add_fact env pred for both EAssume and EAssert, with the comment
+"add to context so downstream proofs can use it." The two code paths
+processed the same statement type with different semantics.
+
+Symptom: any function with `ensures P` where the body proves P via an
+explicit `assume(...)` (e.g. trusted Montgomery analysis bounds in
+proven-elsewhere chains) reports proof_failed even when the assume's
+predicate would imply P trivially. SMT dump shows the assume's
+predicate literally absent from the Z3 query.
+
+Reproduction:
+
+  fn test_assume(x: u32) -> u32
+      ensures result == 42u32
+  {
+      assume(x == 100u32) "test";
+      x + 0u32 - 58u32
+  }
+
+  // Pre-fix: proof_failed (need: ((x + 0) - 58) == 42, no assume in env)
+  // Post-fix: proof_ok, audit log: 1 assumption
+
+Fix: add explicit EAssume/EAssert cases to stmt_final_env's SExpr branch,
+mirroring check_stmt's existing behavior. The assume audit-log mechanism
+is preserved — every assumption is still tracked for review. Security
+model unchanged.
+
+Discovered while building math-correctness specs for the Stark prime in
+demos/std/felt252.fg. The v2 Montgomery reduce chain composition needed
+~12 audited assumes for Montgomery analysis bounds; pre-fix none of them
+reached Z3 and the postcondition couldn't be derived from the otherwise-
+proven case-split asserts.
+
+Tested: 27_induction.fg, 31_lemma_postcond.fg, 22_proof_terms.fg, and
+the full demos/std/felt252.fg (10,215 lines, 3030/3030 SMT obligations
+discharged with 12 audit assumptions) all verify post-fix.
+
+---
+ lib/types/typecheck.ml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/types/typecheck.ml b/lib/types/typecheck.ml
+index aaaaaaa..bbbbbbb 100644
+--- a/lib/types/typecheck.ml
++++ b/lib/types/typecheck.ml
+@@ -1327,6 +1327,8 @@
+       env_assign_var env name (expr_to_pred_simple rhs)
+   | SExpr e ->
+       (match e.expr_desc with
++       | EAssume (pred, _) -> env_add_fact env pred
++       | EAssert (pred, _) -> env_add_fact env pred
+        | EAssign (lhs, rhs) ->
+            (match lhs.expr_desc with
+             | EVar v ->
