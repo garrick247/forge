@@ -10839,6 +10839,85 @@ fn pedersen_demo(
 }
 
 
+// ---- pedersen_hash: full 256-bit Pedersen-style hash on Stark curve ----
+// Phase 5 of the Pedersen build. Composes the production-width primitives:
+//   result = P0_shift + scalar_mul_256(a, P1) + scalar_mul_256(b, P3)
+//
+// Each scalar_mul_256 chains 8 calls to pedersen_scalar_mul_32 (phase 4
+// chunked induction), totaling 256 rounds of double-and-add per scalar.
+// All 5 generator points are loaded via verified wrapper functions.
+// The 2 ec_adds tie everything together.
+//
+// Output is guaranteed on the Stark curve via curve(.) propagation through
+// all sub-calls. Caller would take result_x as the felt252 hash output.
+//
+// Note: simplified from standard Stark Pedersen — initial running point
+// for each scalar mul is the base itself (not identity), so the result
+// includes a 2^256 * base shift per scalar. This is byte-different from
+// canonical Stark Pedersen but a verified Pedersen-style hash with all
+// the structural primitives.
+
+fn pedersen_hash(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+    ensures ((((result.8 + result.9 * 4294967296u64 + result.10 * 4294967296u64 * 4294967296u64 + result.11 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.12 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.13 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.14 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.15 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) * (result.8 + result.9 * 4294967296u64 + result.10 * 4294967296u64 * 4294967296u64 + result.11 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.12 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.13 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.14 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.15 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64)) * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) % (STARK_P_LIMB0 + STARK_P_LIMB1 * 4294967296u64 + STARK_P_LIMB2 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) == ((result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) * (result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) * (result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) + (result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + (STARK_BETA_LIMB0 + STARK_BETA_LIMB1 * 4294967296u64 + STARK_BETA_LIMB2 * 4294967296u64 * 4294967296u64 + STARK_BETA_LIMB3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_BETA_LIMB4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_BETA_LIMB5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_BETA_LIMB6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_BETA_LIMB7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) % (STARK_P_LIMB0 + STARK_P_LIMB1 * 4294967296u64 + STARK_P_LIMB2 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64))
+{
+    // Load generator points (each carries curve(.) ensures).
+    let (p0x0, p0x1, p0x2, p0x3, p0x4, p0x5, p0x6, p0x7,
+         p0y0, p0y1, p0y2, p0y3, p0y4, p0y5, p0y6, p0y7) =
+        pedersen_p0_shift_point();
+    let (p1x0, p1x1, p1x2, p1x3, p1x4, p1x5, p1x6, p1x7,
+         p1y0, p1y1, p1y2, p1y3, p1y4, p1y5, p1y6, p1y7) =
+        pedersen_p1_point();
+    let (p3x0, p3x1, p3x2, p3x3, p3x4, p3x5, p3x6, p3x7,
+         p3y0, p3y1, p3y2, p3y3, p3y4, p3y5, p3y6, p3y7) =
+        pedersen_p3_point();
+
+    // 256-round scalar mul: a * P1 + 2^256 * P1 (since running init = P1).
+    let (qa_x0, qa_x1, qa_x2, qa_x3, qa_x4, qa_x5, qa_x6, qa_x7,
+         qa_y0, qa_y1, qa_y2, qa_y3, qa_y4, qa_y5, qa_y6, qa_y7) =
+        pedersen_scalar_mul_256(
+            a0, a1, a2, a3, a4, a5, a6, a7,
+            p1x0, p1x1, p1x2, p1x3, p1x4, p1x5, p1x6, p1x7,
+            p1y0, p1y1, p1y2, p1y3, p1y4, p1y5, p1y6, p1y7,
+            p1x0, p1x1, p1x2, p1x3, p1x4, p1x5, p1x6, p1x7,
+            p1y0, p1y1, p1y2, p1y3, p1y4, p1y5, p1y6, p1y7);
+
+    // 256-round scalar mul: b * P3 + 2^256 * P3.
+    let (qb_x0, qb_x1, qb_x2, qb_x3, qb_x4, qb_x5, qb_x6, qb_x7,
+         qb_y0, qb_y1, qb_y2, qb_y3, qb_y4, qb_y5, qb_y6, qb_y7) =
+        pedersen_scalar_mul_256(
+            b0, b1, b2, b3, b4, b5, b6, b7,
+            p3x0, p3x1, p3x2, p3x3, p3x4, p3x5, p3x6, p3x7,
+            p3y0, p3y1, p3y2, p3y3, p3y4, p3y5, p3y6, p3y7,
+            p3x0, p3x1, p3x2, p3x3, p3x4, p3x5, p3x6, p3x7,
+            p3y0, p3y1, p3y2, p3y3, p3y4, p3y5, p3y6, p3y7);
+
+    // Sum: P0 + qa + qb.
+    let (s1_x0, s1_x1, s1_x2, s1_x3, s1_x4, s1_x5, s1_x6, s1_x7,
+         s1_y0, s1_y1, s1_y2, s1_y3, s1_y4, s1_y5, s1_y6, s1_y7) =
+        ec_add(
+            p0x0, p0x1, p0x2, p0x3, p0x4, p0x5, p0x6, p0x7,
+            p0y0, p0y1, p0y2, p0y3, p0y4, p0y5, p0y6, p0y7,
+            qa_x0, qa_x1, qa_x2, qa_x3, qa_x4, qa_x5, qa_x6, qa_x7,
+            qa_y0, qa_y1, qa_y2, qa_y3, qa_y4, qa_y5, qa_y6, qa_y7);
+
+    let (r0, r1, r2, r3, r4, r5, r6, r7,
+         r8, r9, r10, r11, r12, r13, r14, r15) =
+        ec_add(
+            s1_x0, s1_x1, s1_x2, s1_x3, s1_x4, s1_x5, s1_x6, s1_x7,
+            s1_y0, s1_y1, s1_y2, s1_y3, s1_y4, s1_y5, s1_y6, s1_y7,
+            qb_x0, qb_x1, qb_x2, qb_x3, qb_x4, qb_x5, qb_x6, qb_x7,
+            qb_y0, qb_y1, qb_y2, qb_y3, qb_y4, qb_y5, qb_y6, qb_y7);
+
+    (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
+}
+
+
 // ---- TODO (not yet implemented) -------------------------------------------
 // A stronger spec on felt252_add/_sub/_mul ("ensures result == (a op b)
 // reconstruct-mod-P") requires explicit carry-tracking lemmas — see e.g.
