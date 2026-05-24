@@ -51,6 +51,7 @@ to verified C99.
 | `ec_add` | `curve(x1, y1) ∧ curve(x2, y2) ⇒ curve(x3, y3)` |
 | `pedersen_step` | `curve(r) ∧ curve(b) ∧ bit<2 ⇒ curve(if bit then ec_add(ec_double(r), b) else ec_double(r))` |
 | `pedersen_scalar_mul_32` | 32-round unrolled double-and-add: chains 32 pedersen_step calls, MSB-first |
+| `pedersen_scalar_mul_256` | **Full-width 256-round** scalar mul via chunked inductive wrapper: chains 8 calls to the verified 32-round helper |
 | `pedersen_p0_shift_point` … `pedersen_p4_point` | Stark Pedersen generator constants, each wrapped with `ensures curve(.)` |
 | `pedersen_demo(a, b)` | `P0_SHIFT + a·P1 + b·P3` (32-bit sub-scalars), `ensures curve(result)` |
 
@@ -59,15 +60,15 @@ Stark curve equation in Mont-form integer values.
 
 The Pedersen layer is built bottom-up:
 - `pedersen_step` is the atomic double-and-add round
-- `pedersen_scalar_mul_32` chains 32 of them; the **full 248-round
-  version timed out** at Z3=3000s — composing 248 chained
-  `curve(running)` preconditions overwhelms auto-discharge. The path
-  forward for full width is chunked inductive proofs (verify
-  `pedersen_chain_32` once, chain 8 of them) or Forge guided-proof
-  walking.
+- `pedersen_scalar_mul_32` chains 32 of them; the direct 248-round
+  version timed out at Z3=3000s in phase 2.
+- **`pedersen_scalar_mul_256` clears the timeout via chunked induction**:
+  8 calls to the verified 32-round helper, each call-site needs only
+  a cheap local precondition check (curve(running) from prior call's
+  ensures) instead of asking Z3 to walk 248 chained substitutions.
+  Verifies in 1888s — 250s overhead vs phase 3 baseline.
 - `pedersen_demo(a, b)` ties the construction together with 5 generator
-  constants, 2 scalar muls, 2 ec_adds. The 32-bit sub-scalars stand
-  in for the production 248+4-bit split.
+  constants, 2 scalar muls, 2 ec_adds.
 
 Stark Pedersen generator points (Mont form, 8 u32 limbs each LSB-first):
 - `PEDERSEN_P0_SHIFT_*` — shift point (canonical: 0x49ee3eba8c1600700ee1b87eb599f16716b0b1022947733551fde4050ca6804)
@@ -92,9 +93,9 @@ Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
   in u32/u64 arithmetic (modulo the verified modular operations)
 - Function preconditions discharged at every callsite
 
-## Audit trail (22 trusted assumptions)
+## Audit trail (21 trusted assumptions)
 
-The library declares 22 `assume()` calls that aren't proven within the
+The library declares 21 `assume()` calls that aren't proven within the
 file. Each is a standard, well-known analytic fact.
 
 **`felt252_montgomery_reduce_v2` — 12 Montgomery-analysis assumes:**
@@ -139,13 +140,12 @@ file. Each is a standard, well-known analytic fact.
   so the result is on the curve regardless. Z3 cannot derive curve(.) of
   a per-limb if-selected tuple without an explicit case-split.
 
-**`pedersen_scalar_mul_32` — 1 chain propagation audit-assume:**
+**`pedersen_scalar_mul_32` / `_256` — no new audit-assumes:**
 
-- 32 chained pedersen_step calls. Each call's curve(result) ensures
-  drives the next call's curve(running) precondition. The chain
-  propagation is mechanical but the cumulative curve predicate over 32
-  rounds is large; the audit-assume covers the final result's curve
-  condition.
+- Both chain compositions verified entirely via the already-audited
+  `pedersen_step` (one shared assume covers all chained call-sites).
+  The 256-round version uses chunked induction (8 calls to the 32-round
+  helper) to keep each call-site's precondition discharge local.
 
 **5 generator-point curve audit-assumes:**
 
@@ -154,7 +154,7 @@ file. Each is a standard, well-known analytic fact.
   by construction. The assume captures this published fact for use in
   the verified scalar-mul and ec_add chains.
 
-All 22 are tagged in the assume audit log. Run `forge audit <file>` to
+All 21 are tagged in the assume audit log. Run `forge audit <file>` to
 inspect them.
 
 ## What's NOT verified (research arcs)
@@ -175,7 +175,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3081 / 3081 SMT, 22 audit assumptions, ~1640s
+# Expected: proof_ok, 3211 / 3211 SMT, 21 audit assumptions, ~1890s
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -224,6 +224,7 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `a0fa746` | `pedersen_step` atomic double-and-add round with curve preservation |
 | `8aaf100` | `pedersen_scalar_mul_32` 32-round unrolled scalar mul |
 | `a71c80c` | Pedersen generator constants + `pedersen_demo` (full hash composition) |
+| `0078bb9` | `pedersen_scalar_mul_256` full-width chunked inductive scalar mul (clears phase-2 timeout) |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
