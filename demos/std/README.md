@@ -41,6 +41,7 @@ to verified C99.
 | `felt252_sqr` | `(result · R) % P == (a · a) % P` |
 | `felt252_to_mont` | `(result · R) % P == (a · R²) % P` |
 | `felt252_from_mont` | `(result · R) % P == a % P` |
+| `felt252_inv` | `(result · a) % P == R² % P` (modular inverse in Mont form) |
 
 Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
 
@@ -59,10 +60,12 @@ Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
   in u32/u64 arithmetic (modulo the verified modular operations)
 - Function preconditions discharged at every callsite
 
-## Audit trail (12 trusted assumptions)
+## Audit trail (13 trusted assumptions)
 
-`felt252_montgomery_reduce_v2` declares 12 `assume()` calls that aren't
-proven within the file. Each is a standard Montgomery analysis fact:
+The library declares 13 `assume()` calls that aren't proven within the
+file. Each is a standard, well-known analytic fact.
+
+**`felt252_montgomery_reduce_v2` — 12 Montgomery-analysis assumes:**
 
 - 8× per-iteration limb-zero invariants: `s0..s7 == 0` after 8 iters
   (each follows from `mont_iter_K_split`'s ensures + passthrough
@@ -75,18 +78,29 @@ proven within the file. Each is a standard Montgomery analysis fact:
 - 1× modular bridge form: `(R·state_9) % P == input % P` (algebraically
   follows from the proven `R·state_9 == input + witness·P` bridge)
 
-All 12 are tagged in the assume audit log. Run `forge audit <file>` to
+**`felt252_inv` — 1 Fermat audit-assume:**
+
+- `(result · a) % P == R² % P` — Fermat's little theorem applied to the
+  449-op square-and-multiply chain implementing `a^(P-2)` for the Stark
+  prime. The mechanical chain is canonical (generated from the bit
+  pattern of P-2); the inverse identity follows because
+  `a^(P-2) · a == a^(P-1) ≡ 1 (mod P)` for nonzero `a`. Z3 cannot derive
+  this without an exponentiation theory or uninterpreted-function
+  support in Forge predicates — a bare-ensures probe returns
+  proof_failed in 283s.
+
+All 13 are tagged in the assume audit log. Run `forge audit <file>` to
 inspect them.
 
 ## What's NOT verified (research arcs)
 
 | Item | Why deferred |
 |---|---|
-| `felt252_inv` mod-P (`(result·a) % P == R % P`) | Fermat's chain: 251 sqr + 193 mul = 444 ops; composing 444 mod-P facts exceeds Z3's single-query envelope. Needs per-step inductive structure or power-tracking lemma. |
-| `ec_double` / `ec_add` curve-equation preservation | Depends on `felt252_inv` mod-P + restructuring v2's case-split asserts to be robust to added context. |
+| `ec_double` / `ec_add` curve-equation preservation | `y² ≡ x³ + αx + β (mod P)` preserved through point ops. Requires composing add/sub/mul/inv mod-P facts to derive the curve equation invariance — the slope formula λ = (3x² + α) / (2y) and follow-on x/y arithmetic chain to a large composite predicate. Inv mod-P is now available as a building block. |
 | Canonical-form propagation (`result < P` ensures on mul/sqr/inv) | The current case-2 assert in v2 is fragile to added facts; needs restructuring before canonical-form can chain through. |
 | `felt252_reduce_512` (Solinas folding) | Unimplemented function — alternative to Montgomery for Stark prime. |
 | 12-assume audit reduction via inductive proofs | Would prove each Montgomery bound from a P·R input bound. Substantial inductive work. |
+| Fermat audit-assume → mechanical proof | Currently the 1-assume Fermat trust gap covers the 449-op inv chain. Eliminating it requires Forge support for uninterpreted functions (so `pow(a, k)` can be axiomatized) and an inductive Fermat lemma. Substantial language-design work. |
 
 ## Build / use
 
@@ -96,7 +110,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3030 / 3030 SMT, 12 audit assumptions
+# Expected: proof_ok, 3035 / 3035 SMT, 13 audit assumptions
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -140,6 +154,7 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `fa53567` | **`felt252_mul` mod-P composition (keystone)** |
 | `c7b92e7` | `felt252_sqr` mod-P |
 | `b2772d3` | `felt252_to_mont` / `felt252_from_mont` mod-P |
+| `eaea660` | `felt252_inv` mod-P via Fermat audit-assume |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
