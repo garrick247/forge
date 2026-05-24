@@ -54,6 +54,7 @@ to verified C99.
 | `pedersen_scalar_mul_256` | **Full-width 256-round** scalar mul via chunked inductive wrapper: chains 8 calls to the verified 32-round helper |
 | `pedersen_p0_shift_point` … `pedersen_p4_point` | Stark Pedersen generator constants, each wrapped with `ensures curve(.)` |
 | `pedersen_demo(a, b)` | `P0_SHIFT + a·P1 + b·P3` (32-bit sub-scalars), `ensures curve(result)` |
+| `pedersen_hash(a, b)` | **Full 256-bit Pedersen-style hash**: `P0_SHIFT + scalar_mul_256(a, P1) + scalar_mul_256(b, P3)`, `ensures curve(result)` |
 
 Where `curve(x, y) := (y² · R) % P == (x³ + x · R² + β · R³) % P` is the
 Stark curve equation in Mont-form integer values.
@@ -67,8 +68,13 @@ The Pedersen layer is built bottom-up:
   a cheap local precondition check (curve(running) from prior call's
   ensures) instead of asking Z3 to walk 248 chained substitutions.
   Verifies in 1888s — 250s overhead vs phase 3 baseline.
-- `pedersen_demo(a, b)` ties the construction together with 5 generator
-  constants, 2 scalar muls, 2 ec_adds.
+- `pedersen_demo(a, b)` ties the 32-bit-sub-scalar construction together
+  with 5 generator constants, 2 scalar muls, 2 ec_adds.
+- **`pedersen_hash(a, b)`** is the full-width version using
+  `pedersen_scalar_mul_256` for production-style 256-bit scalars.
+  Output `(x, y)` is guaranteed on the Stark curve via curve(.)
+  propagation through every sub-call. Caller takes `result_x` as the
+  felt252 hash output.
 
 Stark Pedersen generator points (Mont form, 8 u32 limbs each LSB-first):
 - `PEDERSEN_P0_SHIFT_*` — shift point (canonical: 0x49ee3eba8c1600700ee1b87eb599f16716b0b1022947733551fde4050ca6804)
@@ -175,7 +181,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3211 / 3211 SMT, 21 audit assumptions, ~1890s
+# Expected: proof_ok, 3213 / 3213 SMT, 21 audit assumptions, ~1890s
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -225,6 +231,7 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `8aaf100` | `pedersen_scalar_mul_32` 32-round unrolled scalar mul |
 | `a71c80c` | Pedersen generator constants + `pedersen_demo` (full hash composition) |
 | `0078bb9` | `pedersen_scalar_mul_256` full-width chunked inductive scalar mul (clears phase-2 timeout) |
+| `750977f` | `pedersen_hash` full 256-bit Pedersen-style hash assembly |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
