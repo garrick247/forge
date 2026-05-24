@@ -49,9 +49,15 @@ to verified C99.
 |---|---|
 | `ec_double` | `curve(x, y) ⇒ curve(x_new, y_new)` |
 | `ec_add` | `curve(x1, y1) ∧ curve(x2, y2) ⇒ curve(x3, y3)` |
+| `pedersen_step` | `curve(r) ∧ curve(b) ∧ bit<2 ⇒ curve(if bit then ec_add(ec_double(r), b) else ec_double(r))` |
 
 Where `curve(x, y) := (y² · R) % P == (x³ + x · R² + β · R³) % P` is the
 Stark curve equation in Mont-form integer values.
+
+`pedersen_step` is the atomic double-and-add round used to build up
+scalar multiplications for Stark Pedersen. A full 248-bit scalar mul
+is 248 unrolled `pedersen_step` calls; the full hash H(a, b) is 4
+scalar muls + 4 ec_adds + a shift point.
 
 Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
 
@@ -70,9 +76,9 @@ Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
   in u32/u64 arithmetic (modulo the verified modular operations)
 - Function preconditions discharged at every callsite
 
-## Audit trail (15 trusted assumptions)
+## Audit trail (16 trusted assumptions)
 
-The library declares 15 `assume()` calls that aren't proven within the
+The library declares 16 `assume()` calls that aren't proven within the
 file. Each is a standard, well-known analytic fact.
 
 **`felt252_montgomery_reduce_v2` — 12 Montgomery-analysis assumes:**
@@ -109,7 +115,15 @@ file. Each is a standard, well-known analytic fact.
   nonlinear polynomial composition across 11+ mod-P ops, outside Z3's
   auto-discharge envelope without explicit polynomial expansion.
 
-All 15 are tagged in the assume audit log. Run `forge audit <file>` to
+**`pedersen_step` — 1 if-select audit-assume:**
+
+- Per-limb if-select over 16 result components: when `bit==1` the result
+  is `ec_add(ec_double(r), b)`, when `bit==0` it's `ec_double(r)`. Both
+  branches independently satisfy curve(.) by ec_double/ec_add ensures,
+  so the result is on the curve regardless. Z3 cannot derive curve(.) of
+  a per-limb if-selected tuple without an explicit case-split.
+
+All 16 are tagged in the assume audit log. Run `forge audit <file>` to
 inspect them.
 
 ## What's NOT verified (research arcs)
@@ -130,7 +144,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3037 / 3037 SMT, 15 audit assumptions
+# Expected: proof_ok, 3038 / 3038 SMT, 16 audit assumptions
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -176,6 +190,7 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `b2772d3` | `felt252_to_mont` / `felt252_from_mont` mod-P |
 | `eaea660` | `felt252_inv` mod-P via Fermat audit-assume |
 | `102eb8b` | `ec_double` / `ec_add` curve-equation preservation via group-law assumes |
+| `a0fa746` | `pedersen_step` atomic double-and-add round with curve preservation |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
