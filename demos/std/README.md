@@ -43,6 +43,16 @@ to verified C99.
 | `felt252_from_mont` | `(result · R) % P == a % P` |
 | `felt252_inv` | `(result · a) % P == R² % P` (modular inverse in Mont form) |
 
+### Elliptic curve operations (Stark curve, α=1, β = 3141592653589793238462643383279502884197169399375105820974944592307816406665)
+
+| Function | Verified property |
+|---|---|
+| `ec_double` | `curve(x, y) ⇒ curve(x_new, y_new)` |
+| `ec_add` | `curve(x1, y1) ∧ curve(x2, y2) ⇒ curve(x3, y3)` |
+
+Where `curve(x, y) := (y² · R) % P == (x³ + x · R² + β · R³) % P` is the
+Stark curve equation in Mont-form integer values.
+
 Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
 
 ### Montgomery reduce internals (per-iteration)
@@ -60,9 +70,9 @@ Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
   in u32/u64 arithmetic (modulo the verified modular operations)
 - Function preconditions discharged at every callsite
 
-## Audit trail (13 trusted assumptions)
+## Audit trail (15 trusted assumptions)
 
-The library declares 13 `assume()` calls that aren't proven within the
+The library declares 15 `assume()` calls that aren't proven within the
 file. Each is a standard, well-known analytic fact.
 
 **`felt252_montgomery_reduce_v2` — 12 Montgomery-analysis assumes:**
@@ -89,18 +99,28 @@ file. Each is a standard, well-known analytic fact.
   support in Forge predicates — a bare-ensures probe returns
   proof_failed in 283s.
 
-All 13 are tagged in the assume audit log. Run `forge audit <file>` to
+**`ec_double` / `ec_add` — 2 EC group-law audit-assumes:**
+
+- Curve-equation preservation: the slope formulas
+  λ = (3x² + α)/(2y) (double) and λ = (y2-y1)/(x2-x1) (add),
+  combined with x_new = λ² - 2x or λ² - x1 - x2 and y_new = λ(x - x_new) - y,
+  preserve the curve equation `y² = x³ + αx + β (mod P)`. Algebraically
+  derivable (this is *why* elliptic curve groups exist) but requires
+  nonlinear polynomial composition across 11+ mod-P ops, outside Z3's
+  auto-discharge envelope without explicit polynomial expansion.
+
+All 15 are tagged in the assume audit log. Run `forge audit <file>` to
 inspect them.
 
 ## What's NOT verified (research arcs)
 
 | Item | Why deferred |
 |---|---|
-| `ec_double` / `ec_add` curve-equation preservation | `y² ≡ x³ + αx + β (mod P)` preserved through point ops. Requires composing add/sub/mul/inv mod-P facts to derive the curve equation invariance — the slope formula λ = (3x² + α) / (2y) and follow-on x/y arithmetic chain to a large composite predicate. Inv mod-P is now available as a building block. |
 | Canonical-form propagation (`result < P` ensures on mul/sqr/inv) | The current case-2 assert in v2 is fragile to added facts; needs restructuring before canonical-form can chain through. |
 | `felt252_reduce_512` (Solinas folding) | Unimplemented function — alternative to Montgomery for Stark prime. |
 | 12-assume audit reduction via inductive proofs | Would prove each Montgomery bound from a P·R input bound. Substantial inductive work. |
 | Fermat audit-assume → mechanical proof | Currently the 1-assume Fermat trust gap covers the 449-op inv chain. Eliminating it requires Forge support for uninterpreted functions (so `pow(a, k)` can be axiomatized) and an inductive Fermat lemma. Substantial language-design work. |
+| EC group-law audit-assumes → mechanical proof | Currently 2 audit-assumes cover curve preservation through ec_double / ec_add. Direct discharge requires explicit polynomial expansion of the slope-substituted curve equation — a multi-thousand-term composition that Forge's predicate language can express but Z3 will not naively chase. A semi-mechanical approach via guided proof terms is possible. |
 
 ## Build / use
 
@@ -110,7 +130,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3035 / 3035 SMT, 13 audit assumptions
+# Expected: proof_ok, 3037 / 3037 SMT, 15 audit assumptions
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -155,6 +175,7 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `c7b92e7` | `felt252_sqr` mod-P |
 | `b2772d3` | `felt252_to_mont` / `felt252_from_mont` mod-P |
 | `eaea660` | `felt252_inv` mod-P via Fermat audit-assume |
+| `102eb8b` | `ec_double` / `ec_add` curve-equation preservation via group-law assumes |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
