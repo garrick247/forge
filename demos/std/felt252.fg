@@ -8139,6 +8139,61 @@ fn mont_iter_7_split(
     (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r_cap)
 }
 
+// ---- felt252_mont_cond_sub: bounded conditional subtract of P
+//
+// For 9-element input (8 limbs + cap) with the Montgomery analysis bound
+// state_9 < 2*P, the conditional subtract preserves modular value:
+//   result_val == state_9_input OR result_val + P == state_9_input
+//
+// This is one of two pieces needed for felt252_mul mod-P. The other is
+// the chained-iteration mod-P preservation through felt252_montgomery_reduce_v2
+// (deferred research arc — Z3 can't auto-compose all 8 mont_iter_K_split
+// aggregate invariants into a single mod-P claim, even with structural
+// stepwise helpers or explicit witness threading).
+//
+// Standalone verification: 272s wall, proof_ok.
+
+fn felt252_mont_cond_sub(
+    t0: u32, t1: u32, t2: u32, t3: u32,
+    t4: u32, t5: u32, t6: u32, t7: u32,
+    cap: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+    requires cap <= 1u64
+    requires (t0 + t1 * 4294967296u64 + t2 * 4294967296u64 * 4294967296u64 + t3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + cap * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) < (2u64 * (STARK_P_LIMB0 + STARK_P_LIMB1 * 4294967296u64 + STARK_P_LIMB2 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64))
+    ensures ((result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) == (t0 + t1 * 4294967296u64 + t2 * 4294967296u64 * 4294967296u64 + t3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + cap * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64))
+         || ((result.0 + result.1 * 4294967296u64 + result.2 * 4294967296u64 * 4294967296u64 + result.3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + result.7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) + (STARK_P_LIMB0 + STARK_P_LIMB1 * 4294967296u64 + STARK_P_LIMB2 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + STARK_P_LIMB7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64) == (t0 + t1 * 4294967296u64 + t2 * 4294967296u64 * 4294967296u64 + t3 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t4 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t5 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t6 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + t7 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 + cap * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64 * 4294967296u64))
+{
+    let r0d: u32 = sub_with_borrow_diff(t0, STARK_P_LIMB0, 0u32);
+    let rb0: u32 = sub_with_borrow_out (t0, STARK_P_LIMB0, 0u32);
+    let r1d: u32 = sub_with_borrow_diff(t1, STARK_P_LIMB1, rb0);
+    let rb1: u32 = sub_with_borrow_out (t1, STARK_P_LIMB1, rb0);
+    let r2d: u32 = sub_with_borrow_diff(t2, STARK_P_LIMB2, rb1);
+    let rb2: u32 = sub_with_borrow_out (t2, STARK_P_LIMB2, rb1);
+    let r3d: u32 = sub_with_borrow_diff(t3, STARK_P_LIMB3, rb2);
+    let rb3: u32 = sub_with_borrow_out (t3, STARK_P_LIMB3, rb2);
+    let r4d: u32 = sub_with_borrow_diff(t4, STARK_P_LIMB4, rb3);
+    let rb4: u32 = sub_with_borrow_out (t4, STARK_P_LIMB4, rb3);
+    let r5d: u32 = sub_with_borrow_diff(t5, STARK_P_LIMB5, rb4);
+    let rb5: u32 = sub_with_borrow_out (t5, STARK_P_LIMB5, rb4);
+    let r6d: u32 = sub_with_borrow_diff(t6, STARK_P_LIMB6, rb5);
+    let rb6: u32 = sub_with_borrow_out (t6, STARK_P_LIMB6, rb5);
+    let r7d: u32 = sub_with_borrow_diff(t7, STARK_P_LIMB7, rb6);
+    let rb7: u32 = sub_with_borrow_out (t7, STARK_P_LIMB7, rb6);
+
+    let use_diff: u32 = if cap >= 1u64 { 1u32 } else { if rb7 == 0u32 { 1u32 } else { 0u32 } };
+
+    let r0: u32 = if use_diff == 1u32 { r0d } else { t0 };
+    let r1: u32 = if use_diff == 1u32 { r1d } else { t1 };
+    let r2: u32 = if use_diff == 1u32 { r2d } else { t2 };
+    let r3: u32 = if use_diff == 1u32 { r3d } else { t3 };
+    let r4: u32 = if use_diff == 1u32 { r4d } else { t4 };
+    let r5: u32 = if use_diff == 1u32 { r5d } else { t5 };
+    let r6: u32 = if use_diff == 1u32 { r6d } else { t6 };
+    let r7: u32 = if use_diff == 1u32 { r7d } else { t7 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
 // ---- felt252_montgomery_reduce_v2: composed from the 8 verified iterations
 //
 // Math-correctness inherited per-iteration:
