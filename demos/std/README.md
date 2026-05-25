@@ -61,31 +61,42 @@ to verified C99.
 | `pedersen_canonical(a, b)` | Canonical 2-scalar hash using `pedersen_scalar_mul_canonical` (no shift offset in output) |
 | `pedersen_full(a, b)` | **Byte-equivalent Stark Pedersen**: `P0 + a_low·P1 + a_high·P2 + b_low·P3 + b_high·P4` with 248+4-bit input split |
 
-### Poseidon hash (Stark 3-element state, Phase 1)
+### Poseidon hash (Stark 3-element state)
 
 | Function | Verified property |
 |---|---|
 | `poseidon_full_round(state, rc)` | One full round: add round constants → cube_all → MDS mul |
 | `poseidon_partial_round(state, rc)` | One partial round: add round constants → cube_first → MDS mul |
+| `poseidon_chain_demo(state)` | 2 full + 2 partial round demo (placeholder RCs) |
+| `hades_permutation_full(state)` | **Full 91-round canonical Stark Poseidon permutation** (4 full + 83 partial + 4 full), 273 canonical RC constants generated from sha256("Hades" + idx) per Cairo's `poseidon_utils.py` |
 
 MDS matrix `M = [[3, 1, 1], [1, -1, 1], [1, 1, -2]]` stored as Mont-form
-`POSEIDON_MDS_{ij}_k` constants. Both round functions compose verified
-`felt252_add` / `felt252_sqr` / `felt252_mul` — no new audit-assumes.
-Phase 2 would chain 8 full + 83 partial rounds into the full Stark
-Poseidon hash with declared round constants.
+`POSEIDON_MDS_{ij}_k` constants. Round constants are `HADES_RC_RR_c_k`
+(2-digit round 00..90, column 0..2, limb 0..7). All composition is over
+verified `felt252_add` / `felt252_sqr` / `felt252_mul` — no new
+audit-assumes.
 
-### ECDSA foundations (Stark curve, Phase 1)
+To compute Stark Poseidon hash of `(a, b)`: initialize state = `(a, b, 0)`
+for fixed-input mode (or `(a, b, 1)` for variable-input mode), run
+`hades_permutation_full`, output `state[0]`.
+
+### ECDSA foundations (Stark curve)
 
 | Constant / Function | Description |
 |---|---|
 | `STARK_N_LIMB0..7` | Curve order `n = 3618502788666131213697322783095070105526743751716087489154079457884512865583` (canonical form, 8 u32 limbs) |
 | `STARK_G_X*` / `STARK_G_Y*` | Canonical Stark curve generator G in Mont form |
 | `stark_generator_point()` | Wrapper returning G with `ensures curve(.)` (audit-assume) |
+| `felt_n_mont_cond_sub(t, cap)` | Mirror of `felt252_mont_cond_sub` with `n` as modulus |
+| `felt_n_add(a, b)` | 8-limb modular add over `n` (mirror of `felt252_add`) |
+| `felt_n_sub(a, b)` | 8-limb modular sub over `n` (mirror of `felt252_sub`) |
 
-Phase 2 would build mod-n arithmetic (`felt_n_add`/`_sub`/`_mul`/`_inv`)
-as a parallel layer to felt252's mod-P stack. Phase 3 would assemble
-`ecdsa_verify` using mod-n inversion + `pedersen_scalar_mul_canonical`
-for `[u1]G + [u2]Q`.
+**Open work** for full ECDSA verification (phases 2.x + 3):
+- `felt_n_mul_raw` (schoolbook 8×8 mod-n, ~600 lines mirroring mod-P version)
+- `felt_n_montgomery_reduce_v2` (the biggest chunk — mirror of the proven mod-P Mont reduce chain)
+- `felt_n_mul` / `felt_n_sqr` (compositions)
+- `felt_n_inv` (Fermat over n: 251 sqr + ~190 mul chain)
+- `ecdsa_verify(msg_hash, pubkey, r, s)` using mod-n inv + `pedersen_scalar_mul_canonical` for `[u1]G + [u2]Q`
 
 Where `curve(x, y) := (y² · R) % P == (x³ + x · R² + β · R³) % P` is the
 Stark curve equation in Mont-form integer values.
@@ -235,7 +246,9 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3254 / 3254 SMT, 24 audit assumptions, ~2000s
+# Expected: proof_ok, ~3300 SMT, 24 audit assumptions, ~2000s
+# File at ~15,300 lines covering felt252 mod-P + EC + Pedersen + Poseidon
+# + ECDSA foundations.
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -291,6 +304,9 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `0edd567` | `pedersen_full` byte-equivalent Stark Pedersen with 248+4-bit split |
 | `7c655f1` | Poseidon Phase 1: MDS matrix constants + `poseidon_full_round` + `poseidon_partial_round` |
 | `18d423c` | ECDSA Phase 1: Stark curve order `n` + canonical generator `G` + wrapper |
+| `6841a2b` | Poseidon Phase 2: chained round demo (2 full + 2 partial) |
+| `5595d26` | **Poseidon Phase 3: full 91-round canonical Hades permutation** |
+| `d4c2972` | ECDSA Phase 2: mod-n arithmetic foundations (cond_sub_n + add_n + sub_n) |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
