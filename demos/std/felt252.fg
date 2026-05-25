@@ -11635,6 +11635,188 @@ fn stark_generator_point() -> (u32, u32, u32, u32, u32, u32, u32, u32,
     (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
 }
 
+// ---- Poseidon Phase 2: chained round demo with placeholder RCs -----
+// 4 round-constant sets in Mont form. Real Stark Poseidon uses
+// 91 round-constant sets (4 full + 83 partial + 4 full = 91 rounds)
+// from Starknets canonical constants table; these are placeholders
+// for the composition demo only.
+
+// RC[0][0] canonical = 1
+const POSEIDON_RC_00_0: u32 = 4294967265u32;
+const POSEIDON_RC_00_1: u32 = 4294967295u32;
+const POSEIDON_RC_00_2: u32 = 4294967295u32;
+const POSEIDON_RC_00_3: u32 = 4294967295u32;
+const POSEIDON_RC_00_4: u32 = 4294967295u32;
+const POSEIDON_RC_00_5: u32 = 4294967295u32;
+const POSEIDON_RC_00_6: u32 = 4294966768u32;
+const POSEIDON_RC_00_7: u32 = 134217727u32;
+
+// RC[0][1] canonical = 2
+const POSEIDON_RC_01_0: u32 = 4294967233u32;
+const POSEIDON_RC_01_1: u32 = 4294967295u32;
+const POSEIDON_RC_01_2: u32 = 4294967295u32;
+const POSEIDON_RC_01_3: u32 = 4294967295u32;
+const POSEIDON_RC_01_4: u32 = 4294967295u32;
+const POSEIDON_RC_01_5: u32 = 4294967295u32;
+const POSEIDON_RC_01_6: u32 = 4294966224u32;
+const POSEIDON_RC_01_7: u32 = 134217727u32;
+
+// RC[0][2] canonical = 3
+const POSEIDON_RC_02_0: u32 = 4294967201u32;
+const POSEIDON_RC_02_1: u32 = 4294967295u32;
+const POSEIDON_RC_02_2: u32 = 4294967295u32;
+const POSEIDON_RC_02_3: u32 = 4294967295u32;
+const POSEIDON_RC_02_4: u32 = 4294967295u32;
+const POSEIDON_RC_02_5: u32 = 4294967295u32;
+const POSEIDON_RC_02_6: u32 = 4294965680u32;
+const POSEIDON_RC_02_7: u32 = 134217727u32;
+
+// RC[1][0] canonical = 5
+const POSEIDON_RC_10_0: u32 = 4294967137u32;
+const POSEIDON_RC_10_1: u32 = 4294967295u32;
+const POSEIDON_RC_10_2: u32 = 4294967295u32;
+const POSEIDON_RC_10_3: u32 = 4294967295u32;
+const POSEIDON_RC_10_4: u32 = 4294967295u32;
+const POSEIDON_RC_10_5: u32 = 4294967295u32;
+const POSEIDON_RC_10_6: u32 = 4294964592u32;
+const POSEIDON_RC_10_7: u32 = 134217727u32;
+
+// RC[1][1] canonical = 7
+const POSEIDON_RC_11_0: u32 = 4294967073u32;
+const POSEIDON_RC_11_1: u32 = 4294967295u32;
+const POSEIDON_RC_11_2: u32 = 4294967295u32;
+const POSEIDON_RC_11_3: u32 = 4294967295u32;
+const POSEIDON_RC_11_4: u32 = 4294967295u32;
+const POSEIDON_RC_11_5: u32 = 4294967295u32;
+const POSEIDON_RC_11_6: u32 = 4294963504u32;
+const POSEIDON_RC_11_7: u32 = 134217727u32;
+
+// RC[1][2] canonical = 11
+const POSEIDON_RC_12_0: u32 = 4294966945u32;
+const POSEIDON_RC_12_1: u32 = 4294967295u32;
+const POSEIDON_RC_12_2: u32 = 4294967295u32;
+const POSEIDON_RC_12_3: u32 = 4294967295u32;
+const POSEIDON_RC_12_4: u32 = 4294967295u32;
+const POSEIDON_RC_12_5: u32 = 4294967295u32;
+const POSEIDON_RC_12_6: u32 = 4294961328u32;
+const POSEIDON_RC_12_7: u32 = 134217727u32;
+
+// RC[2][0] canonical = 13
+const POSEIDON_RC_20_0: u32 = 4294966881u32;
+const POSEIDON_RC_20_1: u32 = 4294967295u32;
+const POSEIDON_RC_20_2: u32 = 4294967295u32;
+const POSEIDON_RC_20_3: u32 = 4294967295u32;
+const POSEIDON_RC_20_4: u32 = 4294967295u32;
+const POSEIDON_RC_20_5: u32 = 4294967295u32;
+const POSEIDON_RC_20_6: u32 = 4294960240u32;
+const POSEIDON_RC_20_7: u32 = 134217727u32;
+
+// RC[2][1] canonical = 17
+const POSEIDON_RC_21_0: u32 = 4294966753u32;
+const POSEIDON_RC_21_1: u32 = 4294967295u32;
+const POSEIDON_RC_21_2: u32 = 4294967295u32;
+const POSEIDON_RC_21_3: u32 = 4294967295u32;
+const POSEIDON_RC_21_4: u32 = 4294967295u32;
+const POSEIDON_RC_21_5: u32 = 4294967295u32;
+const POSEIDON_RC_21_6: u32 = 4294958064u32;
+const POSEIDON_RC_21_7: u32 = 134217727u32;
+
+// RC[2][2] canonical = 19
+const POSEIDON_RC_22_0: u32 = 4294966689u32;
+const POSEIDON_RC_22_1: u32 = 4294967295u32;
+const POSEIDON_RC_22_2: u32 = 4294967295u32;
+const POSEIDON_RC_22_3: u32 = 4294967295u32;
+const POSEIDON_RC_22_4: u32 = 4294967295u32;
+const POSEIDON_RC_22_5: u32 = 4294967295u32;
+const POSEIDON_RC_22_6: u32 = 4294956976u32;
+const POSEIDON_RC_22_7: u32 = 134217727u32;
+
+// RC[3][0] canonical = 23
+const POSEIDON_RC_30_0: u32 = 4294966561u32;
+const POSEIDON_RC_30_1: u32 = 4294967295u32;
+const POSEIDON_RC_30_2: u32 = 4294967295u32;
+const POSEIDON_RC_30_3: u32 = 4294967295u32;
+const POSEIDON_RC_30_4: u32 = 4294967295u32;
+const POSEIDON_RC_30_5: u32 = 4294967295u32;
+const POSEIDON_RC_30_6: u32 = 4294954800u32;
+const POSEIDON_RC_30_7: u32 = 134217727u32;
+
+// RC[3][1] canonical = 29
+const POSEIDON_RC_31_0: u32 = 4294966369u32;
+const POSEIDON_RC_31_1: u32 = 4294967295u32;
+const POSEIDON_RC_31_2: u32 = 4294967295u32;
+const POSEIDON_RC_31_3: u32 = 4294967295u32;
+const POSEIDON_RC_31_4: u32 = 4294967295u32;
+const POSEIDON_RC_31_5: u32 = 4294967295u32;
+const POSEIDON_RC_31_6: u32 = 4294951536u32;
+const POSEIDON_RC_31_7: u32 = 134217727u32;
+
+// RC[3][2] canonical = 31
+const POSEIDON_RC_32_0: u32 = 4294966305u32;
+const POSEIDON_RC_32_1: u32 = 4294967295u32;
+const POSEIDON_RC_32_2: u32 = 4294967295u32;
+const POSEIDON_RC_32_3: u32 = 4294967295u32;
+const POSEIDON_RC_32_4: u32 = 4294967295u32;
+const POSEIDON_RC_32_5: u32 = 4294967295u32;
+const POSEIDON_RC_32_6: u32 = 4294950448u32;
+const POSEIDON_RC_32_7: u32 = 134217727u32;
+
+
+// ---- poseidon_chain_demo: 2 full + 2 partial rounds chained ------------
+// Demonstrates that the Phase 1 round functions compose correctly through
+// repeated invocation with different round constants. Each call site is
+// just a Forge function call — verified once at definition time.
+//
+// Real Stark Poseidon would chain 91 rounds (4 full + 83 partial + 4
+// full) with canonical round constants; this is the proof-of-concept.
+
+fn poseidon_chain_demo(
+    in0_0: u32, in0_1: u32, in0_2: u32, in0_3: u32, in0_4: u32, in0_5: u32, in0_6: u32, in0_7: u32,
+    in1_0: u32, in1_1: u32, in1_2: u32, in1_3: u32, in1_4: u32, in1_5: u32, in1_6: u32, in1_7: u32,
+    in2_0: u32, in2_1: u32, in2_2: u32, in2_3: u32, in2_4: u32, in2_5: u32, in2_6: u32, in2_7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let (r1_s0_0, r1_s0_1, r1_s0_2, r1_s0_3, r1_s0_4, r1_s0_5, r1_s0_6, r1_s0_7, r1_s1_0, r1_s1_1, r1_s1_2, r1_s1_3, r1_s1_4, r1_s1_5, r1_s1_6, r1_s1_7, r1_s2_0, r1_s2_1, r1_s2_2, r1_s2_3, r1_s2_4, r1_s2_5, r1_s2_6, r1_s2_7) =
+        poseidon_full_round(
+            in0_0, in0_1, in0_2, in0_3, in0_4, in0_5, in0_6, in0_7,
+            in1_0, in1_1, in1_2, in1_3, in1_4, in1_5, in1_6, in1_7,
+            in2_0, in2_1, in2_2, in2_3, in2_4, in2_5, in2_6, in2_7,
+            POSEIDON_RC_00_0, POSEIDON_RC_00_1, POSEIDON_RC_00_2, POSEIDON_RC_00_3, POSEIDON_RC_00_4, POSEIDON_RC_00_5, POSEIDON_RC_00_6, POSEIDON_RC_00_7,
+            POSEIDON_RC_01_0, POSEIDON_RC_01_1, POSEIDON_RC_01_2, POSEIDON_RC_01_3, POSEIDON_RC_01_4, POSEIDON_RC_01_5, POSEIDON_RC_01_6, POSEIDON_RC_01_7,
+            POSEIDON_RC_02_0, POSEIDON_RC_02_1, POSEIDON_RC_02_2, POSEIDON_RC_02_3, POSEIDON_RC_02_4, POSEIDON_RC_02_5, POSEIDON_RC_02_6, POSEIDON_RC_02_7);
+
+    let (r2_s0_0, r2_s0_1, r2_s0_2, r2_s0_3, r2_s0_4, r2_s0_5, r2_s0_6, r2_s0_7, r2_s1_0, r2_s1_1, r2_s1_2, r2_s1_3, r2_s1_4, r2_s1_5, r2_s1_6, r2_s1_7, r2_s2_0, r2_s2_1, r2_s2_2, r2_s2_3, r2_s2_4, r2_s2_5, r2_s2_6, r2_s2_7) =
+        poseidon_full_round(
+            r1_s0_0, r1_s0_1, r1_s0_2, r1_s0_3, r1_s0_4, r1_s0_5, r1_s0_6, r1_s0_7,
+            r1_s1_0, r1_s1_1, r1_s1_2, r1_s1_3, r1_s1_4, r1_s1_5, r1_s1_6, r1_s1_7,
+            r1_s2_0, r1_s2_1, r1_s2_2, r1_s2_3, r1_s2_4, r1_s2_5, r1_s2_6, r1_s2_7,
+            POSEIDON_RC_10_0, POSEIDON_RC_10_1, POSEIDON_RC_10_2, POSEIDON_RC_10_3, POSEIDON_RC_10_4, POSEIDON_RC_10_5, POSEIDON_RC_10_6, POSEIDON_RC_10_7,
+            POSEIDON_RC_11_0, POSEIDON_RC_11_1, POSEIDON_RC_11_2, POSEIDON_RC_11_3, POSEIDON_RC_11_4, POSEIDON_RC_11_5, POSEIDON_RC_11_6, POSEIDON_RC_11_7,
+            POSEIDON_RC_12_0, POSEIDON_RC_12_1, POSEIDON_RC_12_2, POSEIDON_RC_12_3, POSEIDON_RC_12_4, POSEIDON_RC_12_5, POSEIDON_RC_12_6, POSEIDON_RC_12_7);
+
+    let (r3_s0_0, r3_s0_1, r3_s0_2, r3_s0_3, r3_s0_4, r3_s0_5, r3_s0_6, r3_s0_7, r3_s1_0, r3_s1_1, r3_s1_2, r3_s1_3, r3_s1_4, r3_s1_5, r3_s1_6, r3_s1_7, r3_s2_0, r3_s2_1, r3_s2_2, r3_s2_3, r3_s2_4, r3_s2_5, r3_s2_6, r3_s2_7) =
+        poseidon_partial_round(
+            r2_s0_0, r2_s0_1, r2_s0_2, r2_s0_3, r2_s0_4, r2_s0_5, r2_s0_6, r2_s0_7,
+            r2_s1_0, r2_s1_1, r2_s1_2, r2_s1_3, r2_s1_4, r2_s1_5, r2_s1_6, r2_s1_7,
+            r2_s2_0, r2_s2_1, r2_s2_2, r2_s2_3, r2_s2_4, r2_s2_5, r2_s2_6, r2_s2_7,
+            POSEIDON_RC_20_0, POSEIDON_RC_20_1, POSEIDON_RC_20_2, POSEIDON_RC_20_3, POSEIDON_RC_20_4, POSEIDON_RC_20_5, POSEIDON_RC_20_6, POSEIDON_RC_20_7,
+            POSEIDON_RC_21_0, POSEIDON_RC_21_1, POSEIDON_RC_21_2, POSEIDON_RC_21_3, POSEIDON_RC_21_4, POSEIDON_RC_21_5, POSEIDON_RC_21_6, POSEIDON_RC_21_7,
+            POSEIDON_RC_22_0, POSEIDON_RC_22_1, POSEIDON_RC_22_2, POSEIDON_RC_22_3, POSEIDON_RC_22_4, POSEIDON_RC_22_5, POSEIDON_RC_22_6, POSEIDON_RC_22_7);
+
+    let (r4_s0_0, r4_s0_1, r4_s0_2, r4_s0_3, r4_s0_4, r4_s0_5, r4_s0_6, r4_s0_7, r4_s1_0, r4_s1_1, r4_s1_2, r4_s1_3, r4_s1_4, r4_s1_5, r4_s1_6, r4_s1_7, r4_s2_0, r4_s2_1, r4_s2_2, r4_s2_3, r4_s2_4, r4_s2_5, r4_s2_6, r4_s2_7) =
+        poseidon_partial_round(
+            r3_s0_0, r3_s0_1, r3_s0_2, r3_s0_3, r3_s0_4, r3_s0_5, r3_s0_6, r3_s0_7,
+            r3_s1_0, r3_s1_1, r3_s1_2, r3_s1_3, r3_s1_4, r3_s1_5, r3_s1_6, r3_s1_7,
+            r3_s2_0, r3_s2_1, r3_s2_2, r3_s2_3, r3_s2_4, r3_s2_5, r3_s2_6, r3_s2_7,
+            POSEIDON_RC_30_0, POSEIDON_RC_30_1, POSEIDON_RC_30_2, POSEIDON_RC_30_3, POSEIDON_RC_30_4, POSEIDON_RC_30_5, POSEIDON_RC_30_6, POSEIDON_RC_30_7,
+            POSEIDON_RC_31_0, POSEIDON_RC_31_1, POSEIDON_RC_31_2, POSEIDON_RC_31_3, POSEIDON_RC_31_4, POSEIDON_RC_31_5, POSEIDON_RC_31_6, POSEIDON_RC_31_7,
+            POSEIDON_RC_32_0, POSEIDON_RC_32_1, POSEIDON_RC_32_2, POSEIDON_RC_32_3, POSEIDON_RC_32_4, POSEIDON_RC_32_5, POSEIDON_RC_32_6, POSEIDON_RC_32_7);
+
+    (r4_s0_0, r4_s0_1, r4_s0_2, r4_s0_3, r4_s0_4, r4_s0_5, r4_s0_6, r4_s0_7, r4_s1_0, r4_s1_1, r4_s1_2, r4_s1_3, r4_s1_4, r4_s1_5, r4_s1_6, r4_s1_7, r4_s2_0, r4_s2_1, r4_s2_2, r4_s2_3, r4_s2_4, r4_s2_5, r4_s2_6, r4_s2_7)
+}
+
 
 // ---- TODO (not yet implemented) -------------------------------------------
 // A stronger spec on felt252_add/_sub/_mul ("ensures result == (a op b)
