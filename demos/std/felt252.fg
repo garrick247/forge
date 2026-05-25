@@ -11278,6 +11278,294 @@ fn pedersen_full(
     (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
 }
 
+// ---- Stark Poseidon MDS matrix (Mont form, 8 u32 limbs LSB-first) ----
+// M = [[3, 1, 1], [1, -1, 1], [1, 1, -2]] (canonical felt values).
+// Stored in Mont form so felt252_mul(mds_ij, state_j) is correct directly.
+
+// MDS[0][0] canonical = 3
+const POSEIDON_MDS_00_0: u32 = 4294967201u32;  // 0xFFFFFFA1
+const POSEIDON_MDS_00_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_00_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_00_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_00_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_00_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_00_6: u32 = 4294965680u32;  // 0xFFFFF9B0
+const POSEIDON_MDS_00_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[0][1] canonical = 1
+const POSEIDON_MDS_01_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_01_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_01_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_01_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_01_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_01_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_01_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_01_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[0][2] canonical = 1
+const POSEIDON_MDS_02_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_02_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_02_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_02_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_02_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_02_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_02_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_02_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[1][0] canonical = 1
+const POSEIDON_MDS_10_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_10_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_10_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_10_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_10_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_10_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_10_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_10_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[1][1] canonical = 3618502788666131213697322783095070105623107215331596699973092056135872020480
+const POSEIDON_MDS_11_0: u32 = 32u32;  // 0x00000020
+const POSEIDON_MDS_11_1: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_11_2: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_11_3: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_11_4: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_11_5: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_11_6: u32 = 544u32;  // 0x00000220
+const POSEIDON_MDS_11_7: u32 = 0u32;  // 0x00000000
+
+// MDS[1][2] canonical = 1
+const POSEIDON_MDS_12_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_12_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_12_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_12_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_12_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_12_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_12_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_12_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[2][0] canonical = 1
+const POSEIDON_MDS_20_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_20_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_20_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_20_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_20_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_20_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_20_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_20_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[2][1] canonical = 1
+const POSEIDON_MDS_21_0: u32 = 4294967265u32;  // 0xFFFFFFE1
+const POSEIDON_MDS_21_1: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_21_2: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_21_3: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_21_4: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_21_5: u32 = 4294967295u32;  // 0xFFFFFFFF
+const POSEIDON_MDS_21_6: u32 = 4294966768u32;  // 0xFFFFFDF0
+const POSEIDON_MDS_21_7: u32 = 134217727u32;  // 0x07FFFFFF
+
+// MDS[2][2] canonical = 3618502788666131213697322783095070105623107215331596699973092056135872020479
+const POSEIDON_MDS_22_0: u32 = 64u32;  // 0x00000040
+const POSEIDON_MDS_22_1: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_22_2: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_22_3: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_22_4: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_22_5: u32 = 0u32;  // 0x00000000
+const POSEIDON_MDS_22_6: u32 = 1088u32;  // 0x00000440
+const POSEIDON_MDS_22_7: u32 = 0u32;  // 0x00000000
+
+
+// ---- poseidon_full_round: Stark Poseidon full round (3-state) -----------
+// Full round structure: add_constants → cube_all → MDS_mul.
+// Parameterized by 3 round-constant felts; uses the global POSEIDON_MDS_*
+// constants for the matrix multiplication.
+//
+// All operations compose verified felt252 primitives; output is a valid
+// 3-tuple of felts in Mont form.
+
+fn poseidon_full_round(
+    s0_0: u32, s0_1: u32, s0_2: u32, s0_3: u32, s0_4: u32, s0_5: u32, s0_6: u32, s0_7: u32,
+    s1_0: u32, s1_1: u32, s1_2: u32, s1_3: u32, s1_4: u32, s1_5: u32, s1_6: u32, s1_7: u32,
+    s2_0: u32, s2_1: u32, s2_2: u32, s2_3: u32, s2_4: u32, s2_5: u32, s2_6: u32, s2_7: u32,
+    rc0_0: u32, rc0_1: u32, rc0_2: u32, rc0_3: u32, rc0_4: u32, rc0_5: u32, rc0_6: u32, rc0_7: u32,
+    rc1_0: u32, rc1_1: u32, rc1_2: u32, rc1_3: u32, rc1_4: u32, rc1_5: u32, rc1_6: u32, rc1_7: u32,
+    rc2_0: u32, rc2_1: u32, rc2_2: u32, rc2_3: u32, rc2_4: u32, rc2_5: u32, rc2_6: u32, rc2_7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // ===== Step 1: add round constants to state =====
+    let (a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7) =
+        felt252_add(s0_0, s0_1, s0_2, s0_3, s0_4, s0_5, s0_6, s0_7,
+                    rc0_0, rc0_1, rc0_2, rc0_3, rc0_4, rc0_5, rc0_6, rc0_7);
+    let (a1_0, a1_1, a1_2, a1_3, a1_4, a1_5, a1_6, a1_7) =
+        felt252_add(s1_0, s1_1, s1_2, s1_3, s1_4, s1_5, s1_6, s1_7,
+                    rc1_0, rc1_1, rc1_2, rc1_3, rc1_4, rc1_5, rc1_6, rc1_7);
+    let (a2_0, a2_1, a2_2, a2_3, a2_4, a2_5, a2_6, a2_7) =
+        felt252_add(s2_0, s2_1, s2_2, s2_3, s2_4, s2_5, s2_6, s2_7,
+                    rc2_0, rc2_1, rc2_2, rc2_3, rc2_4, rc2_5, rc2_6, rc2_7);
+
+    // ===== Step 2: S-box (cube) on all 3 state elements =====
+    let (a0sq_0, a0sq_1, a0sq_2, a0sq_3, a0sq_4, a0sq_5, a0sq_6, a0sq_7) =
+        felt252_sqr(a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7);
+    let (c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7) =
+        felt252_mul(a0sq_0, a0sq_1, a0sq_2, a0sq_3, a0sq_4, a0sq_5, a0sq_6, a0sq_7,
+                    a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7);
+    let (a1sq_0, a1sq_1, a1sq_2, a1sq_3, a1sq_4, a1sq_5, a1sq_6, a1sq_7) =
+        felt252_sqr(a1_0, a1_1, a1_2, a1_3, a1_4, a1_5, a1_6, a1_7);
+    let (c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7) =
+        felt252_mul(a1sq_0, a1sq_1, a1sq_2, a1sq_3, a1sq_4, a1sq_5, a1sq_6, a1sq_7,
+                    a1_0, a1_1, a1_2, a1_3, a1_4, a1_5, a1_6, a1_7);
+    let (a2sq_0, a2sq_1, a2sq_2, a2sq_3, a2sq_4, a2sq_5, a2sq_6, a2sq_7) =
+        felt252_sqr(a2_0, a2_1, a2_2, a2_3, a2_4, a2_5, a2_6, a2_7);
+    let (c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7) =
+        felt252_mul(a2sq_0, a2sq_1, a2sq_2, a2sq_3, a2sq_4, a2sq_5, a2sq_6, a2sq_7,
+                    a2_0, a2_1, a2_2, a2_3, a2_4, a2_5, a2_6, a2_7);
+
+    // ===== Step 3: MDS matrix multiplication =====
+    // out_i = MDS[i][0]*c0 + MDS[i][1]*c1 + MDS[i][2]*c2
+
+    let (m00_0, m00_1, m00_2, m00_3, m00_4, m00_5, m00_6, m00_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_00_0, POSEIDON_MDS_00_1, POSEIDON_MDS_00_2, POSEIDON_MDS_00_3, POSEIDON_MDS_00_4, POSEIDON_MDS_00_5, POSEIDON_MDS_00_6, POSEIDON_MDS_00_7);
+    let (m01_0, m01_1, m01_2, m01_3, m01_4, m01_5, m01_6, m01_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_01_0, POSEIDON_MDS_01_1, POSEIDON_MDS_01_2, POSEIDON_MDS_01_3, POSEIDON_MDS_01_4, POSEIDON_MDS_01_5, POSEIDON_MDS_01_6, POSEIDON_MDS_01_7);
+    let (m02_0, m02_1, m02_2, m02_3, m02_4, m02_5, m02_6, m02_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_02_0, POSEIDON_MDS_02_1, POSEIDON_MDS_02_2, POSEIDON_MDS_02_3, POSEIDON_MDS_02_4, POSEIDON_MDS_02_5, POSEIDON_MDS_02_6, POSEIDON_MDS_02_7);
+    let (sum0_01_0, sum0_01_1, sum0_01_2, sum0_01_3, sum0_01_4, sum0_01_5, sum0_01_6, sum0_01_7) =
+        felt252_add(m00_0, m00_1, m00_2, m00_3, m00_4, m00_5, m00_6, m00_7,
+                    m01_0, m01_1, m01_2, m01_3, m01_4, m01_5, m01_6, m01_7);
+    let (o0_0, o0_1, o0_2, o0_3, o0_4, o0_5, o0_6, o0_7) =
+        felt252_add(sum0_01_0, sum0_01_1, sum0_01_2, sum0_01_3, sum0_01_4, sum0_01_5, sum0_01_6, sum0_01_7,
+                    m02_0, m02_1, m02_2, m02_3, m02_4, m02_5, m02_6, m02_7);
+
+    let (m10_0, m10_1, m10_2, m10_3, m10_4, m10_5, m10_6, m10_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_10_0, POSEIDON_MDS_10_1, POSEIDON_MDS_10_2, POSEIDON_MDS_10_3, POSEIDON_MDS_10_4, POSEIDON_MDS_10_5, POSEIDON_MDS_10_6, POSEIDON_MDS_10_7);
+    let (m11_0, m11_1, m11_2, m11_3, m11_4, m11_5, m11_6, m11_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_11_0, POSEIDON_MDS_11_1, POSEIDON_MDS_11_2, POSEIDON_MDS_11_3, POSEIDON_MDS_11_4, POSEIDON_MDS_11_5, POSEIDON_MDS_11_6, POSEIDON_MDS_11_7);
+    let (m12_0, m12_1, m12_2, m12_3, m12_4, m12_5, m12_6, m12_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_12_0, POSEIDON_MDS_12_1, POSEIDON_MDS_12_2, POSEIDON_MDS_12_3, POSEIDON_MDS_12_4, POSEIDON_MDS_12_5, POSEIDON_MDS_12_6, POSEIDON_MDS_12_7);
+    let (sum1_01_0, sum1_01_1, sum1_01_2, sum1_01_3, sum1_01_4, sum1_01_5, sum1_01_6, sum1_01_7) =
+        felt252_add(m10_0, m10_1, m10_2, m10_3, m10_4, m10_5, m10_6, m10_7,
+                    m11_0, m11_1, m11_2, m11_3, m11_4, m11_5, m11_6, m11_7);
+    let (o1_0, o1_1, o1_2, o1_3, o1_4, o1_5, o1_6, o1_7) =
+        felt252_add(sum1_01_0, sum1_01_1, sum1_01_2, sum1_01_3, sum1_01_4, sum1_01_5, sum1_01_6, sum1_01_7,
+                    m12_0, m12_1, m12_2, m12_3, m12_4, m12_5, m12_6, m12_7);
+
+    let (m20_0, m20_1, m20_2, m20_3, m20_4, m20_5, m20_6, m20_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_20_0, POSEIDON_MDS_20_1, POSEIDON_MDS_20_2, POSEIDON_MDS_20_3, POSEIDON_MDS_20_4, POSEIDON_MDS_20_5, POSEIDON_MDS_20_6, POSEIDON_MDS_20_7);
+    let (m21_0, m21_1, m21_2, m21_3, m21_4, m21_5, m21_6, m21_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_21_0, POSEIDON_MDS_21_1, POSEIDON_MDS_21_2, POSEIDON_MDS_21_3, POSEIDON_MDS_21_4, POSEIDON_MDS_21_5, POSEIDON_MDS_21_6, POSEIDON_MDS_21_7);
+    let (m22_0, m22_1, m22_2, m22_3, m22_4, m22_5, m22_6, m22_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_22_0, POSEIDON_MDS_22_1, POSEIDON_MDS_22_2, POSEIDON_MDS_22_3, POSEIDON_MDS_22_4, POSEIDON_MDS_22_5, POSEIDON_MDS_22_6, POSEIDON_MDS_22_7);
+    let (sum2_01_0, sum2_01_1, sum2_01_2, sum2_01_3, sum2_01_4, sum2_01_5, sum2_01_6, sum2_01_7) =
+        felt252_add(m20_0, m20_1, m20_2, m20_3, m20_4, m20_5, m20_6, m20_7,
+                    m21_0, m21_1, m21_2, m21_3, m21_4, m21_5, m21_6, m21_7);
+    let (o2_0, o2_1, o2_2, o2_3, o2_4, o2_5, o2_6, o2_7) =
+        felt252_add(sum2_01_0, sum2_01_1, sum2_01_2, sum2_01_3, sum2_01_4, sum2_01_5, sum2_01_6, sum2_01_7,
+                    m22_0, m22_1, m22_2, m22_3, m22_4, m22_5, m22_6, m22_7);
+
+    (o0_0, o0_1, o0_2, o0_3, o0_4, o0_5, o0_6, o0_7, o1_0, o1_1, o1_2, o1_3, o1_4, o1_5, o1_6, o1_7, o2_0, o2_1, o2_2, o2_3, o2_4, o2_5, o2_6, o2_7)
+}
+
+
+// ---- poseidon_partial_round: Stark Poseidon partial round (3-state) ----
+// Partial round structure: add_constants → cube_first → MDS_mul.
+// S-box only applies to state[0]; state[1..2] pass through unchanged.
+//
+// Stark Poseidon uses 8 full + ~83 partial rounds in the canonical
+// sequence; this is the partial-round building block.
+
+fn poseidon_partial_round(
+    s0_0: u32, s0_1: u32, s0_2: u32, s0_3: u32, s0_4: u32, s0_5: u32, s0_6: u32, s0_7: u32,
+    s1_0: u32, s1_1: u32, s1_2: u32, s1_3: u32, s1_4: u32, s1_5: u32, s1_6: u32, s1_7: u32,
+    s2_0: u32, s2_1: u32, s2_2: u32, s2_3: u32, s2_4: u32, s2_5: u32, s2_6: u32, s2_7: u32,
+    rc0_0: u32, rc0_1: u32, rc0_2: u32, rc0_3: u32, rc0_4: u32, rc0_5: u32, rc0_6: u32, rc0_7: u32,
+    rc1_0: u32, rc1_1: u32, rc1_2: u32, rc1_3: u32, rc1_4: u32, rc1_5: u32, rc1_6: u32, rc1_7: u32,
+    rc2_0: u32, rc2_1: u32, rc2_2: u32, rc2_3: u32, rc2_4: u32, rc2_5: u32, rc2_6: u32, rc2_7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32,
+      u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    // ===== Step 1: add round constants =====
+    let (a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7) =
+        felt252_add(s0_0, s0_1, s0_2, s0_3, s0_4, s0_5, s0_6, s0_7,
+                    rc0_0, rc0_1, rc0_2, rc0_3, rc0_4, rc0_5, rc0_6, rc0_7);
+    let (a1_0, a1_1, a1_2, a1_3, a1_4, a1_5, a1_6, a1_7) =
+        felt252_add(s1_0, s1_1, s1_2, s1_3, s1_4, s1_5, s1_6, s1_7,
+                    rc1_0, rc1_1, rc1_2, rc1_3, rc1_4, rc1_5, rc1_6, rc1_7);
+    let (a2_0, a2_1, a2_2, a2_3, a2_4, a2_5, a2_6, a2_7) =
+        felt252_add(s2_0, s2_1, s2_2, s2_3, s2_4, s2_5, s2_6, s2_7,
+                    rc2_0, rc2_1, rc2_2, rc2_3, rc2_4, rc2_5, rc2_6, rc2_7);
+
+    // ===== Step 2: S-box (cube) on first state element only =====
+    let (a0sq_0, a0sq_1, a0sq_2, a0sq_3, a0sq_4, a0sq_5, a0sq_6, a0sq_7) =
+        felt252_sqr(a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7);
+    let (c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7) =
+        felt252_mul(a0sq_0, a0sq_1, a0sq_2, a0sq_3, a0sq_4, a0sq_5, a0sq_6, a0sq_7,
+                    a0_0, a0_1, a0_2, a0_3, a0_4, a0_5, a0_6, a0_7);
+    // Other elements pass through unchanged.
+    let (c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7) = (a1_0, a1_1, a1_2, a1_3, a1_4, a1_5, a1_6, a1_7);
+    let (c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7) = (a2_0, a2_1, a2_2, a2_3, a2_4, a2_5, a2_6, a2_7);
+
+    // ===== Step 3: MDS matrix multiplication =====
+    let (m00_0, m00_1, m00_2, m00_3, m00_4, m00_5, m00_6, m00_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_00_0, POSEIDON_MDS_00_1, POSEIDON_MDS_00_2, POSEIDON_MDS_00_3, POSEIDON_MDS_00_4, POSEIDON_MDS_00_5, POSEIDON_MDS_00_6, POSEIDON_MDS_00_7);
+    let (m01_0, m01_1, m01_2, m01_3, m01_4, m01_5, m01_6, m01_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_01_0, POSEIDON_MDS_01_1, POSEIDON_MDS_01_2, POSEIDON_MDS_01_3, POSEIDON_MDS_01_4, POSEIDON_MDS_01_5, POSEIDON_MDS_01_6, POSEIDON_MDS_01_7);
+    let (m02_0, m02_1, m02_2, m02_3, m02_4, m02_5, m02_6, m02_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_02_0, POSEIDON_MDS_02_1, POSEIDON_MDS_02_2, POSEIDON_MDS_02_3, POSEIDON_MDS_02_4, POSEIDON_MDS_02_5, POSEIDON_MDS_02_6, POSEIDON_MDS_02_7);
+    let (sum0_01_0, sum0_01_1, sum0_01_2, sum0_01_3, sum0_01_4, sum0_01_5, sum0_01_6, sum0_01_7) =
+        felt252_add(m00_0, m00_1, m00_2, m00_3, m00_4, m00_5, m00_6, m00_7,
+                    m01_0, m01_1, m01_2, m01_3, m01_4, m01_5, m01_6, m01_7);
+    let (o0_0, o0_1, o0_2, o0_3, o0_4, o0_5, o0_6, o0_7) =
+        felt252_add(sum0_01_0, sum0_01_1, sum0_01_2, sum0_01_3, sum0_01_4, sum0_01_5, sum0_01_6, sum0_01_7,
+                    m02_0, m02_1, m02_2, m02_3, m02_4, m02_5, m02_6, m02_7);
+
+    let (m10_0, m10_1, m10_2, m10_3, m10_4, m10_5, m10_6, m10_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_10_0, POSEIDON_MDS_10_1, POSEIDON_MDS_10_2, POSEIDON_MDS_10_3, POSEIDON_MDS_10_4, POSEIDON_MDS_10_5, POSEIDON_MDS_10_6, POSEIDON_MDS_10_7);
+    let (m11_0, m11_1, m11_2, m11_3, m11_4, m11_5, m11_6, m11_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_11_0, POSEIDON_MDS_11_1, POSEIDON_MDS_11_2, POSEIDON_MDS_11_3, POSEIDON_MDS_11_4, POSEIDON_MDS_11_5, POSEIDON_MDS_11_6, POSEIDON_MDS_11_7);
+    let (m12_0, m12_1, m12_2, m12_3, m12_4, m12_5, m12_6, m12_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_12_0, POSEIDON_MDS_12_1, POSEIDON_MDS_12_2, POSEIDON_MDS_12_3, POSEIDON_MDS_12_4, POSEIDON_MDS_12_5, POSEIDON_MDS_12_6, POSEIDON_MDS_12_7);
+    let (sum1_01_0, sum1_01_1, sum1_01_2, sum1_01_3, sum1_01_4, sum1_01_5, sum1_01_6, sum1_01_7) =
+        felt252_add(m10_0, m10_1, m10_2, m10_3, m10_4, m10_5, m10_6, m10_7,
+                    m11_0, m11_1, m11_2, m11_3, m11_4, m11_5, m11_6, m11_7);
+    let (o1_0, o1_1, o1_2, o1_3, o1_4, o1_5, o1_6, o1_7) =
+        felt252_add(sum1_01_0, sum1_01_1, sum1_01_2, sum1_01_3, sum1_01_4, sum1_01_5, sum1_01_6, sum1_01_7,
+                    m12_0, m12_1, m12_2, m12_3, m12_4, m12_5, m12_6, m12_7);
+
+    let (m20_0, m20_1, m20_2, m20_3, m20_4, m20_5, m20_6, m20_7) =
+        felt252_mul(c0_0, c0_1, c0_2, c0_3, c0_4, c0_5, c0_6, c0_7,
+                    POSEIDON_MDS_20_0, POSEIDON_MDS_20_1, POSEIDON_MDS_20_2, POSEIDON_MDS_20_3, POSEIDON_MDS_20_4, POSEIDON_MDS_20_5, POSEIDON_MDS_20_6, POSEIDON_MDS_20_7);
+    let (m21_0, m21_1, m21_2, m21_3, m21_4, m21_5, m21_6, m21_7) =
+        felt252_mul(c1_0, c1_1, c1_2, c1_3, c1_4, c1_5, c1_6, c1_7,
+                    POSEIDON_MDS_21_0, POSEIDON_MDS_21_1, POSEIDON_MDS_21_2, POSEIDON_MDS_21_3, POSEIDON_MDS_21_4, POSEIDON_MDS_21_5, POSEIDON_MDS_21_6, POSEIDON_MDS_21_7);
+    let (m22_0, m22_1, m22_2, m22_3, m22_4, m22_5, m22_6, m22_7) =
+        felt252_mul(c2_0, c2_1, c2_2, c2_3, c2_4, c2_5, c2_6, c2_7,
+                    POSEIDON_MDS_22_0, POSEIDON_MDS_22_1, POSEIDON_MDS_22_2, POSEIDON_MDS_22_3, POSEIDON_MDS_22_4, POSEIDON_MDS_22_5, POSEIDON_MDS_22_6, POSEIDON_MDS_22_7);
+    let (sum2_01_0, sum2_01_1, sum2_01_2, sum2_01_3, sum2_01_4, sum2_01_5, sum2_01_6, sum2_01_7) =
+        felt252_add(m20_0, m20_1, m20_2, m20_3, m20_4, m20_5, m20_6, m20_7,
+                    m21_0, m21_1, m21_2, m21_3, m21_4, m21_5, m21_6, m21_7);
+    let (o2_0, o2_1, o2_2, o2_3, o2_4, o2_5, o2_6, o2_7) =
+        felt252_add(sum2_01_0, sum2_01_1, sum2_01_2, sum2_01_3, sum2_01_4, sum2_01_5, sum2_01_6, sum2_01_7,
+                    m22_0, m22_1, m22_2, m22_3, m22_4, m22_5, m22_6, m22_7);
+
+    (o0_0, o0_1, o0_2, o0_3, o0_4, o0_5, o0_6, o0_7, o1_0, o1_1, o1_2, o1_3, o1_4, o1_5, o1_6, o1_7, o2_0, o2_1, o2_2, o2_3, o2_4, o2_5, o2_6, o2_7)
+}
+
 
 // ---- TODO (not yet implemented) -------------------------------------------
 // A stronger spec on felt252_add/_sub/_mul ("ensures result == (a op b)
