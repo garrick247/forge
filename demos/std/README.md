@@ -61,6 +61,32 @@ to verified C99.
 | `pedersen_canonical(a, b)` | Canonical 2-scalar hash using `pedersen_scalar_mul_canonical` (no shift offset in output) |
 | `pedersen_full(a, b)` | **Byte-equivalent Stark Pedersen**: `P0 + a_low·P1 + a_high·P2 + b_low·P3 + b_high·P4` with 248+4-bit input split |
 
+### Poseidon hash (Stark 3-element state, Phase 1)
+
+| Function | Verified property |
+|---|---|
+| `poseidon_full_round(state, rc)` | One full round: add round constants → cube_all → MDS mul |
+| `poseidon_partial_round(state, rc)` | One partial round: add round constants → cube_first → MDS mul |
+
+MDS matrix `M = [[3, 1, 1], [1, -1, 1], [1, 1, -2]]` stored as Mont-form
+`POSEIDON_MDS_{ij}_k` constants. Both round functions compose verified
+`felt252_add` / `felt252_sqr` / `felt252_mul` — no new audit-assumes.
+Phase 2 would chain 8 full + 83 partial rounds into the full Stark
+Poseidon hash with declared round constants.
+
+### ECDSA foundations (Stark curve, Phase 1)
+
+| Constant / Function | Description |
+|---|---|
+| `STARK_N_LIMB0..7` | Curve order `n = 3618502788666131213697322783095070105526743751716087489154079457884512865583` (canonical form, 8 u32 limbs) |
+| `STARK_G_X*` / `STARK_G_Y*` | Canonical Stark curve generator G in Mont form |
+| `stark_generator_point()` | Wrapper returning G with `ensures curve(.)` (audit-assume) |
+
+Phase 2 would build mod-n arithmetic (`felt_n_add`/`_sub`/`_mul`/`_inv`)
+as a parallel layer to felt252's mod-P stack. Phase 3 would assemble
+`ecdsa_verify` using mod-n inversion + `pedersen_scalar_mul_canonical`
+for `[u1]G + [u2]Q`.
+
 Where `curve(x, y) := (y² · R) % P == (x³ + x · R² + β · R³) % P` is the
 Stark curve equation in Mont-form integer values.
 
@@ -114,9 +140,9 @@ Where `R = 2^256`, `B = 2^32`, `P = 2^251 + 17·2^192 + 1`.
   in u32/u64 arithmetic (modulo the verified modular operations)
 - Function preconditions discharged at every callsite
 
-## Audit trail (23 trusted assumptions)
+## Audit trail (24 trusted assumptions)
 
-The library declares 23 `assume()` calls that aren't proven within the
+The library declares 24 `assume()` calls that aren't proven within the
 file. Each is a standard, well-known analytic fact.
 
 **`felt252_montgomery_reduce_v2` — 12 Montgomery-analysis assumes:**
@@ -175,7 +201,7 @@ file. Each is a standard, well-known analytic fact.
   The 256-round version uses chunked induction (8 calls to the 32-round
   helper) to keep each call-site's precondition discharge local.
 
-**5 Pedersen generator-point + 1 `SHIFT_256` curve audit-assumes:**
+**5 Pedersen generator-point + 1 `SHIFT_256` + 1 Stark generator `G` curve audit-assumes:**
 
 - `PEDERSEN_P0_SHIFT`, `PEDERSEN_P1`, `PEDERSEN_P2`, `PEDERSEN_P3`,
   `PEDERSEN_P4` — each published Stark Pedersen generator is on the
@@ -184,8 +210,11 @@ file. Each is a standard, well-known analytic fact.
   Python implementation of Stark curve scalar mul, verified on-curve
   at compile time, declared on-curve via audit-assume for use in
   `pedersen_scalar_mul_canonical`'s shift-point subtraction.
+- `STARK_G` — canonical Stark curve generator (published, verified
+  on-curve at compile time), declared on-curve via audit-assume for
+  future ECDSA verification.
 
-All 23 are tagged in the assume audit log. Run `forge audit <file>`
+All 24 are tagged in the assume audit log. Run `forge audit <file>`
 to inspect them.
 
 ## What's NOT verified (research arcs)
@@ -206,7 +235,7 @@ Requires the patched Forge with `assume_fact_propagation.patch` applied
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, 3221 / 3221 SMT, 23 audit assumptions, ~1990s
+# Expected: proof_ok, 3254 / 3254 SMT, 24 audit assumptions, ~2000s
 ```
 
 Emits `demos/std/felt252.c` — verified C99 the C codegen target.
@@ -260,6 +289,8 @@ Emits `demos/std/felt252.c` — verified C99 the C codegen target.
 | `858de6b` | `ec_neg` / `ec_sub` point negation and subtraction |
 | `b6df0c9` | `pedersen_scalar_mul_canonical` shift-point trick + `pedersen_canonical` |
 | `0edd567` | `pedersen_full` byte-equivalent Stark Pedersen with 248+4-bit split |
+| `7c655f1` | Poseidon Phase 1: MDS matrix constants + `poseidon_full_round` + `poseidon_partial_round` |
+| `18d423c` | ECDSA Phase 1: Stark curve order `n` + canonical generator `G` + wrapper |
 
 Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
 or fork-applied separately.
