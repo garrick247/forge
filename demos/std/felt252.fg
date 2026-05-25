@@ -11635,6 +11635,143 @@ fn stark_generator_point() -> (u32, u32, u32, u32, u32, u32, u32, u32,
     (r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
 }
 
+
+// ---- felt_n_mont_cond_sub: conditional sub of n if t >= n -----------------
+// Mirror of felt252_mont_cond_sub but with curve order n (STARK_N_LIMB)
+// instead of base prime P. Same structure: subtract n from t with borrow
+// tracking; use the difference if no final borrow OR if cap >= 1.
+
+fn felt_n_mont_cond_sub(
+    t0: u32, t1: u32, t2: u32, t3: u32,
+    t4: u32, t5: u32, t6: u32, t7: u32,
+    cap: u64
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let r0d: u32 = sub_with_borrow_diff(t0, STARK_N_LIMB0, 0u32);
+    let rb0: u32 = sub_with_borrow_out (t0, STARK_N_LIMB0, 0u32);
+    let r1d: u32 = sub_with_borrow_diff(t1, STARK_N_LIMB1, rb0);
+    let rb1: u32 = sub_with_borrow_out (t1, STARK_N_LIMB1, rb0);
+    let r2d: u32 = sub_with_borrow_diff(t2, STARK_N_LIMB2, rb1);
+    let rb2: u32 = sub_with_borrow_out (t2, STARK_N_LIMB2, rb1);
+    let r3d: u32 = sub_with_borrow_diff(t3, STARK_N_LIMB3, rb2);
+    let rb3: u32 = sub_with_borrow_out (t3, STARK_N_LIMB3, rb2);
+    let r4d: u32 = sub_with_borrow_diff(t4, STARK_N_LIMB4, rb3);
+    let rb4: u32 = sub_with_borrow_out (t4, STARK_N_LIMB4, rb3);
+    let r5d: u32 = sub_with_borrow_diff(t5, STARK_N_LIMB5, rb4);
+    let rb5: u32 = sub_with_borrow_out (t5, STARK_N_LIMB5, rb4);
+    let r6d: u32 = sub_with_borrow_diff(t6, STARK_N_LIMB6, rb5);
+    let rb6: u32 = sub_with_borrow_out (t6, STARK_N_LIMB6, rb5);
+    let r7d: u32 = sub_with_borrow_diff(t7, STARK_N_LIMB7, rb6);
+    let rb7: u32 = sub_with_borrow_out (t7, STARK_N_LIMB7, rb6);
+
+    let use_diff: u32 = if cap >= 1u64 { 1u32 } else { if rb7 == 0u32 { 1u32 } else { 0u32 } };
+
+    let r0: u32 = if use_diff == 1u32 { r0d } else { t0 };
+    let r1: u32 = if use_diff == 1u32 { r1d } else { t1 };
+    let r2: u32 = if use_diff == 1u32 { r2d } else { t2 };
+    let r3: u32 = if use_diff == 1u32 { r3d } else { t3 };
+    let r4: u32 = if use_diff == 1u32 { r4d } else { t4 };
+    let r5: u32 = if use_diff == 1u32 { r5d } else { t5 };
+    let r6: u32 = if use_diff == 1u32 { r6d } else { t6 };
+    let r7: u32 = if use_diff == 1u32 { r7d } else { t7 };
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
+
+// ---- felt_n_add: 8-limb modular add over the Stark curve order n ----------
+// Mirror of felt252_add: schoolbook 8-limb add with carry, then a
+// conditional subtract of n via felt_n_mont_cond_sub. Math contract
+// (a < n AND b < n) ==> (result < n AND (result == a+b OR result+n == a+b))
+// would be the natural ensures; not added in this minimal phase but the
+// structural proof matches felt252_add's proven version.
+
+fn felt_n_add(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let s0: u32 = add_with_carry_sum(a0, b0, 0u32);
+    let c0: u32 = add_with_carry_out(a0, b0, 0u32);
+    let s1: u32 = add_with_carry_sum(a1, b1, c0);
+    let c1: u32 = add_with_carry_out(a1, b1, c0);
+    let s2: u32 = add_with_carry_sum(a2, b2, c1);
+    let c2: u32 = add_with_carry_out(a2, b2, c1);
+    let s3: u32 = add_with_carry_sum(a3, b3, c2);
+    let c3: u32 = add_with_carry_out(a3, b3, c2);
+    let s4: u32 = add_with_carry_sum(a4, b4, c3);
+    let c4: u32 = add_with_carry_out(a4, b4, c3);
+    let s5: u32 = add_with_carry_sum(a5, b5, c4);
+    let c5: u32 = add_with_carry_out(a5, b5, c4);
+    let s6: u32 = add_with_carry_sum(a6, b6, c5);
+    let c6: u32 = add_with_carry_out(a6, b6, c5);
+    let s7: u32 = add_with_carry_sum(a7, b7, c6);
+    let c7: u32 = add_with_carry_out(a7, b7, c6);
+
+    // Cond-subtract n if sum overflowed (c7 == 1) or sum >= n.
+    felt_n_mont_cond_sub(s0, s1, s2, s3, s4, s5, s6, s7, c7 as u64)
+}
+
+
+// ---- felt_n_sub: 8-limb modular sub over the Stark curve order n ----------
+// Mirror of felt252_sub: schoolbook 8-limb sub with borrow, then a
+// conditional add of n if underflow.
+
+fn felt_n_sub(
+    a0: u32, a1: u32, a2: u32, a3: u32,
+    a4: u32, a5: u32, a6: u32, a7: u32,
+    b0: u32, b1: u32, b2: u32, b3: u32,
+    b4: u32, b5: u32, b6: u32, b7: u32
+) -> (u32, u32, u32, u32, u32, u32, u32, u32)
+{
+    let d0: u32 = sub_with_borrow_diff(a0, b0, 0u32);
+    let bb0: u32 = sub_with_borrow_out(a0, b0, 0u32);
+    let d1: u32 = sub_with_borrow_diff(a1, b1, bb0);
+    let bb1: u32 = sub_with_borrow_out(a1, b1, bb0);
+    let d2: u32 = sub_with_borrow_diff(a2, b2, bb1);
+    let bb2: u32 = sub_with_borrow_out(a2, b2, bb1);
+    let d3: u32 = sub_with_borrow_diff(a3, b3, bb2);
+    let bb3: u32 = sub_with_borrow_out(a3, b3, bb2);
+    let d4: u32 = sub_with_borrow_diff(a4, b4, bb3);
+    let bb4: u32 = sub_with_borrow_out(a4, b4, bb3);
+    let d5: u32 = sub_with_borrow_diff(a5, b5, bb4);
+    let bb5: u32 = sub_with_borrow_out(a5, b5, bb4);
+    let d6: u32 = sub_with_borrow_diff(a6, b6, bb5);
+    let bb6: u32 = sub_with_borrow_out(a6, b6, bb5);
+    let d7: u32 = sub_with_borrow_diff(a7, b7, bb6);
+    let bb7: u32 = sub_with_borrow_out(a7, b7, bb6);
+
+    // If underflow (bb7 == 1), add n back.
+    let n0_add: u32 = if bb7 == 1u32 { STARK_N_LIMB0 } else { 0u32 };
+    let n1_add: u32 = if bb7 == 1u32 { STARK_N_LIMB1 } else { 0u32 };
+    let n2_add: u32 = if bb7 == 1u32 { STARK_N_LIMB2 } else { 0u32 };
+    let n3_add: u32 = if bb7 == 1u32 { STARK_N_LIMB3 } else { 0u32 };
+    let n4_add: u32 = if bb7 == 1u32 { STARK_N_LIMB4 } else { 0u32 };
+    let n5_add: u32 = if bb7 == 1u32 { STARK_N_LIMB5 } else { 0u32 };
+    let n6_add: u32 = if bb7 == 1u32 { STARK_N_LIMB6 } else { 0u32 };
+    let n7_add: u32 = if bb7 == 1u32 { STARK_N_LIMB7 } else { 0u32 };
+
+    let r0: u32 = add_with_carry_sum(d0, n0_add, 0u32);
+    let cr0: u32 = add_with_carry_out(d0, n0_add, 0u32);
+    let r1: u32 = add_with_carry_sum(d1, n1_add, cr0);
+    let cr1: u32 = add_with_carry_out(d1, n1_add, cr0);
+    let r2: u32 = add_with_carry_sum(d2, n2_add, cr1);
+    let cr2: u32 = add_with_carry_out(d2, n2_add, cr1);
+    let r3: u32 = add_with_carry_sum(d3, n3_add, cr2);
+    let cr3: u32 = add_with_carry_out(d3, n3_add, cr2);
+    let r4: u32 = add_with_carry_sum(d4, n4_add, cr3);
+    let cr4: u32 = add_with_carry_out(d4, n4_add, cr3);
+    let r5: u32 = add_with_carry_sum(d5, n5_add, cr4);
+    let cr5: u32 = add_with_carry_out(d5, n5_add, cr4);
+    let r6: u32 = add_with_carry_sum(d6, n6_add, cr5);
+    let cr6: u32 = add_with_carry_out(d6, n6_add, cr5);
+    let r7: u32 = add_with_carry_sum(d7, n7_add, cr6);
+
+    (r0, r1, r2, r3, r4, r5, r6, r7)
+}
+
 // ---- Poseidon Phase 2: chained round demo with placeholder RCs -----
 // 4 round-constant sets in Mont form. Real Stark Poseidon uses
 // 91 round-constant sets (4 full + 83 partial + 4 full = 91 rounds)
