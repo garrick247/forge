@@ -8,7 +8,7 @@ verified C99.
 canonical Stark Pedersen hash (byte-equivalent) → canonical Stark Poseidon
 hash (full 91-round Hades) → ECDSA signature verification.
 
-**State:** 22,323 lines, ~3,700 SMT obligations all discharged, 39 trusted
+**State:** 22,311 lines, ~3,700 SMT obligations all discharged, 38 trusted
 assumptions documented, ~2,100s verify time.
 
 ## Table of contents
@@ -160,7 +160,7 @@ chain + the verified `pedersen_scalar_mul_canonical` for both
 
 ## Audit trail (39 trusted assumptions)
 
-The library declares 39 `assume()` calls that aren't proven mechanically.
+The library declares 38 `assume()` calls that aren't proven mechanically.
 Each is a standard analytic fact with documented justification.
 
 ### Montgomery analysis (24 = 12 mod-P + 12 mod-n)
@@ -207,14 +207,6 @@ each declare 12 Mont-analysis audits (mirrored mechanically):
   audit-assume since chaining through `felt252_sub`'s disjunction-form
   ensures plus the nonlinear curve predicate is messy.
 
-### Pedersen if-select (1 audit)
-
-- **`pedersen_step`**: Per-limb if-select over 16 result components —
-  when `bit==1` the result is `ec_add(ec_double(r), b)`, when `bit==0`
-  it's `ec_double(r)`. Both branches independently satisfy `curve(.)`
-  by ec_double/ec_add ensures. Z3 cannot derive `curve(.)` of a
-  per-limb if-selected tuple without an explicit case-split.
-
 ### Generator-point curve assumes (7 audits)
 
 - **5 Pedersen generators** (`PEDERSEN_P0_SHIFT`, `P1`, `P2`, `P3`, `P4`):
@@ -237,8 +229,14 @@ each declare 12 Mont-analysis audits (mirrored mechanically):
   A canonical mod-n reduction of `Q.x` prior to the comparison would
   refine this further.
 
-All 39 are tagged in the assume audit log. Run `forge audit <file>` to
+All 38 are tagged in the assume audit log. Run `forge audit <file>` to
 inspect them.
+
+**Resolved research arcs**:
+- Per-limb if-select audit (formerly on `pedersen_step`) — replaced
+  by a tuple-typed if-else expression with let-bindings for the
+  ec_double and ec_add results. Z3 case-splits on the bit and uses
+  each branch's curve(.) ensures directly. Commit `2c83413`.
 
 ## Architecture & build narrative
 
@@ -284,27 +282,38 @@ specific named fact, not a vague "trust me":
   P and n)
 - Number-theoretic identities → 2 Fermat over P / n
 - Group-law algebra → 3 EC curve preservation
-- Per-limb structural reasoning → 1 if-select case-split
 - Published constants on-curve → 7 generator + shift-offset audits
 - ECDSA chain correctness → 2 (caller precondition + final boolean)
 
+(Previously included 1 if-select audit on `pedersen_step`; resolved
+via tuple-typed if-else in commit `2c83413`.)
+
 ## What's NOT verified (research arcs)
+
+### Resolved (no longer requires audit)
+
+- **Per-limb if-select** (formerly 1 audit on `pedersen_step`): Replaced
+  via tuple-typed if-else expression. Forge supports tuple-valued if
+  branches that case-split cleanly when each branch is a let-bound
+  result of a function call with `ensures` clauses. Commit `2c83413`.
+
+### Still open
 
 | Item | Why deferred |
 |---|---|
-| Canonical-form propagation (`result < P` / `result < n` ensures on mul/sqr/inv) | The current case-2 assert in v2 is fragile to added facts; restructuring needed before canonical-form can chain through. |
+| Canonical-form propagation (`result < P` / `result < n` ensures on mul/sqr/inv) | The current case-2 assert in v2 is fragile to added facts; restructuring needed before canonical-form can chain through. **Path forward**: empirical work to find a Z3-stable proof shape for the case-split. |
 | `felt252_reduce_512` (Solinas folding) | Unimplemented function — alternative to Montgomery for Stark prime. |
 | 24-Mont-assume audit reduction via inductive proofs | Would prove each Montgomery bound from a P·R / n·R input bound. Substantial inductive work. |
-| Fermat audit-assumes → mechanical proof | Currently 2 assumes (mod P + mod n). Eliminating requires Forge support for uninterpreted functions (so `pow(a, k)` can be axiomatized) and an inductive Fermat lemma. Substantial language-design work. |
-| EC group-law audit-assumes → mechanical proof | Currently 3 assumes cover curve preservation. Direct discharge requires explicit polynomial expansion of the slope-substituted curve equation — multi-thousand-term composition Forge's predicate language can express but Z3 will not naively chase. |
-| ECDSA canonical-mod-n reduction of Q.x | Currently the final `Q.x mod n == r` comparison is audit-assumed. A real reduction would convert Q.x from Mont form mod P to canonical mod-n, then compare. Needs a felt-P-to-felt-n bridge primitive. |
+| Fermat audit-assumes → mechanical proof | Currently 2 assumes (mod P + mod n). **Path forward** identified: recursive Forge functions parse in predicates (verified), but Z3 doesn't auto-unfold them. A mechanical Fermat would require either (a) Z3-level unfolding of recursive function calls when arguments are bounded, or (b) axiomatic `pow_p` with an inductive correspondence proof against the 449-op chain. Both are real Forge core features. |
+| EC group-law audit-assumes → mechanical proof | Currently 3 assumes cover curve preservation. **Path forward**: guided-proof chain (Forge supports a `guided` proof category) walking Z3 through ~10-20 intermediate polynomial-identity asserts per EC op. Mechanically possible; cost-benefit not strong for re-deriving centuries-old EC algebra. |
+| ECDSA canonical-mod-n reduction of Q.x | Currently the final `Q.x mod n == r` comparison is audit-assumed. **Path forward**: implement a felt-P-to-felt-n bridge primitive (convert from Mont mod P to canonical mod-n) and propagate canonical-form ensures (also depends on #1 above). |
 
 ## Build / use
 
 ```
 forge-rag check demos/std/felt252.fg
-# Expected: proof_ok, ~3,700 SMT, 39 audit assumptions, ~2,100s
-# File at 22,323 lines covering felt252 mod-P + EC + Pedersen + Poseidon + ECDSA.
+# Expected: proof_ok, ~3,700 SMT, 38 audit assumptions, ~2,100s
+# File at 22,311 lines covering felt252 mod-P + EC + Pedersen + Poseidon + ECDSA.
 ```
 
 Emits `demos/std/felt252.c` — verified C99, the C codegen target.
@@ -403,6 +412,12 @@ either fails (the assume propagation gate) or runs ~3× slower.
 | Commit | Layer |
 |---|---|
 | `960e1be` | `typecheck` + `proof_engine`: assume propagation + dedup + relevance pruning + Z3 timeout bump |
+
+### Research-arc resolutions (post-feature-complete)
+
+| Commit | Layer |
+|---|---|
+| `2c83413` | `pedersen_step`: drop per-limb if-select audit via tuple-typed if-else |
 
 Without these, v2 mod-P verification fails (the assume-propagation gate)
 or runs ~3× slower (no dedup / no relevance pruning).
