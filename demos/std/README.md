@@ -301,11 +301,6 @@ specific named fact, not a vague "trust me":
 
 ## Build / use
 
-Requires the patched Forge with `assume_fact_propagation.patch` applied
-(see that file). Without the patch, v2 mod-P/mod-n verification fails
-because `stmt_final_env` silently drops body-position `assume`
-statements.
-
 ```
 forge-rag check demos/std/felt252.fg
 # Expected: proof_ok, ~3,700 SMT, 39 audit assumptions, ~2,100s
@@ -313,6 +308,12 @@ forge-rag check demos/std/felt252.fg
 ```
 
 Emits `demos/std/felt252.c` — verified C99, the C codegen target.
+
+Requires the Forge core improvements landed in commit `960e1be`:
+`stmt_final_env` propagates body assume/assert facts; `env_add_fact`
+dedupes identical assumes; `proof_engine` adds relevance pruning +
+60s Z3 timeout. Without these, the v2 mod-P / mod-n verification chain
+either fails (the assume propagation gate) or runs ~3× slower.
 
 ## Who should care
 
@@ -397,5 +398,11 @@ Emits `demos/std/felt252.c` — verified C99, the C codegen target.
 | `1565da8` | Phase 3 step 1: mirror entire mod-P Mont reduce infrastructure for mod-n (161 functions) |
 | `80fc1d6` | **Phase 3 step 2: `felt_n_mul` + `felt_n_sqr` + `felt_n_inv` + `ecdsa_verify`** |
 
-Plus the Forge core patch (`assume_fact_propagation.patch`) — submitted
-or fork-applied separately, gates everything from v2 mod-P forward.
+### Forge core improvements (gating the whole stack)
+
+| Commit | Layer |
+|---|---|
+| `960e1be` | `typecheck` + `proof_engine`: assume propagation + dedup + relevance pruning + Z3 timeout bump |
+
+Without these, v2 mod-P verification fails (the assume-propagation gate)
+or runs ~3× slower (no dedup / no relevance pruning).
