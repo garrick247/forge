@@ -615,7 +615,53 @@ module Z3Bridge = struct
     | U128  -> Some "340282366920938463463374607431768211455"
     | USize -> Some "18446744073709551615"
 
+  (* Relevance prune: keep only assumes transitively reachable from the
+     goal's free variables (plus array var names). Cuts query size when
+     most accumulated facts are about locals unrelated to the goal. *)
+  let relevant_assumes goal_pred assumes =
+    let init =
+      List.sort_uniq String.compare
+        (pred_vars [] goal_pred @ collect_array_var_names [] goal_pred)
+    in
+    let assume_vars =
+      Array.of_list (List.map (fun p ->
+        List.sort_uniq String.compare
+          (pred_vars [] p @ collect_array_var_names [] p)
+      ) assumes)
+    in
+    let assumes_arr = Array.of_list assumes in
+    let in_set v lst = List.mem v lst in
+    let any_in lst set = List.exists (fun v -> in_set v set) lst in
+    let rec fix relevant =
+      let changed = ref false in
+      let acc = ref relevant in
+      Array.iteri (fun i vs ->
+        if vs <> [] && any_in vs !acc then begin
+          List.iter (fun v ->
+            if not (in_set v !acc) then begin
+              acc := v :: !acc;
+              changed := true
+            end
+          ) vs;
+          ignore i
+        end
+      ) assume_vars;
+      if !changed then fix !acc else relevant
+    in
+    let relevant = fix init in
+    let keep =
+      Array.mapi (fun i p ->
+        let vs = assume_vars.(i) in
+        if vs = [] || any_in vs relevant then Some p else None
+      ) assumes_arr
+    in
+    Array.fold_right (fun o acc -> match o with Some p -> p :: acc | None -> acc) keep []
+
   let build_query ?(force_nia=false) ctx pred =
+    let ctx =
+      if Sys.getenv_opt "FORGE_NO_PRUNE" <> None then ctx
+      else { ctx with pc_assumes = relevant_assumes pred ctx.pc_assumes }
+    in
     (* BV mode: use bitvector sorts when the formula involves bitwise ops.
        Int mode: use unbounded integer sorts with range constraints (faster for Z3). *)
     let all_preds = pred :: ctx.pc_assumes in
@@ -988,7 +1034,7 @@ module Z3Bridge = struct
       (not (List.exists has_divmod goal_preds)) &&
       (List.exists has_nonlinear goal_preds)
     in
-    let (tmp, result) = run_z3 ~get_model:true query 20 in
+    let (tmp, result) = run_z3 ~get_model:true query 60 in
     (* nlsat works over the reals — it may return sat for a goal that is only
        a theorem over integers (e.g. i*cols+j < rows*cols given 0<=i<rows, 0<=j<cols).
        When nlsat returns non-Unsat, retry with the NIA solver. *)
@@ -996,7 +1042,7 @@ module Z3Bridge = struct
       let is_unsat = match result with Unsat -> true | _ -> false in
       if used_nlsat && not is_unsat then
         let nia_query = build_query ~force_nia:true ctx pred in
-        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query 20 in
+        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query 60 in
         (match nia_result with
          | Sat _ | Unknown _ when Sys.getenv_opt "FORGE_DUMP_SMT" <> None ->
              Printf.eprintf "[forge-smt] NIA query dumped to %s\n%!" tmp2

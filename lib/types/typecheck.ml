@@ -108,8 +108,50 @@ let env_add_fn_if_missing env name sig_ =
   | Some _ -> env
   | None -> env_add_fn env name sig_
 
+(* Structural equality on predicates — used by env_add_fact to dedupe
+   identical assumes. The SExpr ECall handler injects callee ensures
+   on every call; for kernels that call the same span-mutating helper
+   30 times in a row, every call appends an identical
+     out[base + i] < BABY_BEAR_P
+   set, and Z3 query size grows quadratically. Dedup keeps it linear. *)
+let rec pred_struct_eq a b = match a, b with
+  | PTrue, PTrue | PFalse, PFalse -> true
+  | PVar ia, PVar ib -> ia.name = ib.name
+  | PInt a, PInt b -> Int64.equal a b
+  | PFloat a, PFloat b -> a = b
+  | PBool a, PBool b -> a = b
+  | PResult, PResult -> true
+  | PBinop (oa, la, ra), PBinop (ob, lb, rb) ->
+      oa = ob && pred_struct_eq la lb && pred_struct_eq ra rb
+  | PUnop (oa, pa), PUnop (ob, pb) -> oa = ob && pred_struct_eq pa pb
+  | PApp (fa, asa), PApp (fb, asb) ->
+      fa.name = fb.name &&
+      (try List.for_all2 pred_struct_eq asa asb
+       with Invalid_argument _ -> false)
+  | POld pa, POld pb -> pred_struct_eq pa pb
+  | PIte (ca, ta, ea), PIte (cb, tb, eb) ->
+      pred_struct_eq ca cb && pred_struct_eq ta tb && pred_struct_eq ea eb
+  | PForall (xa, ta, pa), PForall (xb, tb, pb) ->
+      xa.name = xb.name && ta = tb && pred_struct_eq pa pb
+  | PExists (xa, ta, pa), PExists (xb, tb, pb) ->
+      xa.name = xb.name && ta = tb && pred_struct_eq pa pb
+  | PLex la, PLex lb ->
+      (try List.for_all2 pred_struct_eq la lb
+       with Invalid_argument _ -> false)
+  | PField (pa, fa), PField (pb, fb) -> fa = fb && pred_struct_eq pa pb
+  | PStruct (sa, fa), PStruct (sb, fb) ->
+      sa = sb &&
+      (try List.for_all2
+         (fun (na, pa) (nb, pb) -> na = nb && pred_struct_eq pa pb)
+         fa fb
+       with Invalid_argument _ -> false)
+  | PIndex (aa, ia), PIndex (ab, ib) ->
+      pred_struct_eq aa ab && pred_struct_eq ia ib
+  | _, _ -> false
+
 let env_add_fact env pred =
-  { env with proof_ctx = ctx_add_assume env.proof_ctx pred }
+  if List.exists (pred_struct_eq pred) env.proof_ctx.pc_assumes then env
+  else { env with proof_ctx = ctx_add_assume env.proof_ctx pred }
 
 (* Trait/assoc type helpers *)
 let env_add_impl env ty_name trait_name =
@@ -1285,6 +1327,8 @@ and stmt_final_env env stmt =
       env_assign_var env name (expr_to_pred_simple rhs)
   | SExpr e ->
       (match e.expr_desc with
+       | EAssume (pred, _) -> env_add_fact env pred
+       | EAssert (pred, _) -> env_add_fact env pred
        | EAssign (lhs, rhs) ->
            (match lhs.expr_desc with
             | EVar v ->
