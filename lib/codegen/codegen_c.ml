@@ -2136,9 +2136,15 @@ let emit_fn fn =
   (* C99: main() must return int — if FORGE main returns u64, emit int main() *)
   let is_main_fn = fn.fn_name.name = "main" && ret_ty <> TPrim TUnit in
   let c_ret_ty = if is_main_fn then "int" else emit_ret_ty ret_ty in
+  (* For `main`, emit with __attribute__((weak)) so the FORGE-emitted
+     trivial main can be overridden when felt252.c is linked as a library
+     with another program providing its own main. Standalone `forge build`
+     still produces a working entry point — the weak symbol becomes
+     strong when no other main is provided. *)
+  let weak_attr = if is_main_fn then " __attribute__((weak))" else "" in
   Buffer.add_string buf
-    (Printf.sprintf "%s%s %s(%s)"
-      qual c_ret_ty (c_safe_name fn.fn_name.name) params_str);
+    (Printf.sprintf "%s%s%s %s(%s)"
+      qual c_ret_ty weak_attr (c_safe_name fn.fn_name.name) params_str);
   (* Whether trailing expressions should become 'return expr' or just 'expr;'
      Void functions and kernels have no meaningful return value. *)
   let returns_value = ret_ty <> TPrim TUnit && ret_ty <> TPrim TNever in
@@ -2621,6 +2627,24 @@ let emit_program ?(lib_mode=false) prog =
     Buffer.add_string buf "#  define __attribute__(x)\n";
     Buffer.add_string buf "#endif\n"
   end;
+  (* Polyfill typedefs for spec-only extended-uint types.
+     u256/u512/u1024/bv256 appear in spec functions (used to state
+     mathematical contracts in ensures/requires); these functions are
+     not called at runtime. The polyfill is via __uint128_t on GCC/
+     Clang (wide enough to compile but not arithmetically correct for
+     full 256+ bit values); MSVC falls back to uint64_t. Either way,
+     the values exist only in spec contexts so the polyfill is OK. *)
+  Buffer.add_string buf "#ifdef __SIZEOF_INT128__\n";
+  Buffer.add_string buf "typedef unsigned __int128 u256;\n";
+  Buffer.add_string buf "typedef unsigned __int128 u512;\n";
+  Buffer.add_string buf "typedef unsigned __int128 u1024;\n";
+  Buffer.add_string buf "typedef unsigned __int128 bv256;\n";
+  Buffer.add_string buf "#else\n";
+  Buffer.add_string buf "typedef uint64_t u256;\n";
+  Buffer.add_string buf "typedef uint64_t u512;\n";
+  Buffer.add_string buf "typedef uint64_t u1024;\n";
+  Buffer.add_string buf "typedef uint64_t bv256;\n";
+  Buffer.add_string buf "#endif\n";
   (* Tuple/aggregate construction macro that works in both C99 and C++.
      C99 uses compound-literal syntax `(T){a,b}`; C++ uses uniform-init
      `T{a,b}`. nvcc compiles host-and-device CUDA as C++, so the C99
