@@ -5,10 +5,15 @@ for the verified Stark crypto primitives. All single-threaded, x86-64,
 GCC 13.x at `-O2` on a recent Linux box (i9-12900K class CPU).
 
 ```
-gcc -O2 -Du256=__uint128_t -Dmain=__felt_main_unused -c felt252.c -o felt252.o
+gcc -O2 -c felt252.c -o felt252.o
 gcc -O2 -o bench benchmark.c felt252.o
 ./bench
 ```
+
+(Prior to commit `8ef9373` the compile required `-Du256=__uint128_t`
+and `-Dmain=__felt_main_unused` workarounds; the codegen fix emits
+the polyfill typedefs in the C header and marks `main` weak so those
+flags are no longer needed.)
 
 ## Headline numbers
 
