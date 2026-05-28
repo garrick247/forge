@@ -1,0 +1,468 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry accumulate_numerators(
+    .param .u64 accumulate_numerators_param_col_ptrs_data,
+    .param .u64 accumulate_numerators_param_col_ptrs_len,
+    .param .u64 accumulate_numerators_param_col_indices_data,
+    .param .u64 accumulate_numerators_param_col_indices_len,
+    .param .u64 accumulate_numerators_param_b_coeffs_data,
+    .param .u64 accumulate_numerators_param_b_coeffs_len,
+    .param .u64 accumulate_numerators_param_c_coeffs_data,
+    .param .u64 accumulate_numerators_param_c_coeffs_len,
+    .param .u64 accumulate_numerators_param_n_batch_cols,
+    .param .u64 accumulate_numerators_param_n_rows,
+    .param .u64 accumulate_numerators_param_out0_data,
+    .param .u64 accumulate_numerators_param_out0_len,
+    .param .u64 accumulate_numerators_param_out1_data,
+    .param .u64 accumulate_numerators_param_out1_len,
+    .param .u64 accumulate_numerators_param_out2_data,
+    .param .u64 accumulate_numerators_param_out2_len,
+    .param .u64 accumulate_numerators_param_out3_data,
+    .param .u64 accumulate_numerators_param_out3_len
+)
+{
+    .reg .pred %p113, %p117, %p142, %p156, %p160, %p185, %p199, %p203, %p228, %p24, %p244, %p253, %p262, %p271, %p32, %p35, %p42, %p50, %p67, %p73, %p77, %p99;
+    .reg .u32 %r105, %r106, %r107, %r108, %r109, %r110, %r124, %r125, %r131, %r132, %r138, %r148, %r149, %r150, %r151, %r152, %r153, %r167, %r168, %r174, %r175, %r18, %r181, %r19, %r191, %r192, %r193, %r194, %r195, %r196, %r20, %r21, %r210, %r211, %r217, %r218, %r22, %r224, %r234, %r235, %r236, %r237, %r238, %r239, %r248, %r257, %r26, %r266, %r27, %r275, %r278, %r28, %r29, %r291, %r292, %r293, %r40, %r55, %r56, %r57, %r58, %r59, %r60, %r61, %r62, %r63, %r64, %r65, %r66, %r69, %r70, %r82, %r83, %r84, %r88, %r89, %r95;
+    .reg .u64 %rd0, %rd1, %rd10, %rd101, %rd102, %rd103, %rd104, %rd11, %rd111, %rd112, %rd115, %rd116, %rd119, %rd12, %rd120, %rd121, %rd122, %rd123, %rd126, %rd127, %rd128, %rd129, %rd13, %rd130, %rd133, %rd134, %rd135, %rd136, %rd137, %rd139, %rd14, %rd140, %rd141, %rd144, %rd145, %rd146, %rd147, %rd15, %rd154, %rd155, %rd158, %rd159, %rd16, %rd162, %rd163, %rd164, %rd165, %rd166, %rd169, %rd17, %rd170, %rd171, %rd172, %rd173, %rd176, %rd177, %rd178, %rd179, %rd180, %rd182, %rd183, %rd184, %rd187, %rd188, %rd189, %rd190, %rd197, %rd198, %rd2, %rd201, %rd202, %rd205, %rd206, %rd207, %rd208, %rd209, %rd212, %rd213, %rd214, %rd215, %rd216, %rd219, %rd220, %rd221, %rd222, %rd223, %rd225, %rd226, %rd227, %rd23, %rd230, %rd231, %rd232, %rd233, %rd240, %rd241, %rd242, %rd243, %rd246, %rd247, %rd249, %rd250, %rd251, %rd252, %rd255, %rd256, %rd258, %rd259, %rd260, %rd261, %rd264, %rd265, %rd267, %rd268, %rd269, %rd270, %rd273, %rd274, %rd276, %rd277, %rd279, %rd280, %rd281, %rd282, %rd283, %rd284, %rd285, %rd286, %rd287, %rd288, %rd289, %rd290, %rd3, %rd30, %rd33, %rd34, %rd37, %rd38, %rd39, %rd4, %rd41, %rd44, %rd45, %rd46, %rd47, %rd48, %rd49, %rd5, %rd52, %rd53, %rd54, %rd6, %rd7, %rd71, %rd72, %rd75, %rd76, %rd79, %rd8, %rd80, %rd81, %rd85, %rd86, %rd87, %rd9, %rd90, %rd91, %rd92, %rd93, %rd94, %rd96, %rd97, %rd98;
+
+  ld.param.u64 %rd0, [accumulate_numerators_param_col_ptrs_data];
+  ld.param.u64 %rd1, [accumulate_numerators_param_col_ptrs_len];
+  ld.param.u64 %rd2, [accumulate_numerators_param_col_indices_data];
+  ld.param.u64 %rd3, [accumulate_numerators_param_col_indices_len];
+  ld.param.u64 %rd4, [accumulate_numerators_param_b_coeffs_data];
+  ld.param.u64 %rd5, [accumulate_numerators_param_b_coeffs_len];
+  ld.param.u64 %rd6, [accumulate_numerators_param_c_coeffs_data];
+  ld.param.u64 %rd7, [accumulate_numerators_param_c_coeffs_len];
+  ld.param.u64 %rd8, [accumulate_numerators_param_n_batch_cols];
+  ld.param.u64 %rd9, [accumulate_numerators_param_n_rows];
+  ld.param.u64 %rd10, [accumulate_numerators_param_out0_data];
+  ld.param.u64 %rd11, [accumulate_numerators_param_out0_len];
+  ld.param.u64 %rd12, [accumulate_numerators_param_out1_data];
+  ld.param.u64 %rd13, [accumulate_numerators_param_out1_len];
+  ld.param.u64 %rd14, [accumulate_numerators_param_out2_data];
+  ld.param.u64 %rd15, [accumulate_numerators_param_out2_len];
+  ld.param.u64 %rd16, [accumulate_numerators_param_out3_data];
+  ld.param.u64 %rd17, [accumulate_numerators_param_out3_len];
+
+  mov.u32 %r18, %ctaid.x;
+  mov.u32 %r19, %ntid.x;
+  mul.lo.u32 %r20, %r18, %r19;
+  mov.u32 %r21, %tid.x;
+  add.u32 %r22, %r20, %r21;
+  cvt.u64.u32 %rd23, %r22;
+  setp.lt.u64 %p24, %rd23, %rd9;
+  @%p24 bra accumulate_numerators_then_25;
+  bra accumulate_numerators_else_25;
+  accumulate_numerators_then_25:
+  mov.u32 %r26, 0;
+  mov.u32 %r27, 0;
+  mov.u32 %r28, 0;
+  mov.u32 %r29, 0;
+  mov.u64 %rd30, 0;
+  accumulate_numerators_loop_31:
+  setp.lt.u64 %p32, %rd30, %rd8;
+  @!%p32 bra accumulate_numerators_loop_end_31;
+  mov.u64 %rd33, 4;
+  mul.lo.u64 %rd34, %rd30, %rd33;
+  setp.lt.u64 %p35, %rd30, %rd3;
+  @%p35 bra accumulate_numerators_then_36;
+  bra accumulate_numerators_else_36;
+  accumulate_numerators_then_36:
+  mov.u64 %rd37, 4;
+  mul.lo.u64 %rd38, %rd30, %rd37;
+  add.u64 %rd39, %rd2, %rd38;
+  ld.global.u32 %r40, [%rd39];
+  cvt.u64.u32 %rd41, %r40;
+  setp.lt.u64 %p42, %rd41, %rd1;
+  @%p42 bra accumulate_numerators_then_43;
+  bra accumulate_numerators_else_43;
+  accumulate_numerators_then_43:
+  mov.u64 %rd44, 16;
+  mul.lo.u64 %rd45, %rd41, %rd44;
+  add.u64 %rd46, %rd0, %rd45;
+  ld.global.u64 %rd47, [%rd46];
+  add.u64 %rd48, %rd46, 8;
+  ld.global.u64 %rd49, [%rd48];
+  setp.lt.u64 %p50, %rd23, %rd49;
+  @%p50 bra accumulate_numerators_then_51;
+  bra accumulate_numerators_else_51;
+  accumulate_numerators_then_51:
+  mov.u64 %rd52, 4;
+  mul.lo.u64 %rd53, %rd23, %rd52;
+  add.u64 %rd54, %rd47, %rd53;
+  ld.global.u32 %r55, [%rd54];
+  mov.u32 %r56, %r55;
+  bra accumulate_numerators_end_51;
+  accumulate_numerators_else_51:
+  mov.u32 %r57, 0;
+  mov.u32 %r56, %r57;
+  accumulate_numerators_end_51:
+  mov.u32 %r58, %r56;
+  bra accumulate_numerators_end_43;
+  accumulate_numerators_else_43:
+  mov.u32 %r59, 0;
+  mov.u32 %r58, %r59;
+  accumulate_numerators_end_43:
+  mov.u32 %r60, %r58;
+  bra accumulate_numerators_end_36;
+  accumulate_numerators_else_36:
+  mov.u32 %r61, 0;
+  mov.u32 %r60, %r61;
+  accumulate_numerators_end_36:
+  mov.u32 %r62, 2147483647;
+  and.b32 %r63, %r60, %r62;
+  mov.u32 %r64, 31;
+  shr.u32 %r65, %r60, %r64;
+  add.u32 %r66, %r63, %r65;
+  setp.ge.u32 %p67, %r66, %r62;
+  @%p67 bra accumulate_numerators_then_68;
+  bra accumulate_numerators_else_68;
+  accumulate_numerators_then_68:
+  sub.u32 %r69, %r66, %r62;
+  mov.u32 %r70, %r69;
+  bra accumulate_numerators_end_68;
+  accumulate_numerators_else_68:
+  mov.u32 %r70, %r66;
+  accumulate_numerators_end_68:
+  mov.u64 %rd71, 3;
+  add.u64 %rd72, %rd34, %rd71;
+  setp.lt.u64 %p73, %rd72, %rd7;
+  @%p73 bra accumulate_numerators_then_74;
+  bra accumulate_numerators_else_74;
+  accumulate_numerators_then_74:
+  mov.u64 %rd75, 3;
+  add.u64 %rd76, %rd34, %rd75;
+  setp.lt.u64 %p77, %rd76, %rd5;
+  @%p77 bra accumulate_numerators_then_78;
+  bra accumulate_numerators_else_78;
+  accumulate_numerators_then_78:
+  mov.u64 %rd79, 4;
+  mul.lo.u64 %rd80, %rd34, %rd79;
+  add.u64 %rd81, %rd6, %rd80;
+  ld.global.u32 %r82, [%rd81];
+  mov.u32 %r83, 2147483647;
+  rem.u32 %r84, %r82, %r83;
+  mov.u64 %rd85, 4;
+  mul.lo.u64 %rd86, %rd34, %rd85;
+  add.u64 %rd87, %rd4, %rd86;
+  ld.global.u32 %r88, [%rd87];
+  rem.u32 %r89, %r88, %r83;
+  cvt.u64.u32 %rd90, %r84;
+  cvt.u64.u32 %rd91, %r70;
+  mul.lo.u64 %rd92, %rd90, %rd91;
+  cvt.u64.u32 %rd93, %r83;
+  rem.u64 %rd94, %rd92, %rd93;
+  cvt.u32.u64 %r95, %rd94;
+  cvt.u64.u32 %rd96, %r95;
+  cvt.u64.u32 %rd97, %r89;
+  cvt.u64.u32 %rd98, %r83;
+  setp.ge.u64 %p99, %rd96, %rd97;
+  @%p99 bra accumulate_numerators_then_100;
+  bra accumulate_numerators_else_100;
+  accumulate_numerators_then_100:
+  sub.u64 %rd101, %rd96, %rd97;
+  mov.u64 %rd102, %rd101;
+  bra accumulate_numerators_end_100;
+  accumulate_numerators_else_100:
+  add.u64 %rd103, %rd96, %rd98;
+  sub.u64 %rd104, %rd103, %rd97;
+  mov.u64 %rd102, %rd104;
+  accumulate_numerators_end_100:
+  cvt.u32.u64 %r105, %rd102;
+  mov.u32 %r106, %r105;
+  bra accumulate_numerators_end_78;
+  accumulate_numerators_else_78:
+  mov.u32 %r107, 0;
+  mov.u32 %r106, %r107;
+  accumulate_numerators_end_78:
+  mov.u32 %r108, %r106;
+  bra accumulate_numerators_end_74;
+  accumulate_numerators_else_74:
+  mov.u32 %r109, 0;
+  mov.u32 %r108, %r109;
+  accumulate_numerators_end_74:
+  rem.u32 %r110, %r108, %r83;
+  mov.u64 %rd111, 3;
+  add.u64 %rd112, %rd34, %rd111;
+  setp.lt.u64 %p113, %rd112, %rd7;
+  @%p113 bra accumulate_numerators_then_114;
+  bra accumulate_numerators_else_114;
+  accumulate_numerators_then_114:
+  mov.u64 %rd115, 3;
+  add.u64 %rd116, %rd34, %rd115;
+  setp.lt.u64 %p117, %rd116, %rd5;
+  @%p117 bra accumulate_numerators_then_118;
+  bra accumulate_numerators_else_118;
+  accumulate_numerators_then_118:
+  mov.u64 %rd119, 1;
+  add.u64 %rd120, %rd34, %rd119;
+  mov.u64 %rd121, 4;
+  mul.lo.u64 %rd122, %rd120, %rd121;
+  add.u64 %rd123, %rd6, %rd122;
+  ld.global.u32 %r124, [%rd123];
+  rem.u32 %r125, %r124, %r83;
+  mov.u64 %rd126, 1;
+  add.u64 %rd127, %rd34, %rd126;
+  mov.u64 %rd128, 4;
+  mul.lo.u64 %rd129, %rd127, %rd128;
+  add.u64 %rd130, %rd4, %rd129;
+  ld.global.u32 %r131, [%rd130];
+  rem.u32 %r132, %r131, %r83;
+  cvt.u64.u32 %rd133, %r125;
+  cvt.u64.u32 %rd134, %r70;
+  mul.lo.u64 %rd135, %rd133, %rd134;
+  cvt.u64.u32 %rd136, %r83;
+  rem.u64 %rd137, %rd135, %rd136;
+  cvt.u32.u64 %r138, %rd137;
+  cvt.u64.u32 %rd139, %r138;
+  cvt.u64.u32 %rd140, %r132;
+  cvt.u64.u32 %rd141, %r83;
+  setp.ge.u64 %p142, %rd139, %rd140;
+  @%p142 bra accumulate_numerators_then_143;
+  bra accumulate_numerators_else_143;
+  accumulate_numerators_then_143:
+  sub.u64 %rd144, %rd139, %rd140;
+  mov.u64 %rd145, %rd144;
+  bra accumulate_numerators_end_143;
+  accumulate_numerators_else_143:
+  add.u64 %rd146, %rd139, %rd141;
+  sub.u64 %rd147, %rd146, %rd140;
+  mov.u64 %rd145, %rd147;
+  accumulate_numerators_end_143:
+  cvt.u32.u64 %r148, %rd145;
+  mov.u32 %r149, %r148;
+  bra accumulate_numerators_end_118;
+  accumulate_numerators_else_118:
+  mov.u32 %r150, 0;
+  mov.u32 %r149, %r150;
+  accumulate_numerators_end_118:
+  mov.u32 %r151, %r149;
+  bra accumulate_numerators_end_114;
+  accumulate_numerators_else_114:
+  mov.u32 %r152, 0;
+  mov.u32 %r151, %r152;
+  accumulate_numerators_end_114:
+  rem.u32 %r153, %r151, %r83;
+  mov.u64 %rd154, 3;
+  add.u64 %rd155, %rd34, %rd154;
+  setp.lt.u64 %p156, %rd155, %rd7;
+  @%p156 bra accumulate_numerators_then_157;
+  bra accumulate_numerators_else_157;
+  accumulate_numerators_then_157:
+  mov.u64 %rd158, 3;
+  add.u64 %rd159, %rd34, %rd158;
+  setp.lt.u64 %p160, %rd159, %rd5;
+  @%p160 bra accumulate_numerators_then_161;
+  bra accumulate_numerators_else_161;
+  accumulate_numerators_then_161:
+  mov.u64 %rd162, 2;
+  add.u64 %rd163, %rd34, %rd162;
+  mov.u64 %rd164, 4;
+  mul.lo.u64 %rd165, %rd163, %rd164;
+  add.u64 %rd166, %rd6, %rd165;
+  ld.global.u32 %r167, [%rd166];
+  rem.u32 %r168, %r167, %r83;
+  mov.u64 %rd169, 2;
+  add.u64 %rd170, %rd34, %rd169;
+  mov.u64 %rd171, 4;
+  mul.lo.u64 %rd172, %rd170, %rd171;
+  add.u64 %rd173, %rd4, %rd172;
+  ld.global.u32 %r174, [%rd173];
+  rem.u32 %r175, %r174, %r83;
+  cvt.u64.u32 %rd176, %r168;
+  cvt.u64.u32 %rd177, %r70;
+  mul.lo.u64 %rd178, %rd176, %rd177;
+  cvt.u64.u32 %rd179, %r83;
+  rem.u64 %rd180, %rd178, %rd179;
+  cvt.u32.u64 %r181, %rd180;
+  cvt.u64.u32 %rd182, %r181;
+  cvt.u64.u32 %rd183, %r175;
+  cvt.u64.u32 %rd184, %r83;
+  setp.ge.u64 %p185, %rd182, %rd183;
+  @%p185 bra accumulate_numerators_then_186;
+  bra accumulate_numerators_else_186;
+  accumulate_numerators_then_186:
+  sub.u64 %rd187, %rd182, %rd183;
+  mov.u64 %rd188, %rd187;
+  bra accumulate_numerators_end_186;
+  accumulate_numerators_else_186:
+  add.u64 %rd189, %rd182, %rd184;
+  sub.u64 %rd190, %rd189, %rd183;
+  mov.u64 %rd188, %rd190;
+  accumulate_numerators_end_186:
+  cvt.u32.u64 %r191, %rd188;
+  mov.u32 %r192, %r191;
+  bra accumulate_numerators_end_161;
+  accumulate_numerators_else_161:
+  mov.u32 %r193, 0;
+  mov.u32 %r192, %r193;
+  accumulate_numerators_end_161:
+  mov.u32 %r194, %r192;
+  bra accumulate_numerators_end_157;
+  accumulate_numerators_else_157:
+  mov.u32 %r195, 0;
+  mov.u32 %r194, %r195;
+  accumulate_numerators_end_157:
+  rem.u32 %r196, %r194, %r83;
+  mov.u64 %rd197, 3;
+  add.u64 %rd198, %rd34, %rd197;
+  setp.lt.u64 %p199, %rd198, %rd7;
+  @%p199 bra accumulate_numerators_then_200;
+  bra accumulate_numerators_else_200;
+  accumulate_numerators_then_200:
+  mov.u64 %rd201, 3;
+  add.u64 %rd202, %rd34, %rd201;
+  setp.lt.u64 %p203, %rd202, %rd5;
+  @%p203 bra accumulate_numerators_then_204;
+  bra accumulate_numerators_else_204;
+  accumulate_numerators_then_204:
+  mov.u64 %rd205, 3;
+  add.u64 %rd206, %rd34, %rd205;
+  mov.u64 %rd207, 4;
+  mul.lo.u64 %rd208, %rd206, %rd207;
+  add.u64 %rd209, %rd6, %rd208;
+  ld.global.u32 %r210, [%rd209];
+  rem.u32 %r211, %r210, %r83;
+  mov.u64 %rd212, 3;
+  add.u64 %rd213, %rd34, %rd212;
+  mov.u64 %rd214, 4;
+  mul.lo.u64 %rd215, %rd213, %rd214;
+  add.u64 %rd216, %rd4, %rd215;
+  ld.global.u32 %r217, [%rd216];
+  rem.u32 %r218, %r217, %r83;
+  cvt.u64.u32 %rd219, %r211;
+  cvt.u64.u32 %rd220, %r70;
+  mul.lo.u64 %rd221, %rd219, %rd220;
+  cvt.u64.u32 %rd222, %r83;
+  rem.u64 %rd223, %rd221, %rd222;
+  cvt.u32.u64 %r224, %rd223;
+  cvt.u64.u32 %rd225, %r224;
+  cvt.u64.u32 %rd226, %r218;
+  cvt.u64.u32 %rd227, %r83;
+  setp.ge.u64 %p228, %rd225, %rd226;
+  @%p228 bra accumulate_numerators_then_229;
+  bra accumulate_numerators_else_229;
+  accumulate_numerators_then_229:
+  sub.u64 %rd230, %rd225, %rd226;
+  mov.u64 %rd231, %rd230;
+  bra accumulate_numerators_end_229;
+  accumulate_numerators_else_229:
+  add.u64 %rd232, %rd225, %rd227;
+  sub.u64 %rd233, %rd232, %rd226;
+  mov.u64 %rd231, %rd233;
+  accumulate_numerators_end_229:
+  cvt.u32.u64 %r234, %rd231;
+  mov.u32 %r235, %r234;
+  bra accumulate_numerators_end_204;
+  accumulate_numerators_else_204:
+  mov.u32 %r236, 0;
+  mov.u32 %r235, %r236;
+  accumulate_numerators_end_204:
+  mov.u32 %r237, %r235;
+  bra accumulate_numerators_end_200;
+  accumulate_numerators_else_200:
+  mov.u32 %r238, 0;
+  mov.u32 %r237, %r238;
+  accumulate_numerators_end_200:
+  rem.u32 %r239, %r237, %r83;
+  cvt.u64.u32 %rd240, %r26;
+  cvt.u64.u32 %rd241, %r110;
+  add.u64 %rd242, %rd240, %rd241;
+  cvt.u64.u32 %rd243, %r83;
+  setp.ge.u64 %p244, %rd242, %rd243;
+  @%p244 bra accumulate_numerators_then_245;
+  bra accumulate_numerators_else_245;
+  accumulate_numerators_then_245:
+  sub.u64 %rd246, %rd242, %rd243;
+  mov.u64 %rd247, %rd246;
+  bra accumulate_numerators_end_245;
+  accumulate_numerators_else_245:
+  mov.u64 %rd247, %rd242;
+  accumulate_numerators_end_245:
+  cvt.u32.u64 %r248, %rd247;
+  cvt.u64.u32 %rd249, %r27;
+  cvt.u64.u32 %rd250, %r153;
+  add.u64 %rd251, %rd249, %rd250;
+  cvt.u64.u32 %rd252, %r83;
+  setp.ge.u64 %p253, %rd251, %rd252;
+  @%p253 bra accumulate_numerators_then_254;
+  bra accumulate_numerators_else_254;
+  accumulate_numerators_then_254:
+  sub.u64 %rd255, %rd251, %rd252;
+  mov.u64 %rd256, %rd255;
+  bra accumulate_numerators_end_254;
+  accumulate_numerators_else_254:
+  mov.u64 %rd256, %rd251;
+  accumulate_numerators_end_254:
+  cvt.u32.u64 %r257, %rd256;
+  cvt.u64.u32 %rd258, %r28;
+  cvt.u64.u32 %rd259, %r196;
+  add.u64 %rd260, %rd258, %rd259;
+  cvt.u64.u32 %rd261, %r83;
+  setp.ge.u64 %p262, %rd260, %rd261;
+  @%p262 bra accumulate_numerators_then_263;
+  bra accumulate_numerators_else_263;
+  accumulate_numerators_then_263:
+  sub.u64 %rd264, %rd260, %rd261;
+  mov.u64 %rd265, %rd264;
+  bra accumulate_numerators_end_263;
+  accumulate_numerators_else_263:
+  mov.u64 %rd265, %rd260;
+  accumulate_numerators_end_263:
+  cvt.u32.u64 %r266, %rd265;
+  cvt.u64.u32 %rd267, %r29;
+  cvt.u64.u32 %rd268, %r239;
+  add.u64 %rd269, %rd267, %rd268;
+  cvt.u64.u32 %rd270, %r83;
+  setp.ge.u64 %p271, %rd269, %rd270;
+  @%p271 bra accumulate_numerators_then_272;
+  bra accumulate_numerators_else_272;
+  accumulate_numerators_then_272:
+  sub.u64 %rd273, %rd269, %rd270;
+  mov.u64 %rd274, %rd273;
+  bra accumulate_numerators_end_272;
+  accumulate_numerators_else_272:
+  mov.u64 %rd274, %rd269;
+  accumulate_numerators_end_272:
+  cvt.u32.u64 %r275, %rd274;
+  mov.u64 %rd276, 1;
+  add.u64 %rd277, %rd30, %rd276;
+  mov.u32 %r26, %r248; // loop wb: a0
+  mov.u32 %r27, %r257; // loop wb: a1
+  mov.u32 %r28, %r266; // loop wb: a2
+  mov.u32 %r29, %r275; // loop wb: a3
+  mov.u64 %rd30, %rd277; // loop wb: i
+  bra accumulate_numerators_loop_31;
+  accumulate_numerators_loop_end_31:
+  mov.u32 %r278, 0; // unit
+  mov.u64 %rd279, 4;
+  mul.lo.u64 %rd280, %rd23, %rd279;
+  add.u64 %rd281, %rd10, %rd280;
+  st.global.u32 [%rd281], %r26;
+  mov.u64 %rd282, 4;
+  mul.lo.u64 %rd283, %rd23, %rd282;
+  add.u64 %rd284, %rd12, %rd283;
+  st.global.u32 [%rd284], %r27;
+  mov.u64 %rd285, 4;
+  mul.lo.u64 %rd286, %rd23, %rd285;
+  add.u64 %rd287, %rd14, %rd286;
+  st.global.u32 [%rd287], %r28;
+  mov.u64 %rd288, 4;
+  mul.lo.u64 %rd289, %rd23, %rd288;
+  add.u64 %rd290, %rd16, %rd289;
+  st.global.u32 [%rd290], %r29;
+  mov.u32 %r291, 0; // unit
+  mov.u32 %r292, %r291;
+  bra accumulate_numerators_end_25;
+  accumulate_numerators_else_25:
+  mov.u32 %r292, 0; // no else branch
+  accumulate_numerators_end_25:
+  mov.u32 %r293, 0; // unit
+  ret;
+}
+

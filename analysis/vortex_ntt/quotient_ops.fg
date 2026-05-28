@@ -1,0 +1,129 @@
+// VortexSTARK quotient-stage accumulate_numerators kernel — FORGE.
+// Replaces cuda/quotient.cu accumulate_numerators_kernel.
+//
+//   result[row] = sum_i ( c_i * f_i[row] - b_i )    in QM31
+// where f_i[row] = col_ptrs[col_indices[i]][row] is an M31 column value,
+// (b_i, c_i) are QM31 line coefficients (4 M31 limbs each, flat AoS), and
+// c_i * f_i is QM31 * M31 scalar (per-limb m31_mul). Output is SoA QM31
+// (out0..out3). Modeled on barycentric_eval.fg (QM31 reduction loop +
+// per-component if-expr bound-carry) + circle_ntt_batch.fg (span<span<u32>>).
+//
+// Every loaded value is canonicalized via `% M31_P`: for the canonical M31
+// inputs the prover actually feeds (coeffs + trace columns < M31_P) this is
+// a runtime no-op (byte-identical to the hand kernel), and it discharges the
+// `< M31_P` precondition of m31_mul/m31_sub/m31_add without a forall over the
+// nested span<span<u32>>.
+
+use std::gpu;
+use std::m31;
+
+#[device]
+fn reduce_word(v: u32) -> u32
+    ensures result < M31_P
+{
+    let lo: u32 = v & M31_P;
+    let hi: u32 = v >> 31u32;
+    let r: u32 = lo + hi;
+    if r >= M31_P { r - M31_P } else { r }
+}
+
+#[kernel]
+fn accumulate_numerators(
+    col_ptrs:     span<span<u32>>,
+    col_indices:  span<u32>,
+    b_coeffs:     span<u32>,
+    c_coeffs:     span<u32>,
+    n_batch_cols: u64,
+    n_rows:       u64,
+    out0: span<u32>,
+    out1: span<u32>,
+    out2: span<u32>,
+    out3: span<u32>
+)
+    requires n_rows <= out0.len
+    requires n_rows <= out1.len
+    requires n_rows <= out2.len
+    requires n_rows <= out3.len
+{
+    let row: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if row < n_rows {
+        let mut a0: u32 = 0u32;
+        let mut a1: u32 = 0u32;
+        let mut a2: u32 = 0u32;
+        let mut a3: u32 = 0u32;
+
+        let mut i: u64 = 0u64;
+        while i < n_batch_cols
+            invariant a0 < M31_P
+            invariant a1 < M31_P
+            invariant a2 < M31_P
+            invariant a3 < M31_P
+            decreases n_batch_cols - i
+        {
+            let cb: u64 = i * 4u64;
+
+            // f = col_ptrs[col_indices[i]][row], canonicalized.
+            let f_raw: u32 = if i < col_indices.len {
+                let col_idx: u64 = col_indices[i] as u64;
+                if col_idx < col_ptrs.len {
+                    let col: span<u32> = col_ptrs[col_idx];
+                    if row < col.len {
+                        col[row]
+                    } else { 0u32 }
+                } else { 0u32 }
+            } else { 0u32 };
+            let f: u32 = reduce_word(f_raw);
+
+            // term_k = m31_sub(m31_mul(c_k, f), b_k), bounds-guarded.
+            let t0_raw: u32 = if cb + 3u64 < c_coeffs.len {
+                if cb + 3u64 < b_coeffs.len {
+                    let c0: u32 = c_coeffs[cb] % M31_P;
+                    let b0: u32 = b_coeffs[cb] % M31_P;
+                    m31_sub(m31_mul(c0, f), b0)
+                } else { 0u32 }
+            } else { 0u32 };
+            let t0: u32 = t0_raw % M31_P;
+
+            let t1_raw: u32 = if cb + 3u64 < c_coeffs.len {
+                if cb + 3u64 < b_coeffs.len {
+                    let c1: u32 = c_coeffs[cb + 1u64] % M31_P;
+                    let b1: u32 = b_coeffs[cb + 1u64] % M31_P;
+                    m31_sub(m31_mul(c1, f), b1)
+                } else { 0u32 }
+            } else { 0u32 };
+            let t1: u32 = t1_raw % M31_P;
+
+            let t2_raw: u32 = if cb + 3u64 < c_coeffs.len {
+                if cb + 3u64 < b_coeffs.len {
+                    let c2: u32 = c_coeffs[cb + 2u64] % M31_P;
+                    let b2: u32 = b_coeffs[cb + 2u64] % M31_P;
+                    m31_sub(m31_mul(c2, f), b2)
+                } else { 0u32 }
+            } else { 0u32 };
+            let t2: u32 = t2_raw % M31_P;
+
+            let t3_raw: u32 = if cb + 3u64 < c_coeffs.len {
+                if cb + 3u64 < b_coeffs.len {
+                    let c3: u32 = c_coeffs[cb + 3u64] % M31_P;
+                    let b3: u32 = b_coeffs[cb + 3u64] % M31_P;
+                    m31_sub(m31_mul(c3, f), b3)
+                } else { 0u32 }
+            } else { 0u32 };
+            let t3: u32 = t3_raw % M31_P;
+
+            a0 = m31_add(a0, t0);
+            a1 = m31_add(a1, t1);
+            a2 = m31_add(a2, t2);
+            a3 = m31_add(a3, t3);
+
+            i = i + 1u64;
+        };
+
+        out0[row] = a0;
+        out1[row] = a1;
+        out2[row] = a2;
+        out3[row] = a3;
+    };
+}
+
+fn main() -> i32 { 0i32 }
