@@ -1,5 +1,8 @@
 // VortexSTARK quotient-stage accumulate_numerators kernel — FORGE.
 // Replaces cuda/quotient.cu accumulate_numerators_kernel.
+// NOTE: a verified REFERENCE. The LIVE prove path uses the fused dual
+// variant (quotient_ops_dual.fg); the single hand kernel was removed from
+// VortexSTARK as dead code (2026-05-28).
 //
 //   result[row] = sum_i ( c_i * f_i[row] - b_i )    in QM31
 // where f_i[row] = col_ptrs[col_indices[i]][row] is an M31 column value,
