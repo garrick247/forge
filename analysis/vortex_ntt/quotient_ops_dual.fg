@@ -1,0 +1,160 @@
+// VortexSTARK fused dual accumulate_numerators kernel — FORGE.
+// Replaces cuda/quotient.cu accumulate_numerators_dual_kernel (the LIVE
+// quotient kernel, prover.rs phase2c). Computes BOTH the z-sample and
+// z_next-sample QM31 accumulators in one pass, reading each column once:
+//   out_z[row]  = sum_i ( c_z_i  * f_i[row] - b_z_i )
+//   out_zn[row] = sum_i ( c_zn_i * f_i[row] - b_zn_i )   for i with zn_coeff_idx[i] != UINT32_MAX
+// where f_i[row] = col_ptrs[col_indices_z[i]][row], the z-batch (b,c) come
+// from (b_coeffs_z, c_coeffs_z) at index i, and the z_next (b,c) come from
+// (b_coeffs_zn, c_coeffs_zn) at index zn_coeff_idx[i].
+//
+// The hand kernel stages col_ptrs/indices/coeffs into shared memory (a pure
+// read optimization); the OUTPUT is identical to reading from global each
+// iteration, so this FORGE version omits the shared-mem staging and stays
+// byte-identical. The z_next "skip when zn_coeff_idx[i]==UINT32_MAX" is
+// modeled by a zero term (adding 0 == not adding), which the bounds guard
+// produces automatically (sentinel index fails znb+3 < len).
+//
+// Modeled on quotient_ops.fg (single) — same per-limb m31 ops, span<span>
+// indexing, % M31_P / reduce_word canonicalization, if-expr bound-carry.
+
+use std::gpu;
+use std::m31;
+
+#[device]
+fn reduce_word(v: u32) -> u32
+    ensures result < M31_P
+{
+    let lo: u32 = v & M31_P;
+    let hi: u32 = v >> 31u32;
+    let r: u32 = lo + hi;
+    if r >= M31_P { r - M31_P } else { r }
+}
+
+#[kernel]
+fn accumulate_numerators_dual(
+    col_ptrs:      span<span<u32>>,
+    col_indices_z: span<u32>,
+    zn_coeff_idx:  span<u32>,
+    b_coeffs_z:    span<u32>,
+    c_coeffs_z:    span<u32>,
+    b_coeffs_zn:   span<u32>,
+    c_coeffs_zn:   span<u32>,
+    n_cols_z: u64,
+    n_rows:   u64,
+    out_z0: span<u32>, out_z1: span<u32>, out_z2: span<u32>, out_z3: span<u32>,
+    out_zn0: span<u32>, out_zn1: span<u32>, out_zn2: span<u32>, out_zn3: span<u32>
+)
+    requires n_rows <= out_z0.len
+    requires n_rows <= out_z1.len
+    requires n_rows <= out_z2.len
+    requires n_rows <= out_z3.len
+    requires n_rows <= out_zn0.len
+    requires n_rows <= out_zn1.len
+    requires n_rows <= out_zn2.len
+    requires n_rows <= out_zn3.len
+{
+    let row: u64 = blockIdx_x * blockDim_x + threadIdx_x;
+    if row < n_rows {
+        let mut az0: u32 = 0u32;
+        let mut az1: u32 = 0u32;
+        let mut az2: u32 = 0u32;
+        let mut az3: u32 = 0u32;
+        let mut an0: u32 = 0u32;
+        let mut an1: u32 = 0u32;
+        let mut an2: u32 = 0u32;
+        let mut an3: u32 = 0u32;
+
+        let mut i: u64 = 0u64;
+        while i < n_cols_z
+            invariant az0 < M31_P
+            invariant az1 < M31_P
+            invariant az2 < M31_P
+            invariant az3 < M31_P
+            invariant an0 < M31_P
+            invariant an1 < M31_P
+            invariant an2 < M31_P
+            invariant an3 < M31_P
+            decreases n_cols_z - i
+        {
+            let cb: u64 = i * 4u64;
+
+            // f = col_ptrs[col_indices_z[i]][row], canonicalized.
+            let f_raw: u32 = if i < col_indices_z.len {
+                let col_idx: u64 = col_indices_z[i] as u64;
+                if col_idx < col_ptrs.len {
+                    let col: span<u32> = col_ptrs[col_idx];
+                    if row < col.len { col[row] } else { 0u32 }
+                } else { 0u32 }
+            } else { 0u32 };
+            let f: u32 = reduce_word(f_raw);
+
+            // ---- z contribution: t_z_k = m31_sub(m31_mul(c_z_k, f), b_z_k) ----
+            let tz0: u32 = (if cb + 3u64 < c_coeffs_z.len {
+                if cb + 3u64 < b_coeffs_z.len {
+                    m31_sub(m31_mul(c_coeffs_z[cb] % M31_P, f), b_coeffs_z[cb] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tz1: u32 = (if cb + 3u64 < c_coeffs_z.len {
+                if cb + 3u64 < b_coeffs_z.len {
+                    m31_sub(m31_mul(c_coeffs_z[cb + 1u64] % M31_P, f), b_coeffs_z[cb + 1u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tz2: u32 = (if cb + 3u64 < c_coeffs_z.len {
+                if cb + 3u64 < b_coeffs_z.len {
+                    m31_sub(m31_mul(c_coeffs_z[cb + 2u64] % M31_P, f), b_coeffs_z[cb + 2u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tz3: u32 = (if cb + 3u64 < c_coeffs_z.len {
+                if cb + 3u64 < b_coeffs_z.len {
+                    m31_sub(m31_mul(c_coeffs_z[cb + 3u64] % M31_P, f), b_coeffs_z[cb + 3u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            az0 = m31_add(az0, tz0);
+            az1 = m31_add(az1, tz1);
+            az2 = m31_add(az2, tz2);
+            az3 = m31_add(az3, tz3);
+
+            // ---- z_next contribution at index zn_coeff_idx[i] (sentinel -> 0 term) ----
+            let zn_i: u64 = if i < zn_coeff_idx.len { zn_coeff_idx[i] as u64 } else { 4294967295u64 };
+            let nb: u64 = zn_i * 4u64;
+            let tn0: u32 = (if nb + 3u64 < c_coeffs_zn.len {
+                if nb + 3u64 < b_coeffs_zn.len {
+                    m31_sub(m31_mul(c_coeffs_zn[nb] % M31_P, f), b_coeffs_zn[nb] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tn1: u32 = (if nb + 3u64 < c_coeffs_zn.len {
+                if nb + 3u64 < b_coeffs_zn.len {
+                    m31_sub(m31_mul(c_coeffs_zn[nb + 1u64] % M31_P, f), b_coeffs_zn[nb + 1u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tn2: u32 = (if nb + 3u64 < c_coeffs_zn.len {
+                if nb + 3u64 < b_coeffs_zn.len {
+                    m31_sub(m31_mul(c_coeffs_zn[nb + 2u64] % M31_P, f), b_coeffs_zn[nb + 2u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            let tn3: u32 = (if nb + 3u64 < c_coeffs_zn.len {
+                if nb + 3u64 < b_coeffs_zn.len {
+                    m31_sub(m31_mul(c_coeffs_zn[nb + 3u64] % M31_P, f), b_coeffs_zn[nb + 3u64] % M31_P)
+                } else { 0u32 }
+            } else { 0u32 }) % M31_P;
+            an0 = m31_add(an0, tn0);
+            an1 = m31_add(an1, tn1);
+            an2 = m31_add(an2, tn2);
+            an3 = m31_add(an3, tn3);
+
+            i = i + 1u64;
+        };
+
+        out_z0[row] = az0;
+        out_z1[row] = az1;
+        out_z2[row] = az2;
+        out_z3[row] = az3;
+        out_zn0[row] = an0;
+        out_zn1[row] = an1;
+        out_zn2[row] = an2;
+        out_zn3[row] = an3;
+    };
+}
+
+fn main() -> i32 { 0i32 }
