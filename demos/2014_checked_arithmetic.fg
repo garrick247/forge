@@ -45,3 +45,37 @@ fn remaining(capacity: u64, used: u64) -> u64
 {
     capacity - used
 }
+
+
+// --- signed + shift: #[checked] covers these too (BV-mode exact) ---
+
+// Signed sum, bounded so it cannot overflow i32 (sign-bit overflow test).
+#[checked]
+fn signed_sum(a: i32, b: i32) -> i32
+    requires a >= -1000000i32
+    requires a <= 1000000i32
+    requires b >= -1000000i32
+    requires b <= 1000000i32
+{
+    a + b
+}
+
+// Signed product across all sign quadrants, bounded to fit i32.
+#[checked]
+fn signed_scale(a: i32, b: i32) -> i32
+    requires a >= -30000i32
+    requires a <= 30000i32
+    requires b >= -30000i32
+    requires b <= 30000i32
+{
+    a * b
+}
+
+// Bit-packing shift: proven to drop no high bits (k < 32 and round-trips).
+#[checked]
+fn pack_shift(a: u32, k: u32) -> u32
+    requires a <= 65535u32
+    requires k <= 16u32
+{
+    a << k
+}

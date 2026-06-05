@@ -233,8 +233,14 @@ module Z3Bridge = struct
     | PBool _ -> SBool
     | PInt _  -> SBV (64, false)  (* numeric literals default to u64 in BV context *)
     | PBinop ((Add|Sub|Mul|Div|Mod|BitAnd|BitOr|BitXor|Shl|Shr), l, r) ->
+        let is_lit = (function PInt _ -> true | _ -> false) in
         let ls = infer_sort ~bv ctx l in
-        (match ls with SBV _ -> ls | _ -> infer_sort ~bv ctx r)
+        let rs = infer_sort ~bv ctx r in
+        (match ls, rs with
+         | SBV _, SBV _ -> if is_lit l && not (is_lit r) then rs else ls
+         | SBV _, _ -> ls
+         | _, SBV _ -> rs
+         | _ -> ls)
     | PBinop ((Eq|Ne|Lt|Le|Gt|Ge|And|Or|Implies|Iff), _, _) -> SBool
     | PUnop ((Neg|BitNot), p) -> infer_sort ~bv ctx p
     | PUnop (Not, _) -> SBool
@@ -285,8 +291,14 @@ module Z3Bridge = struct
         (* In BV mode: determine sort from operand types.
            In Int mode: everything is SInt (infer returns SInt when bv=false). *)
         let arith_sort =
+          let is_lit = (function PInt _ -> true | _ -> false) in
           let ls = infer l in
-          match ls with SBV _ -> ls | _ -> infer r
+          let rs = infer r in
+          (match ls, rs with
+           | SBV _, SBV _ -> if is_lit l && not (is_lit r) then rs else ls
+           | SBV _, _ -> ls
+           | _, SBV _ -> rs
+           | _ -> (match hint_sort with SBV _ -> hint_sort | _ -> ls))
         in
         let ls = pred_to_smtlib ~hint_sort:arith_sort ~bv ctx l in
         let rs = pred_to_smtlib ~hint_sort:arith_sort ~bv ctx r in
@@ -345,7 +357,9 @@ module Z3Bridge = struct
               | Shr     -> Printf.sprintf "(bvlshr %s %s)"     ls rs))
     | PUnop (Not, p)    -> Printf.sprintf "(not %s)" (pred_to_smtlib ~bv ctx p)
     | PUnop (Neg, p)    ->
-        let s = infer p in
+        let s = (match p with
+                 | PInt _ -> (match hint_sort with SBV _ -> hint_sort | _ -> infer p)
+                 | _      -> infer p) in
         (match s with
          | SBV _ -> Printf.sprintf "(bvneg %s)" (pred_to_smtlib ~hint_sort:s ~bv ctx p)
          | _     -> Printf.sprintf "(- %s)"     (pred_to_smtlib ~bv ctx p))

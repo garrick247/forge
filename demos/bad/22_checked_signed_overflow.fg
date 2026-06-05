@@ -1,0 +1,25 @@
+// expect-error: proof obligation(s) could not be discharged
+// FORGE Bad Demo 22 — Signed multiply overflow under #[checked] (correctly rejected)
+//
+// This program SHOULD FAIL to compile.
+//
+// `a * b` on unbounded i32 operands can overflow the signed range
+// [INT_MIN, INT_MAX]. Under #[checked], Forge emits a sign-split no-overflow
+// obligation (CERT INT32-C) and discharges it in bitvector mode. With no bound
+// on a and b it cannot be proven — e.g. INT_MAX * 2 overflows.
+//
+// Notably, the check is not fooled by the INT_MIN * -1 corner: that case is
+// also correctly rejected (a naive (a*b)/b == a check would wrongly accept it).
+//
+// Expected output:
+//   ✗  cannot prove 'mul' won't overflow
+//   compilation stopped — fix proof failures before proceeding
+//
+// Fix: bound the operands (e.g. requires -30000 <= a <= 30000, likewise b),
+// or drop #[checked] if wraparound is intended. See SOUNDNESS.md section 2.
+
+#[checked]
+fn signed_mul(a: i32, b: i32) -> i32
+{
+    a * b
+}

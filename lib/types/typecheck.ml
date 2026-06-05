@@ -1809,31 +1809,71 @@ and infer_expr env expr : ty =
         | _ -> numeric_result_ty (strip_qual (strip_secret lt)) (strip_qual (strip_secret rt))
       in
       (if env.overflow_checked then begin
-         let is_uint t = (match strip_qual (strip_secret t) with
-           | TPrim (TUint _) -> true | _ -> false) in
-         if is_uint result_ty then begin
-           let lp = expr_to_pred_simple lhs in
-           let rp = expr_to_pred_simple rhs in
-           let umax = (match strip_qual (strip_secret result_ty) with
-             | TPrim (TUint U8)  -> Some 255L
-             | TPrim (TUint U16) -> Some 65535L
-             | TPrim (TUint U32) -> Some 4294967295L
-             | TPrim (TUint U64) -> Some (-1L)   (* 2^64-1: emitted unsigned in BV mode *)
-             | _ -> None) in
-           (match op with
-            | Add -> add_obligation (PBinop (Ge, PBinop (Add, lp, rp), lp))
-                       (ONoOverflow "add") expr.expr_loc env
-            | Sub -> add_obligation (PBinop (Ge, lp, rp))
-                       (ONoOverflow "sub") expr.expr_loc env
-            | Mul ->
-                let mul_ob = (match umax with
-                  | Some m -> PBinop (Or, PBinop (Eq, rp, PInt 0L),
-                                      PBinop (Le, lp, PBinop (Div, PInt m, rp)))
-                  | None   -> PBinop (Or, PBinop (Eq, lp, PInt 0L),
-                                      PBinop (Eq, PBinop (Div, PBinop (Mul, lp, rp), lp), rp))) in
-                add_obligation mul_ob (ONoOverflow "mul") expr.expr_loc env
-            | _ -> ())
-         end
+         let lp = expr_to_pred_simple lhs in
+         let rp = expr_to_pred_simple rhs in
+         (* (signed, width, ones, smin) for the result type. ones = the all-ones
+            value (unsigned MAX, and also the W-bit rep of signed -1); smin = the
+            W-bit unsigned rep of signed MIN. Both chosen so emit_int_lit's %Lu
+            path produces the correct fixed-width BV literal. None = not checked
+            (128-bit / size / non-integer). *)
+         let info = (match strip_qual (strip_secret result_ty) with
+           | TPrim (TUint U8)  -> Some (false, 8,  255L,        0L,            0L)
+           | TPrim (TUint U16) -> Some (false, 16, 65535L,      0L,            0L)
+           | TPrim (TUint U32) -> Some (false, 32, 4294967295L, 0L,            0L)
+           | TPrim (TUint U64) -> Some (false, 64, (-1L),       0L,            0L)
+           | TPrim (TInt  I8)  -> Some (true,  8,  255L,        128L,          127L)
+           | TPrim (TInt  I16) -> Some (true,  16, 65535L,      32768L,        32767L)
+           | TPrim (TInt  I32) -> Some (true,  32, 4294967295L, 2147483648L,   2147483647L)
+           | TPrim (TInt  I64) -> Some (true,  64, (-1L),       Int64.min_int, Int64.max_int)
+           | _ -> None) in
+         (match info with
+          | None -> ()
+          | Some (signed, width, ones, smin, smax) ->
+            let ob pr nm = add_obligation pr (ONoOverflow nm) expr.expr_loc env in
+            let z = PInt 0L in
+            let wlit = PInt (Int64.of_int width) in
+            if not signed then
+              (match op with
+               | Add -> ob (PBinop (Ge, PBinop (Add, lp, rp), lp)) "add"
+               | Sub -> ob (PBinop (Ge, lp, rp)) "sub"
+               | Mul -> ob (PBinop (Or, PBinop (Eq, rp, z),
+                              PBinop (Le, lp, PBinop (Div, PInt ones, rp)))) "mul"
+               | Shl -> ob (PBinop (And, PBinop (Lt, rp, wlit),
+                              PBinop (Eq, PBinop (Shr, PBinop (Shl, lp, rp), rp), lp))) "shl"
+               | _ -> ())
+            else
+              let pmin = PInt smin and pmax = PInt smax in
+              (match op with
+               (* signed add: ((a^s) & (b^s)) >= 0,  s = a + b *)
+               | Add -> let su = PBinop (Add, lp, rp) in
+                        ob (PBinop (Ge, PBinop (BitAnd,
+                              PBinop (BitXor, lp, su), PBinop (BitXor, rp, su)), z)) "add"
+               (* signed sub: ((a^b) & (a^s)) >= 0,  s = a - b *)
+               | Sub -> let su = PBinop (Sub, lp, rp) in
+                        ob (PBinop (Ge, PBinop (BitAnd,
+                              PBinop (BitXor, lp, rp), PBinop (BitXor, lp, su)), z)) "sub"
+               (* signed mul: sign-split constant-bound check (CERT INT32-C).
+                  Each division has a constant dividend (MAX or MIN) and a
+                  denominator bounded away from the MIN/-1 division edge. *)
+               | Mul ->
+                   let dmax d = PBinop (Div, pmax, d) in
+                   let dmin d = PBinop (Div, pmin, d) in
+                   let c_pp = PBinop (And, PBinop (Gt, lp, z),
+                                PBinop (And, PBinop (Gt, rp, z), PBinop (Le, lp, dmax rp))) in
+                   let c_pn = PBinop (And, PBinop (Gt, lp, z),
+                                PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmin lp))) in
+                   let c_np = PBinop (And, PBinop (Lt, lp, z),
+                                PBinop (And, PBinop (Gt, rp, z), PBinop (Ge, lp, dmin rp))) in
+                   let c_nn = PBinop (And, PBinop (Lt, lp, z),
+                                PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmax lp))) in
+                   ob (PBinop (Or, PBinop (Eq, lp, z),
+                         PBinop (Or, c_pp, PBinop (Or, c_pn, PBinop (Or, c_np, c_nn))))) "mul"
+               (* signed shl: a>=0 && 0<=k<width && (a<<k)>>k == a *)
+               | Shl -> ob (PBinop (And, PBinop (Ge, lp, z),
+                              PBinop (And, PBinop (Ge, rp, z),
+                                PBinop (And, PBinop (Lt, rp, wlit),
+                                  PBinop (Eq, PBinop (Shr, PBinop (Shl, lp, rp), rp), lp))))) "shl"
+               | _ -> ()))
        end);
       let result = if q = Varying then TQual (Varying, result_ty) else result_ty in
       if is_secret lt || is_secret rt then TSecret (strip_secret result) else result

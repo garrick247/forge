@@ -56,13 +56,13 @@ be unprovable under mandatory overflow checking.
 
 ### Opt-in overflow checking: `#[checked]`
 
-Annotate a function `#[checked]` to require that **unsigned** `+`, `-`, `*` cannot
+Annotate a function `#[checked]` to require that `+`, `-`, `*`, and `<<` cannot
 overflow/underflow. Forge emits a no-overflow obligation per operation, discharged in
 **BV mode** (bitvectors model wraparound *exactly*):
 
 ```forge
 #[checked]
-fn add(a: u64, b: u64) -> u64 ensures result >= a { a + b }   // REJECTED: cannot prove (a+b) >= a
+fn add(a: u64, b: u64) -> u64 ensures result >= a { a + b }   // REJECTED: cannot prove no overflow
 
 #[checked]
 fn add(a: u64, b: u64) -> u64
@@ -71,18 +71,30 @@ fn add(a: u64, b: u64) -> u64
     ensures result >= a { a + b }                              // PROVES
 ```
 
-Obligations emitted under `#[checked]` (unsigned operands only):
+Obligations emitted under `#[checked]`, by operation and signedness:
 
-| op | obligation | meaning |
-|----|------------|---------|
-| `a + b` | `(a + b) >= a`  (bvuge) | no unsigned overflow |
-| `a - b` | `a >= b` | no unsigned underflow |
-| `a * b` | `a == 0` or `(a*b)/a == b` | no unsigned multiply overflow |
+| op | unsigned | signed |
+|----|----------|--------|
+| `a + b` | `(a + b) >= a` (bvuge) | `((a^s) & (b^s)) >= 0`, `s = a+b` (sign-bit test) |
+| `a - b` | `a >= b` | `((a^b) & (a^s)) >= 0`, `s = a-b` |
+| `a * b` | `b == 0` or `a <= MAX/b` | CERT INT32-C sign-split over `MAX/b`, `MIN/a` |
+| `a << k` | `k < W` and `(a<<k)>>k == a` | same, plus `a >= 0` |
 
-**Not yet covered (tracked):** signed-integer overflow (INT_MIN edge cases),
-left-shift overflow, and overflow inside `assume`/`ensures` predicate expressions.
-Until those land, `#[checked]` is a guarantee about unsigned `+ - *` only. Do not read
-it as total overflow freedom.
+All checks are *exact* in BV mode. The multiply checks use a constant-numerator division
+(`MAX/b`) that Z3 discharges efficiently — full `u32 x u32`, and bounded signed ranges.
+The signed multiply form deliberately avoids the `INT_MIN * -1` / `INT_MIN / -1`
+division-overflow traps: `INT_MIN * -1` is correctly **rejected**, while `a * -1` with `a`
+provably excluding `INT_MIN` is **accepted**.
+
+**Limitations (sound, but conservative — Forge fails closed, never accepts an overflow):**
+- Types wider than 64 bits (`u128`/`i128`) and platform-width (`usize`/`isize`) are **not**
+  checked: no obligation is emitted.
+- A *signed* `*` or `<<` whose operand is a **literal constant** (e.g. `a * 8i32`) is
+  conservatively **rejected**. A bare literal loses its width/sign in the proof term, so
+  Forge cannot form a well-typed *signed* BV query and rejects rather than risk an unsound
+  pass. Use a bounded variable operand. Unsigned literal operands, and signed `+`/`-` by a
+  literal (which anchor their sort on the variable operand), are unaffected.
+- Overflow inside `assume`/`ensures` predicate *expressions* is not checked.
 
 ---
 
