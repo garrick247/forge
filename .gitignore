@@ -67,3 +67,4 @@ benchmarks/bench_fused_perm
 benchmarks/bench_fused_pr
 benchmarks/bench_plonky3_fields
 benchmarks/bench_sbox
+*.bak

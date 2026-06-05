@@ -657,7 +657,7 @@ module Z3Bridge = struct
     in
     Array.fold_right (fun o acc -> match o with Some p -> p :: acc | None -> acc) keep []
 
-  let build_query ?(force_nia=false) ctx pred =
+  let build_query ?(force_nia=false) ?(force_bv=false) ctx pred =
     let ctx =
       if Sys.getenv_opt "FORGE_NO_PRUNE" <> None then ctx
       else { ctx with pc_assumes = relevant_assumes pred ctx.pc_assumes }
@@ -665,7 +665,7 @@ module Z3Bridge = struct
     (* BV mode: use bitvector sorts when the formula involves bitwise ops.
        Int mode: use unbounded integer sorts with range constraints (faster for Z3). *)
     let all_preds = pred :: ctx.pc_assumes in
-    let use_bv = List.exists has_bitwise_ops all_preds in
+    let use_bv = force_bv || List.exists has_bitwise_ops all_preds in
     let known_vars = List.map fst ctx.pc_vars in
     let all_pred_vars =
       let goal_vars   = pred_vars [] pred in
@@ -1022,13 +1022,14 @@ module Z3Bridge = struct
     in
     (tmp, result)
 
-  let check_valid ctx pred : z3_result =
-    let query = build_query ctx pred in
+  let check_valid ?(force_bv=false) ctx pred : z3_result =
+    let query = build_query ~force_bv ctx pred in
     (* Detect whether we used nlsat: goal is QF+nonlinear (same logic as build_query) *)
     let all_preds = pred :: ctx.pc_assumes in
     let no_frame = List.filter (fun p -> not (is_array_init_frame p)) ctx.pc_assumes in
     let goal_preds = pred :: no_frame in
     let used_nlsat =
+      (not force_bv) &&
       (not (List.exists has_bitwise_ops all_preds)) &&
       (not (has_quantifiers pred)) &&
       (not (List.exists has_divmod goal_preds)) &&
@@ -1114,7 +1115,8 @@ let try_smt ctx ob : proof_status =
     | OInvariant i     -> "invariant: " ^ i
     | OBitfieldWidth f -> "bitfield width: " ^ f
   in
-  match Z3Bridge.check_valid ctx ob.ob_pred with
+  let force_bv = (match ob.ob_kind with ONoOverflow _ -> true | _ -> false) in
+  match Z3Bridge.check_valid ~force_bv ctx ob.ob_pred with
   | Z3Bridge.Unsat -> Discharged Tier1_SMT
   | Z3Bridge.Sat model ->
       (* Parse counterexample model to show concrete failing values *)

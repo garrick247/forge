@@ -58,6 +58,7 @@ type env = {
   after_barrier:     bool;   (* __syncthreads() has been called *)
   in_varying_branch: bool;   (* inside a branch on a varying condition *)
   coalesced_fn:      bool;   (* #[coalesced] annotation active *)
+  overflow_checked:  bool;   (* #[checked] annotation: emit no-overflow obligations *)
   (* Mutual recursion group — SCC id for this function *)
   scc_id: int option;
   (* Value-returning loop context — Some ref means we're inside a loop { break val } *)
@@ -81,6 +82,7 @@ let empty_env = {
   after_barrier      = false;
   in_varying_branch  = false;
   coalesced_fn       = false;
+  overflow_checked   = false;
   scc_id             = None;
   loop_break_ty      = None;
 }
@@ -1786,6 +1788,33 @@ and infer_expr env expr : ty =
         | And | Or | Implies | Iff    -> TPrim TBool
         | _ -> numeric_result_ty (strip_qual (strip_secret lt)) (strip_qual (strip_secret rt))
       in
+      (if env.overflow_checked then begin
+         let is_uint t = (match strip_qual (strip_secret t) with
+           | TPrim (TUint _) -> true | _ -> false) in
+         if is_uint result_ty then begin
+           let lp = expr_to_pred_simple lhs in
+           let rp = expr_to_pred_simple rhs in
+           let umax = (match strip_qual (strip_secret result_ty) with
+             | TPrim (TUint U8)  -> Some 255L
+             | TPrim (TUint U16) -> Some 65535L
+             | TPrim (TUint U32) -> Some 4294967295L
+             | TPrim (TUint U64) -> Some (-1L)   (* 2^64-1: emitted unsigned in BV mode *)
+             | _ -> None) in
+           (match op with
+            | Add -> add_obligation (PBinop (Ge, PBinop (Add, lp, rp), lp))
+                       (ONoOverflow "add") expr.expr_loc env
+            | Sub -> add_obligation (PBinop (Ge, lp, rp))
+                       (ONoOverflow "sub") expr.expr_loc env
+            | Mul ->
+                let mul_ob = (match umax with
+                  | Some m -> PBinop (Or, PBinop (Eq, rp, PInt 0L),
+                                      PBinop (Le, lp, PBinop (Div, PInt m, rp)))
+                  | None   -> PBinop (Or, PBinop (Eq, lp, PInt 0L),
+                                      PBinop (Eq, PBinop (Div, PBinop (Mul, lp, rp), lp), rp))) in
+                add_obligation mul_ob (ONoOverflow "mul") expr.expr_loc env
+            | _ -> ())
+         end
+       end);
       let result = if q = Varying then TQual (Varying, result_ty) else result_ty in
       if is_secret lt || is_secret rt then TSecret (strip_secret result) else result
 
@@ -3414,9 +3443,11 @@ let check_fn env fn =
   let is_kernel    = List.exists (fun a -> a.attr_name = "kernel")    fn.fn_attrs in
   let is_device_fn = List.exists (fun a -> a.attr_name = "device")   fn.fn_attrs in
   let is_coalesced = List.exists (fun a -> a.attr_name = "coalesced") fn.fn_attrs in
+  let is_checked   = List.exists (fun a -> a.attr_name = "checked")    fn.fn_attrs in
   let is_ind_cpa   = List.exists (fun a -> a.attr_name = "ind_cpa")   fn.fn_attrs in
   let env = if is_kernel || is_device_fn then { env with is_gpu_fn = true } else env in
   let env = if is_coalesced then { env with coalesced_fn = true } else env in
+  let env = if is_checked then { env with overflow_checked = true } else env in
   (* Inject GPU built-in variables for kernel functions.
      threadIdx_x/y/z are varying (per-thread); blockIdx/blockDim/gridDim are uniform. *)
   let env =

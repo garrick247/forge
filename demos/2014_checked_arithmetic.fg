@@ -1,0 +1,47 @@
+// FORGE Demo 2014 — Opt-in overflow checking with #[checked]
+//
+// By default, Forge arithmetic wraps (C/CUDA semantics) and proofs run over
+// mathematical integers — so `a + b >= a` is provable even though it can wrap.
+// That default is required by the field/crypto corpus, which relies on wraparound.
+//
+// When the *magnitude* of a result matters for safety (allocation sizes, byte
+// counts, offsets), annotate the function `#[checked]`. Forge then emits a
+// no-overflow obligation for every unsigned + - * and discharges it in bitvector
+// mode, where wraparound is modelled exactly. The obligations are dischargeable
+// here because the preconditions bound the operands.
+//
+// See SOUNDNESS.md section 2 for the full semantics.
+
+// A safe buffer-size computation: count * stride must not overflow, so a caller
+// cannot trick it into returning a tiny size that wraps past a huge allocation.
+#[checked]
+fn buffer_size(count: u64, stride: u64) -> u64
+    requires count  >= 1u64
+    requires count  <= 1048576u64     // <= 2^20 elements
+    requires stride >= 1u64
+    requires stride <= 4096u64        // <= 2^12 bytes each
+    ensures  result >= count          // stride >= 1, so product dominates the count
+    ensures  result >= stride         // count  >= 1, so product dominates the stride
+{
+    count * stride
+}
+
+// Safe accumulation: header + payload can't overflow a u64 length field.
+#[checked]
+fn frame_len(header: u64, payload: u64) -> u64
+    requires header  <= 65535u64
+    requires payload <= 65535u64
+    ensures  result >= header
+    ensures  result >= payload
+{
+    header + payload
+}
+
+// Safe subtraction: remaining space is non-wrapping because used <= capacity.
+#[checked]
+fn remaining(capacity: u64, used: u64) -> u64
+    requires used <= capacity
+    ensures  result <= capacity
+{
+    capacity - used
+}

@@ -1,0 +1,24 @@
+// expect-error: proof obligation(s) could not be discharged
+// FORGE Bad Demo 21 — Unchecked overflow under #[checked] (correctly rejected)
+//
+// This program SHOULD FAIL to compile.
+//
+// The function is annotated #[checked], which requires Forge to prove that
+// every unsigned +, -, * cannot overflow. `a + b` has no bound on its operands,
+// so a + b can wrap past 2^64 and the no-overflow obligation
+//     (a + b) >= a
+// cannot be discharged.
+//
+// Expected output:
+//   ✗  cannot prove 'add' won't overflow   need: ((a + b) >= a)
+//   compilation stopped — fix proof failures before proceeding
+//
+// Fix: bound the operands (e.g. requires a <= 1000u64, requires b <= 1000u64),
+// or drop #[checked] if wraparound is intended. See SOUNDNESS.md section 2.
+
+#[checked]
+fn add(a: u64, b: u64) -> u64
+    ensures result >= a
+{
+    a + b
+}

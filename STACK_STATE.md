@@ -1,5 +1,12 @@
 # STACK_STATE — 2026-04-09
 
+> **Historical checkpoint, not current state.** This is a point-in-time snapshot
+> taken 2026-04-09. The stack has advanced substantially since (dozens of commits,
+> new kernels, the `#[checked]` overflow feature). Treat the numbers below as a
+> frozen baseline to diff *against*, not as a live status report. For current
+> proof/codegen status run `bash test/run_all.sh`; for the soundness boundary see
+> [SOUNDNESS.md](SOUNDNESS.md).
+
 ## Full Stack Frozen Checkpoint
 
 This document defines the first fully synchronized, all-green checkpoint of the open GPU compilation stack.

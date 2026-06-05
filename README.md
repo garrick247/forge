@@ -25,7 +25,7 @@ Forge (.fg)  ──►  CUDA C / PTX  ──►  [OpenCUDA]  ──►  [OpenPTX
 - **[forge-workbench](https://github.com/garrick247/forge-workbench)** — cross-stack CLI cockpit (run / compare / benchmark / classify)
 - **[VortexSTARK](https://github.com/garrick247/VortexSTARK)** — production user: GPU-native Circle STARK prover, 9 forge-emitted kernels default-on
 
-No NVIDIA compiler is invoked at any stage of the toolchain.
+No NVIDIA compiler is invoked at any stage of the toolchain. The backend (OpenCUDA, OpenPTXas) is validated end-to-end on a curated kernel set, not yet the full demo corpus — see [SOUNDNESS.md](SOUNDNESS.md) section 4 for what "validated" covers versus what is proven.
 
 ---
 
@@ -85,7 +85,7 @@ The generated code has **zero** runtime bounds checks because they were **proven
 | No buffer overflows | Every array access proven within bounds |
 | No null dereferences | Pointer validity proven at use site |
 | No infinite loops | Termination proven via decreasing measures |
-| No arithmetic overflow | Value ranges tracked by Z3 |
+| Arithmetic overflow | Wraps by default (C semantics); opt-in `#[checked]` proves unsigned `+ - *` cannot overflow — see [SOUNDNESS.md](SOUNDNESS.md) |
 | No divergent barriers | `syncthreads()` verified not in thread-divergent branches |
 | Sorted output | Universally quantified postconditions |
 
@@ -258,6 +258,7 @@ Run the full suite with `bash test/run_all.sh`. Cross-toolchain integration test
 |----------|---------------|
 | **[Language Reference](LANGUAGE.md)** | Complete syntax, semantics, and examples |
 | **[Architecture](ARCHITECTURE.md)** | Compiler internals, proof system, common pitfalls |
+| **[Soundness Boundary](SOUNDNESS.md)** | Trusted computing base, integer-overflow model, Int/BV seam — what "proven" covers |
 | **[Kernel Roadmap](ROADMAP_KERNEL.md)** | Systems programming features |
 | **[Changelog](CHANGELOG.md)** | Version history |
 | **[FB-0 Manifest](benchmarks/fb0_baseline/MANIFEST.md)** | Benchmark baseline with cubin hashes |
