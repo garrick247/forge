@@ -49,6 +49,7 @@ fn vec_u64_is_full(v: ref<Vec_u64>) -> bool
 fn vec_u64_get(v: ref<Vec_u64>, i: u64) -> u64
     requires i < (*v).len
     requires (*v).len <= (*v).data.len
+    ensures  result == (*v).data[i]
 {
     (*v).data[i]
 }
@@ -58,6 +59,7 @@ fn vec_u64_set(v: refmut<Vec_u64>, i: u64, val: u64)
     requires i < (*v).len
     requires (*v).len <= (*v).data.len
     ensures  (*v).len      == old((*v).len)
+    ensures  (*v).data[i] == val
 {
     (*v).data[i] = val;
 }
@@ -66,6 +68,7 @@ fn vec_u64_set(v: refmut<Vec_u64>, i: u64, val: u64)
 fn vec_u64_push(v: refmut<Vec_u64>, val: u64)
     requires (*v).len < (*v).data.len
     ensures  (*v).len == old((*v).len) + 1u64
+    ensures  (*v).data[old((*v).len)] == val
 {
     (*v).data[(*v).len] = val;
     (*v).len = (*v).len + 1u64;
@@ -76,6 +79,7 @@ fn vec_u64_pop(v: refmut<Vec_u64>) -> u64
     requires (*v).len > 0u64
     requires (*v).len <= (*v).data.len
     ensures  (*v).len == old((*v).len) - 1u64
+    ensures  result == old((*v).data[old((*v).len) - 1u64])
 {
     (*v).len = (*v).len - 1u64;
     (*v).data[(*v).len]
@@ -85,6 +89,7 @@ fn vec_u64_pop(v: refmut<Vec_u64>) -> u64
 fn vec_u64_peek(v: ref<Vec_u64>) -> u64
     requires (*v).len > 0u64
     requires (*v).len <= (*v).data.len
+    ensures  result == (*v).data[(*v).len - 1u64]
 {
     (*v).data[(*v).len - 1u64]
 }

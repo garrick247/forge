@@ -797,6 +797,8 @@ let resolve_old_for_injection env pred =
   let rec pred_eq a b = match a, b with
     | PVar ia, PVar ib -> ia.name = ib.name
     | PField (pa, fa), PField (pb, fb) -> fa = fb && pred_eq pa pb
+    | PIndex (pa, ia), PIndex (pb, ib) -> pred_eq pa pb && pred_eq ia ib
+    | PInt na, PInt nb -> na = nb
     | PResult, PResult -> true
     | _ -> false
   in
@@ -810,6 +812,9 @@ let resolve_old_for_injection env pred =
     ) env.proof_ctx.pc_assumes
   in
   let rec go p = match p with
+    | POld (PIndex (arr, idx)) ->
+        let target = PIndex (go arr, go idx) in
+        (match lookup_value target with Some v -> v | None -> target)
     | POld inner ->
         (match lookup_value inner with
          | Some v -> v
@@ -1374,6 +1379,21 @@ and stmt_final_env env stmt =
                   | _            -> expr_to_pred_simple outer
                 in
                 env_assign_field env base_pred fld.name (expr_to_pred_simple rhs)
+            (* Index into a field array: v.data[i] = rhs. Mirror the
+               struct-of-arrays trick and write to the virtual array v__data, so
+               the postcondition encoding select(v__data, i) sees the store. *)
+            | EIndex ({ expr_desc = EField (fbase, fld); _ }, idx) ->
+                let base_id = (match fbase.expr_desc with
+                  | EDeref { expr_desc = EVar v; _ } -> Some v
+                  | EVar v -> Some v
+                  | _ -> None) in
+                (match base_id with
+                 | Some v ->
+                     let virtual_id = { v with name = v.name ^ "__" ^ fld.name } in
+                     let idx_pred = expr_to_pred_simple idx in
+                     let rhs_pred = expr_to_pred_simple rhs in
+                     env_array_write env virtual_id idx_pred rhs_pred
+                 | None -> expr_final_env env e)
             | EIndex ({ expr_desc = EVar arr_id; _ }, idx) ->
                 let idx_pred = expr_to_pred_simple idx in
                 let rhs_pred = expr_to_pred_simple rhs in
@@ -1445,7 +1465,7 @@ and stmt_final_env env stmt =
                 ) sig_.fs_params call_args in
                 List.fold_left (fun e ens ->
                   let subst_ens = subst_pred arg_subst ens in
-                  let resolved  = resolve_old_for_injection e subst_ens in
+                  let resolved  = resolve_old_for_injection env subst_ens in
                   env_add_fact e resolved
                 ) env sig_.fs_ensures
             | _ -> env)
@@ -2908,7 +2928,7 @@ and check_stmt env stmt : env =
                 ) sig_.fs_params call_args in
                 List.fold_left (fun e ens ->
                   let subst_ens  = subst_pred arg_subst ens in
-                  let resolved   = resolve_old_for_injection e subst_ens in
+                  let resolved   = resolve_old_for_injection env subst_ens in
                   env_add_fact e resolved
                 ) env sig_.fs_ensures
             | _ -> env)
@@ -3781,7 +3801,8 @@ let check_fn env fn =
              ) params all_args in
              let result_subst = ("result", call_pred) :: arg_subst in
              List.fold_left (fun e ens ->
-               env_add_fact e (subst_pred result_subst ens)
+               let subst_ens = subst_pred result_subst ens in
+               env_add_fact e (resolve_old_for_injection env_in subst_ens)
              ) env_in ensures
            end
          in

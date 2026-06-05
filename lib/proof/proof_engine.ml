@@ -437,6 +437,11 @@ module Z3Bridge = struct
                 by the span<Struct> snapshot injection in typecheck. *)
              Printf.sprintf "(select __%s_init__%s %s)"
                id.name f (pred_to_smtlib ~bv ctx idx)
+         | PIndex (PField (PVar id, f), idx) ->
+             (* old(v.data[i]) → (select __v_init__data i). __v_init__data is the
+                refmut<Struct> field snapshot, equal to v__data at entry. *)
+             Printf.sprintf "(select __%s_init__%s %s)"
+               id.name f (pred_to_smtlib ~bv ctx idx)
          | PField (PVar id, f) ->
              Printf.sprintf "__%s_init__%s" id.name f
          | _ ->
@@ -560,6 +565,24 @@ module Z3Bridge = struct
     match pred with
     | PIndex (PVar id, idx) ->
         collect_array_var_names (id.name :: acc) idx
+    | PIndex ((PField _) as arr, idx) ->
+        (* field-array index: v.data[i] flattens to the name v__data, which the
+           term encoder emits inside (select v__data i). Register that flattened
+           name as an array so it is declared (Array Int Int), not Int. Must match
+           flatten_field_base in pred_to_smtlib / pred_vars. *)
+        let rec flatten_field_base = function
+          | PVar id        -> Some id.name
+          | PResult        -> Some "result__"
+          | PField (q, fi) ->
+              (match flatten_field_base q with
+               | Some b -> Some (b ^ "__" ^ fi)
+               | None   -> None)
+          | _ -> None
+        in
+        let acc = (match flatten_field_base arr with
+                   | Some n -> n :: acc
+                   | None   -> acc) in
+        collect_array_var_names (collect_array_var_names acc arr) idx
     | PIndex (arr, idx) ->
         collect_array_var_names (collect_array_var_names acc arr) idx
     | PBinop (Eq, PVar id, (PApp (f, _) as rhs)) when f.name = "store" ->
@@ -591,6 +614,10 @@ module Z3Bridge = struct
         collect_array_var_names (("__" ^ id.name ^ "_init") :: acc) idx
     | POld (PField (PIndex (PVar id, idx), f)) ->
         (* old(span[i].field) encodes as __span_init__field array *)
+        let arr_name = "__" ^ id.name ^ "_init__" ^ f in
+        collect_array_var_names (arr_name :: acc) idx
+    | POld (PIndex (PField (PVar id, f), idx)) ->
+        (* old(v.data[i]) encodes as the __v_init__data field-snapshot array *)
         let arr_name = "__" ^ id.name ^ "_init__" ^ f in
         collect_array_var_names (arr_name :: acc) idx
     | POld p -> collect_array_var_names acc p
