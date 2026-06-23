@@ -1,0 +1,21 @@
+// expect-error: proof obligation(s) could not be discharged
+// FORGE Bad Demo 23 — Signed multiply by a literal constant overflows (correctly rejected)
+//
+// This program SHOULD FAIL to compile.
+//
+// `a * 2` on an i32 bounded only by [0, 2_000_000_000] overflows: 2e9 * 2 > INT_MAX.
+// Under #[checked], the literal-multiplier path emits the exact representable
+// bound (a <= INT_MAX/2 = 1_073_741_823); the precondition does not imply it, so
+// the obligation cannot be discharged. The bound is tight — raising the upper
+// requires to 1_073_741_823 would make it verify.
+//
+// Fix: tighten the bound (requires a <= 1073741823i32), or drop #[checked] if
+// wraparound is intended. See SOUNDNESS.md section 2.
+
+#[checked]
+fn scale_unbounded(a: i32) -> i32
+    requires a >= 0i32
+    requires a <= 2000000000i32
+{
+    a * 2i32
+}

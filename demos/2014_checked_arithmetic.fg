@@ -79,3 +79,47 @@ fn pack_shift(a: u32, k: u32) -> u32
 {
     a << k
 }
+
+
+// --- signed * and << by a LITERAL constant ---
+// When a multiplier or shift amount is a compile-time constant, Forge emits an
+// exact constant-folded bound (the representable interval for the other operand)
+// instead of the general sign-split. This is sound AND complete — the bound is
+// tight at the INT_MIN/INT_MAX edge — and avoids the literal/literal division
+// that previously left these obligations undischargeable.
+
+// Scale by a positive literal.
+#[checked]
+fn double_signed(a: i32) -> i32
+    requires a >= -1000000000i32
+    requires a <= 1000000000i32
+{
+    a * 2i32
+}
+
+// Scale by a negative literal (the sign-split corner the general path handles,
+// here exact via the folded bound).
+#[checked]
+fn triple_negate(a: i32) -> i32
+    requires a >= -700000000i32
+    requires a <= 700000000i32
+{
+    a * -3i32
+}
+
+// Negate via * -1: rejected only at a == INT_MIN, accepted on the rest.
+#[checked]
+fn negate_via_mul(a: i32) -> i32
+    requires a >= -2147483647i32
+{
+    a * -1i32
+}
+
+// Left shift by a literal amount: proven to drop no significant bits.
+#[checked]
+fn shift_signed_lit(a: i32) -> i32
+    requires a >= 0i32
+    requires a <= 2000000i32
+{
+    a << 10i32
+}

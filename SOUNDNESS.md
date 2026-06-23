@@ -86,14 +86,21 @@ The signed multiply form deliberately avoids the `INT_MIN * -1` / `INT_MIN / -1`
 division-overflow traps: `INT_MIN * -1` is correctly **rejected**, while `a * -1` with `a`
 provably excluding `INT_MIN` is **accepted**.
 
+**Signed `*` / `<<` by a literal constant — exact constant-folded bound.** When a *signed*
+multiply or left-shift has a compile-time literal operand (e.g. `a * 2i32`, `a * -3i32`,
+`a << 10i32`), Forge does **not** use the general sign-split — a bare literal has no width
+or sign in the proof term, and a literal÷literal subexpression (`MAX/c`) would default to
+`u64` and poison the signed BV query. Instead the literal value is folded at type-check
+time into the **exact representable interval** `[lo, hi]` for the variable operand
+(`lo <= v <= hi`, every comparison anchoring its sort on `v`). This is sound *and* complete:
+the interval is tight at the `INT_MIN`/`INT_MAX` edge (e.g. `a * 2i32` accepts exactly
+`a <= INT_MAX/2 = 1_073_741_823`; `a * -1i32` accepts all but `a == INT_MIN`; an
+out-of-range or `< 0` literal shift is rejected). See `demos/2014_checked_arithmetic.fg`
+(valid) and `demos/bad/23_checked_signed_literal_overflow.fg` (rejected).
+
 **Limitations (sound, but conservative — Forge fails closed, never accepts an overflow):**
 - Types wider than 64 bits (`u128`/`i128`) and platform-width (`usize`/`isize`) are **not**
   checked: no obligation is emitted.
-- A *signed* `*` or `<<` whose operand is a **literal constant** (e.g. `a * 8i32`) is
-  conservatively **rejected**. A bare literal loses its width/sign in the proof term, so
-  Forge cannot form a well-typed *signed* BV query and rejects rather than risk an unsound
-  pass. Use a bounded variable operand. Unsigned literal operands, and signed `+`/`-` by a
-  literal (which anchor their sort on the variable operand), are unaffected.
 - Overflow inside `assume`/`ensures` predicate *expressions* is not checked.
 
 ---

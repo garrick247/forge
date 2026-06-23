@@ -1843,6 +1843,35 @@ and infer_expr env expr : ty =
                | _ -> ())
             else
               let pmin = PInt smin and pmax = PInt smax in
+              (* Signed type bounds as actual signed Int64 values. smax is already
+                 the signed max; smin is stored as the unsigned W-bit rep, so the
+                 signed MIN is -(smax+1) (and Int64.min_int at width 64). *)
+              let smax_s = smax in
+              let smin_s = if width = 64 then Int64.min_int
+                           else Int64.neg (Int64.add smax_s 1L) in
+              (* Compile-time integer constant of an operand (folds a negated lit). *)
+              let as_int_lit = function
+                | PInt n -> Some n
+                | PUnop (Neg, PInt n) -> Some (Int64.neg n)
+                | _ -> None in
+              (* Exact representable interval [lo,hi] for v such that v*c stays in
+                 [smin_s,smax_s]. Truncating Int64 division is exact for the bound
+                 (ceil at the negative endpoint, floor at the positive). c=0/1 →
+                 whole range (always fits); c=-1 → exclude MIN only; |c|>=2 → divide
+                 the type bounds, never hitting the MIN/-1 division trap. *)
+              let mul_bounds c =
+                if c = 0L || c = 1L then (smin_s, smax_s)
+                else if c = -1L then (Int64.add smin_s 1L, smax_s)
+                else if c > 0L then (Int64.div smin_s c, Int64.div smax_s c)
+                else (Int64.div smax_s c, Int64.div smin_s c) in
+              (* Emit lo<=v<=hi (each comparison anchors its sort on v, the typed
+                 operand — no literal/literal subterm to poison the BV sort); fold
+                 to a constant verdict when v is itself a literal. *)
+              let emit_range nm lo hi v =
+                match as_int_lit v with
+                | Some a -> ob (if a >= lo && a <= hi then PTrue else PFalse) nm
+                | None   -> ob (PBinop (And, PBinop (Le, PInt lo, v),
+                                        PBinop (Le, v, PInt hi))) nm in
               (match op with
                (* signed add: ((a^s) & (b^s)) >= 0,  s = a + b *)
                | Add -> let su = PBinop (Add, lp, rp) in
@@ -1852,27 +1881,46 @@ and infer_expr env expr : ty =
                | Sub -> let su = PBinop (Sub, lp, rp) in
                         ob (PBinop (Ge, PBinop (BitAnd,
                               PBinop (BitXor, lp, rp), PBinop (BitXor, lp, su)), z)) "sub"
-               (* signed mul: sign-split constant-bound check (CERT INT32-C).
-                  Each division has a constant dividend (MAX or MIN) and a
-                  denominator bounded away from the MIN/-1 division edge. *)
+               (* signed mul. When one operand is a literal constant, emit the
+                  exact constant-folded bound (sound AND complete, no literal/literal
+                  division). Otherwise the CERT INT32-C sign-split: each division has
+                  a constant dividend (MAX/MIN), denominator bounded off the MIN/-1
+                  edge. *)
                | Mul ->
-                   let dmax d = PBinop (Div, pmax, d) in
-                   let dmin d = PBinop (Div, pmin, d) in
-                   let c_pp = PBinop (And, PBinop (Gt, lp, z),
-                                PBinop (And, PBinop (Gt, rp, z), PBinop (Le, lp, dmax rp))) in
-                   let c_pn = PBinop (And, PBinop (Gt, lp, z),
-                                PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmin lp))) in
-                   let c_np = PBinop (And, PBinop (Lt, lp, z),
-                                PBinop (And, PBinop (Gt, rp, z), PBinop (Ge, lp, dmin rp))) in
-                   let c_nn = PBinop (And, PBinop (Lt, lp, z),
-                                PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmax lp))) in
-                   ob (PBinop (Or, PBinop (Eq, lp, z),
-                         PBinop (Or, c_pp, PBinop (Or, c_pn, PBinop (Or, c_np, c_nn))))) "mul"
-               (* signed shl: a>=0 && 0<=k<width && (a<<k)>>k == a *)
-               | Shl -> ob (PBinop (And, PBinop (Ge, lp, z),
+                   (match as_int_lit lp, as_int_lit rp with
+                    | Some c, _ -> let lo, hi = mul_bounds c in emit_range "mul" lo hi rp
+                    | _, Some c -> let lo, hi = mul_bounds c in emit_range "mul" lo hi lp
+                    | None, None ->
+                        let dmax d = PBinop (Div, pmax, d) in
+                        let dmin d = PBinop (Div, pmin, d) in
+                        let c_pp = PBinop (And, PBinop (Gt, lp, z),
+                                     PBinop (And, PBinop (Gt, rp, z), PBinop (Le, lp, dmax rp))) in
+                        let c_pn = PBinop (And, PBinop (Gt, lp, z),
+                                     PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmin lp))) in
+                        let c_np = PBinop (And, PBinop (Lt, lp, z),
+                                     PBinop (And, PBinop (Gt, rp, z), PBinop (Ge, lp, dmin rp))) in
+                        let c_nn = PBinop (And, PBinop (Lt, lp, z),
+                                     PBinop (And, PBinop (Le, rp, z), PBinop (Ge, rp, dmax lp))) in
+                        ob (PBinop (Or, PBinop (Eq, lp, z),
+                              PBinop (Or, c_pp, PBinop (Or, c_pn, PBinop (Or, c_np, c_nn))))) "mul")
+               (* signed shl: a>=0 (C UB otherwise) && a<<k in range. For a literal
+                  shift amount, fold to a>=0 && a <= smax>>k (out-of-range k → reject);
+                  for a variable amount, the bit-reconstruction check (a<<k)>>k==a. *)
+               | Shl ->
+                   (match as_int_lit rp with
+                    | Some k ->
+                        if k < 0L || k >= Int64.of_int width then ob PFalse "shl"
+                        else
+                          let hi = Int64.div smax_s (Int64.shift_left 1L (Int64.to_int k)) in
+                          (match as_int_lit lp with
+                           | Some a -> ob (if a >= 0L && a <= hi then PTrue else PFalse) "shl"
+                           | None   -> ob (PBinop (And, PBinop (Ge, lp, z),
+                                             PBinop (Le, lp, PInt hi))) "shl")
+                    | None ->
+                        ob (PBinop (And, PBinop (Ge, lp, z),
                               PBinop (And, PBinop (Ge, rp, z),
                                 PBinop (And, PBinop (Lt, rp, wlit),
-                                  PBinop (Eq, PBinop (Shr, PBinop (Shl, lp, rp), rp), lp))))) "shl"
+                                  PBinop (Eq, PBinop (Shr, PBinop (Shl, lp, rp), rp), lp))))) "shl")
                | _ -> ()))
        end);
       let result = if q = Varying then TQual (Varying, result_ty) else result_ty in
