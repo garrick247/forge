@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -374,7 +385,7 @@ uint64_t insn_wdep(Insn insn __attribute__((unused))) {
   }
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Insn nop __attribute__((unused)) = (Insn){ .tag = Insn_tag_Nop, .data.Nop = { ._dummy = 0 } };
   Insn mov __attribute__((unused)) = (Insn){ .tag = Insn_tag_Mov, .data.Mov = { ._v0 = (RegKind){ .tag = RegKind_tag_GPR, .data.GPR = { ._v0 = 5ULL } }, ._v1 = (RegKind){ .tag = RegKind_tag_GPR, .data.GPR = { ._v0 = 3ULL } } } };
   Insn add __attribute__((unused)) = (Insn){ .tag = Insn_tag_IADD3, .data.IADD3 = { ._v0 = (RegKind){ .tag = RegKind_tag_GPR, .data.GPR = { ._v0 = 4ULL } }, ._v1 = (RegKind){ .tag = RegKind_tag_GPR, .data.GPR = { ._v0 = 2ULL } }, ._v2 = (RegKind){ .tag = RegKind_tag_GPR, .data.GPR = { ._v0 = 3ULL } }, ._v3 = (RegKind){ .tag = RegKind_tag_RZ, .data.RZ = { ._dummy = 0 } } } };

@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -120,7 +131,7 @@ uint64_t encode_total(uint64_t b0 __attribute__((unused)), uint64_t b1 __attribu
   return (((enc.c0 + enc.c1) + enc.c2) + enc.c3);
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Rle4 r0 __attribute__((unused)) = rle_new();
   Rle4 r1 __attribute__((unused)) = rle_push(r0, 5ULL, 65ULL);
   Rle4 r2 __attribute__((unused)) = rle_push(r1, 3ULL, 66ULL);

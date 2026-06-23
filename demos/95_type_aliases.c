@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -90,7 +101,7 @@ uint64_t blue_channel(RGB c __attribute__((unused))) {
   return (c & 255ULL);
 }
 
-int main() {
+int __attribute__((weak)) main() {
   MPS v1 __attribute__((unused)) = speed(100ULL, 5ULL);
   MPS v2 __attribute__((unused)) = speed(60ULL, 3ULL);
   Point p1 __attribute__((unused)) = make_point(1ULL, 2ULL);

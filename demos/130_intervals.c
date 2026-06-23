@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -120,7 +131,7 @@ Ivl ivl_intersect(Ivl a __attribute__((unused)), Ivl b __attribute__((unused))) 
   return (Ivl){ .lo = lo, .hi = hi };
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Ivl i1 __attribute__((unused)) = ivl_new(2ULL, 8ULL);
   Ivl i2 __attribute__((unused)) = ivl_new(5ULL, 12ULL);
   Ivl i3 __attribute__((unused)) = ivl_new(0ULL, 10ULL);

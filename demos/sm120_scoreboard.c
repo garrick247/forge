@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -209,7 +220,7 @@ uint64_t ctrl_for_stg(forge_span_u64_t state __attribute__((unused)), uint64_t a
   return make_ctrl(0ULL, 0ULL, 0ULL, rbar, 63ULL, 5ULL);
 }
 
-int main() {
+int __attribute__((weak)) main() {
   return (int)(0);
 
 }

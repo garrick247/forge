@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -50,7 +61,7 @@ _Bool is_identity3(forge_span_u64_t m __attribute__((unused))) {
   return (((((((((m.data[0ULL] == 1ULL) && (m.data[1ULL] == 0ULL)) && (m.data[2ULL] == 0ULL)) && (m.data[3ULL] == 0ULL)) && (m.data[4ULL] == 1ULL)) && (m.data[5ULL] == 0ULL)) && (m.data[6ULL] == 0ULL)) && (m.data[7ULL] == 0ULL)) && (m.data[8ULL] == 1ULL));
 }
 
-int main() {
+int __attribute__((weak)) main() {
   return (int)(0ULL);
 
 }

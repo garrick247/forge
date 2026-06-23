@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -74,7 +85,7 @@ Result_u64_u64 div_twice(uint64_t a __attribute__((unused)), uint64_t b __attrib
   return (Result_u64_u64){ .tag = Result_u64_u64_tag_Ok, .data.Ok = { ._v0 = y } };
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Result_u64_u64 r __attribute__((unused)) = div_twice(100ULL, 5ULL, 4ULL);
   uint64_t __forge_main_result;
   switch (r.tag) {

@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -96,7 +107,7 @@ uint64_t loop_count(uint64_t k __attribute__((unused))) {
   return c;
 }
 
-int main() {
+int __attribute__((weak)) main() {
   uint64_t cu __attribute__((unused)) = count_up(10ULL);
   uint64_t cd __attribute__((unused)) = count_down(5ULL);
   uint64_t ml __attribute__((unused)) = mul_by_add(3ULL, 4ULL);

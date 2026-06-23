@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -59,7 +70,7 @@ Sorted4 sort4(uint64_t a __attribute__((unused)), uint64_t b __attribute__((unus
   return (Sorted4){ .v0 = u0, .v1 = v1, .v2 = v2, .v3 = u3 };
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Sorted4 s1 __attribute__((unused)) = sort4(4ULL, 2ULL, 7ULL, 1ULL);
   uint64_t sum1 __attribute__((unused)) = (((s1.v0 + s1.v1) + s1.v2) + s1.v3);
   Sorted4 s2 __attribute__((unused)) = sort4(10ULL, 10ULL, 5ULL, 3ULL);

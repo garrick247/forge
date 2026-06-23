@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -87,7 +98,7 @@ uint64_t Stack4_u64__is_empty(const Stack4_u64* self __attribute__((unused))) {
   }
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Stack4_u64 s0 __attribute__((unused)) = Stack4_u64__new();
   Stack4_u64 s1 __attribute__((unused)) = Stack4_u64__push((&s0), 10ULL);
   Stack4_u64 s2 __attribute__((unused)) = Stack4_u64__push((&s1), 20ULL);

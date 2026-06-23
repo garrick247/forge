@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -53,7 +64,7 @@ uint64_t weighted_avg(uint64_t a __attribute__((unused)), uint64_t wa __attribut
   return (((a * wa) + (b * wb)) / (wa + wb));
 }
 
-int main() {
+int __attribute__((weak)) main() {
   uint64_t c1 __attribute__((unused)) = clamp_byte(300ULL);
   uint64_t c2 __attribute__((unused)) = clamp_byte(100ULL);
   uint64_t r1 __attribute__((unused)) = is_in_range(5ULL, 1ULL, 10ULL);

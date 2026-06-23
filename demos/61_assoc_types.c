@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -64,7 +75,7 @@ uint64_t Triple__Container__size(const Triple* self __attribute__((unused))) {
   return 3ULL;
 }
 
-int main() {
+int __attribute__((weak)) main() {
   Pair p __attribute__((unused)) = (Pair){ .a = 10ULL, .b = 20ULL };
   Triple t __attribute__((unused)) = (Triple){ .x = 1ULL, .y = 2ULL, .z = 3ULL };
   uint64_t pa __attribute__((unused)) = Pair__Container__get((&p), 0ULL);

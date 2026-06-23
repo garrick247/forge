@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -41,7 +52,7 @@ uint64_t circle_area_approx(uint64_t r __attribute__((unused))) {
   return ((PI_INT * r) * r);
 }
 
-int main() {
+int __attribute__((weak)) main() {
   uint64_t c1 __attribute__((unused)) = clamp_to_max(2000ULL);
   uint64_t c2 __attribute__((unused)) = clamp_to_max(100ULL);
   _Bool m __attribute__((unused)) = is_magic(4660ULL);

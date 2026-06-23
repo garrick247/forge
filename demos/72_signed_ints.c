@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -51,7 +62,7 @@ int64_t clamp_i64(int64_t x __attribute__((unused)), int64_t lo __attribute__((u
   }
 }
 
-int main() {
+int __attribute__((weak)) main() {
   int64_t a __attribute__((unused)) = abs64((0 - 42));
   int64_t b __attribute__((unused)) = abs64(17);
   int64_t s __attribute__((unused)) = sign((0 - 99));

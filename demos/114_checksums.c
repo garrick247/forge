@@ -7,6 +7,17 @@
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -118,7 +129,7 @@ uint64_t fletcher_sum2(uint64_t b0 __attribute__((unused)), uint64_t b1 __attrib
   return c4;
 }
 
-int main() {
+int __attribute__((weak)) main() {
   uint64_t oc1 __attribute__((unused)) = oc_add(0ULL, 0ULL);
   uint64_t oc2 __attribute__((unused)) = oc_add(65535ULL, 1ULL);
   uint64_t oc3 __attribute__((unused)) = oc_add(60000ULL, 10000ULL);

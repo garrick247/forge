@@ -25,6 +25,17 @@
 #define gridDim_y   ((uint32_t)(gridDim.y))
 #define gridDim_z   ((uint32_t)(gridDim.z))
 
+#ifdef __SIZEOF_INT128__
+typedef unsigned __int128 u256;
+typedef unsigned __int128 u512;
+typedef unsigned __int128 u1024;
+typedef unsigned __int128 bv256;
+#else
+typedef uint64_t u256;
+typedef uint64_t u512;
+typedef uint64_t u1024;
+typedef uint64_t bv256;
+#endif
 #ifdef __cplusplus
 #  define FORGE_AGG(T, ...) (T{__VA_ARGS__})
 #else
@@ -309,7 +320,7 @@ __global__ void histogram(forge_span_u64_t data __attribute__((unused)), uint64_
   }
 }
 
-int main() {
+int __attribute__((weak)) main() {
   return (int)(0ULL);
 
 }
