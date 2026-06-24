@@ -1146,6 +1146,18 @@ FORGE_DUMP_SMT=1 forge build myfile.fg
 # Dumps failing queries to /tmp/forge_smt*.smt2
 ```
 
+### Tuning the solver
+
+| Variable | Default | Effect |
+|----------|---------|--------|
+| `FORGE_Z3` | `z3` | Path to the Z3 binary. |
+| `FORGE_Z3_TIMEOUT` | `60` | Per-obligation Z3 wall-clock budget, in seconds. Raise it (e.g. `120`) to let a genuinely hard nonlinear obligation finish; lower it (e.g. `10`) for fail-fast CI so one slow obligation cannot tie up a build. Invalid/non-positive values fall back to the default. Note: this caps *per-obligation* time, not the whole build — a demo that emits tens of thousands of obligations is bounded by their count discharged serially, not by this timeout. |
+
+```bash
+FORGE_Z3_TIMEOUT=120 forge build heavy_nonlinear.fg   # grant hard goals more budget
+FORGE_Z3_TIMEOUT=10  forge check ci_target.fg          # fail-fast in CI
+```
+
 ### Exit codes
 
 | Code | Meaning |
