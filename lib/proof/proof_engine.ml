@@ -1006,6 +1006,18 @@ module Z3Bridge = struct
     | Some p -> p
     | None -> "z3"
 
+  (* Per-obligation Z3 wall-clock timeout in seconds. Default 60. Override with
+     FORGE_Z3_TIMEOUT to fail-fast in CI (e.g. =10, so a single hard nonlinear
+     obligation can't tie up a build for minutes) or to grant a genuinely heavy
+     obligation more budget (e.g. =180). Invalid/non-positive values fall back
+     to the default. The consistency probe keeps its own short fixed budget. *)
+  let z3_timeout_s () =
+    match Sys.getenv_opt "FORGE_Z3_TIMEOUT" with
+    | Some s -> (match int_of_string_opt (String.trim s) with
+                 | Some n when n > 0 -> n
+                 | _ -> 60)
+    | None -> 60
+
   let run_z3_process args =
     (* Platform-independent Z3 invocation via Unix.create_process.
        No shell involved — works on Win32, Unix, and Cygwin. *)
@@ -1076,7 +1088,7 @@ module Z3Bridge = struct
       (not (List.exists has_divmod goal_preds)) &&
       (List.exists has_nonlinear goal_preds)
     in
-    let (tmp, result) = run_z3 ~get_model:true query 60 in
+    let (tmp, result) = run_z3 ~get_model:true query (z3_timeout_s ()) in
     (* nlsat works over the reals — it may return sat for a goal that is only
        a theorem over integers (e.g. i*cols+j < rows*cols given 0<=i<rows, 0<=j<cols).
        When nlsat returns non-Unsat, retry with the NIA solver. *)
@@ -1084,7 +1096,7 @@ module Z3Bridge = struct
       let is_unsat = match result with Unsat -> true | _ -> false in
       if used_nlsat && not is_unsat then
         let nia_query = build_query ~force_nia:true ctx pred in
-        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query 60 in
+        let (tmp2, nia_result) = run_z3 ~get_model:true nia_query (z3_timeout_s ()) in
         (match nia_result with
          | Sat _ | Unknown _ when Sys.getenv_opt "FORGE_DUMP_SMT" <> None ->
              Printf.eprintf "[forge-smt] NIA query dumped to %s\n%!" tmp2
