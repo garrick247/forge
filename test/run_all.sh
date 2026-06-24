@@ -13,13 +13,12 @@ PROG_DIR=$(realpath "$(dirname "$0")/programs" 2>/dev/null || true)
 JOBS=${JOBS:-$(nproc)}
 [[ "${SERIAL:-}" == "1" ]] && JOBS=1
 
-# Demos with known codegen bugs surfaced when the test runner was made
-# parallel and the silent-pass bug (test of $? after command-sub) was fixed.
-# Each one fails gcc -fsyntax-only with a real C error (unknown type name,
-# called-object-not-a-function, etc.) — these are forge codegen issues to
-# fix; until then we skip Phase 2/3 for the affected outputs to keep CI
-# accurate. See `tracking issues` in CLAUDE.md or the project tracker.
-KNOWN_CODEGEN_BUG_RE='^(1044_float_smt)\.c$'
+# Demos with known codegen bugs: Phase 2/3 (gcc + runtime) are skipped for any
+# output matching this regex, so CI stays accurate while a real codegen issue is
+# open. Currently EMPTY — 1044_float_smt (function-typed/TDepArr param lowered to
+# a non-callable scalar) was fixed 2026-06-23 (codegen_c: TDepArr -> fn-pointer).
+# The sentinel below matches no real basename; add `^(name1|name2)\.c$` to re-skip.
+KNOWN_CODEGEN_BUG_RE='^__no_known_codegen_bugs__$'
 
 LOG_DIR=$(mktemp -d -t forge-tests-XXXXXX)
 trap 'rm -rf "$LOG_DIR"' EXIT

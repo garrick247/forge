@@ -1,4 +1,4 @@
-// expected: 0
+// expected: 10
 // Demo 1044: Float variables in SMT — Real sort (not Int approximation).
 //
 // Before this fix, float-typed variables were declared as `Int` in Z3,
