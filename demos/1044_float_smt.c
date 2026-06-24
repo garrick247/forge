@@ -29,7 +29,7 @@ typedef uint64_t (*forge_fn_u64_ret_u64_t)(uint64_t);
 
 /* Forward declarations */
 float float_scale(float x __attribute__((unused)), float y __attribute__((unused)));
-uint64_t apply_dep(uint64_t f __attribute__((unused)), uint64_t v __attribute__((unused)));
+uint64_t apply_dep(forge_fn_u64_ret_u64_t f __attribute__((unused)), uint64_t v __attribute__((unused)));
 uint64_t forge_double(uint64_t x __attribute__((unused)));
 int main();
 
@@ -37,7 +37,7 @@ float float_scale(float x __attribute__((unused)), float y __attribute__((unused
   return (x * y);
 }
 
-uint64_t apply_dep(uint64_t f __attribute__((unused)), uint64_t v __attribute__((unused))) {
+uint64_t apply_dep(forge_fn_u64_ret_u64_t f __attribute__((unused)), uint64_t v __attribute__((unused))) {
   return f(v);
 }
 

@@ -28,6 +28,13 @@ let is_generic_fn (fn : fn_def) =
 (* Type name mangling — produces a C-identifier-safe name for a type  *)
 (* ------------------------------------------------------------------ *)
 
+(* A dependent function type `(x: T) -> U` erases its dependency at codegen
+   and is identical to an anonymous single-parameter TFn — typecheck already
+   treats the two as compatible. Normalize here so mangling, type emission,
+   and fn-pointer-typedef collection all agree on one representation. *)
+let tfn_of_deparr x dom cod =
+  TFn { params = [(x, dom)]; ret = cod; requires = []; ensures = [] }
+
 let rec mangle_ty_id = function
   | TPrim (TInt I8)    -> "i8"   | TPrim (TInt I16)   -> "i16"
   | TPrim (TInt I32)   -> "i32"  | TPrim (TInt I64)   -> "i64"
@@ -56,9 +63,9 @@ let rec mangle_ty_id = function
   | TFn fty            ->
       "fn_" ^ String.concat "_" (List.map (fun (_, t) -> mangle_ty_id t) fty.params)
       ^ "_ret_" ^ mangle_ty_id fty.ret
+  | TDepArr (x, dom, cod) -> mangle_ty_id (tfn_of_deparr x dom cod)
   | TStr               -> "str"
   | TAssoc _           -> "assoc"
-  | _                  -> "opaque"
 
 (* ------------------------------------------------------------------ *)
 (* Collect all unique span element types used in the program           *)
@@ -247,6 +254,7 @@ let rec collect_fn_ptr_tys acc = function
   | TSpan t | TArray (t, _) | TShared (t, _) -> collect_fn_ptr_tys acc t
   | TQual (_, t) | TSecret t -> collect_fn_ptr_tys acc t
   | TTuple tys -> List.fold_left collect_fn_ptr_tys acc tys
+  | TDepArr (x, dom, cod) -> collect_fn_ptr_tys acc (tfn_of_deparr x dom cod)
   | _ -> acc
 
 (* Walk every expression and statement in a function body to also collect
@@ -505,7 +513,7 @@ let rec emit_ty = function
       (* Monomorphized generic: Option<u32> → Option_u32 *)
       id.name ^ "_" ^ String.concat "_" (List.map mangle_ty_id args)
   | TArray (t, None)   -> emit_ty t ^ "*"
-  | TDepArr (_, _, r)  -> emit_ty r
+  | TDepArr (x, dom, cod) -> emit_ty (tfn_of_deparr x dom cod)
   | TFn fty            -> Printf.sprintf "forge_%s_t" (mangle_ty_id (TFn fty))
   (* GPU / span types *)
   | TSpan t   ->
