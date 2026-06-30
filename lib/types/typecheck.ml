@@ -4125,8 +4125,69 @@ type discharge_summary = {
   ds_failures:  proof_error list;
 }
 
+(* Number of concurrent Z3 worker threads used to discharge proof obligations
+   within a single build. Default = available cores; override with FORGE_JOBS
+   (=1 forces the original serial path). Discharge is Z3-subprocess-bound, so
+   *threads* — not domains — are the right tool: OCaml's runtime lock serializes
+   all OCaml-level state and is released only during the blocking waitpid/read on
+   the Z3 child, so the Z3 processes run in parallel while `discharge`/`check_valid`
+   and the shared (read-only-during-this-loop) proved_lemmas/assume_log stay
+   race-free. The test suite pins FORGE_JOBS=1 so its across-demo `xargs -P`
+   parallelism isn't oversubscribed. *)
+let discharge_jobs () =
+  match Sys.getenv_opt "FORGE_JOBS" with
+  | Some s -> (match int_of_string_opt (String.trim s) with
+               | Some n when n > 0 -> n
+               | _ -> 1)
+  | None -> (try max 1 (Domain.recommended_domain_count ()) with _ -> 1)
+
+(* Concurrent map that preserves index order. A bounded pool of worker threads
+   pulls indices from a shared counter; each worker writes its result into a
+   distinct slot of [out]. Slot writes are serialized by the runtime lock (only
+   the Z3 wait runs truly concurrently), so no slot is ever raced. Results are
+   returned in the original order, making downstream output deterministic and
+   identical to a serial run. *)
+let parallel_map_ordered (jobs : int) (xs : 'a array) (f : 'a -> 'b) : 'b array =
+  let n = Array.length xs in
+  if n = 0 then [||]
+  else begin
+    let out  = Array.make n None in   (* each slot becomes Some (Ok r | Error exn) *)
+    let next = ref 0 in
+    let mtx  = Mutex.create () in
+    let worker () =
+      let rec loop () =
+        Mutex.lock mtx;
+        let i = !next in
+        if i >= n then Mutex.unlock mtx
+        else begin
+          incr next;
+          Mutex.unlock mtx;
+          (* Capture exceptions rather than letting them escape the worker: an
+             uncaught exception in a thread is silently swallowed by the runtime
+             (it does not reach the joiner), which would diverge from the serial
+             path where an exception aborts the build. We re-raise on the main
+             thread below, preserving that semantics. *)
+          let r = (try Ok (f xs.(i)) with e -> Error e) in
+          out.(i) <- Some r;
+          loop ()
+        end
+      in
+      loop ()
+    in
+    let nthreads = max 1 (min jobs n) in
+    let threads = Array.init nthreads (fun _ -> Thread.create worker ()) in
+    Array.iter Thread.join threads;
+    (* Fold in order; re-raise the lowest-index exception, matching the serial
+       path's "first failing obligation aborts" behaviour. *)
+    Array.map (function
+      | Some (Ok r)    -> r
+      | Some (Error e) -> raise e
+      | None           -> assert false) out
+  end
+
 let discharge_all (obs : obligation list) (prog_env : env) =
-  let total   = List.length obs in
+  let obs_arr = Array.of_list obs in
+  let total   = Array.length obs_arr in
   let tier1   = ref 0 in
   let tier2   = ref 0 in
   let tier3   = ref 0 in
@@ -4134,13 +4195,31 @@ let discharge_all (obs : obligation list) (prog_env : env) =
   let vacuous = ref 0 in
   let failures = ref [] in
 
-  List.iter (fun ob ->
+  (* Snapshot the read-only proof context once; it is constant for the whole
+     discharge pass (lemmas/assumes are registered during typechecking, before
+     this function runs), so every worker shares the same immutable view. *)
+  let lemmas       = !proved_lemmas in
+  let base_assumes = prog_env.proof_ctx.pc_assumes in
+  let run ob =
     let ctx = {
       pc_vars    = ob.ob_ctx;
-      pc_assumes = ob.ob_assumes @ prog_env.proof_ctx.pc_assumes;
-      pc_lemmas  = !proved_lemmas;
+      pc_assumes = ob.ob_assumes @ base_assumes;
+      pc_lemmas  = lemmas;
     } in
-    match discharge ctx ob with
+    discharge ctx ob
+  in
+
+  (* Discharge across N concurrent Z3 subprocesses, then fold results back in
+     obligation order. jobs<=1 takes the original serial path verbatim. *)
+  let jobs = discharge_jobs () in
+  let results =
+    if jobs <= 1 then Array.map run obs_arr
+    else parallel_map_ordered jobs obs_arr run
+  in
+
+  Array.iteri (fun i res ->
+    let ob = obs_arr.(i) in
+    match res with
     | Proved Tier1_SMT ->
         incr tier1;
         Printf.printf "  ✓ [SMT]    %s:%d %s\n%!"
@@ -4182,7 +4261,7 @@ let discharge_all (obs : obligation list) (prog_env : env) =
         Printf.printf "  %s %s\n%!"
           (if is_vac then "  ⚠ [vacuous]" else "✗")
           (format_error pe)
-  ) obs;
+  ) results;
 
   {
     ds_total    = total;

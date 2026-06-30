@@ -1,4 +1,4 @@
 (library
  (name types)
  (wrapped false)
- (libraries ast proof))
+ (libraries ast proof threads.posix))

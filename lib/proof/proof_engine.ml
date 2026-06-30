@@ -1020,10 +1020,18 @@ module Z3Bridge = struct
 
   let run_z3_process args =
     (* Platform-independent Z3 invocation via Unix.create_process.
-       No shell involved — works on Win32, Unix, and Cygwin. *)
+       No shell involved — works on Win32, Unix, and Cygwin.
+       The pipe is created close-on-exec so that when obligations are discharged
+       concurrently (multiple worker threads each spawning a Z3 child, see
+       FORGE_JOBS in typecheck.ml) a sibling thread's fork+exec cannot inherit
+       *this* call's write end. Without cloexec the read side would never observe
+       EOF until every concurrently-forked child also exited — a classic
+       multi-threaded pipe-inheritance deadlock. create_process dup2's wr onto the
+       child's stdout/stderr (those dups are not cloexec), so the intended child
+       still writes normally. *)
     let bin = z3_bin () in
     let argv = Array.of_list (bin :: args) in
-    let (rd, wr) = Unix.pipe () in
+    let (rd, wr) = Unix.pipe ~cloexec:true () in
     let pid = Unix.create_process bin argv Unix.stdin wr wr in
     Unix.close wr;
     let ic = Unix.in_channel_of_descr rd in

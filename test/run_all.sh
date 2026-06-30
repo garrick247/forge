@@ -13,6 +13,12 @@ PROG_DIR=$(realpath "$(dirname "$0")/programs" 2>/dev/null || true)
 JOBS=${JOBS:-$(nproc)}
 [[ "${SERIAL:-}" == "1" ]] && JOBS=1
 
+# The suite parallelizes ACROSS demos via xargs -P $JOBS. Pin each forge process
+# to serial obligation discharge so it does not also fan out internally (FORGE_JOBS
+# defaults to core count), which would oversubscribe to JOBS*cores Z3 processes.
+# Override (e.g. FORGE_JOBS=8 SERIAL=1) to instead exercise the parallel path.
+export FORGE_JOBS="${FORGE_JOBS:-1}"
+
 # Demos with known codegen bugs: Phase 2/3 (gcc + runtime) are skipped for any
 # output matching this regex, so CI stays accurate while a real codegen issue is
 # open. Currently EMPTY — 1044_float_smt (function-typed/TDepArr param lowered to

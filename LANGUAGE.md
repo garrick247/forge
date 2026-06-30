@@ -1151,11 +1151,14 @@ FORGE_DUMP_SMT=1 forge build myfile.fg
 | Variable | Default | Effect |
 |----------|---------|--------|
 | `FORGE_Z3` | `z3` | Path to the Z3 binary. |
-| `FORGE_Z3_TIMEOUT` | `60` | Per-obligation Z3 wall-clock budget, in seconds. Raise it (e.g. `120`) to let a genuinely hard nonlinear obligation finish; lower it (e.g. `10`) for fail-fast CI so one slow obligation cannot tie up a build. Invalid/non-positive values fall back to the default. Note: this caps *per-obligation* time, not the whole build — a demo that emits tens of thousands of obligations is bounded by their count discharged serially, not by this timeout. |
+| `FORGE_Z3_TIMEOUT` | `60` | Per-obligation Z3 wall-clock budget, in seconds. Raise it (e.g. `120`) to let a genuinely hard nonlinear obligation finish; lower it (e.g. `10`) for fail-fast CI so one slow obligation cannot tie up a build. Invalid/non-positive values fall back to the default. This caps *per-obligation* time, not the whole build; for whole-build wall-clock on obligation-heavy demos, use `FORGE_JOBS`. |
+| `FORGE_JOBS` | *cores* | Number of obligations discharged concurrently within a single build (each in its own Z3 subprocess). Defaults to the available core count. Set `1` to force the original serial discharge. Obligations are independent and results are folded back in obligation order, so the proof log is identical regardless of job count — only wall-clock changes. This is the lever for obligation-heavy demos: a stack emitting thousands of obligations is otherwise bound by their *count* discharged serially, not by any per-obligation timeout. |
 
 ```bash
 FORGE_Z3_TIMEOUT=120 forge build heavy_nonlinear.fg   # grant hard goals more budget
 FORGE_Z3_TIMEOUT=10  forge check ci_target.fg          # fail-fast in CI
+FORGE_JOBS=24 forge build felt252.fg                  # discharge ~3,700 obligations across 24 cores
+FORGE_JOBS=1  forge build demo.fg                     # force serial (e.g. inside an outer parallel runner)
 ```
 
 ### Exit codes
