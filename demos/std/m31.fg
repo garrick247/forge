@@ -25,6 +25,7 @@ fn m31_add(a: u32, b: u32) -> u32
     requires a < M31_P
     requires b < M31_P
     ensures result < M31_P
+    ensures result == (a + b) % M31_P
 {
     let s: u64 = (a as u64) + (b as u64);
     let p: u64 = M31_P as u64;
@@ -37,6 +38,7 @@ fn m31_sub(a: u32, b: u32) -> u32
     requires a < M31_P
     requires b < M31_P
     ensures result < M31_P
+    ensures result == (a + M31_P - b) % M31_P
 {
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
@@ -53,6 +55,7 @@ fn m31_mul(a: u32, b: u32) -> u32
     requires a < M31_P
     requires b < M31_P
     ensures result < M31_P
+    ensures result == (a * b) % M31_P
 {
     let prod: u64 = (a as u64) * (b as u64);
     let p: u64 = M31_P as u64;
@@ -74,6 +77,41 @@ fn m31_double(a: u32) -> u32
     ensures result < M31_P
 {
     m31_add(a, a)
+}
+
+// ---- Cooley-Tukey NTT butterfly (scalar, functionally verified) ------------
+// The core operation of every M31 NTT/FRI stage. Given a value `a`, its pair
+// `b`, and twiddle `w`, a butterfly produces (a + w*b, a - w*b) mod P. These
+// two helpers prove not just that the outputs stay canonical (< P) but that
+// they equal the true field values — functional correctness composed from the
+// verified add/sub/mul, so the emitted kernel is a *verified* NTT butterfly.
+
+// High output: a + w*b (mod P). The `let`-bound product brings m31_mul's
+// `t == (w*b) % P` into scope; the assert discharges the modular fold
+// (a + w*b) ≡ (a + t) (mod P), so m31_add's postcondition yields the clean spec.
+fn m31_butterfly_hi(a: u32, b: u32, w: u32) -> u32
+    requires a < M31_P
+    requires b < M31_P
+    requires w < M31_P
+    ensures result < M31_P
+    ensures result == (a + w * b) % M31_P
+{
+    let t: u32 = m31_mul(w, b);
+    assert((a + w * b) % M31_P == (a + t) % M31_P) "twiddle product folds mod P";
+    m31_add(a, t)
+}
+
+// Low output: a - w*b (mod P), in canonical non-negative form. `t == (w*b) % P`
+// is the reduced twiddle product; m31_sub yields (a + P - t) mod P by substitution.
+fn m31_butterfly_lo(a: u32, b: u32, w: u32) -> u32
+    requires a < M31_P
+    requires b < M31_P
+    requires w < M31_P
+    ensures result < M31_P
+    ensures result == (a + M31_P - (w * b) % M31_P) % M31_P
+{
+    let t: u32 = m31_mul(w, b);
+    m31_sub(a, t)
 }
 
 // ---- CM31 = M31 x M31 with i^2 = -1 ----------------------------------------
