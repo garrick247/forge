@@ -38,17 +38,36 @@ expressed as `requires`/`ensures` over machine integers and discharged by Z3.
 
 ## Property class, stated honestly
 
-What these demos prove is **memory-safety and field-canonical-range
-preservation** (plus the absence of UB/overflow that Forge proves for every
-program), *not* full functional correctness of the transform — i.e. the verified
-contract is "this NTT never reads out of bounds and never lets an M31 element
-leave `[0, P)`," not "this NTT computes the mathematically correct evaluation."
-That deeper claim is what the [felt252 stack](verified-stark-crypto.md) carries
-for the crypto primitives (e.g. `felt252_mul`'s `(result·R) % P == (a·b) % P`),
-and the same techniques extend here at proportional cost. For an accelerated
-prover the safety+range contract is already the high-value one: it is precisely
-the class of bug that differential testing against a reference catches late and
-that a verified emit rules out by construction.
+For most kernels above the verified contract is **memory-safety and
+field-canonical-range preservation** (plus the absence of UB/overflow that Forge
+proves for every program): "this NTT never reads out of bounds and never lets an
+M31 element leave `[0, P)`." For an accelerated prover that is already the
+high-value contract — it is exactly the class of bug that differential testing
+against a reference catches late and that a verified emit rules out by
+construction.
+
+**The field core now goes further — full functional correctness.** As of the
+`std/m31` upgrade, the M31 field atoms prove not just range but the exact field
+value:
+
+| Function | Verified property |
+|---|---|
+| `m31_add` | `result == (a + b) % P` |
+| `m31_sub` | `result == (a + P − b) % P` |
+| `m31_mul` | `result == (a · b) % P` |
+| `m31_butterfly_hi` | `result == (a + w·b) % P` (Cooley-Tukey high output) |
+| `m31_butterfly_lo` | `result == (a + P − (w·b) % P) % P` (low output) |
+
+So the **scalar NTT butterfly** — the atom under every NTT/FRI/Poseidon2 stage —
+is functionally verified, composed from the functionally-verified add/sub/mul (a
+`let`-bound twiddle product plus a modular-fold assert bridges
+`(a + w·b) ≡ (a + t) (mod P)`). This is the same depth the
+[felt252 stack](verified-stark-crypto.md) carries for the crypto primitives
+(e.g. `felt252_mul`'s `(result·R) % P == (a·b) % P`), now reached for the M31
+prover core. Lifting this functional guarantee through the *in-place array*
+butterfly kernels (with the accompanying update-framing / `old()` reasoning) is
+the next step; the scalar core establishes the specification and the proof
+pattern.
 
 ## Reproduce
 
