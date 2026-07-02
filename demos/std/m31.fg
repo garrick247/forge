@@ -118,27 +118,35 @@ fn m31_butterfly_lo(a: u32, b: u32, w: u32) -> u32
 // A complex M31 element is (re, im); multiplication is:
 //   (a + bi)(c + di) = (ac - bd) + (ad + bc)i
 
+// Real part: a_re*b_re - a_im*b_im (mod P), canonical form. The two reduced
+// products are let-bound (ac, bd carry m31_mul's functional ensures); m31_sub
+// then yields (ac + P - bd) mod P by substitution.
 fn cm31_mul_re(a_re: u32, a_im: u32, b_re: u32, b_im: u32) -> u32
     requires a_re < M31_P
     requires a_im < M31_P
     requires b_re < M31_P
     requires b_im < M31_P
     ensures result < M31_P
+    ensures result == ((a_re * b_re) % M31_P + M31_P - (a_im * b_im) % M31_P) % M31_P
 {
     let ac: u32 = m31_mul(a_re, b_re);
     let bd: u32 = m31_mul(a_im, b_im);
     m31_sub(ac, bd)
 }
 
+// Imag part: a_re*b_im + a_im*b_re (mod P). Fold assert bridges the two reduced
+// products back to the clean sum-of-products spec.
 fn cm31_mul_im(a_re: u32, a_im: u32, b_re: u32, b_im: u32) -> u32
     requires a_re < M31_P
     requires a_im < M31_P
     requires b_re < M31_P
     requires b_im < M31_P
     ensures result < M31_P
+    ensures result == (a_re * b_im + a_im * b_re) % M31_P
 {
     let ad: u32 = m31_mul(a_re, b_im);
     let bc: u32 = m31_mul(a_im, b_re);
+    assert((a_re * b_im + a_im * b_re) % M31_P == (ad + bc) % M31_P) "products fold mod P";
     m31_add(ad, bc)
 }
 
