@@ -75,6 +75,7 @@ fn m31_neg(a: u32) -> u32
 fn m31_double(a: u32) -> u32
     requires a < M31_P
     ensures result < M31_P
+    ensures result == (a + a) % M31_P
 {
     m31_add(a, a)
 }
@@ -127,10 +128,11 @@ fn cm31_mul_re(a_re: u32, a_im: u32, b_re: u32, b_im: u32) -> u32
     requires b_re < M31_P
     requires b_im < M31_P
     ensures result < M31_P
-    ensures result == ((a_re * b_re) % M31_P + M31_P - (a_im * b_im) % M31_P) % M31_P
+    ensures result == (a_re * b_re + M31_P * M31_P - a_im * b_im) % M31_P
 {
     let ac: u32 = m31_mul(a_re, b_re);
     let bd: u32 = m31_mul(a_im, b_im);
+    assert((a_re * b_re + M31_P * M31_P - a_im * b_im) % M31_P == (ac + M31_P - bd) % M31_P) "reduced products fold mod P";
     m31_sub(ac, bd)
 }
 
@@ -202,6 +204,8 @@ fn qm31_mul_out_re_re(a_re: u32, a_im: u32, b_re: u32, b_im: u32,
     requires c_re < M31_P  requires c_im < M31_P
     requires d_re < M31_P  requires d_im < M31_P
     ensures result < M31_P
+    ensures result == (a_re*c_re + 2*b_re*d_re + 6*M31_P*M31_P
+                       - a_im*c_im - 2*b_im*d_im - b_re*d_im - b_im*d_re) % M31_P
 {
     // ac_re = a_re*c_re - a_im*c_im
     let ac_re: u32 = cm31_mul_re(a_re, a_im, c_re, c_im);
@@ -209,8 +213,12 @@ fn qm31_mul_out_re_re(a_re: u32, a_im: u32, b_re: u32, b_im: u32,
     let bd_re: u32 = cm31_mul_re(b_re, b_im, d_re, d_im);
     // bd_im = b_re*d_im + b_im*d_re
     let bd_im: u32 = cm31_mul_im(b_re, b_im, d_re, d_im);
-    // 2*bd_re - bd_im
-    let t: u32 = m31_sub(m31_double(bd_re), bd_im);
+    // bd*(2+i) real part = 2*bd_re - bd_im
+    let dbl: u32 = m31_double(bd_re);
+    let t: u32 = m31_sub(dbl, bd_im);
+    assert((a_re*c_re + 2*b_re*d_re + 6*M31_P*M31_P
+            - a_im*c_im - 2*b_im*d_im - b_re*d_im - b_im*d_re) % M31_P
+           == (ac_re + t) % M31_P) "j^2=2+i twist folds mod P";
     m31_add(ac_re, t)
 }
 
@@ -221,12 +229,18 @@ fn qm31_mul_out_re_im(a_re: u32, a_im: u32, b_re: u32, b_im: u32,
     requires c_re < M31_P  requires c_im < M31_P
     requires d_re < M31_P  requires d_im < M31_P
     ensures result < M31_P
+    ensures result == (a_re*c_im + a_im*c_re + b_re*d_re
+                       + 2*b_re*d_im + 2*b_im*d_re + 2*M31_P*M31_P - b_im*d_im) % M31_P
 {
     let ac_im: u32 = cm31_mul_im(a_re, a_im, c_re, c_im);
     let bd_re: u32 = cm31_mul_re(b_re, b_im, d_re, d_im);
     let bd_im: u32 = cm31_mul_im(b_re, b_im, d_re, d_im);
-    // bd_re + 2*bd_im
-    let t: u32 = m31_add(bd_re, m31_double(bd_im));
+    // bd*(2+i) imag part = bd_re + 2*bd_im
+    let dbl: u32 = m31_double(bd_im);
+    let t: u32 = m31_add(bd_re, dbl);
+    assert((a_re*c_im + a_im*c_re + b_re*d_re
+            + 2*b_re*d_im + 2*b_im*d_re + 2*M31_P*M31_P - b_im*d_im) % M31_P
+           == (ac_im + t) % M31_P) "j^2=2+i twist folds mod P";
     m31_add(ac_im, t)
 }
 
@@ -240,11 +254,13 @@ fn qm31_mul_out_im_re(a_re: u32, a_im: u32, b_re: u32, b_im: u32,
     requires c_re < M31_P  requires c_im < M31_P
     requires d_re < M31_P  requires d_im < M31_P
     ensures result < M31_P
+    ensures result == (a_re*d_re + M31_P*M31_P - a_im*d_im + b_re*c_re + M31_P*M31_P - b_im*c_im) % M31_P
 {
     // ad_re = a_re*d_re - a_im*d_im
     let ad_re: u32 = cm31_mul_re(a_re, a_im, d_re, d_im);
     // bc_re = b_re*c_re - b_im*c_im
     let bc_re: u32 = cm31_mul_re(b_re, b_im, c_re, c_im);
+    assert((a_re*d_re + M31_P*M31_P - a_im*d_im + b_re*c_re + M31_P*M31_P - b_im*c_im) % M31_P == (ad_re + bc_re) % M31_P) "cm31 re-products fold mod P";
     m31_add(ad_re, bc_re)
 }
 
@@ -255,11 +271,13 @@ fn qm31_mul_out_im_im(a_re: u32, a_im: u32, b_re: u32, b_im: u32,
     requires c_re < M31_P  requires c_im < M31_P
     requires d_re < M31_P  requires d_im < M31_P
     ensures result < M31_P
+    ensures result == (a_re*d_im + a_im*d_re + b_re*c_im + b_im*c_re) % M31_P
 {
     // ad_im = a_re*d_im + a_im*d_re
     let ad_im: u32 = cm31_mul_im(a_re, a_im, d_re, d_im);
     // bc_im = b_re*c_im + b_im*c_re
     let bc_im: u32 = cm31_mul_im(b_re, b_im, c_re, c_im);
+    assert((a_re*d_im + a_im*d_re + b_re*c_im + b_im*c_re) % M31_P == (ad_im + bc_im) % M31_P) "cm31 im-products fold mod P";
     m31_add(ad_im, bc_im)
 }
 

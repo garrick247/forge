@@ -57,24 +57,31 @@ value:
 | `m31_mul` | `result == (a · b) % P` |
 | `m31_butterfly_hi` | `result == (a + w·b) % P` (Cooley-Tukey high output) |
 | `m31_butterfly_lo` | `result == (a + P − (w·b) % P) % P` (low output) |
-| `cm31_mul_re` | `result == ((a_re·b_re)%P + P − (a_im·b_im)%P) % P` (complex real part) |
+| `cm31_mul_re` | `result == (a_re·b_re + P² − a_im·b_im) % P` (complex real part) |
 | `cm31_mul_im` | `result == (a_re·b_im + a_im·b_re) % P` (complex imag part) |
+| `qm31_mul_out_{re_re, re_im, im_re, im_im}` | all four components of `(a+bj)(c+dj)` with `j²=2+i`, each proved equal to its exact bilinear field value mod P |
 
-So the **scalar NTT butterfly** — the atom under every NTT/FRI/Poseidon2 stage —
-is functionally verified, composed from the functionally-verified add/sub/mul (a
-`let`-bound twiddle product plus a modular-fold assert bridges
-`(a + w·b) ≡ (a + t) (mod P)`), and the **CM31 complex-field multiply**
-(`(a+bi)(c+di) = (ac−bd)+(ad+bc)i`) is functionally verified on top of them. The
-field tower is verified through the degree-2 extension; **QM31** (the degree-4
-`j²=2+i` extension that stwo constraints live in) is the remaining rung — its
-per-component specs are large nested polynomials, tractable by the same
-`let`-bind + fold-assert pattern but a heavier proof. This is the same depth the
-[felt252 stack](verified-stark-crypto.md) carries for the crypto primitives
-(e.g. `felt252_mul`'s `(result·R) % P == (a·b) % P`), now reached for the M31
-prover core. Lifting this functional guarantee through the *in-place array*
-butterfly kernels (with the accompanying update-framing / `old()` reasoning) is
-the next step; the scalar core establishes the specification and the proof
-pattern.
+So the whole **stwo field tower** is functionally verified:
+
+```
+M31 base field  →  scalar NTT butterfly  →  CM31 (degree 2)  →  QM31 (degree 4)
+   add/sub/mul       a + w·b, a − w·b        (a+bi)(c+di)      (a+bj)(c+dj), j²=2+i
+```
+
+The **scalar NTT butterfly** — the atom under every NTT/FRI/Poseidon2 stage — is
+functionally verified (a `let`-bound twiddle product plus a modular-fold assert
+bridges `(a + w·b) ≡ (a + t) (mod P)`); the **CM31** and **QM31** extension
+multiplies compose on top of it, with a P²-padding trick (P² ≡ 0 mod P keeps the
+signed intermediates non-negative) plus one fold assert per component to collapse
+the nested modular reductions Z3 will not fold unaided. **QM31 is the field stwo
+constraints actually live in**, so this pins exact-value correctness across the
+prover's entire arithmetic substrate. This is the same depth the
+[felt252 stack](verified-stark-crypto.md) carries for the Stark-prime crypto
+primitives (e.g. `felt252_mul`'s `(result·R) % P == (a·b) % P`), now reached for
+the M31 prover core. The one remaining step to a fully functionally-verified
+*emitted kernel* is lifting these guarantees through the **in-place array**
+butterfly kernels (with the accompanying update-framing / `old()` reasoning); the
+scalar tower establishes the specification and the proof pattern.
 
 ## Reproduce
 
