@@ -149,7 +149,11 @@ kernels generally.
 functionally verifies the two *linear* layers of a Poseidon2 round: the
 add-round-constant (`result == (s + rc) % P`) and the width-3 external MDS
 diffusion `circ(2,1,1)` (each `out_i == (2·s_i + Σ_{j≠i} s_j) % P`) — exact field
-values, composed from the verified `m31_add`/`m31_double`. The round's *nonlinear*
+values, composed from the verified `m31_add`/`m31_double`. These lift to an
+emitted in-place CUDA kernel `poseidon2_mds3_at` (one thread per width-3 state)
+proving the full array post-state — all three outputs over the *old* triple
+(a read-all-then-write the freeze fix + store-after-store asserts handle) plus a
+locality frame. The round's *nonlinear*
 S-box `x⁵ mod P` is **not** functionally verified: its exact value is a
 high-degree nonlinear goal beyond automated Z3 (it fails even at a 300 s
 per-obligation budget) — the same Fermat-class limitation as the felt252 modular

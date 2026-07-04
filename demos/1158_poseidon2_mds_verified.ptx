@@ -1,0 +1,222 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry poseidon2_mds3_at(
+    .param .u64 poseidon2_mds3_at_param_state_data,
+    .param .u64 poseidon2_mds3_at_param_state_len,
+    .param .u64 poseidon2_mds3_at_param_n,
+    .param .u64 poseidon2_mds3_at_param_tid
+)
+{
+    .reg .pred %p105, %p116, %p33, %p43, %p54, %p64, %p74, %p85, %p95;
+    .reg .u32 %r103, %r109, %r114, %r120, %r142, %r15, %r21, %r27, %r31, %r37, %r41, %r47, %r52, %r58, %r62, %r68, %r72, %r78, %r83, %r89, %r93, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd100, %rd101, %rd102, %rd104, %rd107, %rd108, %rd11, %rd110, %rd111, %rd112, %rd113, %rd115, %rd118, %rd119, %rd12, %rd121, %rd122, %rd123, %rd124, %rd125, %rd126, %rd127, %rd128, %rd129, %rd13, %rd130, %rd131, %rd132, %rd133, %rd134, %rd135, %rd136, %rd137, %rd138, %rd139, %rd14, %rd140, %rd141, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd22, %rd23, %rd24, %rd25, %rd26, %rd28, %rd29, %rd3, %rd30, %rd32, %rd35, %rd36, %rd38, %rd39, %rd4, %rd40, %rd42, %rd45, %rd46, %rd48, %rd49, %rd5, %rd50, %rd51, %rd53, %rd56, %rd57, %rd59, %rd6, %rd60, %rd61, %rd63, %rd66, %rd67, %rd69, %rd7, %rd70, %rd71, %rd73, %rd76, %rd77, %rd79, %rd8, %rd80, %rd81, %rd82, %rd84, %rd87, %rd88, %rd9, %rd90, %rd91, %rd92, %rd94, %rd97, %rd98;
+
+  ld.param.u64 %rd0, [poseidon2_mds3_at_param_state_data];
+  ld.param.u64 %rd1, [poseidon2_mds3_at_param_state_len];
+  ld.param.u64 %rd2, [poseidon2_mds3_at_param_n];
+  ld.param.u64 %rd3, [poseidon2_mds3_at_param_tid];
+
+  mov.u64 %rd4, 3;
+  mul.lo.u64 %rd5, %rd4, %rd3;
+  mov.u64 %rd6, 0; // unhandled expr
+  mov.u64 %rd7, 0; // unhandled expr
+  mov.u64 %rd8, 0; // unhandled expr
+  mov.u64 %rd9, 0; // unhandled expr
+  mov.u64 %rd10, 0;
+  add.u64 %rd11, %rd5, %rd10;
+  mov.u64 %rd12, 4;
+  mul.lo.u64 %rd13, %rd11, %rd12;
+  add.u64 %rd14, %rd0, %rd13;
+  ld.global.u32 %r15, [%rd14];
+  mov.u64 %rd16, 1;
+  add.u64 %rd17, %rd5, %rd16;
+  mov.u64 %rd18, 4;
+  mul.lo.u64 %rd19, %rd17, %rd18;
+  add.u64 %rd20, %rd0, %rd19;
+  ld.global.u32 %r21, [%rd20];
+  mov.u64 %rd22, 2;
+  add.u64 %rd23, %rd5, %rd22;
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd23, %rd24;
+  add.u64 %rd26, %rd0, %rd25;
+  ld.global.u32 %r27, [%rd26];
+  cvt.u64.u32 %rd28, %r15;
+  cvt.u64.u32 %rd29, %r15;
+  add.u64 %rd30, %rd28, %rd29;
+  mov.u32 %r31, 2147483647;
+  cvt.u64.u32 %rd32, %r31;
+  setp.ge.u64 %p33, %rd30, %rd32;
+  @%p33 bra poseidon2_mds3_at_then_34;
+  bra poseidon2_mds3_at_else_34;
+  poseidon2_mds3_at_then_34:
+  sub.u64 %rd35, %rd30, %rd32;
+  mov.u64 %rd36, %rd35;
+  bra poseidon2_mds3_at_end_34;
+  poseidon2_mds3_at_else_34:
+  mov.u64 %rd36, %rd30;
+  poseidon2_mds3_at_end_34:
+  cvt.u32.u64 %r37, %rd36;
+  cvt.u64.u32 %rd38, %r21;
+  cvt.u64.u32 %rd39, %r27;
+  add.u64 %rd40, %rd38, %rd39;
+  mov.u32 %r41, 2147483647;
+  cvt.u64.u32 %rd42, %r41;
+  setp.ge.u64 %p43, %rd40, %rd42;
+  @%p43 bra poseidon2_mds3_at_then_44;
+  bra poseidon2_mds3_at_else_44;
+  poseidon2_mds3_at_then_44:
+  sub.u64 %rd45, %rd40, %rd42;
+  mov.u64 %rd46, %rd45;
+  bra poseidon2_mds3_at_end_44;
+  poseidon2_mds3_at_else_44:
+  mov.u64 %rd46, %rd40;
+  poseidon2_mds3_at_end_44:
+  cvt.u32.u64 %r47, %rd46;
+  mov.u64 %rd48, 0; // unhandled expr
+  cvt.u64.u32 %rd49, %r37;
+  cvt.u64.u32 %rd50, %r47;
+  add.u64 %rd51, %rd49, %rd50;
+  mov.u32 %r52, 2147483647;
+  cvt.u64.u32 %rd53, %r52;
+  setp.ge.u64 %p54, %rd51, %rd53;
+  @%p54 bra poseidon2_mds3_at_then_55;
+  bra poseidon2_mds3_at_else_55;
+  poseidon2_mds3_at_then_55:
+  sub.u64 %rd56, %rd51, %rd53;
+  mov.u64 %rd57, %rd56;
+  bra poseidon2_mds3_at_end_55;
+  poseidon2_mds3_at_else_55:
+  mov.u64 %rd57, %rd51;
+  poseidon2_mds3_at_end_55:
+  cvt.u32.u64 %r58, %rd57;
+  cvt.u64.u32 %rd59, %r21;
+  cvt.u64.u32 %rd60, %r21;
+  add.u64 %rd61, %rd59, %rd60;
+  mov.u32 %r62, 2147483647;
+  cvt.u64.u32 %rd63, %r62;
+  setp.ge.u64 %p64, %rd61, %rd63;
+  @%p64 bra poseidon2_mds3_at_then_65;
+  bra poseidon2_mds3_at_else_65;
+  poseidon2_mds3_at_then_65:
+  sub.u64 %rd66, %rd61, %rd63;
+  mov.u64 %rd67, %rd66;
+  bra poseidon2_mds3_at_end_65;
+  poseidon2_mds3_at_else_65:
+  mov.u64 %rd67, %rd61;
+  poseidon2_mds3_at_end_65:
+  cvt.u32.u64 %r68, %rd67;
+  cvt.u64.u32 %rd69, %r15;
+  cvt.u64.u32 %rd70, %r27;
+  add.u64 %rd71, %rd69, %rd70;
+  mov.u32 %r72, 2147483647;
+  cvt.u64.u32 %rd73, %r72;
+  setp.ge.u64 %p74, %rd71, %rd73;
+  @%p74 bra poseidon2_mds3_at_then_75;
+  bra poseidon2_mds3_at_else_75;
+  poseidon2_mds3_at_then_75:
+  sub.u64 %rd76, %rd71, %rd73;
+  mov.u64 %rd77, %rd76;
+  bra poseidon2_mds3_at_end_75;
+  poseidon2_mds3_at_else_75:
+  mov.u64 %rd77, %rd71;
+  poseidon2_mds3_at_end_75:
+  cvt.u32.u64 %r78, %rd77;
+  mov.u64 %rd79, 0; // unhandled expr
+  cvt.u64.u32 %rd80, %r68;
+  cvt.u64.u32 %rd81, %r78;
+  add.u64 %rd82, %rd80, %rd81;
+  mov.u32 %r83, 2147483647;
+  cvt.u64.u32 %rd84, %r83;
+  setp.ge.u64 %p85, %rd82, %rd84;
+  @%p85 bra poseidon2_mds3_at_then_86;
+  bra poseidon2_mds3_at_else_86;
+  poseidon2_mds3_at_then_86:
+  sub.u64 %rd87, %rd82, %rd84;
+  mov.u64 %rd88, %rd87;
+  bra poseidon2_mds3_at_end_86;
+  poseidon2_mds3_at_else_86:
+  mov.u64 %rd88, %rd82;
+  poseidon2_mds3_at_end_86:
+  cvt.u32.u64 %r89, %rd88;
+  cvt.u64.u32 %rd90, %r27;
+  cvt.u64.u32 %rd91, %r27;
+  add.u64 %rd92, %rd90, %rd91;
+  mov.u32 %r93, 2147483647;
+  cvt.u64.u32 %rd94, %r93;
+  setp.ge.u64 %p95, %rd92, %rd94;
+  @%p95 bra poseidon2_mds3_at_then_96;
+  bra poseidon2_mds3_at_else_96;
+  poseidon2_mds3_at_then_96:
+  sub.u64 %rd97, %rd92, %rd94;
+  mov.u64 %rd98, %rd97;
+  bra poseidon2_mds3_at_end_96;
+  poseidon2_mds3_at_else_96:
+  mov.u64 %rd98, %rd92;
+  poseidon2_mds3_at_end_96:
+  cvt.u32.u64 %r99, %rd98;
+  cvt.u64.u32 %rd100, %r15;
+  cvt.u64.u32 %rd101, %r21;
+  add.u64 %rd102, %rd100, %rd101;
+  mov.u32 %r103, 2147483647;
+  cvt.u64.u32 %rd104, %r103;
+  setp.ge.u64 %p105, %rd102, %rd104;
+  @%p105 bra poseidon2_mds3_at_then_106;
+  bra poseidon2_mds3_at_else_106;
+  poseidon2_mds3_at_then_106:
+  sub.u64 %rd107, %rd102, %rd104;
+  mov.u64 %rd108, %rd107;
+  bra poseidon2_mds3_at_end_106;
+  poseidon2_mds3_at_else_106:
+  mov.u64 %rd108, %rd102;
+  poseidon2_mds3_at_end_106:
+  cvt.u32.u64 %r109, %rd108;
+  mov.u64 %rd110, 0; // unhandled expr
+  cvt.u64.u32 %rd111, %r99;
+  cvt.u64.u32 %rd112, %r109;
+  add.u64 %rd113, %rd111, %rd112;
+  mov.u32 %r114, 2147483647;
+  cvt.u64.u32 %rd115, %r114;
+  setp.ge.u64 %p116, %rd113, %rd115;
+  @%p116 bra poseidon2_mds3_at_then_117;
+  bra poseidon2_mds3_at_else_117;
+  poseidon2_mds3_at_then_117:
+  sub.u64 %rd118, %rd113, %rd115;
+  mov.u64 %rd119, %rd118;
+  bra poseidon2_mds3_at_end_117;
+  poseidon2_mds3_at_else_117:
+  mov.u64 %rd119, %rd113;
+  poseidon2_mds3_at_end_117:
+  cvt.u32.u64 %r120, %rd119;
+  mov.u64 %rd121, 0; // unhandled expr
+  mov.u64 %rd122, 0; // unhandled expr
+  mov.u64 %rd123, 0; // unhandled expr
+  mov.u64 %rd124, 0;
+  add.u64 %rd125, %rd5, %rd124;
+  mov.u64 %rd126, 4;
+  mul.lo.u64 %rd127, %rd125, %rd126;
+  add.u64 %rd128, %rd0, %rd127;
+  st.global.u32 [%rd128], %r58;
+  mov.u64 %rd129, 1;
+  add.u64 %rd130, %rd5, %rd129;
+  mov.u64 %rd131, 4;
+  mul.lo.u64 %rd132, %rd130, %rd131;
+  add.u64 %rd133, %rd0, %rd132;
+  st.global.u32 [%rd133], %r89;
+  mov.u64 %rd134, 2;
+  add.u64 %rd135, %rd5, %rd134;
+  mov.u64 %rd136, 4;
+  mul.lo.u64 %rd137, %rd135, %rd136;
+  add.u64 %rd138, %rd0, %rd137;
+  st.global.u32 [%rd138], %r120;
+  mov.u64 %rd139, 0; // unhandled expr
+  mov.u64 %rd140, 0; // unhandled expr
+  mov.u64 %rd141, 0; // unhandled expr
+  mov.u32 %r142, 0; // unit
+  ret;
+}
+

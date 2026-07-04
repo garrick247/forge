@@ -312,3 +312,26 @@ static __device__ __forceinline__ uint32_t poseidon2_add_rc(uint32_t s, uint32_t
   return m31_add(s, rc);
 }
 
+__global__ void poseidon2_mds3_at(uint32_t* __restrict__ state, uint64_t state_len, uint64_t n, uint64_t tid) {
+  uint64_t base = (3ULL * tid);
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  uint32_t s0 = state[(base + 0ULL)];
+  uint32_t s1 = state[(base + 1ULL)];
+  uint32_t s2 = state[(base + 2ULL)];
+  uint32_t o0 = poseidon2_mds3_out0(s0, s1, s2);
+  uint32_t o1 = poseidon2_mds3_out1(s0, s1, s2);
+  uint32_t o2 = poseidon2_mds3_out2(s0, s1, s2);
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  state[(base + 0ULL)] = o0;
+  state[(base + 1ULL)] = o1;
+  state[(base + 2ULL)] = o2;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+}
+

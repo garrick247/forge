@@ -62,4 +62,49 @@ fn poseidon2_add_rc(s: u32, rc: u32) -> u32
     m31_add(s, rc)
 }
 
+// In-place Poseidon2 MDS diffusion KERNEL (width-3 states, one thread per state).
+// Applies the circ(2,1,1) MDS to state[3*tid .. 3*tid+2] in place, proving the
+// exact array post-state (each slot = its MDS output over the OLD triple) + a
+// frame. All three outputs depend on all three inputs, so the reads are taken
+// before any write; the emitted __global__ kernel is a verified Poseidon2
+// diffusion stage.
+#[kernel]
+fn poseidon2_mds3_at(state: span<u32>, n: u64, tid: u64)
+    requires tid < n
+    requires 3u64 * n <= state.len
+    requires forall k: u64, k < state.len ==> state[k] < M31_P
+    ensures state[3u64 * tid + 0u64] < M31_P
+    ensures state[3u64 * tid + 1u64] < M31_P
+    ensures state[3u64 * tid + 2u64] < M31_P
+    ensures state[3u64 * tid + 0u64]
+            == (2*old(state[3u64*tid + 0u64]) + old(state[3u64*tid + 1u64]) + old(state[3u64*tid + 2u64])) % M31_P
+    ensures state[3u64 * tid + 1u64]
+            == (old(state[3u64*tid + 0u64]) + 2*old(state[3u64*tid + 1u64]) + old(state[3u64*tid + 2u64])) % M31_P
+    ensures state[3u64 * tid + 2u64]
+            == (old(state[3u64*tid + 0u64]) + old(state[3u64*tid + 1u64]) + 2*old(state[3u64*tid + 2u64])) % M31_P
+    ensures forall k: u64, k < state.len ==> k != 3u64*tid + 0u64 ==> k != 3u64*tid + 1u64
+                                        ==> k != 3u64*tid + 2u64 ==> state[k] == old(state[k])
+{
+    let base: u64 = 3u64 * tid;
+    assert(base + 2u64 < state.len) "state triple in bounds";
+    assert(state[base + 0u64] < M31_P) "field @ base";
+    assert(state[base + 1u64] < M31_P) "field @ base+1";
+    assert(state[base + 2u64] < M31_P) "field @ base+2";
+    let s0: u32 = state[base + 0u64];
+    let s1: u32 = state[base + 1u64];
+    let s2: u32 = state[base + 2u64];
+    let o0: u32 = poseidon2_mds3_out0(s0, s1, s2);   // (2*s0 + s1 + s2) % P
+    let o1: u32 = poseidon2_mds3_out1(s0, s1, s2);   // (s0 + 2*s1 + s2) % P
+    let o2: u32 = poseidon2_mds3_out2(s0, s1, s2);   // (s0 + s1 + 2*s2) % P
+    assert(base + 0u64 != base + 1u64) "distinct 0,1";
+    assert(base + 0u64 != base + 2u64) "distinct 0,2";
+    assert(base + 1u64 != base + 2u64) "distinct 1,2";
+    state[base + 0u64] = o0;
+    state[base + 1u64] = o1;
+    state[base + 2u64] = o2;
+    assert(state[base + 0u64] == o0) "slot 0 holds o0 after later distinct stores";
+    assert(state[base + 1u64] == o1) "slot 1 holds o1 after later distinct store";
+    assert(state[base + 2u64] == o2) "slot 2 holds o2";
+}
+
 fn main() -> u64 { 0u64 }
