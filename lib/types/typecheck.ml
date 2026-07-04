@@ -898,17 +898,67 @@ let extract_block_var_assigns expr =
       ) stmts
   | _ -> []
 
+(* Freeze let-bound array reads inside conditional blocks.
+   A `let tmp = arr[i]` snapshots arr[i] at bind time. But the conditional-write
+   encoding inlines tmp's value and env_array_write later re-renames `arr` to the
+   post-write version, so a subsequent `arr[j] = tmp` would store arr[i] read from
+   the ALREADY-WRITTEN array — the wrong value. This breaks in-branch swaps: the
+   mirror slot ends up holding old(arr[j]) instead of old(arr[i]).
+   Fix: rewrite array reads in a let value to a stable frozen alias `__frz_<arr>`
+   (which env_array_write never renames, since the name differs), and assert
+   `__frz_<arr> == <arr>` at block entry so the alias pins the entry state. Only
+   conditional-block writes go through this path; unconditional writes are handled
+   by ordinary sequential SSA and are unaffected. *)
+let frozen_read_arrays : ident list ref = ref []
+
+let rec freeze_array_reads (p : pred) : pred = match p with
+  | PIndex (PVar arr, idx) ->
+      frozen_read_arrays := arr :: !frozen_read_arrays;
+      PIndex (PVar { arr with name = "__frz_" ^ arr.name }, freeze_array_reads idx)
+  | PIndex (a, i)     -> PIndex (freeze_array_reads a, freeze_array_reads i)
+  | PBinop (op, l, r) -> PBinop (op, freeze_array_reads l, freeze_array_reads r)
+  | PUnop (op, q)     -> PUnop (op, freeze_array_reads q)
+  | PIte (c, t, e)    -> PIte (freeze_array_reads c, freeze_array_reads t, freeze_array_reads e)
+  | PField (q, f)     -> PField (freeze_array_reads q, f)
+  | PApp (f, args)    -> PApp (f, List.map freeze_array_reads args)
+  | _                 -> p
+
+(* Drain the frozen-alias set and add `__frz_<arr> == <arr>` assumes to env.
+   Called at each conditional-write apply site, before the writes are applied, so
+   the alias equals the block-entry array (subsequent env_array_write renames of
+   `arr` carry the alias equation to the entry snapshot). *)
+let add_freeze_assumes (env : env) : env =
+  let ids = !frozen_read_arrays in
+  frozen_read_arrays := [];
+  let seen = Hashtbl.create 8 in
+  List.fold_left (fun e arr ->
+    if Hashtbl.mem seen arr.name then e
+    else begin
+      Hashtbl.add seen arr.name ();
+      let frz = { arr with name = "__frz_" ^ arr.name } in
+      let ty = match List.assoc_opt arr.name e.vars with
+        | Some vi -> vi.vi_ty | None -> TSpan (TPrim (TUint U64)) in
+      let eq = PBinop (Eq, PVar frz, PVar arr) in
+      { e with proof_ctx = { e.proof_ctx with
+          pc_vars    = (frz.name, ty) :: e.proof_ctx.pc_vars;
+          pc_assumes = eq :: e.proof_ctx.pc_assumes } }
+    end
+  ) env ids
+
 (* Extract array element writes (arr_id, idx_pred, rhs_pred) from a block.
    Handles SExpr(EAssign(EIndex(EVar arr_id, idx), rhs)).
    Let-bindings inside the block are collected first so their values can be
-   substituted into subsequent write expressions (enabling `let tmp=s[i]; s[j]=tmp`). *)
+   substituted into subsequent write expressions (enabling `let tmp=s[i]; s[j]=tmp`).
+   Array reads in a let value are frozen (see freeze_array_reads) so the snapshot
+   is not re-read from a later-written array. *)
 let rec extract_block_arr_assigns expr =
   match expr.expr_desc with
   | EBlock (stmts, _) ->
       (* First pass: collect let-binding substitutions so we can inline
          tmp variables defined within the same if-block. *)
       let let_subst = List.filter_map (fun s -> match s.stmt_desc with
-        | SLet (v, _, rhs, _) | SGhost (v, _, rhs) -> Some (v.name, expr_to_pred_simple rhs)
+        | SLet (v, _, rhs, _) | SGhost (v, _, rhs) ->
+            Some (v.name, freeze_array_reads (expr_to_pred_simple rhs))
         | _ -> None
       ) stmts in
       let rec apply_subst p = match p with
@@ -966,6 +1016,7 @@ let rec extract_block_arr_assigns expr =
                                               write PIte(cond, arr_old[idx], v_else)
    Calls env_array_write which renames arr → __arr_pN and adds write + frame facts. *)
 let apply_if_arr_assigns env cond_pred then_arr_assigns else_arr_assigns =
+  let env = add_freeze_assumes env in
   let same_arr_idx (a1, i1, _) (a2, i2, _) = a1.name = a2.name && i1 = i2 in
   let then_keys = List.map (fun (a, i, _) -> (a, i)) then_arr_assigns in
   let ordered =
@@ -1173,6 +1224,7 @@ let rec expr_final_env env expr =
       let env2 =
         if is_elif then
           let chain_arr = collect_chain_arr_assigns expr in
+          let env1 = add_freeze_assumes env1 in
           List.fold_left (fun env_ (arr_id, idx_p, val_p) ->
             env_array_write env_ arr_id idx_p val_p
           ) env1 chain_arr
@@ -1439,6 +1491,7 @@ and stmt_final_env env stmt =
            let env2 =
              if is_elif then
                let chain_arr = collect_chain_arr_assigns e in
+               let env1 = add_freeze_assumes env1 in
                List.fold_left (fun env_ (arr_id, idx_p, val_p) ->
                  env_array_write env_ arr_id idx_p val_p
                ) env1 chain_arr
@@ -2991,6 +3044,7 @@ and check_stmt env stmt : env =
            let env2 =
              if is_elif then
                let chain_arr = collect_chain_arr_assigns e in
+               let env1 = add_freeze_assumes env1 in
                List.fold_left (fun env_ (arr_id, idx_p, val_p) ->
                  env_array_write env_ arr_id idx_p val_p
                ) env1 chain_arr
