@@ -1,0 +1,31 @@
+// Demo 1157: functionally-verified NTT scaling kernel
+//
+// The final step of an inverse NTT: divide every element by N, done as a
+// multiply by inv_n = N^{-1} mod P.  data[tid] = data[tid] * inv_n  (mod P), in
+// place. Proves the exact post-state (each element becomes its true scaled field
+// value) plus a frame, not just canonical range.
+//
+// tid as an explicit thread index (SPMD, cf. demo 232), old(span[i]) pre-state
+// (cf. demo 139), and the functionally-verified scalar std::m31::m31_mul.
+
+use std::gpu;
+use std::m31;
+
+#[kernel]
+fn ntt_scale_at(data: span<u32>, inv_n: u32, n: u64, tid: u64)
+    requires tid < n
+    requires n <= data.len
+    requires inv_n < M31_P
+    requires forall k: u64, k < data.len ==> data[k] < M31_P
+    ensures data[tid] < M31_P
+    ensures data[tid] == (old(data[tid]) * inv_n) % M31_P
+    // frame: every other element is untouched
+    ensures forall k: u64, k < data.len ==> k != tid ==> data[k] == old(data[k])
+{
+    assert(tid < data.len) "element in bounds";
+    assert(data[tid] < M31_P) "field invariant at tid";
+    let v: u32 = data[tid];
+    data[tid] = m31_mul(v, inv_n);
+}
+
+fn main() -> u64 { 0u64 }

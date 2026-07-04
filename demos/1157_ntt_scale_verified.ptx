@@ -1,0 +1,45 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry ntt_scale_at(
+    .param .u64 ntt_scale_at_param_data_data,
+    .param .u64 ntt_scale_at_param_data_len,
+    .param .u32 ntt_scale_at_param_inv_n,
+    .param .u64 ntt_scale_at_param_n,
+    .param .u64 ntt_scale_at_param_tid
+)
+{
+    .reg .u32 %r10, %r14, %r17, %r2, %r21;
+    .reg .u64 %rd0, %rd1, %rd11, %rd12, %rd13, %rd15, %rd16, %rd18, %rd19, %rd20, %rd3, %rd4, %rd5, %rd6, %rd7, %rd8, %rd9;
+
+  ld.param.u64 %rd0, [ntt_scale_at_param_data_data];
+  ld.param.u64 %rd1, [ntt_scale_at_param_data_len];
+  ld.param.u32 %r2, [ntt_scale_at_param_inv_n];
+  ld.param.u64 %rd3, [ntt_scale_at_param_n];
+  ld.param.u64 %rd4, [ntt_scale_at_param_tid];
+
+  mov.u64 %rd5, 0; // unhandled expr
+  mov.u64 %rd6, 0; // unhandled expr
+  mov.u64 %rd7, 4;
+  mul.lo.u64 %rd8, %rd4, %rd7;
+  add.u64 %rd9, %rd0, %rd8;
+  ld.global.u32 %r10, [%rd9];
+  cvt.u64.u32 %rd11, %r10;
+  cvt.u64.u32 %rd12, %r2;
+  mul.lo.u64 %rd13, %rd11, %rd12;
+  mov.u32 %r14, 2147483647;
+  cvt.u64.u32 %rd15, %r14;
+  rem.u64 %rd16, %rd13, %rd15;
+  cvt.u32.u64 %r17, %rd16;
+  mov.u64 %rd18, 4;
+  mul.lo.u64 %rd19, %rd4, %rd18;
+  add.u64 %rd20, %rd0, %rd19;
+  st.global.u32 [%rd20], %r17;
+  mov.u32 %r21, 0; // unit
+  ret;
+}
+

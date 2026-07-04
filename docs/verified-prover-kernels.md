@@ -112,7 +112,11 @@ nonlinear over the pre-state, so beyond the fold assert it needed an explicit
 *congruence-rename* assert (equal args ⇒ equal product) to rewrite the local-var
 form into the `old()`/`twiddle` form Z3 would not substitute on its own. It also
 runs at parity (`benchmarks/bench_intt.cu`): VRAM-bound verified-vs-hand-tuned
-ratio **1.000** at ~1,555 GB/s.
+ratio **1.000** at ~1,555 GB/s. And the pipeline's tail — the
+`ntt_scale` kernel (`demos/1157_ntt_scale_verified.fg`, `data[tid] *= inv_n` mod P
+for the final ÷N) — verifies clean (`data[tid] == (old(data[tid])·inv_n) % P` +
+frame). So the whole NTT pipeline is functionally verified: forward butterfly →
+bit-reversal → inverse butterfly → scale.
 
 **A second family of emitted kernels: the FRI fold.**
 `demos/1154_fri_fold_verified.fg` lifts the same way. The FRI low-degree-test fold
