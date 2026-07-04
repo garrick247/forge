@@ -145,6 +145,17 @@ the block-entry state (`lib/types/typecheck.ml`), which env_array_write never
 re-renames — unlocking correct verification of in-place swap/scatter/permutation
 kernels generally.
 
+**Poseidon2 — the linear layers.** `demos/1158_poseidon2_mds_verified.fg`
+functionally verifies the two *linear* layers of a Poseidon2 round: the
+add-round-constant (`result == (s + rc) % P`) and the width-3 external MDS
+diffusion `circ(2,1,1)` (each `out_i == (2·s_i + Σ_{j≠i} s_j) % P`) — exact field
+values, composed from the verified `m31_add`/`m31_double`. The round's *nonlinear*
+S-box `x⁵ mod P` is **not** functionally verified: its exact value is a
+high-degree nonlinear goal beyond automated Z3 (it fails even at a 300 s
+per-obligation budget) — the same Fermat-class limitation as the felt252 modular
+inverse, which is an audit-assume there. The S-box is range-verified; the linear
+diffusion is where functional correctness is achievable, and this demo pins it.
+
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
 field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full

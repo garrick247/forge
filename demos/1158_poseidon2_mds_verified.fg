@@ -1,0 +1,65 @@
+// Demo 1158: functionally-verified Poseidon2 MDS diffusion layer (width 3)
+//
+// A Poseidon2 permutation round is: add round constants (linear) -> S-box x^5
+// (nonlinear) -> MDS matrix multiply (linear diffusion). This demo functionally
+// verifies the MDS layer for the width-3 external matrix circ(2,1,1):
+//     [[2,1,1],[1,2,1],[1,1,2]]   so   out_i = 2*s_i + sum_{j != i} s_j  (mod P).
+// Each output is proved to equal its exact field value, composed from the
+// verified m31_double / m31_add.
+//
+// Scope note: the round's S-box (x^5 mod P) is NOT functionally verified here --
+// its exact value is a high-degree nonlinear goal beyond automated Z3 (it fails
+// even at a 300s per-obligation budget), the same Fermat-class limitation as the
+// felt252 modular inverse (an audit-assume in that stack). The S-box is
+// range-verified (result < P); the LINEAR layers (add-RC, MDS) are the
+// functionally-verifiable part of the permutation, which this demo establishes.
+
+use std::gpu;
+use std::m31;
+
+// out0 = 2*s0 + s1 + s2  (mod P)
+fn poseidon2_mds3_out0(s0: u32, s1: u32, s2: u32) -> u32
+    requires s0 < M31_P  requires s1 < M31_P  requires s2 < M31_P
+    ensures result < M31_P
+    ensures result == (2*s0 + s1 + s2) % M31_P
+{
+    let d: u32 = m31_double(s0);        // 2*s0 % P
+    let t: u32 = m31_add(s1, s2);       // (s1 + s2) % P
+    assert((2*s0 + s1 + s2) % M31_P == (d + t) % M31_P) "mds row0 folds mod P";
+    m31_add(d, t)
+}
+
+// out1 = s0 + 2*s1 + s2  (mod P)
+fn poseidon2_mds3_out1(s0: u32, s1: u32, s2: u32) -> u32
+    requires s0 < M31_P  requires s1 < M31_P  requires s2 < M31_P
+    ensures result < M31_P
+    ensures result == (s0 + 2*s1 + s2) % M31_P
+{
+    let d: u32 = m31_double(s1);        // 2*s1 % P
+    let t: u32 = m31_add(s0, s2);       // (s0 + s2) % P
+    assert((s0 + 2*s1 + s2) % M31_P == (d + t) % M31_P) "mds row1 folds mod P";
+    m31_add(d, t)
+}
+
+// out2 = s0 + s1 + 2*s2  (mod P)
+fn poseidon2_mds3_out2(s0: u32, s1: u32, s2: u32) -> u32
+    requires s0 < M31_P  requires s1 < M31_P  requires s2 < M31_P
+    ensures result < M31_P
+    ensures result == (s0 + s1 + 2*s2) % M31_P
+{
+    let d: u32 = m31_double(s2);        // 2*s2 % P
+    let t: u32 = m31_add(s0, s1);       // (s0 + s1) % P
+    assert((s0 + s1 + 2*s2) % M31_P == (d + t) % M31_P) "mds row2 folds mod P";
+    m31_add(d, t)
+}
+
+// Add-round-constant layer (per element), functionally verified.
+fn poseidon2_add_rc(s: u32, rc: u32) -> u32
+    requires s < M31_P  requires rc < M31_P
+    ensures result < M31_P
+    ensures result == (s + rc) % M31_P
+{
+    m31_add(s, rc)
+}
+
+fn main() -> u64 { 0u64 }
