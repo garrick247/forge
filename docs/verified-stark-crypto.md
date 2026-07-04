@@ -1,4 +1,4 @@
-# Verified Stark-Prime Cryptography in a Refinement-Typed Language with SMT Discharge
+# Verified Stark-Prime Cryptography and Accelerated Prover Kernels in a Refinement-Typed Language with SMT Discharge
 
 *Draft — Garrick Wagner, 2026. Artifact: `forge` / `demos/std/felt252.fg`.*
 
@@ -28,6 +28,19 @@ modulus mirror* that re-derives the entire mod-`n` (curve-order) stack from the
 proven mod-`P` stack by structural substitution. We also describe the trusted
 computing base (TCB) candidly, since for a cryptographic artifact the shape of
 the TCB is the result that matters most.
+
+We then present a **second case study**: applying the same language and
+techniques to the *accelerated prover kernels* on which zk-rollup throughput
+depends. We functionally verify the field arithmetic of both major proving stacks
+— stwo's M31 through its degree-4 QM31 constraint field, and Plonky3's BabyBear
+and KoalaBear with their degree-4 extensions — and lift that exact-value
+correctness up through emitted in-place CUDA kernels for the NTT butterfly (both
+directions), bit-reversal, scale, and FRI fold, plus the linear layers of a
+Poseidon2 round. The emitted kernels are proved *correct* yet benchmark at
+hand-tuned speed (within 0.1 % of a Mersenne-fold implementation at ~88 % of the
+RTX 5090's memory roofline) — verification is free in the regime that matters.
+Reaching in-place swaps/permutations required (and yielded) a small fix to the
+compiler's conditional-array-write encoding, which we describe.
 
 ## 1. Introduction
 
@@ -224,7 +237,64 @@ permutation, 2.20 s → 0.21 s). This turns the whole-stack proof from tens of
 minutes into ~100 s — making the artifact something a reviewer or CI can re-run,
 not just admire. `FORGE_JOBS=1` recovers the original serial path verbatim.
 
-## 7. Related work
+## 7. Second case study: verified accelerated prover kernels
+
+The same language and techniques transfer from the crypto primitives to the
+*hot loop* of a STARK prover — the field, NTT, FRI, and hash kernels that get
+hand-ported to GPUs for speed, and where a silent bug (an out-of-bounds column
+access, a field element escaping its canonical range, a mis-computed butterfly)
+yields a valid-looking but wrong proof.
+
+**Both field families, base through constraint field.** We functionally verify
+(exact field value, not merely canonical range) the arithmetic of both major
+proving stacks: stwo's **M31** base field, its degree-2 **CM31** complex
+extension, and its degree-4 **QM31** constraint field (the field its AIR
+constraints live in); and Plonky3's **BabyBear** and **KoalaBear** with their
+degree-4 extensions. The base-field operations discharge directly in Z3's
+unbounded-integer mode; the extension multiplies use a *P²-padding* trick
+(`P² ≡ 0 (mod P)` keeps signed intermediates non-negative) plus one modular-fold
+assertion per output component to collapse the nested reductions Z3 will not fold
+unaided.
+
+**Up to the emitted kernel.** On top of the verified scalar field ops we verify
+the *array post-state* of real in-place GPU kernels: the Cooley-Tukey NTT
+butterfly (forward and Gentleman-Sande inverse), the bit-reversal permutation,
+the ÷N scale, and the FRI low-degree-test fold (over M31 and CM31) — each proved
+to compute the mathematically correct transform, touch only its intended slots
+(a locality frame), and preserve range, then emitted as `__global__` CUDA via
+`forge cuda`. This uses three composable idioms: the thread index as an explicit
+parameter (the SPMD proof model), `old(span[i])` pre-state references, and the
+verified scalar primitives. The Poseidon2 round's linear layers (add-round-
+constant and the width-3 MDS diffusion) are likewise functionally verified.
+
+**A compiler fix.** Verifying an in-place *swap* inside a conditional exposed a
+bug in the compiler's conditional-array-write encoding: a `let`-bound array read
+(`let tmp = data[i]`) was re-read from the *post-first-write* array rather than
+its bind-time snapshot, so a subsequent `data[j] = tmp` stored the wrong value.
+The fix freezes such reads to a stable alias pinned to the block-entry array;
+it is 56 lines and passes the full regression suite (1,172 demos, zero new
+failures). This is the verification-driven-development loop in miniature: a
+provably-wrong proof obligation localized a real soundness-relevant bug in the
+toolchain.
+
+**Verified *and* fast.** Because the field reduction is kept as `% P` for
+provability (not a branchless Mersenne fold), one might expect a speed penalty.
+There is essentially none: benchmarked on an RTX 5090, the emitted NTT butterfly
+and FRI fold are within **0.1 %** of a hand-optimized Mersenne-fold kernel at
+VRAM-bound sizes, both saturating memory at **~1,560 GB/s (~88 % of roofline)**,
+with byte-identical results. The `%`-for-provability compute hides completely
+behind memory bandwidth; the only measurable cost (~4 %) appears solely in the
+L2-resident/compute-bound regime. The proved-correct kernel is not a research
+toy — it runs at hand-tuned speed on real hardware.
+
+**Honest limits.** Two nonlinear goals resist automated discharge and stay
+range-verified with a documented audit-assume, both Fermat-class: the modular
+inverse `a^(P-2)` (§5) and the Poseidon2 S-box `x⁵ mod P` (which fails even at a
+300 s per-obligation budget). The pattern is consistent: *linear* prover-kernel
+layers reach full functional correctness; *high-degree nonlinear* ones (inverse,
+S-box) reach range plus a named assumption.
+
+## 8. Related work
 
 The artifact sits alongside Fiat-Cryptography (synthesized, proven field
 arithmetic), HACL\*/EverCrypt and Vale (verified crypto in F\*/Dafny-style
@@ -237,7 +307,7 @@ deliverable. The mechanical modulus mirror and the chunked-induction discipline
 are, we believe, transferable to any SMT-backed verifier meeting the same
 non-termination wall.
 
-## 8. Limitations and future work
+## 9. Limitations and future work
 
 The open research arcs are the natural next steps: canonical-form (`result < P`)
 propagation through `mul`/`sqr`/`inv` (blocked by a Z3 proof-tactic instability
@@ -248,7 +318,7 @@ discharge the final ECDSA comparison; and a Solinas-folding alternative to
 Montgomery for the Stark prime. Each shrinks the TCB by a named, enumerated
 amount.
 
-## 9. Conclusion
+## 10. Conclusion
 
 Verified cryptography at the scale that matters for zk-rollups is gated less by
 the difficulty of any individual proof than by the engineering of *staying inside
@@ -258,6 +328,18 @@ evidence that a refinement-typed, SMT-discharged language can reach a full
 field→curve→hash→signature stack, emit deployable C, and — through per-limb
 projection, witness cascades, chunked induction, and a mechanical modulus mirror
 — do so with a trusted base small enough to print on one page.
+
+The second case study shows the same approach reaching the *other* half of a
+trustless-ZK system: the accelerated prover kernels. There the deliverable is not
+only a proof but an emitted, functionally-correct GPU kernel that runs at
+hand-tuned speed — verification and performance are not in tension when the work
+is memory-bound. And the clean division we observe — linear layers reach full
+functional correctness, high-degree nonlinear ones (field inverse, S-box) reach
+range plus a named audit-assume — is itself a useful map of where an
+SMT-discharged refinement type system can and cannot yet go for zero-knowledge
+proving. Together the two studies argue that a single such language can specify
+and verify both the cryptography a rollup trusts and the kernels that compute its
+proofs, keeping the trusted base enumerable at each step.
 
 ---
 
