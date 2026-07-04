@@ -307,6 +307,29 @@ deliverable. The mechanical modulus mirror and the chunked-induction discipline
 are, we believe, transferable to any SMT-backed verifier meeting the same
 non-termination wall.
 
+For the second case study (§7) the relevant prior art partitions cleanly by
+layer, and — importantly — no line of work reaches the intersection this paper
+occupies. *Functionally-verified GPU kernels* exist beyond race-freedom checking
+(GPUVerify) — Kuiper (F\*, dependent types + concurrent separation logic, PLDI'25),
+an SMT-Hoare-logic tool of Kozima et al., and ProofWright (Rocq + VerCors) — but
+exclusively for generic ML/HPC primitives (matmul, softmax, element-wise), with no
+finite-field or ZK content, and none report hand-tuned-speed benchmarks on the
+verified kernels. *Functionally-verified NTT* exists — Trieu's Rocq derivation and
+CryptoLine's verified NTT multiplications — but CPU/assembly only, foundationally
+(Coq/Rocq, not SMT-refinement), and for lattice-PQC moduli, not the STARK-friendly
+small fields or their extensions. *Verified STARK-field arithmetic* is nascent:
+TRZK (a Lean e-graph optimizing compiler) verifies BabyBear base operations but
+emits Rust and defers extension fields and NTT; CompPoly verifies polynomial
+operations over BabyBear/Goldilocks and extensions in Lean, without GPU. And the
+ZK ecosystem's own verification effort — StarkWare's Lean 4 verification of the
+stwo prover — targets AIR *soundness* and explicitly lists the prover
+implementation and GPU kernels as assumed-correct hypotheses, i.e. carves out
+precisely the prover-compute-kernel layer verified here. The contribution of §7 is
+thus the *conjunction* — exact-value verification of STARK-friendly base and
+extension fields, prover-kernel functional correctness, CUDA emission, and
+demonstrated bandwidth-bound performance — in a single SMT-refinement pipeline; a
+fuller prior-art map is in the artifact's `docs/prior-art.md`.
+
 ## 9. Limitations and future work
 
 The open research arcs are the natural next steps: canonical-form (`result < P`)
