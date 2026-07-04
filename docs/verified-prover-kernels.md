@@ -113,7 +113,10 @@ combines an evaluation vector's two halves with a verifier challenge `alpha`;
 runs** (both output components exact) — each with the array post-state + frame,
 `forge cuda`-emitted. Since the fold reads a *separate* `old` array (vs the
 in-place butterfly), the read-value ↔ `old()` link is stated explicitly
-(`assert a == old(old_evals[i])`).
+(`assert a == old(old_evals[i])`). It too runs at parity
+(`benchmarks/bench_fri_fold.cu`): VRAM-bound verified-vs-hand-tuned ratio
+**1.000** at ~1,580 GB/s, and the CM31 fold is likewise memory-bound (same
+~1,575 GB/s ceiling).
 
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
