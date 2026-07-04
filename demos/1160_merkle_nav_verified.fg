@@ -1,0 +1,56 @@
+// Demo 1160: functionally-verified Merkle-tree navigation & combine ordering
+//
+// A Merkle inclusion-proof verifier walks a leaf up to the root, at each level
+// combining the current node with its sibling in the correct order. The HASH
+// itself (Blake2s/Poseidon2) is a range-verified black box — its exact output is
+// nonlinear (S-box / bitwise) and not functionally verified here. But the
+// *navigation* around the tree is pure integer arithmetic and IS exact-value
+// verifiable: the parent/sibling index computation, the invariant that a node and
+// its sibling share a parent (so the walk is well-formed), and the left/right
+// ordering that determines the hash's argument order. This demo pins that
+// structure — the part of a Merkle path verify that doesn't depend on the hash.
+
+// Parent index in a binary tree (heap-style pairing (2k, 2k+1)).
+fn merkle_parent(i: u64) -> u64
+    ensures result == i / 2u64
+{
+    i / 2u64
+}
+
+// Sibling index: even node pairs up (i, i+1); odd node pairs (i-1, i).
+fn merkle_sibling(i: u64) -> u64
+    ensures i % 2u64 == 0u64 ==> result == i + 1u64
+    ensures i % 2u64 == 1u64 ==> result == i - 1u64
+{
+    if i % 2u64 == 0u64 { i + 1u64 } else { i - 1u64 }
+}
+
+// Core well-formedness invariant: a node and its sibling share the same parent.
+// Proved via the sibling spec + integer-division reasoning (i and i±1 floor-halve
+// to the same value). This is what makes the level-by-level walk sound.
+fn merkle_shared_parent(i: u64) -> u64
+    ensures result == i / 2u64
+{
+    let s: u64 = merkle_sibling(i);
+    assert(s / 2u64 == i / 2u64) "a node and its sibling share the parent i/2";
+    i / 2u64
+}
+
+// Combine ordering — the FIRST hash argument: if the node is a left child (even
+// index) the order is (node, sibling), else (sibling, node).
+fn merkle_combine_first(node: u64, sib: u64, i: u64) -> u64
+    ensures i % 2u64 == 0u64 ==> result == node
+    ensures i % 2u64 == 1u64 ==> result == sib
+{
+    if i % 2u64 == 0u64 { node } else { sib }
+}
+
+// The SECOND hash argument (the complement of the first).
+fn merkle_combine_second(node: u64, sib: u64, i: u64) -> u64
+    ensures i % 2u64 == 0u64 ==> result == sib
+    ensures i % 2u64 == 1u64 ==> result == node
+{
+    if i % 2u64 == 0u64 { sib } else { node }
+}
+
+fn main() -> u64 { 0u64 }
