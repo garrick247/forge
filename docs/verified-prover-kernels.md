@@ -127,6 +127,17 @@ in-place butterfly), the read-value ↔ `old()` link is stated explicitly
 **1.000** at ~1,580 GB/s, and the CM31 fold is likewise memory-bound (same
 ~1,575 GB/s ceiling).
 
+**A data-movement kernel too — the bit-reversal permutation.**
+`demos/1156_bitrev_verified.fg` verifies the NTT reorder step (swap `data[tid]`
+with `data[rev[tid]]` when `rev[tid] > tid`), proving the value moved *into*
+`data[tid]` is exactly `old(data[rev[tid]])`, the no-op case, and a locality frame
+(only the pair may change). It's partial by a genuine Forge limitation: the mirror
+equation `data[rev[tid]] == old(data[tid])` is a positive post-state read at a
+*nested/array-derived* index (`rev[tid]`, itself read from an array) across the
+swap's branch merge, which Forge's array theory won't discharge — a concrete Forge
+core improvement target (a plain-param swap, demo 139, proves both directions). The
+frame still pins `data[rev[tid]]` as the only other slot that can change.
+
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
 field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full

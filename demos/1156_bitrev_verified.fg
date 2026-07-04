@@ -1,0 +1,60 @@
+// Demo 1156: functionally-verified in-place bit-reversal permutation
+//
+// The NTT pipeline's reorder step. `rev` is the host-precomputed bit-reversal
+// index array (a permutation). Thread tid owns the pair (tid, rev[tid]) only when
+// rev[tid] > tid, swapping data[tid] with data[rev[tid]] (so each transposed pair
+// is handled by exactly one thread; fixed points and the larger index no-op).
+//
+// The kernel in demo 1030 proves memory-safety + range. This demo proves the
+// FUNCTIONAL data-movement post-state: the value landing in data[tid] is exactly
+// the OLD data[rev[tid]], this thread no-ops when it isn't the owner, and it
+// touches ONLY the pair (tid, rev[tid]) — a locality frame.
+//
+// A distinct kernel shape from the arithmetic butterflies: pure data movement
+// through an index array (cf. demo 139's swap, demo 232's tid-as-index).
+//
+// PARTIAL by a Forge limitation: the *mirror* slot `data[rev[tid]] == old(data[tid])`
+// does not discharge — it is a positive post-state read at a nested/array-derived
+// index (`rev[tid]`, itself read from an array) across the swap's branch merge,
+// which Forge's array theory won't resolve (demo 139 proves both swap directions
+// because there the indices are direct params, not array reads). The frame below
+// still proves that data[rev[tid]] is the ONLY other slot that may change, and the
+// swap makes its value old(data[tid]) by construction; only the explicit equation
+// is left undischarged.
+
+use std::gpu;
+use std::m31;
+
+#[kernel]
+fn bitrev_swap_at(data: span<u32>, rev: span<u64>, n: u64, tid: u64)
+    requires tid < n
+    requires n <= data.len
+    requires n <= rev.len
+    requires forall k: u64, k < data.len ==> data[k] < M31_P
+    requires forall k: u64, k < rev.len  ==> rev[k]  < n
+    ensures data[tid] < M31_P
+    // the value moved INTO data[tid] is exactly the old data[rev[tid]]
+    ensures rev[tid] > tid  ==> data[tid] == old(data[rev[tid]])
+    // no-op when this thread isn't the pair's owner
+    ensures rev[tid] <= tid ==> data[tid] == old(data[tid])
+    // locality frame: only tid and rev[tid] can change
+    ensures forall k: u64, k < data.len ==> k != tid ==> k != rev[tid]
+                                        ==> data[k] == old(data[k])
+{
+    assert(tid < data.len) "tid in data bounds";
+    assert(tid < rev.len)  "tid in rev bounds";
+    let rtid: u64 = rev[tid];
+    assert(rtid < n) "rev[tid] < n (field invariant on rev)";
+    assert(rtid < data.len) "rtid in data bounds";
+    if rtid > tid {
+        let va: u32 = data[tid];
+        let vb: u32 = data[rtid];
+        assert(vb == old(data[rtid])) "vb is pre-state data[rtid] = old data[rev[tid]]";
+        assert(tid != rtid) "the two swapped indices are distinct";
+        data[tid]  = vb;
+        data[rtid] = va;
+        assert(data[tid] == vb) "data[tid] holds vb after the distinct store";
+    };
+}
+
+fn main() -> u64 { 0u64 }
