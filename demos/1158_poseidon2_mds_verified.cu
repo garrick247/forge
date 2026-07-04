@@ -335,3 +335,29 @@ __global__ void poseidon2_mds3_at(uint32_t* __restrict__ state, uint64_t state_l
   0 /* unhandled */;
 }
 
+__global__ void poseidon2_add_rc_at(uint32_t* __restrict__ state, uint64_t state_len, uint32_t* __restrict__ rc, uint64_t rc_len, uint64_t n, uint64_t tid) {
+  uint64_t base = (3ULL * tid);
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  uint32_t s0 = state[(base + 0ULL)];
+  uint32_t s1 = state[(base + 1ULL)];
+  uint32_t s2 = state[(base + 2ULL)];
+  uint32_t o0 = m31_add(s0, rc[0ULL]);
+  uint32_t o1 = m31_add(s1, rc[1ULL]);
+  uint32_t o2 = m31_add(s2, rc[2ULL]);
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  state[(base + 0ULL)] = o0;
+  state[(base + 1ULL)] = o1;
+  state[(base + 2ULL)] = o2;
+  0 /* unhandled */;
+  0 /* unhandled */;
+  0 /* unhandled */;
+}
+

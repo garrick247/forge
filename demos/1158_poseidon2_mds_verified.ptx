@@ -220,3 +220,141 @@
   ret;
 }
 
+.visible .entry poseidon2_add_rc_at(
+    .param .u64 poseidon2_add_rc_at_param_state_data,
+    .param .u64 poseidon2_add_rc_at_param_state_len,
+    .param .u64 poseidon2_add_rc_at_param_rc_data,
+    .param .u64 poseidon2_add_rc_at_param_rc_len,
+    .param .u64 poseidon2_add_rc_at_param_n,
+    .param .u64 poseidon2_add_rc_at_param_tid
+)
+{
+    .reg .pred %p43, %p58, %p73;
+    .reg .u32 %r20, %r26, %r32, %r37, %r41, %r47, %r52, %r56, %r62, %r67, %r71, %r77, %r99;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd21, %rd22, %rd23, %rd24, %rd25, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd33, %rd34, %rd35, %rd36, %rd38, %rd39, %rd4, %rd40, %rd42, %rd45, %rd46, %rd48, %rd49, %rd5, %rd50, %rd51, %rd53, %rd54, %rd55, %rd57, %rd6, %rd60, %rd61, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd72, %rd75, %rd76, %rd78, %rd79, %rd8, %rd80, %rd81, %rd82, %rd83, %rd84, %rd85, %rd86, %rd87, %rd88, %rd89, %rd9, %rd90, %rd91, %rd92, %rd93, %rd94, %rd95, %rd96, %rd97, %rd98;
+
+  ld.param.u64 %rd0, [poseidon2_add_rc_at_param_state_data];
+  ld.param.u64 %rd1, [poseidon2_add_rc_at_param_state_len];
+  ld.param.u64 %rd2, [poseidon2_add_rc_at_param_rc_data];
+  ld.param.u64 %rd3, [poseidon2_add_rc_at_param_rc_len];
+  ld.param.u64 %rd4, [poseidon2_add_rc_at_param_n];
+  ld.param.u64 %rd5, [poseidon2_add_rc_at_param_tid];
+
+  mov.u64 %rd6, 3;
+  mul.lo.u64 %rd7, %rd6, %rd5;
+  mov.u64 %rd8, 0; // unhandled expr
+  mov.u64 %rd9, 0; // unhandled expr
+  mov.u64 %rd10, 0; // unhandled expr
+  mov.u64 %rd11, 0; // unhandled expr
+  mov.u64 %rd12, 0; // unhandled expr
+  mov.u64 %rd13, 0; // unhandled expr
+  mov.u64 %rd14, 0; // unhandled expr
+  mov.u64 %rd15, 0;
+  add.u64 %rd16, %rd7, %rd15;
+  mov.u64 %rd17, 4;
+  mul.lo.u64 %rd18, %rd16, %rd17;
+  add.u64 %rd19, %rd0, %rd18;
+  ld.global.u32 %r20, [%rd19];
+  mov.u64 %rd21, 1;
+  add.u64 %rd22, %rd7, %rd21;
+  mov.u64 %rd23, 4;
+  mul.lo.u64 %rd24, %rd22, %rd23;
+  add.u64 %rd25, %rd0, %rd24;
+  ld.global.u32 %r26, [%rd25];
+  mov.u64 %rd27, 2;
+  add.u64 %rd28, %rd7, %rd27;
+  mov.u64 %rd29, 4;
+  mul.lo.u64 %rd30, %rd28, %rd29;
+  add.u64 %rd31, %rd0, %rd30;
+  ld.global.u32 %r32, [%rd31];
+  mov.u64 %rd33, 0;
+  mov.u64 %rd34, 4;
+  mul.lo.u64 %rd35, %rd33, %rd34;
+  add.u64 %rd36, %rd2, %rd35;
+  ld.global.u32 %r37, [%rd36];
+  cvt.u64.u32 %rd38, %r20;
+  cvt.u64.u32 %rd39, %r37;
+  add.u64 %rd40, %rd38, %rd39;
+  mov.u32 %r41, 2147483647;
+  cvt.u64.u32 %rd42, %r41;
+  setp.ge.u64 %p43, %rd40, %rd42;
+  @%p43 bra poseidon2_add_rc_at_then_44;
+  bra poseidon2_add_rc_at_else_44;
+  poseidon2_add_rc_at_then_44:
+  sub.u64 %rd45, %rd40, %rd42;
+  mov.u64 %rd46, %rd45;
+  bra poseidon2_add_rc_at_end_44;
+  poseidon2_add_rc_at_else_44:
+  mov.u64 %rd46, %rd40;
+  poseidon2_add_rc_at_end_44:
+  cvt.u32.u64 %r47, %rd46;
+  mov.u64 %rd48, 1;
+  mov.u64 %rd49, 4;
+  mul.lo.u64 %rd50, %rd48, %rd49;
+  add.u64 %rd51, %rd2, %rd50;
+  ld.global.u32 %r52, [%rd51];
+  cvt.u64.u32 %rd53, %r26;
+  cvt.u64.u32 %rd54, %r52;
+  add.u64 %rd55, %rd53, %rd54;
+  mov.u32 %r56, 2147483647;
+  cvt.u64.u32 %rd57, %r56;
+  setp.ge.u64 %p58, %rd55, %rd57;
+  @%p58 bra poseidon2_add_rc_at_then_59;
+  bra poseidon2_add_rc_at_else_59;
+  poseidon2_add_rc_at_then_59:
+  sub.u64 %rd60, %rd55, %rd57;
+  mov.u64 %rd61, %rd60;
+  bra poseidon2_add_rc_at_end_59;
+  poseidon2_add_rc_at_else_59:
+  mov.u64 %rd61, %rd55;
+  poseidon2_add_rc_at_end_59:
+  cvt.u32.u64 %r62, %rd61;
+  mov.u64 %rd63, 2;
+  mov.u64 %rd64, 4;
+  mul.lo.u64 %rd65, %rd63, %rd64;
+  add.u64 %rd66, %rd2, %rd65;
+  ld.global.u32 %r67, [%rd66];
+  cvt.u64.u32 %rd68, %r32;
+  cvt.u64.u32 %rd69, %r67;
+  add.u64 %rd70, %rd68, %rd69;
+  mov.u32 %r71, 2147483647;
+  cvt.u64.u32 %rd72, %r71;
+  setp.ge.u64 %p73, %rd70, %rd72;
+  @%p73 bra poseidon2_add_rc_at_then_74;
+  bra poseidon2_add_rc_at_else_74;
+  poseidon2_add_rc_at_then_74:
+  sub.u64 %rd75, %rd70, %rd72;
+  mov.u64 %rd76, %rd75;
+  bra poseidon2_add_rc_at_end_74;
+  poseidon2_add_rc_at_else_74:
+  mov.u64 %rd76, %rd70;
+  poseidon2_add_rc_at_end_74:
+  cvt.u32.u64 %r77, %rd76;
+  mov.u64 %rd78, 0; // unhandled expr
+  mov.u64 %rd79, 0; // unhandled expr
+  mov.u64 %rd80, 0; // unhandled expr
+  mov.u64 %rd81, 0;
+  add.u64 %rd82, %rd7, %rd81;
+  mov.u64 %rd83, 4;
+  mul.lo.u64 %rd84, %rd82, %rd83;
+  add.u64 %rd85, %rd0, %rd84;
+  st.global.u32 [%rd85], %r47;
+  mov.u64 %rd86, 1;
+  add.u64 %rd87, %rd7, %rd86;
+  mov.u64 %rd88, 4;
+  mul.lo.u64 %rd89, %rd87, %rd88;
+  add.u64 %rd90, %rd0, %rd89;
+  st.global.u32 [%rd90], %r62;
+  mov.u64 %rd91, 2;
+  add.u64 %rd92, %rd7, %rd91;
+  mov.u64 %rd93, 4;
+  mul.lo.u64 %rd94, %rd92, %rd93;
+  add.u64 %rd95, %rd0, %rd94;
+  st.global.u32 [%rd95], %r77;
+  mov.u64 %rd96, 0; // unhandled expr
+  mov.u64 %rd97, 0; // unhandled expr
+  mov.u64 %rd98, 0; // unhandled expr
+  mov.u32 %r99, 0; // unit
+  ret;
+}
+

@@ -107,4 +107,48 @@ fn poseidon2_mds3_at(state: span<u32>, n: u64, tid: u64)
     assert(state[base + 2u64] == o2) "slot 2 holds o2";
 }
 
+// In-place add-round-constant KERNEL (width-3 states, one thread per state).
+// state[3*tid + j] += rc[j]  (mod P). The first linear layer of a Poseidon2 round
+// (before the S-box). Proves the exact array post-state + frame.
+#[kernel]
+fn poseidon2_add_rc_at(state: span<u32>, rc: span<u32>, n: u64, tid: u64)
+    requires tid < n
+    requires 3u64 * n <= state.len
+    requires 3u64 <= rc.len
+    requires forall k: u64, k < state.len ==> state[k] < M31_P
+    requires forall k: u64, k < rc.len    ==> rc[k]    < M31_P
+    ensures state[3u64 * tid + 0u64] < M31_P
+    ensures state[3u64 * tid + 1u64] < M31_P
+    ensures state[3u64 * tid + 2u64] < M31_P
+    ensures state[3u64 * tid + 0u64] == (old(state[3u64*tid + 0u64]) + rc[0u64]) % M31_P
+    ensures state[3u64 * tid + 1u64] == (old(state[3u64*tid + 1u64]) + rc[1u64]) % M31_P
+    ensures state[3u64 * tid + 2u64] == (old(state[3u64*tid + 2u64]) + rc[2u64]) % M31_P
+    ensures forall k: u64, k < state.len ==> k != 3u64*tid + 0u64 ==> k != 3u64*tid + 1u64
+                                        ==> k != 3u64*tid + 2u64 ==> state[k] == old(state[k])
+{
+    let base: u64 = 3u64 * tid;
+    assert(base + 2u64 < state.len) "state triple in bounds";
+    assert(state[base + 0u64] < M31_P) "field @ base";
+    assert(state[base + 1u64] < M31_P) "field @ base+1";
+    assert(state[base + 2u64] < M31_P) "field @ base+2";
+    assert(rc[0u64] < M31_P) "rc0 in range";
+    assert(rc[1u64] < M31_P) "rc1 in range";
+    assert(rc[2u64] < M31_P) "rc2 in range";
+    let s0: u32 = state[base + 0u64];
+    let s1: u32 = state[base + 1u64];
+    let s2: u32 = state[base + 2u64];
+    let o0: u32 = m31_add(s0, rc[0u64]);   // (s0 + rc0) % P
+    let o1: u32 = m31_add(s1, rc[1u64]);
+    let o2: u32 = m31_add(s2, rc[2u64]);
+    assert(base + 0u64 != base + 1u64) "distinct 0,1";
+    assert(base + 0u64 != base + 2u64) "distinct 0,2";
+    assert(base + 1u64 != base + 2u64) "distinct 1,2";
+    state[base + 0u64] = o0;
+    state[base + 1u64] = o1;
+    state[base + 2u64] = o2;
+    assert(state[base + 0u64] == o0) "slot 0 holds o0";
+    assert(state[base + 1u64] == o1) "slot 1 holds o1";
+    assert(state[base + 2u64] == o2) "slot 2 holds o2";
+}
+
 fn main() -> u64 { 0u64 }
