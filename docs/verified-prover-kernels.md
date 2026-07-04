@@ -160,6 +160,18 @@ per-obligation budget) — the same Fermat-class limitation as the felt252 modul
 inverse, which is an audit-assume there. The S-box is range-verified; the linear
 diffusion is where functional correctness is achievable, and this demo pins it.
 
+**A full verifier loop.** `demos/1161_merkle_verify_loop.fg` wires the per-level
+Merkle operations into a multi-level inclusion-path verifier: a `while` loop that
+walks `depth` levels from a leaf to the root, combining the running node with its
+sibling (correct order by child parity, from the verified `combine_first`/`second`)
+through a range-preserving compression and halving the index. A **loop invariant**
+(`node < P`, `l ≤ depth`) plus a `decreases` clause prove the *entire walk* is
+memory-safe (every sibling access in bounds at every level) and range-preserving
+(the running node, hence the root, stays canonical) — for any tree depth. It is
+the campaign's first loop-based verifier, showing the per-kernel results compose
+into a whole-verifier property; the hash primitive plugs in as the same kind of
+range-verified black box.
+
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
 field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full

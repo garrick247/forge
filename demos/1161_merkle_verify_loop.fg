@@ -1,0 +1,74 @@
+// Demo 1161: functionally-verified multi-level Merkle inclusion-path verifier loop
+//
+// Wires the per-level Merkle operations (demo 1160) into a full verifier: a
+// `while` loop that walks `depth` levels from a leaf to the root, at each level
+// combining the running node with its sibling (in the correct order per child
+// parity) through a range-preserving compression, and halving the index. Proves,
+// via a loop invariant, that the entire walk is:
+//   - memory-safe: every sibling access is in bounds at every level, and
+//   - range-preserving: the running node — hence the final root — stays canonical
+//     (< P) across all levels,
+// composing the verified combine ordering. The compression is a range-preserving
+// black box (a real verifier plugs in Poseidon2/Blake2s, which are range-verified;
+// their exact output is nonlinear and not functionally verified — see demo 1158).
+// This is the hash-independent correctness of the verifier loop.
+
+use std::gpu;
+use std::m31;
+
+// Range-preserving compression stand-in (real hash is range-verified the same way).
+fn merkle_compress(a: u32, b: u32) -> u32
+    requires a < M31_P  requires b < M31_P
+    ensures result < M31_P
+{
+    m31_add(a, b)
+}
+
+// Combine ordering: FIRST hash argument (node if left child, else sibling).
+fn combine_first(node: u32, sib: u32, i: u64) -> u32
+    requires node < M31_P  requires sib < M31_P
+    ensures result < M31_P
+    ensures i % 2u64 == 0u64 ==> result == node
+    ensures i % 2u64 == 1u64 ==> result == sib
+{
+    if i % 2u64 == 0u64 { node } else { sib }
+}
+
+// Combine ordering: SECOND hash argument (the complement).
+fn combine_second(node: u32, sib: u32, i: u64) -> u32
+    requires node < M31_P  requires sib < M31_P
+    ensures result < M31_P
+    ensures i % 2u64 == 0u64 ==> result == sib
+    ensures i % 2u64 == 1u64 ==> result == node
+{
+    if i % 2u64 == 0u64 { sib } else { node }
+}
+
+// The verifier loop: walk depth levels, return the computed root.
+fn merkle_verify_path(leaf: u32, leaf_idx: u64, siblings: span<u32>, depth: u64) -> u32
+    requires leaf < M31_P
+    requires depth <= siblings.len
+    requires forall k: u64, k < siblings.len ==> siblings[k] < M31_P
+    ensures result < M31_P
+{
+    let mut node: u32 = leaf;
+    let mut idx:  u64 = leaf_idx;
+    let mut l:    u64 = 0u64;
+    while l < depth
+        invariant l <= depth
+        invariant node < M31_P
+        decreases depth - l
+    {
+        assert(l < siblings.len) "sibling index in bounds at this level";
+        assert(siblings[l] < M31_P) "sibling canonical";
+        let sib: u32 = siblings[l];
+        let a:   u32 = combine_first(node, sib, idx);   // correct order by parity
+        let b:   u32 = combine_second(node, sib, idx);
+        node = merkle_compress(a, b);                    // range-preserving
+        idx  = idx / 2u64;                               // ascend one level
+        l    = l + 1u64;
+    };
+    node
+}
+
+fn main() -> u64 { 0u64 }
