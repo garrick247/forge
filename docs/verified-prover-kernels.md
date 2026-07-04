@@ -105,6 +105,16 @@ the memory roofline**) with byte-identical results — the `% M31_P` reduction k
 cost (~3.4%) appears only when the working set fits in L2 and compute dominates.
 Verification is free where it counts.
 
+**A second emitted kernel: the FRI fold.**
+`demos/1154_fri_fold_verified.fg` lifts the same way. The FRI low-degree-test fold
+combines an evaluation vector's two halves with a verifier challenge `alpha`;
+`fri_fold_at` (M31) proves `new[i] == (old[i] + alpha·old[i+half]) mod P`,
+`fri_unfold_at` the inverse, and `fri_fold_at_cm31` the **CM31 fold stwo actually
+runs** (both output components exact) — each with the array post-state + frame,
+`forge cuda`-emitted. Since the fold reads a *separate* `old` array (vs the
+in-place butterfly), the read-value ↔ `old()` link is stated explicitly
+(`assert a == old(old_evals[i])`).
+
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
 field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full

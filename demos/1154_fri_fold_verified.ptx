@@ -1,0 +1,316 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry fri_fold_at(
+    .param .u64 fri_fold_at_param_new_evals_data,
+    .param .u64 fri_fold_at_param_new_evals_len,
+    .param .u64 fri_fold_at_param_old_evals_data,
+    .param .u64 fri_fold_at_param_old_evals_len,
+    .param .u32 fri_fold_at_param_alpha,
+    .param .u64 fri_fold_at_param_half,
+    .param .u64 fri_fold_at_param_i
+)
+{
+    .reg .pred %p35;
+    .reg .u32 %r14, %r19, %r25, %r28, %r33, %r39, %r4, %r43;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd29, %rd3, %rd30, %rd31, %rd32, %rd34, %rd37, %rd38, %rd40, %rd41, %rd42, %rd5, %rd6, %rd7, %rd8, %rd9;
+
+  ld.param.u64 %rd0, [fri_fold_at_param_new_evals_data];
+  ld.param.u64 %rd1, [fri_fold_at_param_new_evals_len];
+  ld.param.u64 %rd2, [fri_fold_at_param_old_evals_data];
+  ld.param.u64 %rd3, [fri_fold_at_param_old_evals_len];
+  ld.param.u32 %r4, [fri_fold_at_param_alpha];
+  ld.param.u64 %rd5, [fri_fold_at_param_half];
+  ld.param.u64 %rd6, [fri_fold_at_param_i];
+
+  mov.u64 %rd7, 0; // unhandled expr
+  mov.u64 %rd8, 0; // unhandled expr
+  mov.u64 %rd9, 0; // unhandled expr
+  mov.u64 %rd10, 0; // unhandled expr
+  mov.u64 %rd11, 4;
+  mul.lo.u64 %rd12, %rd6, %rd11;
+  add.u64 %rd13, %rd2, %rd12;
+  ld.global.u32 %r14, [%rd13];
+  add.u64 %rd15, %rd6, %rd5;
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd15, %rd16;
+  add.u64 %rd18, %rd2, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  mov.u64 %rd20, 0; // unhandled expr
+  mov.u64 %rd21, 0; // unhandled expr
+  cvt.u64.u32 %rd22, %r4;
+  cvt.u64.u32 %rd23, %r19;
+  mul.lo.u64 %rd24, %rd22, %rd23;
+  mov.u32 %r25, 2147483647;
+  cvt.u64.u32 %rd26, %r25;
+  rem.u64 %rd27, %rd24, %rd26;
+  cvt.u32.u64 %r28, %rd27;
+  mov.u64 %rd29, 0; // unhandled expr
+  cvt.u64.u32 %rd30, %r14;
+  cvt.u64.u32 %rd31, %r28;
+  add.u64 %rd32, %rd30, %rd31;
+  mov.u32 %r33, 2147483647;
+  cvt.u64.u32 %rd34, %r33;
+  setp.ge.u64 %p35, %rd32, %rd34;
+  @%p35 bra fri_fold_at_then_36;
+  bra fri_fold_at_else_36;
+  fri_fold_at_then_36:
+  sub.u64 %rd37, %rd32, %rd34;
+  mov.u64 %rd38, %rd37;
+  bra fri_fold_at_end_36;
+  fri_fold_at_else_36:
+  mov.u64 %rd38, %rd32;
+  fri_fold_at_end_36:
+  cvt.u32.u64 %r39, %rd38;
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd6, %rd40;
+  add.u64 %rd42, %rd0, %rd41;
+  st.global.u32 [%rd42], %r39;
+  mov.u32 %r43, 0; // unit
+  ret;
+}
+
+.visible .entry fri_unfold_at(
+    .param .u64 fri_unfold_at_param_new_evals_data,
+    .param .u64 fri_unfold_at_param_new_evals_len,
+    .param .u64 fri_unfold_at_param_old_evals_data,
+    .param .u64 fri_unfold_at_param_old_evals_len,
+    .param .u32 fri_unfold_at_param_alpha,
+    .param .u64 fri_unfold_at_param_half,
+    .param .u64 fri_unfold_at_param_i
+)
+{
+    .reg .pred %p33;
+    .reg .u32 %r14, %r19, %r25, %r28, %r31, %r39, %r4, %r43;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd23, %rd24, %rd26, %rd27, %rd29, %rd3, %rd30, %rd32, %rd35, %rd36, %rd37, %rd38, %rd40, %rd41, %rd42, %rd5, %rd6, %rd7, %rd8, %rd9;
+
+  ld.param.u64 %rd0, [fri_unfold_at_param_new_evals_data];
+  ld.param.u64 %rd1, [fri_unfold_at_param_new_evals_len];
+  ld.param.u64 %rd2, [fri_unfold_at_param_old_evals_data];
+  ld.param.u64 %rd3, [fri_unfold_at_param_old_evals_len];
+  ld.param.u32 %r4, [fri_unfold_at_param_alpha];
+  ld.param.u64 %rd5, [fri_unfold_at_param_half];
+  ld.param.u64 %rd6, [fri_unfold_at_param_i];
+
+  mov.u64 %rd7, 0; // unhandled expr
+  mov.u64 %rd8, 0; // unhandled expr
+  mov.u64 %rd9, 0; // unhandled expr
+  mov.u64 %rd10, 0; // unhandled expr
+  mov.u64 %rd11, 4;
+  mul.lo.u64 %rd12, %rd6, %rd11;
+  add.u64 %rd13, %rd2, %rd12;
+  ld.global.u32 %r14, [%rd13];
+  add.u64 %rd15, %rd6, %rd5;
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd15, %rd16;
+  add.u64 %rd18, %rd2, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  mov.u64 %rd20, 0; // unhandled expr
+  mov.u64 %rd21, 0; // unhandled expr
+  cvt.u64.u32 %rd22, %r4;
+  cvt.u64.u32 %rd23, %r19;
+  mul.lo.u64 %rd24, %rd22, %rd23;
+  mov.u32 %r25, 2147483647;
+  cvt.u64.u32 %rd26, %r25;
+  rem.u64 %rd27, %rd24, %rd26;
+  cvt.u32.u64 %r28, %rd27;
+  cvt.u64.u32 %rd29, %r14;
+  cvt.u64.u32 %rd30, %r28;
+  mov.u32 %r31, 2147483647;
+  cvt.u64.u32 %rd32, %r31;
+  setp.ge.u64 %p33, %rd29, %rd30;
+  @%p33 bra fri_unfold_at_then_34;
+  bra fri_unfold_at_else_34;
+  fri_unfold_at_then_34:
+  sub.u64 %rd35, %rd29, %rd30;
+  mov.u64 %rd36, %rd35;
+  bra fri_unfold_at_end_34;
+  fri_unfold_at_else_34:
+  add.u64 %rd37, %rd29, %rd32;
+  sub.u64 %rd38, %rd37, %rd30;
+  mov.u64 %rd36, %rd38;
+  fri_unfold_at_end_34:
+  cvt.u32.u64 %r39, %rd36;
+  mov.u64 %rd40, 4;
+  mul.lo.u64 %rd41, %rd6, %rd40;
+  add.u64 %rd42, %rd0, %rd41;
+  st.global.u32 [%rd42], %r39;
+  mov.u32 %r43, 0; // unit
+  ret;
+}
+
+.visible .entry fri_fold_at_cm31(
+    .param .u64 fri_fold_at_cm31_param_new_re_data,
+    .param .u64 fri_fold_at_cm31_param_new_re_len,
+    .param .u64 fri_fold_at_cm31_param_new_im_data,
+    .param .u64 fri_fold_at_cm31_param_new_im_len,
+    .param .u64 fri_fold_at_cm31_param_old_re_data,
+    .param .u64 fri_fold_at_cm31_param_old_re_len,
+    .param .u64 fri_fold_at_cm31_param_old_im_data,
+    .param .u64 fri_fold_at_cm31_param_old_im_len,
+    .param .u32 fri_fold_at_cm31_param_alpha_re,
+    .param .u32 fri_fold_at_cm31_param_alpha_im,
+    .param .u64 fri_fold_at_cm31_param_half,
+    .param .u64 fri_fold_at_cm31_param_i
+)
+{
+    .reg .pred %p100, %p113, %p61, %p88;
+    .reg .u32 %r104, %r111, %r117, %r121, %r23, %r27, %r32, %r37, %r45, %r48, %r52, %r55, %r59, %r67, %r71, %r74, %r78, %r8, %r81, %r86, %r9, %r92, %r98;
+    .reg .u64 %rd0, %rd1, %rd10, %rd102, %rd103, %rd105, %rd106, %rd107, %rd108, %rd109, %rd11, %rd110, %rd112, %rd115, %rd116, %rd118, %rd119, %rd12, %rd120, %rd13, %rd14, %rd15, %rd16, %rd17, %rd18, %rd19, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd28, %rd29, %rd3, %rd30, %rd31, %rd33, %rd34, %rd35, %rd36, %rd38, %rd39, %rd4, %rd40, %rd41, %rd42, %rd43, %rd44, %rd46, %rd47, %rd49, %rd5, %rd50, %rd51, %rd53, %rd54, %rd56, %rd57, %rd58, %rd6, %rd60, %rd63, %rd64, %rd65, %rd66, %rd68, %rd69, %rd7, %rd70, %rd72, %rd73, %rd75, %rd76, %rd77, %rd79, %rd80, %rd82, %rd83, %rd84, %rd85, %rd87, %rd90, %rd91, %rd93, %rd94, %rd95, %rd96, %rd97, %rd99;
+
+  ld.param.u64 %rd0, [fri_fold_at_cm31_param_new_re_data];
+  ld.param.u64 %rd1, [fri_fold_at_cm31_param_new_re_len];
+  ld.param.u64 %rd2, [fri_fold_at_cm31_param_new_im_data];
+  ld.param.u64 %rd3, [fri_fold_at_cm31_param_new_im_len];
+  ld.param.u64 %rd4, [fri_fold_at_cm31_param_old_re_data];
+  ld.param.u64 %rd5, [fri_fold_at_cm31_param_old_re_len];
+  ld.param.u64 %rd6, [fri_fold_at_cm31_param_old_im_data];
+  ld.param.u64 %rd7, [fri_fold_at_cm31_param_old_im_len];
+  ld.param.u32 %r8, [fri_fold_at_cm31_param_alpha_re];
+  ld.param.u32 %r9, [fri_fold_at_cm31_param_alpha_im];
+  ld.param.u64 %rd10, [fri_fold_at_cm31_param_half];
+  ld.param.u64 %rd11, [fri_fold_at_cm31_param_i];
+
+  mov.u64 %rd12, 0; // unhandled expr
+  mov.u64 %rd13, 0; // unhandled expr
+  mov.u64 %rd14, 0; // unhandled expr
+  mov.u64 %rd15, 0; // unhandled expr
+  mov.u64 %rd16, 0; // unhandled expr
+  mov.u64 %rd17, 0; // unhandled expr
+  mov.u64 %rd18, 0; // unhandled expr
+  mov.u64 %rd19, 0; // unhandled expr
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd11, %rd20;
+  add.u64 %rd22, %rd4, %rd21;
+  ld.global.u32 %r23, [%rd22];
+  mov.u64 %rd24, 4;
+  mul.lo.u64 %rd25, %rd11, %rd24;
+  add.u64 %rd26, %rd6, %rd25;
+  ld.global.u32 %r27, [%rd26];
+  add.u64 %rd28, %rd11, %rd10;
+  mov.u64 %rd29, 4;
+  mul.lo.u64 %rd30, %rd28, %rd29;
+  add.u64 %rd31, %rd4, %rd30;
+  ld.global.u32 %r32, [%rd31];
+  add.u64 %rd33, %rd11, %rd10;
+  mov.u64 %rd34, 4;
+  mul.lo.u64 %rd35, %rd33, %rd34;
+  add.u64 %rd36, %rd6, %rd35;
+  ld.global.u32 %r37, [%rd36];
+  mov.u64 %rd38, 0; // unhandled expr
+  mov.u64 %rd39, 0; // unhandled expr
+  mov.u64 %rd40, 0; // unhandled expr
+  mov.u64 %rd41, 0; // unhandled expr
+  cvt.u64.u32 %rd42, %r8;
+  cvt.u64.u32 %rd43, %r32;
+  mul.lo.u64 %rd44, %rd42, %rd43;
+  mov.u32 %r45, 2147483647;
+  cvt.u64.u32 %rd46, %r45;
+  rem.u64 %rd47, %rd44, %rd46;
+  cvt.u32.u64 %r48, %rd47;
+  cvt.u64.u32 %rd49, %r9;
+  cvt.u64.u32 %rd50, %r37;
+  mul.lo.u64 %rd51, %rd49, %rd50;
+  mov.u32 %r52, 2147483647;
+  cvt.u64.u32 %rd53, %r52;
+  rem.u64 %rd54, %rd51, %rd53;
+  cvt.u32.u64 %r55, %rd54;
+  mov.u64 %rd56, 0; // unhandled expr
+  cvt.u64.u32 %rd57, %r48;
+  cvt.u64.u32 %rd58, %r55;
+  mov.u32 %r59, 2147483647;
+  cvt.u64.u32 %rd60, %r59;
+  setp.ge.u64 %p61, %rd57, %rd58;
+  @%p61 bra fri_fold_at_cm31_then_62;
+  bra fri_fold_at_cm31_else_62;
+  fri_fold_at_cm31_then_62:
+  sub.u64 %rd63, %rd57, %rd58;
+  mov.u64 %rd64, %rd63;
+  bra fri_fold_at_cm31_end_62;
+  fri_fold_at_cm31_else_62:
+  add.u64 %rd65, %rd57, %rd60;
+  sub.u64 %rd66, %rd65, %rd58;
+  mov.u64 %rd64, %rd66;
+  fri_fold_at_cm31_end_62:
+  cvt.u32.u64 %r67, %rd64;
+  cvt.u64.u32 %rd68, %r8;
+  cvt.u64.u32 %rd69, %r37;
+  mul.lo.u64 %rd70, %rd68, %rd69;
+  mov.u32 %r71, 2147483647;
+  cvt.u64.u32 %rd72, %r71;
+  rem.u64 %rd73, %rd70, %rd72;
+  cvt.u32.u64 %r74, %rd73;
+  cvt.u64.u32 %rd75, %r9;
+  cvt.u64.u32 %rd76, %r32;
+  mul.lo.u64 %rd77, %rd75, %rd76;
+  mov.u32 %r78, 2147483647;
+  cvt.u64.u32 %rd79, %r78;
+  rem.u64 %rd80, %rd77, %rd79;
+  cvt.u32.u64 %r81, %rd80;
+  mov.u64 %rd82, 0; // unhandled expr
+  cvt.u64.u32 %rd83, %r74;
+  cvt.u64.u32 %rd84, %r81;
+  add.u64 %rd85, %rd83, %rd84;
+  mov.u32 %r86, 2147483647;
+  cvt.u64.u32 %rd87, %r86;
+  setp.ge.u64 %p88, %rd85, %rd87;
+  @%p88 bra fri_fold_at_cm31_then_89;
+  bra fri_fold_at_cm31_else_89;
+  fri_fold_at_cm31_then_89:
+  sub.u64 %rd90, %rd85, %rd87;
+  mov.u64 %rd91, %rd90;
+  bra fri_fold_at_cm31_end_89;
+  fri_fold_at_cm31_else_89:
+  mov.u64 %rd91, %rd85;
+  fri_fold_at_cm31_end_89:
+  cvt.u32.u64 %r92, %rd91;
+  mov.u64 %rd93, 0; // unhandled expr
+  mov.u64 %rd94, 0; // unhandled expr
+  cvt.u64.u32 %rd95, %r23;
+  cvt.u64.u32 %rd96, %r67;
+  add.u64 %rd97, %rd95, %rd96;
+  mov.u32 %r98, 2147483647;
+  cvt.u64.u32 %rd99, %r98;
+  setp.ge.u64 %p100, %rd97, %rd99;
+  @%p100 bra fri_fold_at_cm31_then_101;
+  bra fri_fold_at_cm31_else_101;
+  fri_fold_at_cm31_then_101:
+  sub.u64 %rd102, %rd97, %rd99;
+  mov.u64 %rd103, %rd102;
+  bra fri_fold_at_cm31_end_101;
+  fri_fold_at_cm31_else_101:
+  mov.u64 %rd103, %rd97;
+  fri_fold_at_cm31_end_101:
+  cvt.u32.u64 %r104, %rd103;
+  mov.u64 %rd105, 4;
+  mul.lo.u64 %rd106, %rd11, %rd105;
+  add.u64 %rd107, %rd0, %rd106;
+  st.global.u32 [%rd107], %r104;
+  cvt.u64.u32 %rd108, %r27;
+  cvt.u64.u32 %rd109, %r92;
+  add.u64 %rd110, %rd108, %rd109;
+  mov.u32 %r111, 2147483647;
+  cvt.u64.u32 %rd112, %r111;
+  setp.ge.u64 %p113, %rd110, %rd112;
+  @%p113 bra fri_fold_at_cm31_then_114;
+  bra fri_fold_at_cm31_else_114;
+  fri_fold_at_cm31_then_114:
+  sub.u64 %rd115, %rd110, %rd112;
+  mov.u64 %rd116, %rd115;
+  bra fri_fold_at_cm31_end_114;
+  fri_fold_at_cm31_else_114:
+  mov.u64 %rd116, %rd110;
+  fri_fold_at_cm31_end_114:
+  cvt.u32.u64 %r117, %rd116;
+  mov.u64 %rd118, 4;
+  mul.lo.u64 %rd119, %rd11, %rd118;
+  add.u64 %rd120, %rd2, %rd119;
+  st.global.u32 [%rd120], %r117;
+  mov.u32 %r121, 0; // unit
+  ret;
+}
+
