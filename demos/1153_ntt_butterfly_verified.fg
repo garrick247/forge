@@ -1,0 +1,68 @@
+// Demo 1046: functionally-verified in-place NTT butterfly (array post-state)
+//
+// The kernels in demo 1030 prove memory-safety + canonical range for the NTT
+// butterfly. This demo proves the *functional* post-state of one thread's
+// in-place butterfly: after the write, the pair (data[tid], data[tid+half_n])
+// holds the EXACT Cooley-Tukey outputs of the pre-state values —
+//   data[tid]          == (a + w*b) mod P
+//   data[tid+half_n]   == (a - w*b) mod P   (canonical form)
+// where a, b are the OLD values and w = twiddle[tid].
+//
+// Combines three verified pieces:
+//   - tid as an explicit thread index (SPMD kernel model, cf. demo 232)
+//   - old(data[i]) pre-state references over a span (cf. demo 139)
+//   - the functionally-verified scalar butterfly std::m31::m31_butterfly_hi/lo
+//
+// This lifts the M31 field-tower functional correctness up through an in-place
+// array kernel: the emitted CUDA butterfly stage is now proven to compute the
+// mathematically correct transform, not merely to keep elements in [0, P).
+
+use std::gpu;
+use std::m31;
+
+#[kernel]
+fn ntt_butterfly_at(data: span<u32>, twiddle: span<u32>, half_n: u64, tid: u64)
+    requires tid < half_n
+    requires 2u64 * half_n <= data.len
+    requires half_n <= twiddle.len
+    requires forall k: u64, k < data.len    ==> data[k]    < M31_P
+    requires forall k: u64, k < twiddle.len ==> twiddle[k] < M31_P
+    // canonical range preserved
+    ensures data[tid]          < M31_P
+    ensures data[tid + half_n] < M31_P
+    // functional post-state: exact butterfly outputs of the pre-state values
+    ensures data[tid]
+            == (old(data[tid]) + twiddle[tid] * old(data[tid + half_n])) % M31_P
+    ensures data[tid + half_n]
+            == (old(data[tid]) + M31_P - (twiddle[tid] * old(data[tid + half_n])) % M31_P) % M31_P
+    // frame: every other element is untouched
+    ensures forall k: u64, k < data.len ==> k != tid ==> k != tid + half_n
+                                        ==> data[k] == old(data[k])
+{
+    // bounds + field-range instantiations from the foralls
+    assert(tid < data.len) "lower element in bounds";
+    assert(tid + half_n < data.len) "upper element in bounds";
+    assert(data[tid] < M31_P) "field invariant at tid";
+    assert(data[tid + half_n] < M31_P) "field invariant at tid+half_n";
+    assert(twiddle[tid] < M31_P) "twiddle field invariant at tid";
+
+    // read the pre-state pair (no writes yet, so these equal old(data[...]))
+    let a: u32 = data[tid];
+    let b: u32 = data[tid + half_n];
+    let w: u32 = twiddle[tid];
+
+    // verified scalar butterfly: a2 == (a + w*b)%P, b2 == (a + P - (w*b)%P)%P
+    let a2: u32 = m31_butterfly_hi(a, b, w);
+    let b2: u32 = m31_butterfly_lo(a, b, w);
+
+    // distinct indices (half_n >= 1 since tid < half_n) so the second store does
+    // not clobber data[tid] — needed for the data[tid] post-state
+    assert(tid + half_n != tid) "the two written indices are distinct";
+    data[tid]          = a2;
+    data[tid + half_n] = b2;
+    // the second store is at a distinct index, so data[tid] still holds a2
+    assert(data[tid] == a2) "data[tid] holds a2 after the distinct second store";
+    assert(data[tid + half_n] == b2) "data[tid+half_n] holds b2";
+}
+
+fn main() -> u64 { 0u64 }

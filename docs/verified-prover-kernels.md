@@ -78,10 +78,24 @@ constraints actually live in**, so this pins exact-value correctness across the
 prover's entire arithmetic substrate. This is the same depth the
 [felt252 stack](verified-stark-crypto.md) carries for the Stark-prime crypto
 primitives (e.g. `felt252_mul`'s `(result·R) % P == (a·b) % P`), now reached for
-the M31 prover core. The one remaining step to a fully functionally-verified
-*emitted kernel* is lifting these guarantees through the **in-place array**
-butterfly kernels (with the accompanying update-framing / `old()` reasoning); the
-scalar tower establishes the specification and the proof pattern.
+the M31 prover core.
+
+**And it now reaches the emitted kernel.** `demos/1153_ntt_butterfly_verified.fg`
+lifts the scalar tower up through an **in-place array** kernel: `ntt_butterfly_at`
+(a `#[kernel]`, one thread per pair) proves the full array *post-state* —
+
+| Post-state | Verified property |
+|---|---|
+| `data[tid]` | `== (old(data[tid]) + w·old(data[tid+half_n])) % P` |
+| `data[tid+half_n]` | `== (old(data[tid]) + P − (w·old(data[tid+half_n])) % P) % P` |
+| every other `data[k]` | `== old(data[k])` (frame) |
+
+(`w = twiddle[tid]`). It composes `tid`-as-thread-index (cf. demo 232),
+`old(span[i])` pre-state references (cf. demo 139), and the verified scalar
+`m31_butterfly_hi/lo`; `forge cuda` emits `__global__ void ntt_butterfly_at(...)`.
+So the emitted CUDA butterfly stage is proven to compute the *mathematically
+correct* transform on the array — not merely to keep elements in `[0, P)` — the
+end-to-end "verified ZK compilation" claim made concrete for one real kernel.
 
 ## Reproduce
 
