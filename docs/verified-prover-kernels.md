@@ -97,6 +97,14 @@ So the emitted CUDA butterfly stage is proven to compute the *mathematically
 correct* transform on the array — not merely to keep elements in `[0, P)` — the
 end-to-end "verified ZK compilation" claim made concrete for one real kernel.
 
+**And it runs at hand-tuned speed.** Benchmarked on an RTX 5090
+(`benchmarks/bench_butterfly.cu`), the emitted kernel is within **0.1%** of a
+hand-optimized Mersenne-fold butterfly at VRAM-bound sizes (**~1,553 GB/s, ~87% of
+the memory roofline**) with byte-identical results — the `% M31_P` reduction kept
+*for provability* hides completely behind memory bandwidth. The only measurable
+cost (~3.4%) appears only when the working set fits in L2 and compute dominates.
+Verification is free where it counts.
+
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
 field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full
