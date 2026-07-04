@@ -97,6 +97,15 @@ So the emitted CUDA butterfly stage is proven to compute the *mathematically
 correct* transform on the array — not merely to keep elements in `[0, P)` — the
 end-to-end "verified ZK compilation" claim made concrete for one real kernel.
 
+**Both ZK field families are covered.** The same functional-correctness pattern
+extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
+field values for the base ops (add/sub/mul/neg/double/mul_w) *and* the full
+degree-4 extension multiply (`ext4_mul c0..c3` over `x⁴ = W`, with `W = 11` for
+BabyBear / `3` for KoalaBear) plus the componentwise extension add/sub. So both
+major proving stacks — **stwo** (M31 → QM31) and **Plonky3** (BabyBear/KoalaBear
++ their degree-4 extensions) — now have their field arithmetic exact-value
+verified, base field through constraint field.
+
 ## Reproduce
 
 ```bash

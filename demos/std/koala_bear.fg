@@ -25,6 +25,7 @@ fn koala_bear_add(a: u32, b: u32) -> u32
     requires a < KOALA_BEAR_P
     requires b < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a + b) % KOALA_BEAR_P
 {
     let s: u64 = (a as u64) + (b as u64);
     let p: u64 = KOALA_BEAR_P as u64;
@@ -37,6 +38,7 @@ fn koala_bear_sub(a: u32, b: u32) -> u32
     requires a < KOALA_BEAR_P
     requires b < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a + KOALA_BEAR_P - b) % KOALA_BEAR_P
 {
     let a64: u64 = a as u64;
     let b64: u64 = b as u64;
@@ -53,6 +55,7 @@ fn koala_bear_mul(a: u32, b: u32) -> u32
     requires a < KOALA_BEAR_P
     requires b < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a * b) % KOALA_BEAR_P
 {
     let prod: u64 = (a as u64) * (b as u64);
     let p: u64 = KOALA_BEAR_P as u64;
@@ -64,6 +67,7 @@ fn koala_bear_mul(a: u32, b: u32) -> u32
 fn koala_bear_neg(a: u32) -> u32
     requires a < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (KOALA_BEAR_P - a) % KOALA_BEAR_P
 {
     if a == 0u32 { 0u32 } else { KOALA_BEAR_P - a }
 }
@@ -72,6 +76,7 @@ fn koala_bear_neg(a: u32) -> u32
 fn koala_bear_double(a: u32) -> u32
     requires a < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a + a) % KOALA_BEAR_P
 {
     koala_bear_add(a, a)
 }
@@ -81,6 +86,7 @@ fn koala_bear_double(a: u32) -> u32
 fn koala_bear_mul_w(a: u32) -> u32
     requires a < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a * KOALA_BEAR_W) % KOALA_BEAR_P
 {
     koala_bear_mul(a, KOALA_BEAR_W)
 }
@@ -109,6 +115,7 @@ fn koala_bear_ext4_mul_c0(
     requires b0 < KOALA_BEAR_P  requires b1 < KOALA_BEAR_P
     requires b2 < KOALA_BEAR_P  requires b3 < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a0*b0 + KOALA_BEAR_W*(a1*b3 + a2*b2 + a3*b1)) % KOALA_BEAR_P
 {
     let a0b0: u32 = koala_bear_mul(a0, b0);
     let a1b3: u32 = koala_bear_mul(a1, b3);
@@ -117,6 +124,7 @@ fn koala_bear_ext4_mul_c0(
     let s1: u32 = koala_bear_add(a1b3, a2b2);
     let s2: u32 = koala_bear_add(s1, a3b1);
     let ws: u32 = koala_bear_mul_w(s2);
+    assert((a0*b0 + KOALA_BEAR_W*(a1*b3 + a2*b2 + a3*b1)) % KOALA_BEAR_P == (a0b0 + ws) % KOALA_BEAR_P) "ext4 c0 folds mod P";
     koala_bear_add(a0b0, ws)
 }
 
@@ -128,6 +136,7 @@ fn koala_bear_ext4_mul_c1(
     requires b0 < KOALA_BEAR_P  requires b1 < KOALA_BEAR_P
     requires b2 < KOALA_BEAR_P  requires b3 < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a0*b1 + a1*b0 + KOALA_BEAR_W*(a2*b3 + a3*b2)) % KOALA_BEAR_P
 {
     let a0b1: u32 = koala_bear_mul(a0, b1);
     let a1b0: u32 = koala_bear_mul(a1, b0);
@@ -136,6 +145,7 @@ fn koala_bear_ext4_mul_c1(
     let s0: u32 = koala_bear_add(a0b1, a1b0);
     let s1: u32 = koala_bear_add(a2b3, a3b2);
     let ws: u32 = koala_bear_mul_w(s1);
+    assert((a0*b1 + a1*b0 + KOALA_BEAR_W*(a2*b3 + a3*b2)) % KOALA_BEAR_P == (s0 + ws) % KOALA_BEAR_P) "ext4 c1 folds mod P";
     koala_bear_add(s0, ws)
 }
 
@@ -147,6 +157,7 @@ fn koala_bear_ext4_mul_c2(
     requires b0 < KOALA_BEAR_P  requires b1 < KOALA_BEAR_P
     requires b2 < KOALA_BEAR_P  requires b3 < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a0*b2 + a1*b1 + a2*b0 + KOALA_BEAR_W*(a3*b3)) % KOALA_BEAR_P
 {
     let a0b2: u32 = koala_bear_mul(a0, b2);
     let a1b1: u32 = koala_bear_mul(a1, b1);
@@ -155,6 +166,7 @@ fn koala_bear_ext4_mul_c2(
     let s01: u32 = koala_bear_add(a0b2, a1b1);
     let s012: u32 = koala_bear_add(s01, a2b0);
     let ws: u32 = koala_bear_mul_w(a3b3);
+    assert((a0*b2 + a1*b1 + a2*b0 + KOALA_BEAR_W*(a3*b3)) % KOALA_BEAR_P == (s012 + ws) % KOALA_BEAR_P) "ext4 c2 folds mod P";
     koala_bear_add(s012, ws)
 }
 
@@ -166,6 +178,7 @@ fn koala_bear_ext4_mul_c3(
     requires b0 < KOALA_BEAR_P  requires b1 < KOALA_BEAR_P
     requires b2 < KOALA_BEAR_P  requires b3 < KOALA_BEAR_P
     ensures result < KOALA_BEAR_P
+    ensures result == (a0*b3 + a1*b2 + a2*b1 + a3*b0) % KOALA_BEAR_P
 {
     let a0b3: u32 = koala_bear_mul(a0, b3);
     let a1b2: u32 = koala_bear_mul(a1, b2);
@@ -173,41 +186,58 @@ fn koala_bear_ext4_mul_c3(
     let a3b0: u32 = koala_bear_mul(a3, b0);
     let s01: u32 = koala_bear_add(a0b3, a1b2);
     let s012: u32 = koala_bear_add(s01, a2b1);
+    assert((a0*b3 + a1*b2 + a2*b1 + a3*b0) % KOALA_BEAR_P == (s012 + a3b0) % KOALA_BEAR_P) "ext4 c3 folds mod P";
     koala_bear_add(s012, a3b0)
 }
 
 // ---- KoalaBear^4 addition / subtraction (componentwise) ---------------------
 
 fn koala_bear_ext4_add_c0(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + b) % KOALA_BEAR_P
 { koala_bear_add(a, b) }
 
 fn koala_bear_ext4_add_c1(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + b) % KOALA_BEAR_P
 { koala_bear_add(a, b) }
 
 fn koala_bear_ext4_add_c2(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + b) % KOALA_BEAR_P
 { koala_bear_add(a, b) }
 
 fn koala_bear_ext4_add_c3(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + b) % KOALA_BEAR_P
 { koala_bear_add(a, b) }
 
 fn koala_bear_ext4_sub_c0(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + KOALA_BEAR_P - b) % KOALA_BEAR_P
 { koala_bear_sub(a, b) }
 
 fn koala_bear_ext4_sub_c1(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + KOALA_BEAR_P - b) % KOALA_BEAR_P
 { koala_bear_sub(a, b) }
 
 fn koala_bear_ext4_sub_c2(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + KOALA_BEAR_P - b) % KOALA_BEAR_P
 { koala_bear_sub(a, b) }
 
 fn koala_bear_ext4_sub_c3(a: u32, b: u32) -> u32
-    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P  ensures result < KOALA_BEAR_P
+    requires a < KOALA_BEAR_P  requires b < KOALA_BEAR_P
+    ensures result < KOALA_BEAR_P
+    ensures result == (a + KOALA_BEAR_P - b) % KOALA_BEAR_P
 { koala_bear_sub(a, b) }
 
 fn main() -> u64 { 0u64 }
