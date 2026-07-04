@@ -1,0 +1,40 @@
+// Demo 1159: functionally-verified M31 / QM31 zero tests
+//
+// Equality-to-zero is the tractable field predicate the prover needs (e.g. FRI
+// query / constraint-quotient denominators check for a zero divisor). Full field
+// DIVISION is NOT here: it needs the modular inverse a^(P-2), a high-degree
+// nonlinear (Fermat-class) goal beyond automated Z3 — the same limitation as the
+// felt252 inverse (an audit-assume) and the Poseidon2 S-box. The zero test,
+// negation, and conditional-select are the exact-value-verifiable parts.
+
+use std::m31;
+
+// M31 equality-to-zero test (returns 1 if zero, 0 otherwise), functionally verified.
+fn m31_is_zero(a: u32) -> u32
+    requires a < M31_P
+    ensures result < 2u32
+    ensures result == 1u32 ==> a == 0u32
+    ensures a == 0u32      ==> result == 1u32
+{
+    if a == 0u32 { 1u32 } else { 0u32 }
+}
+
+// QM31 (degree-4) equality-to-zero: a QM31 element is zero iff all four M31
+// components are zero. Exact-value verified in both directions.
+fn qm31_is_zero(a_re: u32, a_im: u32, b_re: u32, b_im: u32) -> u32
+    requires a_re < M31_P  requires a_im < M31_P
+    requires b_re < M31_P  requires b_im < M31_P
+    ensures result < 2u32
+    ensures result == 1u32
+            ==> (a_re == 0u32 && a_im == 0u32 && b_re == 0u32 && b_im == 0u32)
+    ensures (a_re == 0u32 && a_im == 0u32 && b_re == 0u32 && b_im == 0u32)
+            ==> result == 1u32
+{
+    if (a_re == 0u32) && (a_im == 0u32) && (b_re == 0u32) && (b_im == 0u32) {
+        1u32
+    } else {
+        0u32
+    }
+}
+
+fn main() -> u64 { 0u64 }
