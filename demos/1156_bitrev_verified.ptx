@@ -15,8 +15,8 @@
 )
 {
     .reg .pred %p14;
-    .reg .u32 %r19, %r23, %r33, %r34, %r35;
-    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd31, %rd32, %rd4, %rd5, %rd6, %rd7, %rd8, %rd9;
+    .reg .u32 %r20, %r24, %r31, %r32, %r33;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd16, %rd17, %rd18, %rd19, %rd2, %rd21, %rd22, %rd23, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd30, %rd4, %rd5, %rd6, %rd7, %rd8, %rd9;
 
   ld.param.u64 %rd0, [bitrev_swap_at_param_data_data];
   ld.param.u64 %rd1, [bitrev_swap_at_param_data_len];
@@ -37,32 +37,30 @@
   @%p14 bra bitrev_swap_at_then_15;
   bra bitrev_swap_at_else_15;
   bitrev_swap_at_then_15:
-  mov.u64 %rd16, 4;
-  mul.lo.u64 %rd17, %rd5, %rd16;
-  add.u64 %rd18, %rd0, %rd17;
-  ld.global.u32 %r19, [%rd18];
-  mov.u64 %rd20, 4;
-  mul.lo.u64 %rd21, %rd11, %rd20;
-  add.u64 %rd22, %rd0, %rd21;
-  ld.global.u32 %r23, [%rd22];
-  mov.u64 %rd24, 0; // unhandled expr
-  mov.u64 %rd25, 0; // unhandled expr
-  mov.u64 %rd26, 4;
-  mul.lo.u64 %rd27, %rd5, %rd26;
-  add.u64 %rd28, %rd0, %rd27;
-  st.global.u32 [%rd28], %r23;
-  mov.u64 %rd29, 4;
-  mul.lo.u64 %rd30, %rd11, %rd29;
-  add.u64 %rd31, %rd0, %rd30;
-  st.global.u32 [%rd31], %r19;
-  mov.u64 %rd32, 0; // unhandled expr
-  mov.u32 %r33, 0; // unit
-  mov.u32 %r34, %r33;
+  mov.u64 %rd16, 0; // unhandled expr
+  mov.u64 %rd17, 4;
+  mul.lo.u64 %rd18, %rd5, %rd17;
+  add.u64 %rd19, %rd0, %rd18;
+  ld.global.u32 %r20, [%rd19];
+  mov.u64 %rd21, 4;
+  mul.lo.u64 %rd22, %rd11, %rd21;
+  add.u64 %rd23, %rd0, %rd22;
+  ld.global.u32 %r24, [%rd23];
+  mov.u64 %rd25, 4;
+  mul.lo.u64 %rd26, %rd5, %rd25;
+  add.u64 %rd27, %rd0, %rd26;
+  st.global.u32 [%rd27], %r24;
+  mov.u64 %rd28, 4;
+  mul.lo.u64 %rd29, %rd11, %rd28;
+  add.u64 %rd30, %rd0, %rd29;
+  st.global.u32 [%rd30], %r20;
+  mov.u32 %r31, 0; // unit
+  mov.u32 %r32, %r31;
   bra bitrev_swap_at_end_15;
   bitrev_swap_at_else_15:
-  mov.u32 %r34, 0; // no else branch
+  mov.u32 %r32, 0; // no else branch
   bitrev_swap_at_end_15:
-  mov.u32 %r35, 0; // unit
+  mov.u32 %r33, 0; // unit
   ret;
 }
 

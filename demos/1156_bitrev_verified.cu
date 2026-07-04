@@ -294,13 +294,10 @@ __global__ void bitrev_swap_at(uint32_t* __restrict__ data, uint64_t data_len, u
   0 /* unhandled */;
   0 /* unhandled */;
   if ((rtid > tid)) {
-    uint32_t va = data[tid];
-    uint32_t vb = data[rtid];
     0 /* unhandled */;
-    0 /* unhandled */;
-    data[tid] = vb;
-    data[rtid] = va;
-    0 /* unhandled */;
+    uint32_t tmp = data[tid];
+    data[tid] = data[rtid];
+    data[rtid] = tmp;
   }
 }
 

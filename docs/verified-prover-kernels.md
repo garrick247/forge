@@ -133,14 +133,17 @@ in-place butterfly), the read-value ↔ `old()` link is stated explicitly
 
 **A data-movement kernel too — the bit-reversal permutation.**
 `demos/1156_bitrev_verified.fg` verifies the NTT reorder step (swap `data[tid]`
-with `data[rev[tid]]` when `rev[tid] > tid`), proving the value moved *into*
-`data[tid]` is exactly `old(data[rev[tid]])`, the no-op case, and a locality frame
-(only the pair may change). It's partial by a genuine Forge limitation: the mirror
-equation `data[rev[tid]] == old(data[tid])` is a positive post-state read at a
-*nested/array-derived* index (`rev[tid]`, itself read from an array) across the
-swap's branch merge, which Forge's array theory won't discharge — a concrete Forge
-core improvement target (a plain-param swap, demo 139, proves both directions). The
-frame still pins `data[rev[tid]]` as the only other slot that can change.
+with `data[rev[tid]]` when `rev[tid] > tid`) *fully*: both swap directions
+(`data[tid] == old(data[rev[tid]])` and `data[rev[tid]] == old(data[tid])`), the
+no-op case, and a locality frame — pure data movement through an index array,
+`forge cuda`-emitted. Completing it required a **Forge core fix**: an in-branch
+swap re-read its `let`-bound snapshot (`let tmp = data[tid]`) from the
+*post-first-write* array instead of bind-time, so the mirror slot got
+`old(data[rev[tid]])` instead of `old(data[tid])`. The fix freezes `let`-bound
+array reads inside conditional blocks to a stable alias `__frz_<arr>` pinned to
+the block-entry state (`lib/types/typecheck.ml`), which env_array_write never
+re-renames — unlocking correct verification of in-place swap/scatter/permutation
+kernels generally.
 
 **Both ZK field families are covered.** The same functional-correctness pattern
 extends to Plonky3's fields: `std/baby_bear` and `std/koala_bear` prove exact
