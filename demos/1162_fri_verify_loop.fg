@@ -1,0 +1,55 @@
+// Demo 1162: functionally-verified multi-layer FRI folding verifier loop
+//
+// A FRI verifier folds a claimed value down through the commitment layers: at
+// each layer it combines the current value with its pair (the sibling evaluation
+// supplied in the proof) using that layer's random challenge alpha, producing the
+// next-layer value — value' = value + alpha * pair (mod P), the FRI fold. This
+// demo wires the *functionally-verified* per-layer fold (std::m31::m31_butterfly_hi,
+// which proves result == (a + w*b) mod P) into a `while` loop over n_layers.
+//
+// Proves, via a loop invariant + decreases: the whole fold chain is memory-safe
+// (every pair/alpha access in bounds at every layer) and range-preserving (the
+// running value stays canonical) for any number of layers, with each layer's fold
+// being the exact-value-verified operation. This is the FRI counterpart to the
+// Merkle verifier loop (demo 1161).
+
+use std::gpu;
+use std::m31;
+
+// One FRI fold layer: value + alpha * pair (mod P) — the verified functional fold.
+fn fri_fold_step(value: u32, pair: u32, alpha: u32) -> u32
+    requires value < M31_P  requires pair < M31_P  requires alpha < M31_P
+    ensures result < M31_P
+    ensures result == (value + alpha * pair) % M31_P
+{
+    m31_butterfly_hi(value, pair, alpha)
+}
+
+fn fri_verify_fold(value0: u32, pairs: span<u32>, alphas: span<u32>, n_layers: u64) -> u32
+    requires value0 < M31_P
+    requires n_layers <= pairs.len
+    requires n_layers <= alphas.len
+    requires forall k: u64, k < pairs.len  ==> pairs[k]  < M31_P
+    requires forall k: u64, k < alphas.len ==> alphas[k] < M31_P
+    ensures result < M31_P
+{
+    let mut value: u32 = value0;
+    let mut l:     u64 = 0u64;
+    while l < n_layers
+        invariant l <= n_layers
+        invariant value < M31_P
+        decreases n_layers - l
+    {
+        assert(l < pairs.len)  "pair evaluation in bounds at this layer";
+        assert(l < alphas.len) "challenge in bounds at this layer";
+        assert(pairs[l]  < M31_P) "pair canonical";
+        assert(alphas[l] < M31_P) "challenge canonical";
+        let pair:  u32 = pairs[l];
+        let alpha: u32 = alphas[l];
+        value = fri_fold_step(value, pair, alpha);   // value + alpha*pair (mod P), verified
+        l     = l + 1u64;
+    };
+    value
+}
+
+fn main() -> u64 { 0u64 }
