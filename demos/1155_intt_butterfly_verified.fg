@@ -1,0 +1,65 @@
+// Demo 1155: functionally-verified in-place Gentleman-Sande INTT butterfly
+//
+// The inverse-NTT (decimation-in-frequency) butterfly stage:
+//     a' = a + b,        b' = w * (a - b)        (mod P)
+// operating in place on the pair (data[tid], data[tid+half_n]). Companion to the
+// forward DIT butterfly (demo 1153). Proves the exact array POST-STATE — both
+// outputs equal the true field values of the pre-state — plus a frame (every
+// other element untouched), not merely canonical range.
+//
+// Composes: tid as an explicit thread index (SPMD, cf. demo 232), old(span[i])
+// pre-state references (cf. demo 139), and the verified scalar std::m31 ops.
+
+use std::gpu;
+use std::m31;
+
+#[kernel]
+fn intt_butterfly_at(data: span<u32>, twiddle: span<u32>, half_n: u64, tid: u64)
+    requires tid < half_n
+    requires 2u64 * half_n <= data.len
+    requires half_n <= twiddle.len
+    requires forall k: u64, k < data.len    ==> data[k]    < M31_P
+    requires forall k: u64, k < twiddle.len ==> twiddle[k] < M31_P
+    ensures data[tid]          < M31_P
+    ensures data[tid + half_n] < M31_P
+    // a' = a + b
+    ensures data[tid] == (old(data[tid]) + old(data[tid + half_n])) % M31_P
+    // b' = w * (a - b)   (a - b in canonical non-negative form a + P - b)
+    ensures data[tid + half_n]
+            == (twiddle[tid] * (old(data[tid]) + M31_P - old(data[tid + half_n]))) % M31_P
+    // frame: every other element is untouched
+    ensures forall k: u64, k < data.len ==> k != tid ==> k != tid + half_n
+                                        ==> data[k] == old(data[k])
+{
+    assert(tid < data.len) "lower element in bounds";
+    assert(tid + half_n < data.len) "upper element in bounds";
+    assert(data[tid] < M31_P) "field invariant at tid";
+    assert(data[tid + half_n] < M31_P) "field invariant at tid+half_n";
+    assert(twiddle[tid] < M31_P) "twiddle field invariant at tid";
+
+    let a: u32 = data[tid];
+    let b: u32 = data[tid + half_n];
+    let w: u32 = twiddle[tid];
+    // pin the reads to the pre-state / twiddle so the nonlinear b' term substitutes
+    assert(a == old(data[tid])) "a is pre-state data[tid]";
+    assert(b == old(data[tid + half_n])) "b is pre-state data[tid+half_n]";
+    assert(w == twiddle[tid]) "w is twiddle[tid]";
+
+    let a2: u32 = m31_add(a, b);        // (a + b) % P
+    let d:  u32 = m31_sub(a, b);        // (a + P - b) % P
+    let b2: u32 = m31_mul(w, d);        // (w * d) % P
+    // fold: w*(a+P-b) == w*d  (mod P), since d == (a+P-b) % P
+    assert((w * (a + M31_P - b)) % M31_P == (w * d) % M31_P) "w*(a-b) folds mod P";
+    // congruence rename to the pre-state form (w==twiddle[tid], a==old.., b==old..)
+    assert((w * (a + M31_P - b)) % M31_P
+           == (twiddle[tid] * (old(data[tid]) + M31_P - old(data[tid + half_n]))) % M31_P)
+           "rename locals to pre-state via the connection equalities";
+
+    assert(tid + half_n != tid) "the two written indices are distinct";
+    data[tid]          = a2;
+    data[tid + half_n] = b2;
+    assert(data[tid] == a2) "data[tid] holds a2 after the distinct second store";
+    assert(data[tid + half_n] == b2) "data[tid+half_n] holds b2";
+}
+
+fn main() -> u64 { 0u64 }

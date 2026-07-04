@@ -105,7 +105,14 @@ the memory roofline**) with byte-identical results — the `% M31_P` reduction k
 cost (~3.4%) appears only when the working set fits in L2 and compute dominates.
 Verification is free where it counts.
 
-**A second emitted kernel: the FRI fold.**
+**The inverse transform too.** `demos/1155_intt_butterfly_verified.fg` verifies the
+in-place **Gentleman-Sande INTT butterfly** (`a' = a+b`, `b' = w·(a−b)`) the same
+way — exact post-state + frame, `forge cuda`-emitted. Its `b' = w·(a−b)` is
+nonlinear over the pre-state, so beyond the fold assert it needed an explicit
+*congruence-rename* assert (equal args ⇒ equal product) to rewrite the local-var
+form into the `old()`/`twiddle` form Z3 would not substitute on its own.
+
+**A second family of emitted kernels: the FRI fold.**
 `demos/1154_fri_fold_verified.fg` lifts the same way. The FRI low-degree-test fold
 combines an evaluation vector's two halves with a verifier challenge `alpha`;
 `fri_fold_at` (M31) proves `new[i] == (old[i] + alpha·old[i+half]) mod P`,

@@ -1,0 +1,106 @@
+// FORGE-generated PTX — SM_120
+// Proofs discharged before emission. Correct by construction.
+
+.version 8.8
+.target sm_120
+.address_size 64
+
+.visible .entry intt_butterfly_at(
+    .param .u64 intt_butterfly_at_param_data_data,
+    .param .u64 intt_butterfly_at_param_data_len,
+    .param .u64 intt_butterfly_at_param_twiddle_data,
+    .param .u64 intt_butterfly_at_param_twiddle_len,
+    .param .u64 intt_butterfly_at_param_half_n,
+    .param .u64 intt_butterfly_at_param_tid
+)
+{
+    .reg .pred %p32, %p41;
+    .reg .u32 %r14, %r19, %r23, %r30, %r36, %r39, %r47, %r51, %r54, %r67;
+    .reg .u64 %rd0, %rd1, %rd10, %rd11, %rd12, %rd13, %rd15, %rd16, %rd17, %rd18, %rd2, %rd20, %rd21, %rd22, %rd24, %rd25, %rd26, %rd27, %rd28, %rd29, %rd3, %rd31, %rd34, %rd35, %rd37, %rd38, %rd4, %rd40, %rd43, %rd44, %rd45, %rd46, %rd48, %rd49, %rd5, %rd50, %rd52, %rd53, %rd55, %rd56, %rd57, %rd58, %rd59, %rd6, %rd60, %rd61, %rd62, %rd63, %rd64, %rd65, %rd66, %rd7, %rd8, %rd9;
+
+  ld.param.u64 %rd0, [intt_butterfly_at_param_data_data];
+  ld.param.u64 %rd1, [intt_butterfly_at_param_data_len];
+  ld.param.u64 %rd2, [intt_butterfly_at_param_twiddle_data];
+  ld.param.u64 %rd3, [intt_butterfly_at_param_twiddle_len];
+  ld.param.u64 %rd4, [intt_butterfly_at_param_half_n];
+  ld.param.u64 %rd5, [intt_butterfly_at_param_tid];
+
+  mov.u64 %rd6, 0; // unhandled expr
+  mov.u64 %rd7, 0; // unhandled expr
+  mov.u64 %rd8, 0; // unhandled expr
+  mov.u64 %rd9, 0; // unhandled expr
+  mov.u64 %rd10, 0; // unhandled expr
+  mov.u64 %rd11, 4;
+  mul.lo.u64 %rd12, %rd5, %rd11;
+  add.u64 %rd13, %rd0, %rd12;
+  ld.global.u32 %r14, [%rd13];
+  add.u64 %rd15, %rd5, %rd4;
+  mov.u64 %rd16, 4;
+  mul.lo.u64 %rd17, %rd15, %rd16;
+  add.u64 %rd18, %rd0, %rd17;
+  ld.global.u32 %r19, [%rd18];
+  mov.u64 %rd20, 4;
+  mul.lo.u64 %rd21, %rd5, %rd20;
+  add.u64 %rd22, %rd2, %rd21;
+  ld.global.u32 %r23, [%rd22];
+  mov.u64 %rd24, 0; // unhandled expr
+  mov.u64 %rd25, 0; // unhandled expr
+  mov.u64 %rd26, 0; // unhandled expr
+  cvt.u64.u32 %rd27, %r14;
+  cvt.u64.u32 %rd28, %r19;
+  add.u64 %rd29, %rd27, %rd28;
+  mov.u32 %r30, 2147483647;
+  cvt.u64.u32 %rd31, %r30;
+  setp.ge.u64 %p32, %rd29, %rd31;
+  @%p32 bra intt_butterfly_at_then_33;
+  bra intt_butterfly_at_else_33;
+  intt_butterfly_at_then_33:
+  sub.u64 %rd34, %rd29, %rd31;
+  mov.u64 %rd35, %rd34;
+  bra intt_butterfly_at_end_33;
+  intt_butterfly_at_else_33:
+  mov.u64 %rd35, %rd29;
+  intt_butterfly_at_end_33:
+  cvt.u32.u64 %r36, %rd35;
+  cvt.u64.u32 %rd37, %r14;
+  cvt.u64.u32 %rd38, %r19;
+  mov.u32 %r39, 2147483647;
+  cvt.u64.u32 %rd40, %r39;
+  setp.ge.u64 %p41, %rd37, %rd38;
+  @%p41 bra intt_butterfly_at_then_42;
+  bra intt_butterfly_at_else_42;
+  intt_butterfly_at_then_42:
+  sub.u64 %rd43, %rd37, %rd38;
+  mov.u64 %rd44, %rd43;
+  bra intt_butterfly_at_end_42;
+  intt_butterfly_at_else_42:
+  add.u64 %rd45, %rd37, %rd40;
+  sub.u64 %rd46, %rd45, %rd38;
+  mov.u64 %rd44, %rd46;
+  intt_butterfly_at_end_42:
+  cvt.u32.u64 %r47, %rd44;
+  cvt.u64.u32 %rd48, %r23;
+  cvt.u64.u32 %rd49, %r47;
+  mul.lo.u64 %rd50, %rd48, %rd49;
+  mov.u32 %r51, 2147483647;
+  cvt.u64.u32 %rd52, %r51;
+  rem.u64 %rd53, %rd50, %rd52;
+  cvt.u32.u64 %r54, %rd53;
+  mov.u64 %rd55, 0; // unhandled expr
+  mov.u64 %rd56, 0; // unhandled expr
+  mov.u64 %rd57, 0; // unhandled expr
+  mov.u64 %rd58, 4;
+  mul.lo.u64 %rd59, %rd5, %rd58;
+  add.u64 %rd60, %rd0, %rd59;
+  st.global.u32 [%rd60], %r36;
+  add.u64 %rd61, %rd5, %rd4;
+  mov.u64 %rd62, 4;
+  mul.lo.u64 %rd63, %rd61, %rd62;
+  add.u64 %rd64, %rd0, %rd63;
+  st.global.u32 [%rd64], %r54;
+  mov.u64 %rd65, 0; // unhandled expr
+  mov.u64 %rd66, 0; // unhandled expr
+  mov.u32 %r67, 0; // unit
+  ret;
+}
+
